@@ -1,0 +1,34 @@
+{{ $notes := where .Site.RegularPages "Section" "notes" }}
+{{ $quotes := where .Site.RegularPages "Section" "quotes" }}
+
+{{ with $notes }}
+<section class="activity-feed">
+  <h2>Recently updated notes</h2>
+  <ul>
+    {{ range (sort . "Lastmod" "desc" | first 10) }}
+    <li>
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+      <span class="feed-date">
+        <time datetime="{{ .Lastmod.Format "2006-01-02" }}">{{ .Lastmod.Format "Jan 2, 2006" }}</time>
+      </span>
+    </li>
+    {{ end }}
+  </ul>
+</section>
+{{ end }}
+
+{{ with $quotes }}
+<section class="activity-feed">
+  <h2>Recent quotes</h2>
+  <ul>
+    {{ range (sort . "Date" "desc" | first 5) }}
+    <li>
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+      <span class="feed-date">
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
+      </span>
+    </li>
+    {{ end }}
+  </ul>
+</section>
+{{ end }}

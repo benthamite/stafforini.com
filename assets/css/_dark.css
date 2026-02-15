@@ -1,0 +1,12 @@
+/* Dark mode */
+[data-theme="dark"] {
+  --color-bg: #1a1a1a;
+  --color-text: #d4d4d4;
+  --color-text-secondary: #999;
+  --color-link: #7eb8da;
+  --color-link-hover: #a8d4ef;
+  --color-border: #333;
+  --color-code-bg: #242424;
+  --color-blockquote-border: #555;
+  --color-heading: #e0e0e0;
+}

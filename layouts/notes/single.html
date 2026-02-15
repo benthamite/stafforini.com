@@ -1,0 +1,20 @@
+{{ define "main" }}
+<article>
+  <h1>{{ .Title }}</h1>
+
+  {{ partial "note-meta.html" . }}
+
+  {{ if gt .WordCount 300 }}
+    {{ partial "toc.html" . }}
+  {{ end }}
+
+  <div class="note-body">
+    {{ .Content }}
+  </div>
+
+  {{ partial "backlinks.html" . }}
+</article>
+
+{{ $linkPreview := resources.Get "js/link-preview.js" | minify | fingerprint }}
+<script src="{{ $linkPreview.RelPermalink }}" integrity="{{ $linkPreview.Data.Integrity }}"></script>
+{{ end }}

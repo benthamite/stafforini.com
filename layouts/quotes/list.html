@@ -1,0 +1,20 @@
+{{ define "main" }}
+<h1>{{ .Title }}</h1>
+
+{{ $paginator := .Paginate (.Pages.ByDate.Reverse) }}
+{{ range $paginator.Pages }}
+  {{ partial "quote-entry.html" . }}
+{{ end }}
+
+{{ if gt $paginator.TotalPages 1 }}
+<nav class="pagination" aria-label="Pagination">
+  {{ if $paginator.HasPrev }}
+    <a href="{{ $paginator.Prev.URL }}">&#8592; Newer</a>
+  {{ end }}
+  <span>Page {{ $paginator.PageNumber }} of {{ $paginator.TotalPages }}</span>
+  {{ if $paginator.HasNext }}
+    <a href="{{ $paginator.Next.URL }}">Older &#8594;</a>
+  {{ end }}
+</nav>
+{{ end }}
+{{ end }}

@@ -1,0 +1,6 @@
+<footer class="site-footer" role="contentinfo">
+  <p>&copy; {{ now.Year }} {{ .Site.Title }}</p>
+</footer>
+
+{{ $darkMode := resources.Get "js/dark-mode.js" | minify | fingerprint }}
+<script src="{{ $darkMode.RelPermalink }}" integrity="{{ $darkMode.Data.Integrity }}"></script>

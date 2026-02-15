@@ -1,0 +1,24 @@
+/* Single-column centered layout */
+.site-header,
+main,
+.site-footer {
+  max-width: var(--max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--padding-x);
+  padding-right: var(--padding-x);
+}
+
+main {
+  padding-top: 1.5rem;
+  padding-bottom: 3rem;
+  min-height: 60vh;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  :root {
+    --padding-x: 1rem;
+    --font-size-base: 1rem;
+  }
+}

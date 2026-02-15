@@ -1,0 +1,15 @@
+<header class="site-header" role="banner">
+  <nav class="site-nav" aria-label="Main navigation">
+    <a class="site-title" href="/">{{ .Site.Title }}</a>
+    <ul class="nav-links">
+      {{ range .Site.Menus.main }}
+      <li><a href="{{ .URL }}"{{ if $.IsMenuCurrent "main" . }} aria-current="page"{{ end }}>{{ .Name }}</a></li>
+      {{ end }}
+      <li><a href="/search/" aria-label="Search">Search</a></li>
+    </ul>
+    <button class="dark-mode-toggle" aria-label="Toggle dark mode" type="button">
+      <span class="icon-sun" aria-hidden="true">&#9788;</span>
+      <span class="icon-moon" aria-hidden="true">&#9790;</span>
+    </button>
+  </nav>
+</header>

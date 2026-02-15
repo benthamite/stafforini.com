@@ -1,0 +1,7 @@
+<div class="quote-entry">
+  {{ .Content }}
+  <div class="quote-date">
+    <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
+    <span class="quote-permalink"><a href="{{ .RelPermalink }}">&#8734;</a></span>
+  </div>
+</div>

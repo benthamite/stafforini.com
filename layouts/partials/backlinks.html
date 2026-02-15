@@ -1,0 +1,12 @@
+{{ $slug := .File.ContentBaseName }}
+{{ $backlinks := index .Site.Data.backlinks $slug }}
+{{ with $backlinks }}
+<section class="backlinks" aria-label="Backlinks">
+  <h2>Links to this note</h2>
+  <ul>
+    {{ range . }}
+    <li><a href="/notes/{{ .slug }}/">{{ .title }}</a></li>
+    {{ end }}
+  </ul>
+</section>
+{{ end }}
