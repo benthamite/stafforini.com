@@ -1,0 +1,54 @@
+baseURL = "https://stafforini.com/"
+languageCode = "en"
+title = "Pablo Stafforini"
+
+# Markup settings
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    noClasses = false
+    lineNos = false
+    guessSyntax = false
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 4
+    ordered = false
+
+# Permalinks
+[permalinks]
+  notes = "/notes/:contentbasename/"
+  quotes = "/quotes/:contentbasename/"
+
+# Menu
+[menus]
+  [[menus.main]]
+    name = "Home"
+    pageRef = "/"
+    weight = 1
+  [[menus.main]]
+    name = "Notes"
+    pageRef = "/notes/"
+    weight = 2
+  [[menus.main]]
+    name = "Quotes"
+    pageRef = "/quotes/"
+    weight = 3
+
+# Output formats
+[outputFormats]
+  [outputFormats.RSS]
+    mediaType = "application/rss+xml"
+    baseName = "index"
+
+[outputs]
+  home = ["HTML", "RSS"]
+  section = ["HTML", "RSS"]
+
+# Disable taxonomies (backlinks-as-taxonomy instead)
+[taxonomies]
+
+# Pagination
+[pagination]
+  pagerSize = 20
