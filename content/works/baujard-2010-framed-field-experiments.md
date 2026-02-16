@@ -7,3 +7,5 @@ location: "Berlin"
 booktitle: "Handbook on approval voting"
 editor: "Jean-François Laslier and M. Remzi Sanver"
 ---
+
+With approval voting, voters can approve of as many candidates as they want, and the one approved by the most voters wins. This book surveys a wide variety of empirical and theoretical knowledge accumulated from years of studying this method of voting.

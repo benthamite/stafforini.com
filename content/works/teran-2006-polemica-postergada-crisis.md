@@ -7,3 +7,5 @@ location: "Buenos Aires"
 booktitle: "De utopias, catástrofes y esperanzas: Un camino intelectual"
 editor: "Oscar Terán"
 ---
+
+El socialismo real arroja serias dudas sobre el marxismo ideal.
