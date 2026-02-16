@@ -342,7 +342,7 @@ def collect_work_slugs_from_quotes() -> set[str]:
 
 def generate_work_pages(bib_by_key: dict, dry_run: bool = False, limit: int = 0) -> dict:
     """Generate work pages for all cite keys referenced by quotes."""
-    stats = {"created": 0, "skipped_exists": 0, "missing_bib": 0}
+    stats = {"created": 0, "skipped_exists": 0, "skipped_duplicate": 0, "missing_bib": 0}
     missing_bib_keys = []
 
     work_slugs = collect_work_slugs_from_quotes()
@@ -356,6 +356,9 @@ def generate_work_pages(bib_by_key: dict, dry_run: bool = False, limit: int = 0)
     for cite_key in bib_by_key:
         slug = cite_key_to_slug(cite_key)
         slug_to_key[slug] = cite_key
+
+    # Track (title, author, year) to detect duplicates across different cite keys
+    seen_works: dict[tuple[str, str, str], str] = {}  # (title, author, year) -> first slug
 
     processed = 0
     for slug in sorted(work_slugs):
@@ -377,6 +380,19 @@ def generate_work_pages(bib_by_key: dict, dry_run: bool = False, limit: int = 0)
             continue
 
         entry = bib_by_key[cite_key]
+
+        # Deduplicate: skip if another slug already created a page for this work
+        work_key = (
+            entry.get("title", "").lower().replace("{", "").replace("}", ""),
+            bib_author_to_display(entry.get("author", "") or entry.get("editor", "")).lower(),
+            entry.get("year", ""),
+        )
+        if work_key in seen_works:
+            stats["skipped_duplicate"] += 1
+            print(f"  DUPLICATE: {slug} same as {seen_works[work_key]}, skipping")
+            continue
+        seen_works[work_key] = slug
+
         page_content = generate_work_page(entry)
 
         if dry_run:
@@ -454,6 +470,7 @@ def main():
         wp_stats = generate_work_pages(bib_by_key, dry_run=args.dry_run, limit=args.limit)
         print(f"\n  Work pages created:    {wp_stats['created']}")
         print(f"  Skipped (exists):      {wp_stats['skipped_exists']}")
+        print(f"  Skipped (duplicate):   {wp_stats['skipped_duplicate']}")
         print(f"  Missing bib entries:   {wp_stats['missing_bib']}")
         if args.dry_run:
             print("  *** DRY RUN — no files created ***")
