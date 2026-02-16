@@ -11,7 +11,7 @@
   {{/* Find all quotes that cite this work */}}
   {{ $citingQuotes := where (where .Site.RegularPages "Section" "quotes") ".Params.work" $workSlug }}
   {{ with $citingQuotes }}
-  <section class="backlinks" aria-label="Citing quotes">
+  <section class="backlinks" aria-label="Citing quotes" data-pagefind-ignore>
     <h2>Quotes from this work</h2>
     {{ range (sort . "Date" "desc") }}
       {{ partial "quote-entry.html" . }}
@@ -27,7 +27,7 @@
     {{ end }}
   {{ end }}
   {{ with $citingNotes }}
-  <section class="backlinks" aria-label="Citing notes">
+  <section class="backlinks" aria-label="Citing notes" data-pagefind-ignore>
     <h2>Notes citing this work</h2>
     <ul>
       {{ range (sort . "Title") }}

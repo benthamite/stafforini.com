@@ -1,16 +1,18 @@
 {{ define "main" }}
-<article class="quote-entry">
-  {{ .Content }}
-  {{ with .Params.work }}
-    {{ $work := $.Site.GetPage (printf "/works/%s" .) }}
-    {{ with $work }}
-    <p class="quote-attribution">
-      <a href="{{ .RelPermalink }}">{{ .Params.author }}, <em>{{ .Title }}</em> ({{ .Params.year }})</a>{{ with $.Params.locator }}, {{ . }}{{ end }}
-    </p>
-    {{ end }}
+{{ $workAuthor := "" }}{{ $workTitle := "" }}
+{{ with .Params.work }}
+  {{ $work := $.Site.GetPage (printf "/works/%s" .) }}
+  {{ with $work }}
+    {{ $workAuthor = .Params.author }}
+    {{ $workTitle = .Title }}
   {{ end }}
-  <div class="quote-date">
-    <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
-  </div>
-</article>
+{{ end }}
+<div>
+  {{ with $workAuthor }}
+  <span data-pagefind-meta="title" data-pagefind-ignore class="visually-hidden">{{ $workAuthor }} – {{ $workTitle }}</span>
+  <span data-pagefind-meta="work_author" data-pagefind-ignore class="visually-hidden">{{ $workAuthor }}</span>
+  <span data-pagefind-meta="work_title" data-pagefind-ignore class="visually-hidden">{{ $workTitle }}</span>
+  {{ end }}
+  {{ partial "quote-entry.html" . }}
+</div>
 {{ end }}

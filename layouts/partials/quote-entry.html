@@ -3,8 +3,31 @@
   {{ with .Params.work }}
     {{ $work := $.Site.GetPage (printf "/works/%s" .) }}
     {{ with $work }}
+    {{ $type := .Params.entry_type | default "book" }}
     <p class="quote-attribution">
-      <a href="{{ .RelPermalink }}">{{ .Params.author }}, <em>{{ .Title }}</em> ({{ .Params.year }})</a>{{ with $.Params.locator }}, {{ . }}{{ end }}
+      {{- if or (eq $type "incollection") (eq $type "inbook") (eq $type "inproceedings") -}}
+        {{/* Chapter/section in a book: Author, 'Title', in Editor (ed.) *BookTitle*, Place, Year */}}
+        {{ .Params.author }}, &lsquo;{{ .Title }}&rsquo;,
+        {{- with .Params.editor }} in {{ . }} (ed.){{ end }}
+        <a href="{{ .RelPermalink }}"><em>{{ .Params.booktitle | default .Title }}</em></a>
+        {{- with .Params.location }}, {{ . }}{{ end -}}
+        {{- with .Params.year }}, {{ . }}{{ end -}}
+        {{- with $.Params.locator }}, {{ . }}{{ end -}}
+      {{- else if eq $type "article" -}}
+        {{/* Journal article: Author, 'Title', *Journal*, vol. X, no. Y, Year */}}
+        {{ .Params.author }}, &lsquo;{{ .Title }}&rsquo;,
+        <a href="{{ .RelPermalink }}"><em>{{ .Params.journaltitle | default .Title }}</em></a>
+        {{- with .Params.volume }}, vol. {{ . }}{{ end -}}
+        {{- with .Params.number }}, no. {{ . }}{{ end -}}
+        {{- with .Params.year }}, {{ . }}{{ end -}}
+        {{- with $.Params.locator }}, {{ . }}{{ end -}}
+      {{- else -}}
+        {{/* Book and everything else: Author, *Title*, Place, Year */}}
+        {{ .Params.author }}, <a href="{{ .RelPermalink }}"><em>{{ .Title }}</em></a>
+        {{- with .Params.location }}, {{ . }}{{ end -}}
+        {{- with .Params.year }}, {{ . }}{{ end -}}
+        {{- with $.Params.locator }}, {{ . }}{{ end -}}
+      {{- end -}}
     </p>
     {{ end }}
   {{ end }}
