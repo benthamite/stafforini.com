@@ -1,6 +1,9 @@
 {{ define "main" }}
 <article>
   {{ $type := .Params.entry_type | default "book" }}
+  <span data-pagefind-meta="work_author" data-pagefind-ignore class="visually-hidden">{{ .Params.author }}</span>
+  <span data-pagefind-meta="work_title" data-pagefind-ignore class="visually-hidden">{{ .Title }}</span>
+  {{ with .Plain }}<span data-pagefind-meta="work_abstract" data-pagefind-ignore class="visually-hidden">{{ . }}</span>{{ end }}
   <h1>
     {{- if or (eq $type "incollection") (eq $type "inbook") (eq $type "inproceedings") -}}
       {{ .Params.author }}, &lsquo;{{ .Title }}&rsquo;,
