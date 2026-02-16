@@ -7,5 +7,3 @@ location: "Oxford"
 booktitle: "Human Enhancement"
 editor: "Julian Savulescu and Nick Bostrom"
 ---
-
-To what extent should we use technological advances to try to make better human beings? Leading philosophers debate the possibility of enhancing human cognition, mood, personality, and physical performance, and controlling aging. Would this take us beyond the bounds of human nature? These are questions that need to be answered now.

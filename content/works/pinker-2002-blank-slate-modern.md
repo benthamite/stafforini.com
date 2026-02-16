@@ -5,5 +5,3 @@ entry_type: "book"
 year: 2002
 location: "New York"
 ---
-
-One of the world's leading experts on language and the mind  explores the idea of human nature and its moral, emotional, and political colorings. With characteristic wit, lucidity, and insight, Pinker argues that the dogma that the mind has no innate traits-a doctrine held by many intellectuals during the past century-denies our common humanity and our individual preferences, replaces objective analyses of social problems with feel-good slogans, and distorts our understanding of politics, violence, parenting, and the arts. Injecting calm and rationality into debates that are notorious for ax-grinding and mud-slinging, Pinker shows the importance of an honest acknowledgment of human nature based on science and common sense.
