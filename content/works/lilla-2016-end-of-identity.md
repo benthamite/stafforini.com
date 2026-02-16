@@ -1,5 +1,6 @@
 ---
 title: "The end of identity liberalism"
 author: "Mark Lilla"
+entry_type: "article"
 year: 2016-11-08
 ---

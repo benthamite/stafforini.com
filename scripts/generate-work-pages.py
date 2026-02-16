@@ -77,9 +77,41 @@ def parse_bib_entries(bib_path: Path) -> list[dict]:
             "editor": fields.get("editor", ""),
             "title": fields.get("title", ""),
             "year": year,
+            "location": fields.get("location", fields.get("address", "")),
+            "booktitle": fields.get("booktitle", ""),
+            "journaltitle": fields.get("journaltitle", ""),
+            "volume": fields.get("volume", ""),
+            "number": fields.get("number", ""),
+            "bookauthor": fields.get("bookauthor", ""),
+            "crossref": fields.get("crossref", ""),
         })
 
     return entries
+
+
+def resolve_crossrefs(bib_by_key: dict) -> None:
+    """Resolve crossref fields: inherit missing fields from parent entries."""
+    inherit_fields = ["booktitle", "journaltitle", "location", "editor", "volume", "number"]
+    for entry in bib_by_key.values():
+        crossref_key = entry.get("crossref", "")
+        if not crossref_key:
+            continue
+        parent = bib_by_key.get(crossref_key)
+        if not parent:
+            continue
+        # Inherit missing fields from parent
+        for field in inherit_fields:
+            if not entry.get(field) and parent.get(field):
+                entry[field] = parent[field]
+        # For booktitle, fall back to parent's title if still empty
+        if not entry.get("booktitle") and parent.get("title"):
+            entry["booktitle"] = parent["title"]
+        # Inherit year if missing
+        if not entry.get("year") and parent.get("year"):
+            entry["year"] = parent["year"]
+        # Inherit editor from parent if this entry has an author
+        if not entry.get("editor") and parent.get("editor") and entry.get("author"):
+            entry["editor"] = parent["editor"]
 
 
 # === Author formatting ===
@@ -240,18 +272,43 @@ def escape_yaml_string(s: str) -> str:
 
 def generate_work_page(entry: dict) -> str:
     """Generate YAML front matter for a work page."""
-    title = entry["title"].replace("{", "").replace("}", "")
+    def clean(s: str) -> str:
+        return s.replace("{", "").replace("}", "")
+
+    title = clean(entry["title"])
     author_raw = entry["author"] or entry["editor"]
     author = bib_author_to_display(author_raw)
     year = entry["year"]
+    location = clean(entry.get("location", ""))
+    entry_type = entry.get("entry_type", "book")
+    booktitle = clean(entry.get("booktitle", ""))
+    journaltitle = clean(entry.get("journaltitle", ""))
+    volume = clean(entry.get("volume", ""))
+    number = clean(entry.get("number", ""))
+    editor_raw = entry.get("editor", "")
+    editor = bib_author_to_display(editor_raw) if editor_raw else ""
 
     lines = [
         "---",
         f'title: "{escape_yaml_string(title)}"',
         f'author: "{escape_yaml_string(author)}"',
+        f'entry_type: "{entry_type}"',
     ]
     if year:
         lines.append(f"year: {year}")
+    if location:
+        lines.append(f'location: "{escape_yaml_string(location)}"')
+    if booktitle:
+        lines.append(f'booktitle: "{escape_yaml_string(booktitle)}"')
+    if journaltitle:
+        lines.append(f'journaltitle: "{escape_yaml_string(journaltitle)}"')
+    if volume:
+        lines.append(f'volume: "{escape_yaml_string(volume)}"')
+    if number:
+        lines.append(f'number: "{escape_yaml_string(number)}"')
+    if editor and entry.get("author", ""):
+        # Only include editor when there's also an author (i.e. for incollection)
+        lines.append(f'editor: "{escape_yaml_string(editor)}"')
     lines.append("---")
     lines.append("")
 
@@ -382,6 +439,10 @@ def main():
                 bib_by_key[entry["cite_key"]] = entry
             print(f"    {bib_path.name}: {len(entries)} entries")
         print(f"  Total unique keys: {len(bib_by_key)}")
+
+        # Resolve crossref inheritance
+        resolve_crossrefs(bib_by_key)
+        print("  Crossrefs resolved")
 
         wp_stats = generate_work_pages(bib_by_key, dry_run=args.dry_run, limit=args.limit)
         print(f"\n  Work pages created:    {wp_stats['created']}")
