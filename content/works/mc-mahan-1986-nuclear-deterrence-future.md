@@ -7,5 +7,3 @@ location: "Totowa, New Jersey"
 booktitle: "Nuclear weapons and the future of humanity: the fundamental questions"
 editor: "Avner Cohen and Steven Lee"
 ---
-
-The excellent quality and depth of the various essays make [the book] an invaluable resource....It is likely to become essential reading in its field.--CHOICE.

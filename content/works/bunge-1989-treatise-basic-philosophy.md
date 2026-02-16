@@ -6,5 +6,3 @@ year: 1989
 location: "Dordrecht"
 volume: "8"
 ---
-
-An effort to establish a system of ontology in tune with contemporary science.
