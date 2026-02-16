@@ -95,7 +95,18 @@
 
       if (search.results.length === 0) continue;
 
-      var items = search.results.slice(0, 5);
+      // Deduplicate by ID
+      var seen = {};
+      var unique = [];
+      for (var k = 0; k < search.results.length; k++) {
+        var id = search.results[k].id;
+        if (!seen[id]) {
+          seen[id] = true;
+          unique.push(search.results[k]);
+        }
+      }
+
+      var items = unique.slice(0, 5);
       var results = await Promise.all(items.map(function(r) { return r.data(); }));
 
       html += '<div class="search-section">';
@@ -105,9 +116,9 @@
         html += renderResult(results[j]);
       }
       html += '</ul>';
-      if (search.results.length > 5) {
+      if (unique.length > 5) {
         var moreUrl = '/search/?q=' + encodeURIComponent(query) + '&section=' + sec.key;
-        html += '<a class="search-more" href="' + moreUrl + '">' + (search.results.length - 5) + ' more results</a>';
+        html += '<a class="search-more" href="' + moreUrl + '">' + (unique.length - 5) + ' more results</a>';
       }
       html += '</div>';
     }
