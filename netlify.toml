@@ -18,6 +18,34 @@ for = "/fonts/*"
   [headers.values]
   Cache-Control = "public, max-age=31536000, immutable"
 
+# RSS feed redirects (preserve subscribers from WordPress)
+[[redirects]]
+from = "/blog/feed/"
+to = "/notes/index.xml"
+status = 301
+
+[[redirects]]
+from = "/blog/feed"
+to = "/notes/index.xml"
+status = 301
+
+[[redirects]]
+from = "/tango/feed/"
+to = "/notes/index.xml"
+status = 301
+
+[[redirects]]
+from = "/tango/feed"
+to = "/notes/index.xml"
+status = 301
+
+[[redirects]]
+from = "/quotes/"
+query = { feed = "rss2" }
+to = "/quotes/index.xml"
+status = 301
+
+# General blog → notes redirect
 [[redirects]]
 from = "/blog/*"
 to = "/notes/:splat"
