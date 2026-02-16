@@ -32,7 +32,6 @@
     {{ end }}
   {{ end }}
   <div class="quote-date">
-    <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
-    <span class="quote-permalink"><a href="{{ .RelPermalink }}">&#8734;</a></span>
+    <a href="{{ .RelPermalink }}"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time></a>
   </div>
 </div>
