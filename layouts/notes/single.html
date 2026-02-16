@@ -12,6 +12,21 @@
     {{ .Content }}
   </div>
 
+  {{/* References — works cited in this note */}}
+  {{ with .Params.works }}
+  <section class="references" aria-label="References">
+    <h2>References</h2>
+    <ul>
+      {{ range . }}
+        {{ $work := $.Site.GetPage (printf "/works/%s" .) }}
+        {{ with $work }}
+        <li><a href="{{ .RelPermalink }}">{{ .Params.author }}, <em>{{ .Title }}</em> ({{ .Params.year }})</a></li>
+        {{ end }}
+      {{ end }}
+    </ul>
+  </section>
+  {{ end }}
+
   {{ partial "backlinks.html" . }}
 </article>
 

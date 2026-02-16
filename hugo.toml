@@ -20,6 +20,7 @@ title = "Pablo Stafforini"
 [permalinks]
   notes = "/notes/:contentbasename/"
   quotes = "/quotes/:contentbasename/"
+  works = "/works/:contentbasename/"
 
 # Menu
 [menus]

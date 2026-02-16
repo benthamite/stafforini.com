@@ -1,0 +1,40 @@
+{{ define "main" }}
+<article>
+  <h1>{{ .Params.author }}, <em>{{ .Title }}</em> ({{ .Params.year }})</h1>
+
+  {{ with .Content }}
+    <div class="work-body">{{ . }}</div>
+  {{ end }}
+
+  {{ $workSlug := .File.ContentBaseName }}
+
+  {{/* Find all quotes that cite this work */}}
+  {{ $citingQuotes := where (where .Site.RegularPages "Section" "quotes") ".Params.work" $workSlug }}
+  {{ with $citingQuotes }}
+  <section class="backlinks" aria-label="Citing quotes">
+    <h2>Quotes from this work</h2>
+    {{ range (sort . "Date" "desc") }}
+      {{ partial "quote-entry.html" . }}
+    {{ end }}
+  </section>
+  {{ end }}
+
+  {{/* Find all notes that cite this work */}}
+  {{ $citingNotes := slice }}
+  {{ range where .Site.RegularPages "Section" "notes" }}
+    {{ if in .Params.works $workSlug }}
+      {{ $citingNotes = $citingNotes | append . }}
+    {{ end }}
+  {{ end }}
+  {{ with $citingNotes }}
+  <section class="backlinks" aria-label="Citing notes">
+    <h2>Notes citing this work</h2>
+    <ul>
+      {{ range (sort . "Title") }}
+      <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+      {{ end }}
+    </ul>
+  </section>
+  {{ end }}
+</article>
+{{ end }}
