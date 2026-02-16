@@ -90,19 +90,23 @@ All 154 weak matches were reviewed: 44 confirmed correct, 97 confirmed no-match,
 **Script**: `scripts/create-bib-entries.py`
 **Output**: `~/Library/CloudStorage/Dropbox/bibliography/migration.bib` (644 entries)
 
-Three-tier lookup strategy for 644 unique works (727 unmatched quotes):
+Five-tier lookup strategy for 644 unique works (727 unmatched quotes):
 
 1. **Tier 1 — Amazon ISBN via zotra**: Extract ISBN-10 from Amazon URLs in attribution HTML, look up via zotra `/search` + `/export?format=biblatex`
 2. **Tier 2 — OpenLibrary ISBN via zotra**: Search OpenLibrary by author surname + title, feed ISBNs to zotra
-3. **Tier 3 — Fallback from WP metadata**: Build minimal BibLaTeX entry from author, title, year, and parsed attribution
+3. **Tier 3 — CrossRef DOI via zotra**: Search CrossRef API by author + title for journal articles, feed DOI to zotra `/search`
+4. **Tier 4 — Web URL via zotra**: Search DuckDuckGo HTML for article URL (newspaper/magazine articles), feed to zotra `/web`
+5. **Tier 5 — Fallback from WP metadata**: Build minimal BibLaTeX entry from author, title, year, and parsed attribution
 
 **Results:**
 
 | Tier | Count | % | Description |
 |------|-------|---|-------------|
-| Tier 1 (Amazon ISBN) | 259 | 40.2% | Rich metadata via zotra ISBN lookup |
+| Tier 1 (Amazon ISBN) | 260 | 40.4% | Rich metadata via zotra ISBN lookup |
 | Tier 2 (OpenLibrary) | 86 | 13.4% | Found ISBN via OpenLibrary search |
-| Tier 3 (WP fallback) | 299 | 46.4% | Minimal entry from WP attribution |
+| Tier 3 (CrossRef DOI) | 47 | 7.3% | Found DOI via CrossRef API |
+| Tier 4 (Web URL) | 33 | 5.1% | Found article URL via DuckDuckGo |
+| Tier 5 (WP fallback) | 218 | 33.9% | Minimal entry from WP attribution |
 | **Total** | **644** | **100%** | **0 errors** |
 
 **Features:**
@@ -112,13 +116,13 @@ Three-tier lookup strategy for 644 unique works (727 unmatched quotes):
 - Work type detection: book, article, incollection, speech, letter, classical
 - Resume support via `scripts/create-bib-progress.json`
 - Collision detection against all existing bib files
-- `--dry-run` and `--limit N` flags for testing
+- `--dry-run`, `--limit N`, and `--reprocess-fallbacks` flags for testing
 
 **Total quote coverage: 100% (1,643/1,643 quotes now have cite keys)**
 - 916 matched to existing bib entries (Phase 2)
 - 727 with new bib entries (Phase 3)
 
-**Items for manual review:** 299 Tier 3 entries (see `scripts/create-bib-report.txt`)
+**Items for manual review:** 218 Tier 5 entries (see `scripts/create-bib-report.txt`)
 
 ### Phase 4: Write quotes to org files — TODO
 

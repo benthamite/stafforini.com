@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 """Create BibLaTeX entries for unmatched WordPress quotes.
 
-Three-tier lookup strategy:
-1. Amazon ISBN via zotra (extract ISBN-10 from Amazon URLs)
-2. OpenLibrary ISBN via zotra (search by author+title)
-3. Fallback from WP metadata (minimal entry from attribution text)
+Five-tier lookup strategy:
+1. Amazon ISBN via zotra /search (extract ISBN-10 from Amazon URLs)
+2. OpenLibrary ISBN via zotra /search (search by author+title)
+3. CrossRef DOI via zotra /search (search by author+title for journal articles)
+4. Web URL via zotra /web (search DuckDuckGo for newspaper/magazine articles)
+5. Fallback from WP metadata (minimal entry from attribution text)
 
 Usage:
-    python create-bib-entries.py              # Process all works
-    python create-bib-entries.py --limit 10   # Process first 10 works
-    python create-bib-entries.py --dry-run    # Show what would be done
-    python create-bib-entries.py --dry-run --limit 10  # Test first 10
+    python create-bib-entries.py                        # Process all works
+    python create-bib-entries.py --limit 10             # Process first 10 works
+    python create-bib-entries.py --dry-run --limit 10   # Test first 10
+    python create-bib-entries.py --reprocess-fallbacks  # Re-run fallback entries through new tiers
 """
 
 import argparse
@@ -22,6 +24,7 @@ import time
 import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import quote_plus, unquote
 
 try:
     import requests
@@ -43,6 +46,12 @@ ZOTRA_TIMEOUT = 30
 
 OPENLIBRARY_SEARCH_URL = "https://openlibrary.org/search.json"
 OPENLIBRARY_RATE_LIMIT = 1.0  # seconds between requests
+
+CROSSREF_API_URL = "https://api.crossref.org/works"
+CROSSREF_RATE_LIMIT = 0.5  # seconds between requests
+
+DUCKDUCKGO_HTML_URL = "https://html.duckduckgo.com/html/"
+DUCKDUCKGO_RATE_LIMIT = 2.5  # seconds between requests (be polite)
 
 BIB_FILES = [
     Path.home() / "Library/CloudStorage/Dropbox/bibliography/new.bib",
@@ -645,6 +654,200 @@ def openlibrary_search(author_surname, title, limit=3):
         return []
 
 
+# === CrossRef API ===
+
+_last_cr_request = 0.0
+
+
+def crossref_search_doi(author_surname, title, journal=None):
+    """Search CrossRef for a DOI by author and title.
+
+    Mirrors bib.el's bib-search-crossref logic:
+    query.bibliographic=<title>&query.author=<author>
+
+    Returns DOI string or None.
+    """
+    global _last_cr_request
+
+    elapsed = time.time() - _last_cr_request
+    if elapsed < CROSSREF_RATE_LIMIT:
+        time.sleep(CROSSREF_RATE_LIMIT - elapsed)
+
+    try:
+        params = {
+            "query.bibliographic": title,
+            "rows": 5,
+            "select": "DOI,title,author,container-title,score",
+        }
+        if author_surname:
+            params["query.author"] = author_surname
+        if journal:
+            params["query.container-title"] = journal
+
+        headers = {
+            "User-Agent": "stafforini-migration/1.0 (https://stafforini.com; quote migration script)",
+        }
+
+        resp = requests.get(
+            CROSSREF_API_URL, params=params, headers=headers, timeout=15
+        )
+        _last_cr_request = time.time()
+
+        if resp.status_code != 200:
+            return None
+
+        data = resp.json()
+        items = data.get("message", {}).get("items", [])
+
+        title_norm = normalize(title)
+        surname_norm = normalize(author_surname) if author_surname else ""
+
+        for item in items:
+            item_title = (item.get("title") or [""])[0]
+            item_title_norm = normalize(item_title)
+
+            # Verify title match (at least partial)
+            if not item_title_norm:
+                continue
+
+            # Check title similarity: all significant words from our title
+            # should appear in the CrossRef title (or vice versa)
+            our_words = {w for w in title_norm.split() if w not in STOP_WORDS and len(w) > 2}
+            their_words = {w for w in item_title_norm.split() if w not in STOP_WORDS and len(w) > 2}
+            if not our_words:
+                continue
+            overlap = our_words & their_words
+            if len(overlap) < min(len(our_words), 2):
+                continue
+
+            # Verify author match if we have a surname
+            if surname_norm:
+                authors = item.get("author", [])
+                author_match = any(
+                    surname_norm in normalize(a.get("family", "") + " " + a.get("given", ""))
+                    for a in authors
+                )
+                if not author_match:
+                    continue
+
+            doi = item.get("DOI")
+            if doi:
+                return doi
+
+        return None
+    except (requests.RequestException, json.JSONDecodeError, KeyError):
+        _last_cr_request = time.time()
+        return None
+
+
+# === Web URL search (DuckDuckGo) ===
+
+_last_ddg_request = 0.0
+
+# Domains to skip when searching for article URLs
+SKIP_DOMAINS = {
+    "amazon.com", "goodreads.com", "wikipedia.org", "librarything.com",
+    "worldcat.org", "openlibrary.org", "google.com", "bing.com",
+    "duckduckgo.com", "facebook.com", "twitter.com", "reddit.com",
+    "youtube.com", "archive.org", "scholar.google.com", "jstor.org",
+    "philpapers.org",
+}
+
+
+def search_article_url(title, publication, author, year):
+    """Search DuckDuckGo HTML for an article URL.
+
+    Uses the same duckduckgo.com/html/ endpoint as bib.el's
+    bib-lbx--ddg-items, with double-decoding of result URLs.
+
+    Returns URL string or None.
+    """
+    global _last_ddg_request
+
+    if not title:
+        return None
+
+    elapsed = time.time() - _last_ddg_request
+    if elapsed < DUCKDUCKGO_RATE_LIMIT:
+        time.sleep(DUCKDUCKGO_RATE_LIMIT - elapsed)
+
+    try:
+        # Build query: quoted title + publication name + author
+        parts = [f'"{title}"']
+        if publication:
+            parts.append(publication)
+        if author:
+            # Use just the surname to avoid over-constraining
+            surname = extract_surname_for_key(author)
+            if surname:
+                parts.append(surname)
+
+        query = " ".join(parts)
+        url = f"{DUCKDUCKGO_HTML_URL}?q={quote_plus(query)}"
+
+        resp = requests.get(
+            url,
+            headers={
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/120.0.0.0 Safari/537.36",
+            },
+            timeout=15,
+        )
+        _last_ddg_request = time.time()
+
+        if resp.status_code != 200:
+            return None
+
+        html = resp.text
+
+        # DuckDuckGo wraps result URLs in uddg= parameter (URL-encoded)
+        # Double-decode like bib.el does
+        decoded = unquote(html)
+        decoded = unquote(decoded)
+
+        # Extract uddg URLs
+        url_matches = re.findall(r"uddg=([^&\"' ]+)", decoded)
+
+        for encoded_url in url_matches:
+            candidate = unquote(encoded_url)
+
+            # Skip irrelevant domains
+            if any(skip in candidate.lower() for skip in SKIP_DOMAINS):
+                continue
+
+            # Must be a proper HTTP URL
+            if candidate.startswith("http"):
+                return candidate
+
+        return None
+    except requests.RequestException:
+        _last_ddg_request = time.time()
+        return None
+
+
+# === Zotra /web endpoint ===
+
+
+def zotra_web(url):
+    """Extract metadata from a URL via zotra /web endpoint.
+
+    Returns Zotero JSON array or None.
+    """
+    try:
+        resp = requests.post(
+            f"{ZOTRA_BASE}/web",
+            data=url,
+            headers={"Content-Type": "text/plain"},
+            timeout=ZOTRA_TIMEOUT,
+        )
+        if resp.status_code == 200:
+            return resp.json()
+        return None
+    except (requests.RequestException, json.JSONDecodeError):
+        return None
+
+
 # === BibLaTeX construction ===
 
 
@@ -708,6 +911,18 @@ def build_entry_from_zotra(biblatex_text, work_info, cite_key):
         entry_type = "misc"
     elif work_info["work_type"] == "letter":
         entry_type = "misc"
+
+    # Ensure author is present (zotra /web may not extract it)
+    if "author" not in fields and work_info.get("bib_author"):
+        fields["author"] = to_bib_author(work_info["bib_author"])
+
+    # Ensure title is present
+    if "title" not in fields and work_info.get("title"):
+        fields["title"] = work_info["title"]
+
+    # Ensure date is present
+    if "date" not in fields and "year" not in fields and work_info.get("year"):
+        fields["date"] = work_info["year"]
 
     # Prefer 'date' over 'year'
     if "year" in fields and "date" not in fields:
@@ -859,7 +1074,7 @@ def group_by_work(quotes):
 
 
 def process_work(work_key, work, used_keys, zotra_available, dry_run=False):
-    """Process a single work through the three-tier lookup.
+    """Process a single work through the five-tier lookup.
 
     Returns dict with cite_key, tier, bib_entry, status, notes.
     """
@@ -867,8 +1082,13 @@ def process_work(work_key, work, used_keys, zotra_available, dry_run=False):
     title = work["title"]
     year = work["year"]
     isbns = list(work["isbns"])
+    wtype = work.get("work_type", "book")
 
     surname = extract_surname_for_key(bib_author)
+
+    # For articles, the search title should be the article_title (the actual paper)
+    article_title = work.get("article_title", "")
+    search_title = article_title or title
 
     result = {
         "cite_key": None,
@@ -878,63 +1098,106 @@ def process_work(work_key, work, used_keys, zotra_available, dry_run=False):
         "notes": "",
     }
 
-    # === Tier 1: Amazon ISBN via zotra ===
+    def _try_zotra_search(identifier, tier, note_prefix):
+        """Helper: try zotra /search + /export for an identifier."""
+        zotero_json = zotra_search(identifier)
+        if zotero_json:
+            biblatex = zotra_export_biblatex(zotero_json)
+            if biblatex and biblatex.strip():
+                ck = generate_cite_key(surname, year, title, used_keys)
+                entry = build_entry_from_zotra(biblatex, work, ck)
+                if entry:
+                    result.update(
+                        cite_key=ck,
+                        tier=tier,
+                        bib_entry=entry,
+                        status="success",
+                        notes=f"{note_prefix} via zotra /search",
+                    )
+                    return True
+        return False
+
+    def _try_zotra_web(url, tier, note_prefix):
+        """Helper: try zotra /web + /export for a URL."""
+        zotero_json = zotra_web(url)
+        if zotero_json:
+            biblatex = zotra_export_biblatex(zotero_json)
+            if biblatex and biblatex.strip():
+                ck = generate_cite_key(surname, year, title, used_keys)
+                entry = build_entry_from_zotra(biblatex, work, ck)
+                if entry:
+                    result.update(
+                        cite_key=ck,
+                        tier=tier,
+                        bib_entry=entry,
+                        status="success",
+                        notes=f"{note_prefix} via zotra /web",
+                    )
+                    return True
+        return False
+
+    # === Tier 1: Amazon ISBN via zotra /search ===
     if isbns and zotra_available and not dry_run:
         for isbn in isbns:
-            zotero_json = zotra_search(isbn)
-            if zotero_json:
-                biblatex = zotra_export_biblatex(zotero_json)
-                if biblatex and biblatex.strip():
-                    cite_key = generate_cite_key(surname, year, title, used_keys)
-                    entry = build_entry_from_zotra(biblatex, work, cite_key)
-                    if entry:
-                        result.update(
-                            cite_key=cite_key,
-                            tier=1,
-                            bib_entry=entry,
-                            status="success",
-                            notes=f"ISBN {isbn} via zotra",
-                        )
-                        return result
+            if _try_zotra_search(isbn, 1, f"ISBN {isbn}"):
+                return result
         result["notes"] += f"Tier 1 failed (ISBNs: {', '.join(isbns)}). "
     elif isbns and dry_run:
         result["notes"] += f"Tier 1: would try ISBNs {', '.join(isbns)}. "
 
-    # === Tier 2: OpenLibrary ISBN via zotra ===
+    # === Tier 2: OpenLibrary ISBN via zotra /search ===
     if zotra_available and not dry_run:
         ol_isbns = openlibrary_search(surname, title)
         if ol_isbns:
             for isbn in ol_isbns[:5]:
-                zotero_json = zotra_search(isbn)
-                if zotero_json:
-                    biblatex = zotra_export_biblatex(zotero_json)
-                    if biblatex and biblatex.strip():
-                        cite_key = generate_cite_key(surname, year, title, used_keys)
-                        entry = build_entry_from_zotra(biblatex, work, cite_key)
-                        if entry:
-                            result.update(
-                                cite_key=cite_key,
-                                tier=2,
-                                bib_entry=entry,
-                                status="success",
-                                notes=f"OpenLibrary ISBN {isbn} via zotra",
-                            )
-                            return result
+                if _try_zotra_search(isbn, 2, f"OpenLibrary ISBN {isbn}"):
+                    return result
             result["notes"] += f"Tier 2 failed ({len(ol_isbns)} ISBNs tried). "
         else:
             result["notes"] += "Tier 2: no OpenLibrary results. "
     elif dry_run:
         result["notes"] += f"Tier 2: would search OpenLibrary for '{surname}' + '{title}'. "
 
-    # === Tier 3: Fallback from WP metadata ===
+    # === Tier 3: CrossRef DOI via zotra /search ===
+    # Try for articles, incollections, and anything with an article_title
+    if zotra_available and not dry_run:
+        journal = work.get("journaltitle") or work.get("work_title", "")
+        # Use article_title for CrossRef search if available (it's the paper title)
+        doi = crossref_search_doi(surname, search_title, journal=journal)
+        if doi:
+            if _try_zotra_search(doi, 3, f"DOI {doi}"):
+                return result
+            result["notes"] += f"Tier 3: DOI {doi} found but zotra failed. "
+        else:
+            result["notes"] += "Tier 3: no CrossRef DOI. "
+    elif dry_run:
+        result["notes"] += f"Tier 3: would search CrossRef for '{surname}' + '{search_title}'. "
+
+    # === Tier 4: Web URL via DuckDuckGo + zotra /web ===
+    # Try for newspaper/magazine articles and anything with an article_title
+    if zotra_available and not dry_run and search_title:
+        publication = work.get("work_title") or work.get("journaltitle", "")
+        found_url = search_article_url(
+            search_title, publication, surname, year
+        )
+        if found_url:
+            if _try_zotra_web(found_url, 4, f"URL {found_url[:60]}"):
+                return result
+            result["notes"] += f"Tier 4: URL found but zotra failed ({found_url[:60]}). "
+        else:
+            result["notes"] += "Tier 4: no URL found. "
+    elif dry_run:
+        result["notes"] += f"Tier 4: would search DuckDuckGo for '{search_title}'. "
+
+    # === Tier 5: Fallback from WP metadata ===
     cite_key = generate_cite_key(surname, year, title, used_keys)
     entry = build_fallback_entry(work, cite_key)
     result.update(
         cite_key=cite_key,
-        tier=3,
+        tier=5,
         bib_entry=entry,
         status="success",
-        notes=(result["notes"] or "") + "Tier 3: fallback from WP metadata",
+        notes=(result["notes"] or "") + "Tier 5: fallback from WP metadata",
     )
     return result
 
@@ -969,6 +1232,11 @@ def main():
     parser.add_argument(
         "--limit", type=int, default=0, help="Process only N works (0 = all)"
     )
+    parser.add_argument(
+        "--reprocess-fallbacks",
+        action="store_true",
+        help="Re-process entries that used the WP metadata fallback (old tier 3, new tier 5)",
+    )
     args = parser.parse_args()
 
     print("=" * 60)
@@ -985,7 +1253,7 @@ def main():
         else:
             print(f"  WARNING: zotra server not reachable at {ZOTRA_BASE}")
             print("  Start it with: cd ~/source/zotra-server && npm start")
-            print("  Tiers 1 and 2 will be skipped; all entries use Tier 3 fallback.")
+            print("  Tiers 1-4 will be skipped; all entries use Tier 5 fallback.")
             resp = input("  Continue anyway? [y/N] ")
             if resp.lower() != "y":
                 sys.exit(0)
@@ -1016,10 +1284,24 @@ def main():
 
     with_isbn = sum(1 for w in works.values() if w["isbns"])
     print(f"  {with_isbn} works with Amazon ISBNs (Tier 1 candidates)")
-    print(f"  {len(works) - with_isbn} works without ISBNs (Tier 2/3)")
+    print(f"  {len(works) - with_isbn} works without ISBNs (Tiers 2-5)")
 
     # Load progress for resume
     progress = load_progress() if not args.dry_run else {"processed": {}}
+
+    # --reprocess-fallbacks: remove old fallback entries (tier 3 or 5) from progress
+    if args.reprocess_fallbacks and not args.dry_run:
+        fallback_keys = [
+            k for k, v in progress["processed"].items()
+            if v.get("tier") in (3, 5)  # old tier 3 = new tier 5
+        ]
+        for k in fallback_keys:
+            # Free the cite key so it can be re-generated
+            old_key = progress["processed"][k].get("cite_key")
+            del progress["processed"][k]
+        print(f"\n  Reprocessing: removed {len(fallback_keys)} fallback entries from progress")
+        save_progress(progress)
+
     already_done = len(progress["processed"])
     if already_done > 0:
         print(f"\n  Resuming: {already_done} works already processed")
@@ -1042,7 +1324,7 @@ def main():
     if args.dry_run:
         print("  (DRY RUN mode)\n")
 
-    stats = {"tier1": 0, "tier2": 0, "tier3": 0, "errors": 0}
+    stats = {"tier1": 0, "tier2": 0, "tier3": 0, "tier4": 0, "tier5": 0, "errors": 0}
     report_lines = []
     new_entries = []
 
@@ -1070,9 +1352,9 @@ def main():
                 print(f"\n{result['bib_entry']}\n")
 
             # Items that used fallback should appear in report for review
-            if tier == 3:
+            if tier == 5:
                 report_lines.append(
-                    f"[TIER 3 - REVIEW] {work['bib_author']} -- "
+                    f"[TIER 5 - REVIEW] {work['bib_author']} -- "
                     f"{work['title'] or '(no title)'} ({work['year'] or 'no year'})\n"
                     f"  Key: {result['cite_key']}\n"
                     f"  Attribution: {work['attribution_text'][:150]}\n"
@@ -1104,11 +1386,13 @@ def main():
     print(f"{'=' * 60}")
     print(f"  Tier 1 (Amazon ISBN):     {stats['tier1']:>5}")
     print(f"  Tier 2 (OpenLibrary):     {stats['tier2']:>5}")
-    print(f"  Tier 3 (WP fallback):     {stats['tier3']:>5}")
+    print(f"  Tier 3 (CrossRef DOI):    {stats['tier3']:>5}")
+    print(f"  Tier 4 (Web URL):         {stats['tier4']:>5}")
+    print(f"  Tier 5 (WP fallback):     {stats['tier5']:>5}")
     print(f"  Skipped (already done):   {skipped:>5}")
     print(f"  Errors:                   {stats['errors']:>5}")
     print(f"  {'~' * 40}")
-    total = stats["tier1"] + stats["tier2"] + stats["tier3"]
+    total = stats["tier1"] + stats["tier2"] + stats["tier3"] + stats["tier4"] + stats["tier5"]
     print(f"  Total processed:          {total:>5}")
 
     if args.dry_run:
@@ -1143,11 +1427,13 @@ def main():
         report_content = (
             f"BibLaTeX creation report -- {datetime.now().strftime('%Y-%m-%d %H:%M')}\n"
             f"{'=' * 60}\n\n"
-            f"Tier 1 (Amazon ISBN): {stats['tier1']}\n"
-            f"Tier 2 (OpenLibrary): {stats['tier2']}\n"
-            f"Tier 3 (WP fallback): {stats['tier3']}\n"
+            f"Tier 1 (Amazon ISBN):  {stats['tier1']}\n"
+            f"Tier 2 (OpenLibrary):  {stats['tier2']}\n"
+            f"Tier 3 (CrossRef DOI): {stats['tier3']}\n"
+            f"Tier 4 (Web URL):      {stats['tier4']}\n"
+            f"Tier 5 (WP fallback):  {stats['tier5']}\n"
             f"Errors: {stats['errors']}\n\n"
-            f"Items needing manual review:\n"
+            f"Items needing manual review (Tier 5 fallbacks):\n"
             f"{'=' * 60}\n\n"
         )
         report_content += "\n".join(report_lines)
