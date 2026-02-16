@@ -1,0 +1,12 @@
+Write Quotes to Org Report
+Generated: 2026-02-16T11:44:24.744346
+============================================================
+
+Files created: 0
+Files modified: 0
+Subheadings added: 0
+Duplicates skipped: 0
+Already processed: 1643
+Missing bib entry: 0
+
+No issues.

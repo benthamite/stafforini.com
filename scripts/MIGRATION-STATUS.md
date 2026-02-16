@@ -124,13 +124,40 @@ Five-tier lookup strategy for 644 unique works (727 unmatched quotes):
 
 **Items for manual review:** 218 Tier 5 entries (see `scripts/create-bib-report.txt`)
 
-### Phase 4: Write quotes to org files — TODO
+### Phase 4: Write quotes to org files — DONE
 
-For each matched quote:
-1. Find or create the bibliographic note file for the cite key
-2. Add a subheading with the quote text, tagged `:public:`
-3. Include org-cite reference and locator
-4. Preserve WP metadata (post date, link) as properties
+**Script**: `scripts/write-quotes-to-org.py`
+**Output**: 1,324 org files in `~/Library/CloudStorage/Dropbox/bibliographic-notes/`
+
+For each of the 1,643 quotes:
+1. Determined cite key (matched: from bib_match, unmatched: from new_cite_key)
+2. Looked up bib entry for author/title/entry_type metadata
+3. Found or created the bibliographic note file for the cite key
+4. Added `:public:`-tagged level-2 subheading with ox-hugo export properties
+5. Included org-cite reference with locator
+6. Preserved WP metadata (post_id, link, date) as properties
+
+**Results:**
+
+| Metric | Count |
+|--------|-------|
+| Files created | 1,168 |
+| Files modified | 156 |
+| Subheadings added | 1,626 |
+| Duplicates skipped | 17 |
+| Missing bib entries | 0 |
+
+**Features:**
+- New org files match `orb-noter-template.org` format exactly: APA-abbreviated author, em dash separator, `[cite:@key]` ROAM_REFS, entry-type tags, NOTER_DOCUMENT path
+- Subheading titles from first WP tag (falls back to quote words)
+- Work slug from cite key (CamelCase → kebab-case) for Phase 5 work pages
+- Globally unique export filenames (`{surname}-{title-slug}`)
+- `#+hugo_base_dir:` added at file top for all files
+- UUID `:ID:` on both level-1 and level-2 headings
+- Resume via `scripts/write-quotes-progress.json`
+- `--dry-run` and `--limit N` flags
+- Idempotent: re-running skips already-processed quotes
+- Duplicate detection: skips if same quote text already in file
 
 ### Phase 5: Hugo export pipeline — TODO
 
@@ -155,6 +182,9 @@ WP tags should eventually link to corresponding org notes (e.g., "emacs" tag →
 | `scripts/match-report.txt`            | Phase 2 items needing attention              |
 | `scripts/create-bib-progress.json`    | Phase 3 progress cache for resume            |
 | `scripts/create-bib-report.txt`       | Phase 3 items needing manual review          |
+| `scripts/write-quotes-to-org.py`      | Phase 4: write quotes to org-roam notes      |
+| `scripts/write-quotes-progress.json`  | Phase 4 progress cache for resume            |
+| `scripts/write-quotes-report.txt`     | Phase 4 summary and duplicate report         |
 | `scripts/MIGRATION-STATUS.md`         | This file                                    |
 | `~/...bibliography/migration.bib`     | 644 new BibLaTeX entries                     |
 
