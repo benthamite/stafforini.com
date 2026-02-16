@@ -1,0 +1,10 @@
++++
+title = "poetry"
+author = ["Pablo Stafforini"]
+date = 2003-05-30
+tags = ["book", "biblio", "public"]
+draft = false
+work = "shelley-1816-alastor-spirit-solitude"
+locator = "pp. 149-191"
++++
+> A vision on his sleep There came, a dream of hopes that never yet Had flushed his cheek. He dreamed a veiled maid Sate near him, talking in low solemn tones. Her voice was like the voice of his own soul Heard in the calm of thought; its music long, Like woven sounds of streams and breezes, held His inmost sense suspended in its web Of many-colored woof and shifting hues. Knowledge and truth and virtue were her theme, And lofty hopes of divine liberty, Thoughts the most dear to him, and poesy, Herself a poet. Soon the solemn mood Of her pure mind kindled through all her frame A permeating fire; wild numbers then She raised, with voice stifled in tremulous sobs Subdued by its own pathos; her fair hands Were bare alone, sweeping from some strange harp Strange symphony, and in their branching veins The eloquent blood told an ineffable tale. The beating of her heart was heard to fill The pauses of her music, and her breath Tumultuously accorded with those fits Of intermitted song. Sudden she rose, As if her heart impatiently endured Its bursting burden; at the sound he turned, And saw by the warm light of their own life Her glowing limbs beneath the sinuous veil Of woven wind, her outspread arms now bare, Her dark locks floating in the breath of night, Her beamy bending eyes, her parted lips Outstretched, and pale, and quivering eagerly. His strong heart sunk and sickened with excess Of love. He reared his shuddering limbs, and quelled His gasping breath, and spread his arms to meet Her panting bosom:--she drew back awhile, Then, yielding to the irresistible joy, With frantic gesture and short breathless cry Folded his frame in her dissolving arms. Now blackness veiled his dizzy eyes, and night Involved and swallowed up the vision; sleep, Like a dark flood suspended in its course, Rolled back its impulse on his vacant brain.

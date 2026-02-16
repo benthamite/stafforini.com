@@ -1,8 +1,10 @@
----
-title: "Parfit on what matters"
-date: 2024-09-20
----
-
-> What matters most is that we rich people give up some of our luxuries, ceasing to overheat the Earth's atmosphere, and taking care of this planet in other ways, so that it continues to support intelligent life.
-
-<p class="quote-attribution">Derek Parfit, <em>On What Matters</em> (2011), vol. 2, p. 419</p>
++++
+title = "reasons"
+author = ["Pablo Stafforini"]
+date = 2007-10-14
+tags = ["incollection", "biblio", "public"]
+draft = false
+work = "parfit-1964-eton-college-chronicle"
+locator = "p.101"
++++
+> Why shouldn’t I eat toothpaste? It’s a free world. Why shouldn’t I chew my toenails? I happen to have trodden in some honey. Why shouldn’t I prance across central park with delicate sideways leaps? I know what your answer will be: “it isn’t done”. But it’s no earthly use just saying it isn’t done. If there’s a reason why it isn’t done, give the reason—if there’s no reason, don’t attempt to stop me doing it. All other things being equal, the mere fact that something “isn’t done” is in itself an excellent reason for doing it.

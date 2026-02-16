@@ -159,12 +159,34 @@ For each of the 1,643 quotes:
 - Idempotent: re-running skips already-processed quotes
 - Duplicate detection: skips if same quote text already in file
 
-### Phase 5: Hugo export pipeline — TODO
+### Phase 5: Hugo export pipeline — DONE
 
-Build the pipeline to:
-1. Find all `:public:`-tagged subheadings across bibliographic notes
-2. Export to Hugo-compatible markdown via ox-hugo
-3. Integrate with the existing Hugo site structure (`content/quotes/`)
+**Scripts**: `scripts/export-quotes.el`, `scripts/export-quotes.sh`, `scripts/generate-work-pages.py`
+**Output**: 1,626 quote markdown files in `content/quotes/`, 1,323 work pages in `content/works/`
+
+Three-step pipeline:
+
+1. **Batch ox-hugo export** (`export-quotes.el` + `export-quotes.sh`): Emacs batch mode script that adds elpaca load paths, loads ox-hugo, registers a no-op cite processor (to avoid slow/broken citeproc in batch mode), then iterates over all 1,324 org files with `:public:` tags and calls `org-hugo-export-wim-to-md :all-subtrees`. Exports 1,626 subtrees to `content/quotes/*.md` with TOML front matter (`work`, `locator`, `date`, `tags`).
+
+2. **Post-processing** (integrated into `generate-work-pages.py`): Strips any trailing content after the blockquote in each markdown file. The no-op cite processor already suppresses citation text, but this step ensures clean output.
+
+3. **Work page generation** (`generate-work-pages.py`): Parses all 6 bib files, scans quote files for unique `work` slugs (1,323 found), generates `content/works/{slug}.md` with YAML front matter (`title`, `author` in "First Last" format, `year`). Uses `cite_key_to_slug()` to map cite keys to slugs.
+
+**Results:**
+
+| Metric | Count |
+|--------|-------|
+| Files exported | 1,324 |
+| Subtrees exported | 1,626 |
+| Export errors | 0 |
+| Quote files post-processed | 1,626 |
+| Work pages generated | 1,323 |
+| Missing bib entries | 0 |
+
+**Key decisions:**
+- No-op cite processor instead of CSL: org-cite-basic tries to parse all bib files per subtree, which is extremely slow (~30+ min) and errors out with `hash-table-p, nil` in batch mode. Since Hugo templates handle attribution via work page lookup, citation rendering is unnecessary.
+- Work pages use YAML front matter (matching existing conventions) while ox-hugo exports use TOML (ox-hugo default). Hugo handles both formats transparently.
+- 5 prototype quote files and 5 prototype work pages from earlier phases were deleted and regenerated from org sources with correct slugs.
 
 ### Phase 6: Tag linking — TODO (deferred)
 
@@ -185,6 +207,9 @@ WP tags should eventually link to corresponding org notes (e.g., "emacs" tag →
 | `scripts/write-quotes-to-org.py`      | Phase 4: write quotes to org-roam notes      |
 | `scripts/write-quotes-progress.json`  | Phase 4 progress cache for resume            |
 | `scripts/write-quotes-report.txt`     | Phase 4 summary and duplicate report         |
+| `scripts/export-quotes.el`            | Phase 5: Elisp batch ox-hugo export          |
+| `scripts/export-quotes.sh`            | Phase 5: Shell wrapper for batch export      |
+| `scripts/generate-work-pages.py`      | Phase 5: Work page generator + post-processor|
 | `scripts/MIGRATION-STATUS.md`         | This file                                    |
 | `~/...bibliography/migration.bib`     | 644 new BibLaTeX entries                     |
 
