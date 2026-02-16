@@ -84,6 +84,7 @@ def parse_bib_entries(bib_path: Path) -> list[dict]:
             "number": fields.get("number", ""),
             "bookauthor": fields.get("bookauthor", ""),
             "crossref": fields.get("crossref", ""),
+            "abstract": fields.get("abstract", ""),
         })
 
     return entries
@@ -311,6 +312,12 @@ def generate_work_page(entry: dict) -> str:
         lines.append(f'editor: "{escape_yaml_string(editor)}"')
     lines.append("---")
     lines.append("")
+
+    # Add abstract as page body content if available
+    abstract = clean(entry.get("abstract", "")).strip()
+    if abstract:
+        lines.append(abstract)
+        lines.append("")
 
     return "\n".join(lines)
 
