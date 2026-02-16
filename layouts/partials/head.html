@@ -29,8 +29,17 @@
 {{/* Font preload */}}
 <link rel="preload" href="/fonts/SourceSerif4Variable-Roman.ttf.woff2" as="font" type="font/woff2" crossorigin>
 
-{{/* CSS via Hugo Pipes */}}
-{{ $css := resources.Get "css/main.css" | minify | fingerprint }}
+{{/* CSS via Hugo Pipes — concat all partials since @import doesn't resolve */}}
+{{ $base := resources.Get "css/_base.css" }}
+{{ $layout := resources.Get "css/_layout.css" }}
+{{ $components := resources.Get "css/_components.css" }}
+{{ $content := resources.Get "css/_content.css" }}
+{{ $chromaLight := resources.Get "css/_chroma-light.css" }}
+{{ $chromaDark := resources.Get "css/_chroma-dark.css" }}
+{{ $dark := resources.Get "css/_dark.css" }}
+{{ $search := resources.Get "css/_search.css" }}
+{{ $preview := resources.Get "css/_preview.css" }}
+{{ $css := slice $base $layout $components $content $chromaLight $chromaDark $dark $search $preview | resources.Concat "css/bundle.css" | minify | fingerprint }}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
 
 {{/* Conditional KaTeX loading */}}
