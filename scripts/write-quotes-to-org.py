@@ -402,12 +402,21 @@ def ensure_hugo_base_dir(content: str) -> str:
     return hugo_line + "\n" + content
 
 
+def _normalize_for_dedup(text: str) -> str:
+    """Normalize text for duplicate comparison.
+
+    Strips org inline markup (e.g. /italics/, *bold*, ~code~) and
+    non-alphanumeric characters so that formatting differences between
+    existing org content and plain WordPress text don't prevent matching.
+    """
+    text = re.sub(r"\s+", " ", text.strip())
+    text = re.sub(r"[^\w\s]", "", text)
+    return text.lower()
+
+
 def check_duplicate_quote(content: str, quote_text: str) -> bool:
     """Check if the same quote text already exists in the file."""
-    # Normalize whitespace for comparison
-    normalized_new = re.sub(r"\s+", " ", quote_text.strip())
-    normalized_existing = re.sub(r"\s+", " ", content)
-    return normalized_new in normalized_existing
+    return _normalize_for_dedup(quote_text) in _normalize_for_dedup(content)
 
 
 def deduplicate_title_in_file(content: str, title: str) -> str:
