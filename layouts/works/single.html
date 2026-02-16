@@ -1,6 +1,25 @@
 {{ define "main" }}
 <article>
-  <h1>{{ .Params.author }}, <em>{{ .Title }}</em> ({{ .Params.year }})</h1>
+  {{ $type := .Params.entry_type | default "book" }}
+  <h1>
+    {{- if or (eq $type "incollection") (eq $type "inbook") (eq $type "inproceedings") -}}
+      {{ .Params.author }}, &lsquo;{{ .Title }}&rsquo;,
+      {{- with .Params.editor }} in {{ . }} (ed.){{ end }}
+      <em>{{ .Params.booktitle | default .Title }}</em>
+      {{- with .Params.location }}, {{ . }}{{ end -}}
+      {{- with .Params.year }}, {{ . }}{{ end -}}
+    {{- else if eq $type "article" -}}
+      {{ .Params.author }}, &lsquo;{{ .Title }}&rsquo;,
+      <em>{{ .Params.journaltitle | default .Title }}</em>
+      {{- with .Params.volume }}, vol. {{ . }}{{ end -}}
+      {{- with .Params.number }}, no. {{ . }}{{ end -}}
+      {{- with .Params.year }}, {{ . }}{{ end -}}
+    {{- else -}}
+      {{ .Params.author }}, <em>{{ .Title }}</em>
+      {{- with .Params.location }}, {{ . }}{{ end -}}
+      {{- with .Params.year }}, {{ . }}{{ end -}}
+    {{- end -}}
+  </h1>
 
   {{ with .Content }}
     <div class="work-body">{{ . }}</div>
