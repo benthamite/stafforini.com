@@ -30,13 +30,18 @@
 
   function renderResult(r) {
     var label;
-    if (r.meta.work_author && r.meta.work_title) {
+    var isWork = r.meta.work_author && r.meta.work_title;
+    if (isWork) {
       label = escapeHtml(r.meta.work_author) + ', <em>' + escapeHtml(r.meta.work_title) + '</em>';
     } else {
       label = escapeHtml(r.meta.title || r.url);
     }
     var html = '<li><a href="' + escapeHtml(r.url) + '">' + label + '</a>';
-    if (r.excerpt) html += '<p class="search-excerpt">' + r.excerpt + '</p>';
+    if (isWork) {
+      if (r.meta.work_abstract) html += '<p class="search-excerpt">' + escapeHtml(r.meta.work_abstract) + '</p>';
+    } else {
+      if (r.excerpt) html += '<p class="search-excerpt">' + r.excerpt + '</p>';
+    }
     html += '</li>';
     return html;
   }
