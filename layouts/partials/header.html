@@ -95,30 +95,31 @@
 
       if (search.results.length === 0) continue;
 
-      // Deduplicate by ID
+      // Load all result data, then deduplicate by title to collapse
+      // genuinely different pages that have identical content
+      var allData = await Promise.all(search.results.map(function(r) { return r.data(); }));
       var seen = {};
-      var unique = [];
-      for (var k = 0; k < search.results.length; k++) {
-        var id = search.results[k].id;
-        if (!seen[id]) {
-          seen[id] = true;
-          unique.push(search.results[k]);
+      var results = [];
+      for (var k = 0; k < allData.length; k++) {
+        var key = (allData[k].meta.title || allData[k].url).toLowerCase();
+        if (!seen[key]) {
+          seen[key] = true;
+          results.push(allData[k]);
         }
       }
 
-      var items = unique.slice(0, 5);
-      var results = await Promise.all(items.map(function(r) { return r.data(); }));
+      var items = results.slice(0, 5);
 
       html += '<div class="search-section">';
       html += '<h3 class="search-section-heading">' + sec.label + '</h3>';
       html += '<ul class="search-section-list">';
-      for (var j = 0; j < results.length; j++) {
-        html += renderResult(results[j]);
+      for (var j = 0; j < items.length; j++) {
+        html += renderResult(items[j]);
       }
       html += '</ul>';
-      if (unique.length > 5) {
+      if (results.length > 5) {
         var moreUrl = '/search/?q=' + encodeURIComponent(query) + '&section=' + sec.key;
-        html += '<a class="search-more" href="' + moreUrl + '">' + (unique.length - 5) + ' more results</a>';
+        html += '<a class="search-more" href="' + moreUrl + '">' + (results.length - 5) + ' more results</a>';
       }
       html += '</div>';
     }

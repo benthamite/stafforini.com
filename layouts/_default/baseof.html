@@ -6,7 +6,7 @@
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
   {{- partial "header.html" . -}}
-  <main id="main-content" data-pagefind-body>
+  <main id="main-content"{{ if .IsPage }} data-pagefind-body{{ end }}>
     <span data-pagefind-filter="section" data-pagefind-ignore class="visually-hidden">{{ .Section }}</span>
     {{- block "main" . }}{{ end -}}
   </main>
