@@ -5,11 +5,141 @@
       {{ range .Site.Menus.main }}
       <li><a href="{{ .URL }}"{{ if $.IsMenuCurrent "main" . }} aria-current="page"{{ end }}>{{ .Name }}</a></li>
       {{ end }}
-      <li><a href="/search/" aria-label="Search">Search</a></li>
     </ul>
+    <div class="nav-search">
+      <button class="search-toggle" aria-label="Open search" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+    </div>
     <button class="dark-mode-toggle" aria-label="Toggle dark mode" type="button">
       <span class="icon-sun" aria-hidden="true">&#9788;</span>
       <span class="icon-moon" aria-hidden="true">&#9790;</span>
     </button>
   </nav>
 </header>
+<div class="search-overlay" hidden>
+  <div class="search-container">
+    <div class="search-box">
+      <input type="text" id="search-input" class="search-input" placeholder="Search..." autocomplete="off" />
+    </div>
+    <div id="search-results" class="search-results"></div>
+  </div>
+</div>
+<script>
+(function() {
+  var toggle = document.querySelector('.search-toggle');
+  var overlay = document.querySelector('.search-overlay');
+  var input = document.getElementById('search-input');
+  var resultsEl = document.getElementById('search-results');
+  var pagefind = null;
+  var debounceTimer = null;
+
+  var sections = [
+    { key: 'notes', label: 'Notes' },
+    { key: 'quotes', label: 'Quotes' },
+    { key: 'works', label: 'Works' }
+  ];
+
+  async function initPagefind() {
+    if (pagefind) return;
+    pagefind = await import('/pagefind/pagefind.js');
+    await pagefind.init();
+  }
+
+  function openSearch() {
+    overlay.hidden = false;
+    input.focus();
+    initPagefind();
+  }
+
+  function closeSearch() {
+    overlay.hidden = true;
+    input.value = '';
+    resultsEl.innerHTML = '';
+  }
+
+  function escapeHtml(s) {
+    var d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  var currentQuery = '';
+
+  function renderResult(r) {
+    var label;
+    if (r.meta.work_author && r.meta.work_title) {
+      label = escapeHtml(r.meta.work_author) + ', <em>' + escapeHtml(r.meta.work_title) + '</em>';
+    } else {
+      label = escapeHtml(r.meta.title || r.url);
+    }
+    var html = '<li><a href="' + escapeHtml(r.url) + '">' + label + '</a>';
+    if (r.excerpt) html += '<p class="search-excerpt">' + r.excerpt + '</p>';
+    html += '</li>';
+    return html;
+  }
+
+  async function runSearch(query) {
+    if (!query || !pagefind) {
+      resultsEl.innerHTML = '';
+      return;
+    }
+
+    currentQuery = query;
+    var html = '';
+    for (var i = 0; i < sections.length; i++) {
+      var sec = sections[i];
+      var search = await pagefind.search(query, {
+        filters: { section: [sec.key] }
+      });
+
+      if (search.results.length === 0) continue;
+
+      var items = search.results.slice(0, 5);
+      var results = await Promise.all(items.map(function(r) { return r.data(); }));
+
+      html += '<div class="search-section">';
+      html += '<h3 class="search-section-heading">' + sec.label + '</h3>';
+      html += '<ul class="search-section-list">';
+      for (var j = 0; j < results.length; j++) {
+        html += renderResult(results[j]);
+      }
+      html += '</ul>';
+      if (search.results.length > 5) {
+        var moreUrl = '/search/?q=' + encodeURIComponent(query) + '&section=' + sec.key;
+        html += '<a class="search-more" href="' + moreUrl + '">' + (search.results.length - 5) + ' more results</a>';
+      }
+      html += '</div>';
+    }
+
+    if (!html) {
+      html = '<p class="search-no-results">No results found.</p>';
+    }
+
+    resultsEl.innerHTML = html;
+  }
+
+  input.addEventListener('input', function() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(function() {
+      runSearch(input.value.trim());
+    }, 200);
+  });
+
+  toggle.addEventListener('click', function() {
+    if (overlay.hidden) openSearch(); else closeSearch();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && !overlay.hidden) closeSearch();
+    if ((e.key === '/' || (e.key === 'k' && (e.metaKey || e.ctrlKey))) && overlay.hidden) {
+      e.preventDefault();
+      openSearch();
+    }
+  });
+
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closeSearch();
+  });
+})();
+</script>
