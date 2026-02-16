@@ -1,0 +1,10 @@
+{{ define "main" }}
+<h1>{{ .Title }}</h1>
+<ul class="notes-list">
+  {{ range .Pages.ByParam "author" }}
+  <li>
+    <a href="{{ .RelPermalink }}">{{ .Params.author }}, <em>{{ .Title }}</em> ({{ .Params.year }})</a>
+  </li>
+  {{ end }}
+</ul>
+{{ end }}

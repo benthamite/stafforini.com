@@ -1,5 +1,13 @@
 <div class="quote-entry">
   {{ .Content }}
+  {{ with .Params.work }}
+    {{ $work := $.Site.GetPage (printf "/works/%s" .) }}
+    {{ with $work }}
+    <p class="quote-attribution">
+      <a href="{{ .RelPermalink }}">{{ .Params.author }}, <em>{{ .Title }}</em> ({{ .Params.year }})</a>{{ with $.Params.locator }}, {{ . }}{{ end }}
+    </p>
+    {{ end }}
+  {{ end }}
   <div class="quote-date">
     <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
     <span class="quote-permalink"><a href="{{ .RelPermalink }}">&#8734;</a></span>

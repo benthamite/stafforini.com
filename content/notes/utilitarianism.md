@@ -2,6 +2,8 @@
 title: "Utilitarianism"
 date: 2024-02-20
 lastmod: 2025-02-01
+works:
+  - "mill-utilitarianism"
 ---
 
 Utilitarianism is an ethical theory that holds that the best action is the one that maximizes overall well-being or utility.
