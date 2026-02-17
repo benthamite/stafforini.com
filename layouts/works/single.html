@@ -26,10 +26,11 @@
   </section>
   {{ end }}
 
-  {{/* Find all notes that cite this work */}}
+  {{/* Find all notes that cite this work (via rendered cite shortcode links) */}}
   {{ $citingNotes := slice }}
+  {{ $workPath := printf "/works/%s/" $workSlug }}
   {{ range where .Site.RegularPages "Section" "notes" }}
-    {{ if in .Params.works $workSlug }}
+    {{ if in .Content $workPath }}
       {{ $citingNotes = $citingNotes | append . }}
     {{ end }}
   {{ end }}
