@@ -1,5 +1,5 @@
 ---
-title: "Review of Émile Meyerson, /La déduction relativiste/"
+title: "Review of Émile Meyerson, <em>La déduction relativiste</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1925

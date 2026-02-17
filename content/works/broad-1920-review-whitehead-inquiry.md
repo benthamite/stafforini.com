@@ -1,5 +1,5 @@
 ---
-title: "Review of A. N. Whitehead, /An inquiry concerning the principles of natural knowledge/"
+title: "Review of A. N. Whitehead, <em>An inquiry concerning the principles of natural knowledge</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1920

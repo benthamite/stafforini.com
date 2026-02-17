@@ -1,5 +1,5 @@
 ---
-title: "Review of Georg Cantor, /Contributions to the founding of the theory of transfinite numbers/"
+title: "Review of Georg Cantor, <em>Contributions to the founding of the theory of transfinite numbers</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1916

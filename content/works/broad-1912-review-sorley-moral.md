@@ -1,5 +1,5 @@
 ---
-title: "Review of W. R. Sorley, /The Moral Life and Moral Worth/"
+title: "Review of W. R. Sorley, <em>The Moral Life and Moral Worth</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1912

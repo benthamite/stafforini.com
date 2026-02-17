@@ -1,5 +1,5 @@
 ---
-title: "Review of F. and L. Lindemann (trs.), /Wissenschaft und Methode/ by H. Poincaré"
+title: "Review of F. and L. Lindemann (trs.), <em>Wissenschaft und Methode</em> by H. Poincaré"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1915

@@ -1,5 +1,5 @@
 ---
-title: "Critical note of H. H. Price, /Thinking and Experience/"
+title: "Critical note of H. H. Price, <em>Thinking and Experience</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1954

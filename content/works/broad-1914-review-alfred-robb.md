@@ -1,5 +1,5 @@
 ---
-title: "Review of Alfred A. Robb, /A Theory of Time and Space/"
+title: "Review of Alfred A. Robb, <em>A Theory of Time and Space</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1914

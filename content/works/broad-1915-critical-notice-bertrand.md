@@ -1,5 +1,5 @@
 ---
-title: "Critical notice of Bertrand Russell, /Our Knowledge of the External World/"
+title: "Critical notice of Bertrand Russell, <em>Our Knowledge of the External World</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1915

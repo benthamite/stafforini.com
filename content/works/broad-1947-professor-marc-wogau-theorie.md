@@ -1,5 +1,5 @@
 ---
-title: "Professor Marc-Wogau's /Theorie der Sinnesdata/ (I)"
+title: "Professor Marc-Wogau's <em>Theorie der Sinnesdata</em> (I)"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1947

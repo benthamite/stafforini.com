@@ -1,5 +1,5 @@
 ---
-title: "Review of G. Lowes Dickinson, /J. McT. E. McTaggart/"
+title: "Review of G. Lowes Dickinson, <em>J. McT. E. McTaggart</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1932

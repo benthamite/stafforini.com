@@ -1,5 +1,5 @@
 ---
-title: "Review of W. Whately Carington, /Matter, Mind, and Meaning/"
+title: "Review of W. Whately Carington, <em>Matter, Mind, and Meaning</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1950

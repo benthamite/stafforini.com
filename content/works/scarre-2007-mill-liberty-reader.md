@@ -1,5 +1,5 @@
 ---
-title: "Mill's /On liberty/: A reader's guide"
+title: "Mill's <em>On liberty</em>: A reader's guide"
 author: "Geoffrey Scarre"
 entry_type: "book"
 year: 2007

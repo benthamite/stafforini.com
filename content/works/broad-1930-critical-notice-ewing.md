@@ -1,5 +1,5 @@
 ---
-title: "Critical notice of A. C. Ewing, /The Morality of Punishment/"
+title: "Critical notice of A. C. Ewing, <em>The Morality of Punishment</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1930

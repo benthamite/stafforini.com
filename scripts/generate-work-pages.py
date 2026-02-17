@@ -211,7 +211,10 @@ def postprocess_quotes(dry_run: bool = False) -> dict:
 def generate_work_page(entry: dict) -> str:
     """Generate YAML front matter for a work page."""
     def clean(s: str) -> str:
-        return s.replace("{", "").replace("}", "")
+        s = s.replace("{", "").replace("}", "")
+        # Convert org-mode /italic/ markup to HTML <em>
+        s = re.sub(r'(?<!\w)/([^/]+)/(?!\w)', r'<em>\1</em>', s)
+        return s
 
     title = clean(entry["title"])
     author_raw = entry["author"] or entry["editor"]

@@ -1,5 +1,5 @@
 ---
-title: "Review of A. E. Taylor, /Does God Exist?/"
+title: "Review of A. E. Taylor, <em>Does God Exist?</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1946

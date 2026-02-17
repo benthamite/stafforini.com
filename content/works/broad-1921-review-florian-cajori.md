@@ -1,5 +1,5 @@
 ---
-title: "Review of Florian Cajori, /A History of the Conceptions of Limits and Fluxions in Great Britain from Newton to Woodhouse/"
+title: "Review of Florian Cajori, <em>A History of the Conceptions of Limits and Fluxions in Great Britain from Newton to Woodhouse</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1921

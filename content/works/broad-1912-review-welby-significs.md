@@ -1,5 +1,5 @@
 ---
-title: "Review of V. Welby, /Significs and Language: The Articulate Form of Our Expressive and Interpretive Resources/"
+title: "Review of V. Welby, <em>Significs and Language: The Articulate Form of Our Expressive and Interpretive Resources</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1912

@@ -1,5 +1,5 @@
 ---
-title: "Review of H. L. Brose (tr.), /Space and time in contemporary physics/ by M. Schlick"
+title: "Review of H. L. Brose (tr.), <em>Space and time in contemporary physics</em> by M. Schlick"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1921

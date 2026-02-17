@@ -1,5 +1,5 @@
 ---
-title: "Review of /Encyclopaedia of the Philosophical Sciences/. Vol. 1. /Logic/"
+title: "Review of <em>Encyclopaedia of the Philosophical Sciences</em>. Vol. 1. <em>Logic</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1914

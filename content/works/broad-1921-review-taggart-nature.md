@@ -1,5 +1,5 @@
 ---
-title: "Review of J. M. E. M'Taggart, /The Nature of Existence/"
+title: "Review of J. M. E. M'Taggart, <em>The Nature of Existence</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1921
