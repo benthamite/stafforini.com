@@ -5,6 +5,7 @@ entry_type: "incollection"
 year: 2014
 location: "Chichester"
 booktitle: "Intelligence unbound: the future of uploaded and machine minds"
+pages: "102–118"
 editor: "Russell Blackford and Damien Broderick"
 ---
 

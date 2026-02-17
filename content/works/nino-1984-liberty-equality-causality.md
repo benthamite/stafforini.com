@@ -6,4 +6,5 @@ year: 1984
 journaltitle: "Rechtstheorie"
 volume: "15"
 number: "1"
+pages: "23–38"
 ---

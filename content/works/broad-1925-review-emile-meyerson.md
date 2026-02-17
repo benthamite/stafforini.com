@@ -6,4 +6,5 @@ year: 1925
 journaltitle: "Mind"
 volume: "34"
 number: "136"
+pages: "504–505"
 ---

@@ -6,4 +6,5 @@ year: 1954
 journaltitle: "The Philosophical Review"
 volume: "63"
 number: "2"
+pages: "155"
 ---

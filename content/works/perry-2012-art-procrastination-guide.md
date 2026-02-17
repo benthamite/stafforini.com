@@ -6,4 +6,5 @@ year: 1988
 journaltitle: "Art Libraries Journal"
 volume: "13"
 number: "3"
+pages: "28--29"
 ---

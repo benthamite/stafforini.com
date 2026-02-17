@@ -6,4 +6,5 @@ year: 1933
 journaltitle: "Mind"
 volume: "42"
 number: "166"
+pages: "150–169"
 ---

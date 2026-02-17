@@ -6,4 +6,5 @@ year: 1998
 journaltitle: "Zygon®"
 volume: "33"
 number: "4"
+pages: "525–533"
 ---

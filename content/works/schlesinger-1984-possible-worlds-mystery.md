@@ -6,4 +6,5 @@ year: 1984
 journaltitle: "Ratio"
 volume: "26"
 number: "1"
+pages: "1–18"
 ---

@@ -4,5 +4,6 @@ author: "Jens Timmermann"
 entry_type: "incollection"
 year: 2017
 booktitle: "The Cambridge History of Moral Philosophy"
+pages: "394--409"
 editor: "Sacha Golob and Jens Timmermann"
 ---

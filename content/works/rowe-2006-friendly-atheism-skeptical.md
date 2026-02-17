@@ -6,4 +6,5 @@ year: 2006
 journaltitle: "International Journal for Philosophy of Religion"
 volume: "59"
 number: "2"
+pages: "79–92"
 ---

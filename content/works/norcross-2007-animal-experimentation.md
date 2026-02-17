@@ -5,6 +5,7 @@ entry_type: "incollection"
 year: 2007
 location: "Oxford"
 booktitle: "The Oxford Handbook of Bioethics"
+pages: "648–667"
 editor: "Bonnie Steinbock"
 ---
 

@@ -5,5 +5,6 @@ entry_type: "incollection"
 year: 2004
 location: "Oxford"
 booktitle: "Reason and Value: Themes From the Moral Philosophy of Joseph Raz"
+pages: "202–230"
 editor: "R. Jay Wallace et al."
 ---

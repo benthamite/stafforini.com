@@ -6,4 +6,5 @@ year: 1920
 journaltitle: "The Hibbert journal"
 volume: "18"
 number: "2"
+pages: "397–406"
 ---

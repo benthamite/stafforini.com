@@ -6,4 +6,5 @@ year: 1932
 journaltitle: "Phlosophy"
 volume: "7"
 number: "27"
+pages: "343–344"
 ---

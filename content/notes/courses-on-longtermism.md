@@ -32,6 +32,3 @@ If you think I'm missing anything, as always, please let me know.
 (Dr Schneier informs me that, regrettably, the materials for his course on catastrophic risk have not been preserved.)
 
 _With thanks to Prof. Shelly Kagan for sharing the syllabus for his course (and adding a helpful introductory note) and to Bastian Stern for discovering many of the courses listed._
-
-
-## Archive <span class="tag"><span class="ARCHIVE">ARCHIVE</span></span> {#archive}

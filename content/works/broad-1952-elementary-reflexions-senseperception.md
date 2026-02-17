@@ -6,4 +6,5 @@ year: 1952
 journaltitle: "Philosophy"
 volume: "27"
 number: "100"
+pages: "3–17"
 ---

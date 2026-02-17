@@ -6,4 +6,5 @@ year: 1988
 journaltitle: "Synthese"
 volume: "74"
 number: "3"
+pages: "391--413"
 ---

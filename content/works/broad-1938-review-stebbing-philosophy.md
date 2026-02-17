@@ -6,4 +6,5 @@ year: 1938
 journaltitle: "Philosophy"
 volume: "13"
 number: "50"
+pages: "221–226"
 ---

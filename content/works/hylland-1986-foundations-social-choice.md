@@ -6,4 +6,5 @@ year: 2017
 journaltitle: "Social Anthropology"
 volume: "25"
 number: "3"
+pages: "282--287"
 ---

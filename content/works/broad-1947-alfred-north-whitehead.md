@@ -6,4 +6,5 @@ year: 1947
 journaltitle: "Mind"
 volume: "57"
 number: "226"
+pages: "139–145"
 ---

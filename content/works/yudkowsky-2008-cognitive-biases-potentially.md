@@ -5,6 +5,7 @@ entry_type: "incollection"
 year: 2008
 location: "Oxford"
 booktitle: "Global catastrophic risks"
+pages: "91–119"
 editor: "Nick Bostrom and Milan M. Ćirković"
 ---
 

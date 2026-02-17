@@ -6,4 +6,5 @@ year: 1990
 journaltitle: "Behavioral and Brain Sciences"
 volume: "13"
 number: "1"
+pages: "30--31"
 ---

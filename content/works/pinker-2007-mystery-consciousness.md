@@ -6,4 +6,5 @@ year: 2007
 journaltitle: "Time"
 volume: "169"
 number: "5"
+pages: "58--62, 65--66, 69--70"
 ---

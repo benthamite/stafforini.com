@@ -6,4 +6,5 @@ year: 1939
 journaltitle: "The Journal of Theological Studies"
 volume: "40"
 number: "1"
+pages: "16–30"
 ---

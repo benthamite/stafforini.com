@@ -6,4 +6,5 @@ year: 1979
 journaltitle: "Inquiry"
 volume: "22"
 number: "1"
+pages: "81--99"
 ---

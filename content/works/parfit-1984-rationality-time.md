@@ -6,4 +6,5 @@ year: 1984
 journaltitle: "Proceedings of the Aristotelian Society"
 volume: "84"
 number: "1"
+pages: "47–82"
 ---

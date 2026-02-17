@@ -6,4 +6,5 @@ year: 1956
 journaltitle: "Revue internationale de philosophie"
 volume: "36"
 number: "2"
+pages: "144–165"
 ---

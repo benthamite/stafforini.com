@@ -6,4 +6,5 @@ year: 1989
 journaltitle: "Australasian journal of philosophy"
 volume: "67"
 number: "2"
+pages: "152–171"
 ---

@@ -177,6 +177,3 @@ _With thanks to James Evans and others for useful discussion._
 
 
 ## <span class="org-todo todo TODO">TODO</span> Revise entry on stuff I own {#revise-entry-on-stuff-i-own}
-
-
-## Archive <span class="tag"><span class="ARCHIVE">ARCHIVE</span></span> {#archive}

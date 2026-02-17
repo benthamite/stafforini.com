@@ -6,4 +6,5 @@ year: 1941
 journaltitle: "Philosophy and phenomenological research"
 volume: "1"
 number: "4"
+pages: "391–430"
 ---

@@ -6,4 +6,5 @@ year: 1951
 journaltitle: "The British Journal for the Philosophy of Science"
 volume: "2"
 number: "6"
+pages: "137–141"
 ---

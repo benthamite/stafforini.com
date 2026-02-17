@@ -6,6 +6,7 @@ year: 1967
 location: "New York"
 booktitle: "The Encyclopedia of Philosophy"
 volume: "6"
+pages: "341–347"
 editor: "Paul Edwards"
 ---
 

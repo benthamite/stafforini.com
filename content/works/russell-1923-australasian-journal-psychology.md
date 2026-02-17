@@ -6,4 +6,5 @@ year: 1923
 journaltitle: "Australasian Journal of Psychology and Philosophy"
 volume: "1"
 number: "2"
+pages: "84--92"
 ---

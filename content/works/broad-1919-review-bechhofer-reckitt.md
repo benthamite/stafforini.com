@@ -6,4 +6,5 @@ year: 1919
 journaltitle: "Ethics"
 volume: "29"
 number: "4"
+pages: "504–5"
 ---

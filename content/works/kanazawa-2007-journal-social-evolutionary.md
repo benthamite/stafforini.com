@@ -6,4 +6,5 @@ year: 2007
 journaltitle: "Journal of Social, Evolutionary, and Cultural Psychology"
 volume: "1"
 number: "1"
+pages: "7--17"
 ---

@@ -6,4 +6,5 @@ year: 1968
 journaltitle: "The Philosophical Review"
 volume: "77"
 number: "4"
+pages: "455–473"
 ---

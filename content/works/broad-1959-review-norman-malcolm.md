@@ -6,4 +6,5 @@ year: 1959
 journaltitle: "Universities quarterly"
 volume: "13"
 number: "3"
+pages: "304–306"
 ---

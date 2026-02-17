@@ -6,4 +6,5 @@ year: 1923
 journaltitle: "Proceedings of the Aristotelian Society"
 volume: "23"
 number: "1"
+pages: "173–198"
 ---

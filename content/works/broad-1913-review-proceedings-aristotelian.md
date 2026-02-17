@@ -6,4 +6,5 @@ year: 1913
 journaltitle: "Mind"
 volume: "22"
 number: "87"
+pages: "408–410"
 ---

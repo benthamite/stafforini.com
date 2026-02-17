@@ -5,6 +5,7 @@ entry_type: "incollection"
 year: 2006
 location: "Buenos Aires"
 booktitle: "De utopias, catástrofes y esperanzas: Un camino intelectual"
+pages: "47–52"
 editor: "Oscar Terán"
 ---
 

@@ -6,4 +6,5 @@ year: 1916
 journaltitle: "Ethics"
 volume: "26"
 number: "3"
+pages: "377"
 ---

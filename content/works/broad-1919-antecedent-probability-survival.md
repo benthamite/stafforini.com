@@ -6,4 +6,5 @@ year: 1919
 journaltitle: "The Hibbert Journal"
 volume: "17"
 number: "4"
+pages: "561–578"
 ---

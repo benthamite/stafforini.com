@@ -6,6 +6,7 @@ year: 1976
 location: "Berkeley, Calif."
 booktitle: "The identities of persons"
 number: "3"
+pages: "91–107"
 editor: "Amélie Oksenberg Rorty"
 ---
 

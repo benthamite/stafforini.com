@@ -6,4 +6,5 @@ year: 1924
 journaltitle: "Aristotelian Society Supplementary Volume"
 volume: "4"
 number: "1"
+pages: "86–129"
 ---

@@ -6,4 +6,5 @@ year: 1993
 journaltitle: "Philosophy and phenomenological research"
 volume: "53"
 number: "4"
+pages: "889–892"
 ---

@@ -6,4 +6,5 @@ year: 1913
 journaltitle: "The International Journal of Ethics"
 volume: "23"
 number: "4"
+pages: "396–418"
 ---

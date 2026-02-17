@@ -6,4 +6,5 @@ year: 1979
 journaltitle: "Journal of philosophy"
 volume: "76"
 number: "10"
+pages: "533–545"
 ---

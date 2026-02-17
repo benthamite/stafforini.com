@@ -6,4 +6,5 @@ year: 1950
 journaltitle: "Philosophy"
 volume: "25"
 number: "92"
+pages: "85–86"
 ---

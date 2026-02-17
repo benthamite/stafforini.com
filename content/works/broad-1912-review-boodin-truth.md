@@ -6,4 +6,5 @@ year: 1912
 journaltitle: "Mind"
 volume: "21"
 number: "83"
+pages: "449–451"
 ---

@@ -5,6 +5,7 @@ entry_type: "incollection"
 year: 2007
 location: "Oxford"
 booktitle: "Human Enhancement"
+pages: "357–72"
 editor: "Julian Savulescu and Nick Bostrom"
 ---
 

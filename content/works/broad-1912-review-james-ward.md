@@ -6,4 +6,5 @@ year: 1912
 journaltitle: "The International Journal of Ethics"
 volume: "23"
 number: "1"
+pages: "77–84"
 ---

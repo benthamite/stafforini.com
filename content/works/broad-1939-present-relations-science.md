@@ -6,4 +6,5 @@ year: 1939
 journaltitle: "Philosophy"
 volume: "14"
 number: "54"
+pages: "131–154"
 ---

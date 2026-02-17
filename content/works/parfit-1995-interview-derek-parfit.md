@@ -6,4 +6,5 @@ year: 1995
 journaltitle: "Cogito"
 volume: "9"
 number: "2"
+pages: "115–125"
 ---

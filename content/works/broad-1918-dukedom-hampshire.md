@@ -5,6 +5,7 @@ entry_type: "article"
 year: 1918
 journaltitle: "College echoes"
 volume: "13"
+pages: "75–78"
 ---
 
 (unsigned)

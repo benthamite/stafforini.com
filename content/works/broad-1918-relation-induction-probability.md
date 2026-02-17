@@ -6,6 +6,7 @@ year: 1918
 journaltitle: "Mind"
 volume: "XXVII"
 number: "4"
+pages: "389–404"
 ---
 
 10.1093/mind/XXVII.4.389

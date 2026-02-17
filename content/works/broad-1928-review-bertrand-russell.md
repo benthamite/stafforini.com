@@ -6,4 +6,5 @@ year: 1928
 journaltitle: "Mind"
 volume: "37"
 number: "145"
+pages: "88–95"
 ---

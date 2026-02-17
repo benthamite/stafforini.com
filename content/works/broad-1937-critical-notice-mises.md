@@ -6,4 +6,5 @@ year: 1937
 journaltitle: "Mind"
 volume: "46"
 number: "184"
+pages: "478–491"
 ---

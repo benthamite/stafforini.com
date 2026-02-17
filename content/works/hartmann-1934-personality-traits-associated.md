@@ -6,4 +6,5 @@ year: 1934
 journaltitle: "The Journal of Abnormal and Social Psychology"
 volume: "29"
 number: "2"
+pages: "202–212"
 ---

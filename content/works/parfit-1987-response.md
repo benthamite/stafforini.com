@@ -6,6 +6,7 @@ year: 1987
 location: "Oxford, UK ; New York, NY, USA"
 booktitle: "Persons and personality: a contemporary inquiry"
 number: "no. 1"
+pages: "88–92"
 editor: "A. R. Peacocke, Grant Gillett, and Ian Ramsey Centre (St. Cross College)"
 ---
 

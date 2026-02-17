@@ -6,4 +6,5 @@ year: 1994
 journaltitle: "Philosophy \\& Public Affairs"
 volume: "23"
 number: "3"
+pages: "195–224"
 ---

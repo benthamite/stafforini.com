@@ -6,4 +6,5 @@ year: 1981
 journaltitle: "Report from the Center for Philosophy and Public Policy"
 volume: "1"
 number: "report 1:1"
+pages: "8–11"
 ---

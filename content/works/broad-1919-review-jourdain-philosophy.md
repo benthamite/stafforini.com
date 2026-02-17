@@ -6,4 +6,5 @@ year: 1919
 journaltitle: "Mind"
 volume: "XXVIII"
 number: "4"
+pages: "485–486"
 ---

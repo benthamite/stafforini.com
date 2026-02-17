@@ -6,4 +6,5 @@ year: 1946
 journaltitle: "Mind"
 volume: "55"
 number: "219"
+pages: "173–178"
 ---

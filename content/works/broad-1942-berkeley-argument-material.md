@@ -5,4 +5,5 @@ entry_type: "article"
 year: 1942
 journaltitle: "Proceedings of the British Academy"
 volume: "28"
+pages: "119–138"
 ---

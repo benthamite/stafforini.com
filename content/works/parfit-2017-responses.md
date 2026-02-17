@@ -5,5 +5,6 @@ entry_type: "incollection"
 year: 2017
 location: "London"
 booktitle: "Reading Parfit: On what matters"
+pages: "189–236"
 editor: "Simon Kirchin"
 ---

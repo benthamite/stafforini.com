@@ -6,6 +6,7 @@ year: 1968
 journaltitle: "Science"
 volume: "162"
 number: "3859"
+pages: "1243–48"
 ---
 
 The population problem has no technical solution; it requires a fundamental extension in morality.

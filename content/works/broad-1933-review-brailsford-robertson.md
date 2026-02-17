@@ -5,4 +5,5 @@ entry_type: "article"
 year: 1933
 journaltitle: "Journal of the Society for Psychical Research"
 volume: "28"
+pages: "112–114"
 ---

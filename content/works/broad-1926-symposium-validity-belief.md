@@ -6,4 +6,5 @@ year: 1926
 journaltitle: "Aristotelian Society Supplementary Volume"
 volume: "6"
 number: "1"
+pages: "84–97"
 ---

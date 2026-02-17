@@ -6,4 +6,5 @@ year: 1981
 journaltitle: "New Left Review"
 volume: "1"
 number: "126"
+pages: "3--16"
 ---

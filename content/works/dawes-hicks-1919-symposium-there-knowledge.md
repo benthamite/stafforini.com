@@ -6,4 +6,5 @@ year: 1919
 journaltitle: "Aristotelian Society Supplementary Volume"
 volume: "2"
 number: "1"
+pages: "159–220"
 ---

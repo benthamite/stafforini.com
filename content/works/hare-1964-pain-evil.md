@@ -6,4 +6,5 @@ year: 1964
 journaltitle: "Aristotelian Society Supplementary Volume"
 volume: "38"
 number: "1"
+pages: "91–124"
 ---

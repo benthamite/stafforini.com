@@ -6,4 +6,5 @@ year: 1986
 journaltitle: "The Philosophical Review"
 volume: "95"
 number: "2"
+pages: "233"
 ---

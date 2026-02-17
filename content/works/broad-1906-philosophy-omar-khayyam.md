@@ -5,4 +5,5 @@ entry_type: "article"
 year: 1906
 journaltitle: "Westminster review"
 volume: "166"
+pages: "544–556"
 ---

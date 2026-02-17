@@ -5,6 +5,7 @@ entry_type: "incollection"
 year: 2010
 location: "Oxford"
 booktitle: "Disagreement"
+pages: "175–86"
 editor: "Richard Feldman and Ted Warfield"
 ---
 

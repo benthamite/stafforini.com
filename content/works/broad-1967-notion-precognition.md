@@ -5,4 +5,5 @@ entry_type: "incollection"
 year: 1967
 location: "New York"
 booktitle: "Science and ESP"
+pages: "165–196"
 ---

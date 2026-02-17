@@ -6,4 +6,5 @@ year: 1885
 journaltitle: "The Pall Mall Gazette"
 volume: "41"
 number: "6236"
+pages: "5"
 ---

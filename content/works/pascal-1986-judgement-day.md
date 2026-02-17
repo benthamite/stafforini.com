@@ -5,6 +5,7 @@ entry_type: "incollection"
 year: 1986
 location: "Oxford"
 booktitle: "Applied Ethics"
+pages: "105–123"
 editor: "P. Singer"
 ---
 

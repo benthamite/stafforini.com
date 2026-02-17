@@ -6,4 +6,5 @@ year: 1995
 journaltitle: "University of Miami Inter-American Law Review"
 volume: "27"
 number: "1"
+pages: "45"
 ---

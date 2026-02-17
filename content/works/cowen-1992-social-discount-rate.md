@@ -5,6 +5,7 @@ entry_type: "incollection"
 year: 1992
 location: "New Haven"
 booktitle: "Justice Between age groups and generations"
+pages: "144–168"
 editor: "Peter Laslett and James Fishkin"
 ---
 

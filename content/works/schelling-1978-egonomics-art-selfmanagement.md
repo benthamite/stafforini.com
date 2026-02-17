@@ -6,4 +6,5 @@ year: 1978
 journaltitle: "American economic review"
 volume: "68"
 number: "2"
+pages: "290–294"
 ---

@@ -6,4 +6,5 @@ year: 2012
 journaltitle: "The Journal of Economic Inequality"
 volume: "10"
 number: "1"
+pages: "1--18"
 ---

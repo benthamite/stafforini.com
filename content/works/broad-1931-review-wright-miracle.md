@@ -5,4 +5,5 @@ entry_type: "article"
 year: 1931
 journaltitle: "Journal of the Society for Psychical Research"
 volume: "27"
+pages: "84–86"
 ---

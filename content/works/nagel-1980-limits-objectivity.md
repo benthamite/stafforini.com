@@ -5,5 +5,6 @@ entry_type: "incollection"
 year: 1980
 location: "Salt Lake City"
 booktitle: "The Tanner Lectures on Human Values"
+pages: "75–139"
 editor: "Sterling M. McMurrin"
 ---

@@ -6,4 +6,5 @@ year: 1929
 journaltitle: "Mind"
 volume: "38"
 number: "151"
+pages: "392–393"
 ---

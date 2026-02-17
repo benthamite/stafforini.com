@@ -6,4 +6,5 @@ year: 1988
 journaltitle: "Analysis"
 volume: "48"
 number: "4"
+pages: "224–224"
 ---
