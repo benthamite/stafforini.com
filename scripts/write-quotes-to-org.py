@@ -20,6 +20,10 @@ import unicodedata
 from datetime import datetime
 from pathlib import Path
 
+from lib import BIB_FILES
+from lib import STOP_WORDS as _BASE_STOP_WORDS
+from lib import cite_key_to_slug, parse_bib_entries
+
 # === Constants ===
 
 SCRIPTS_DIR = Path(__file__).parent
@@ -31,21 +35,8 @@ NOTES_DIR = Path.home() / "Library/CloudStorage/Dropbox/bibliographic-notes"
 HUGO_BASE_DIR = "~/Library/CloudStorage/Dropbox/repos/stafforini.com/"
 NOTER_PDF_DIR = "~/My Drive/library-pdf"
 
-BIB_FILES = [
-    Path.home() / "Library/CloudStorage/Dropbox/bibliography/new.bib",
-    Path.home() / "Library/CloudStorage/Dropbox/bibliography/old.bib",
-    Path.home() / "Library/CloudStorage/Dropbox/repos/babel-refs/bib/fluid.bib",
-    Path.home() / "Library/CloudStorage/Dropbox/repos/babel-refs/bib/stable.bib",
-    Path.home() / "Library/CloudStorage/Dropbox/repos/babel-refs/bib/db.bib",
-    Path.home() / "Library/CloudStorage/Dropbox/bibliography/migration.bib",
-]
-
-STOP_WORDS = {
-    "a", "an", "the", "of", "in", "on", "and", "or", "for", "to", "with",
-    "from", "by", "at", "its", "is", "are", "was", "were", "be", "been",
-    "being", "have", "has", "had", "do", "does", "did", "not", "but",
-    "that", "this", "these", "those", "as", "if", "than", "so", "it",
-    "all", "any", "each", "every", "no", "nor", "only", "own", "same",
+STOP_WORDS = _BASE_STOP_WORDS | {
+    "it", "all", "any", "each", "every", "no", "nor", "only", "own", "same",
     "such", "too", "very", "can", "will", "just", "should", "now",
     "i", "me", "my", "we", "us", "our", "you", "your", "he", "him",
     "his", "she", "her", "they", "them", "their", "who", "whom", "which",
@@ -56,53 +47,15 @@ STOP_WORDS = {
 }
 
 
-# === Bib file parsing (reused from match-quotes-to-bib.py) ===
+# === Bib file parsing ===
 
 
-def parse_bib_entries(bib_path: Path) -> list[dict]:
-    """Parse a .bib file into a list of entry dicts."""
-    entries = []
-    text = bib_path.read_text(errors="replace")
-    entry_starts = list(re.finditer(r"@(\w+)\s*\{([^,\s]+)\s*,", text))
+def _parse_bib_entries_for_org(bib_path: Path) -> list[dict]:
+    """Parse bib entries with brace-stripped title but raw author/editor.
 
-    for idx, match in enumerate(entry_starts):
-        entry_type = match.group(1).lower()
-        cite_key = match.group(2).strip()
-        if entry_type in ("comment", "preamble", "string"):
-            continue
-
-        start_pos = match.end()
-        end_pos = entry_starts[idx + 1].start() if idx + 1 < len(entry_starts) else len(text)
-        body = text[start_pos:end_pos]
-
-        fields = {}
-        for field_match in re.finditer(
-            r"(\w+)\s*=\s*(?:\{((?:[^{}]|\{[^{}]*\})*)\}|\"([^\"]*)\"|(\d+))",
-            body,
-        ):
-            field_name = field_match.group(1).lower()
-            field_value = (
-                field_match.group(2) or field_match.group(3) or field_match.group(4) or ""
-            )
-            fields[field_name] = field_value.strip()
-
-        year = fields.get("year", "")
-        if not year and "date" in fields:
-            ym = re.search(r"(\d{4})", fields["date"])
-            if ym:
-                year = ym.group(1)
-
-        # Keep braces in author/editor/title for apa_format_authors_abbrev
-        entries.append({
-            "cite_key": cite_key,
-            "entry_type": entry_type,
-            "author": fields.get("author", ""),
-            "editor": fields.get("editor", ""),
-            "title": fields.get("title", "").replace("{", "").replace("}", ""),
-            "year": year,
-        })
-
-    return entries
+    Keeps braces in author/editor for apa_format_authors_abbrev.
+    """
+    return parse_bib_entries(bib_path, strip_braces=["title"])
 
 
 # === Author formatting ===
@@ -211,21 +164,6 @@ ENTRY_TYPE_TAGS = {
 def get_entry_type_tag(entry_type: str) -> str:
     """Map bib entry type to org tag."""
     return ENTRY_TYPE_TAGS.get(entry_type, entry_type)
-
-
-# === Cite key to slug conversion ===
-
-
-def cite_key_to_slug(cite_key: str) -> str:
-    """Convert CamelCase cite key to kebab-case slug.
-
-    Singer1972FamineAffluence -> singer-1972-famine-affluence
-    """
-    # Insert hyphens at boundaries: letter→digit, digit→letter, lower→upper
-    s = re.sub(r"([a-zA-Z])(\d)", r"\1-\2", cite_key)
-    s = re.sub(r"(\d)([a-zA-Z])", r"\1-\2", s)
-    s = re.sub(r"([a-z])([A-Z])", r"\1-\2", s)
-    return s.lower()
 
 
 # === Subheading title generation ===
@@ -495,7 +433,7 @@ def main():
         if not bib_path.exists():
             print(f"  WARNING: {bib_path} not found, skipping")
             continue
-        entries = parse_bib_entries(bib_path)
+        entries = _parse_bib_entries_for_org(bib_path)
         for entry in entries:
             bib_by_key[entry["cite_key"]] = entry
         print(f"  {bib_path.name}: {len(entries)} entries")

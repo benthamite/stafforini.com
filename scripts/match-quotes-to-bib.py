@@ -8,31 +8,19 @@ the WP quote all appear in it.
 
 import json
 import re
-import unicodedata
 from pathlib import Path
+
+from lib import BIB_FILES as _ALL_BIB_FILES
+from lib import STOP_WORDS as _BASE_STOP_WORDS
+from lib import normalize, parse_bib_entries
 
 SCRIPTS_DIR = Path(__file__).parent
 QUOTES_JSON = SCRIPTS_DIR / "wp-quotes-parsed.json"
 OUTPUT_JSON = SCRIPTS_DIR / "wp-quotes-matched.json"
 REPORT_FILE = SCRIPTS_DIR / "match-report.txt"
 
-BIB_FILES = [
-    Path.home() / "Library/CloudStorage/Dropbox/bibliography/new.bib",
-    Path.home() / "Library/CloudStorage/Dropbox/bibliography/old.bib",
-    Path.home() / "Library/CloudStorage/Dropbox/repos/babel-refs/bib/fluid.bib",
-    Path.home() / "Library/CloudStorage/Dropbox/repos/babel-refs/bib/stable.bib",
-    Path.home() / "Library/CloudStorage/Dropbox/repos/babel-refs/bib/db.bib",
-]
-
-
-def normalize(text: str) -> str:
-    """Lowercase, strip accents, remove punctuation, collapse whitespace."""
-    text = unicodedata.normalize("NFD", text)
-    text = "".join(c for c in text if unicodedata.category(c) != "Mn")
-    text = text.lower()
-    text = re.sub(r"[^\w\s-]", " ", text)
-    text = re.sub(r"\s+", " ", text).strip()
-    return text
+# This script only uses the five core bib files (not migration.bib)
+BIB_FILES = [f for f in _ALL_BIB_FILES if "migration" not in f.name]
 
 
 def extract_surname(author_str: str) -> str:
@@ -47,65 +35,26 @@ def extract_surname(author_str: str) -> str:
     return parts[-1] if len(parts) >= 2 else author_str.strip()
 
 
-STOP_WORDS = {
-    "a", "an", "the", "of", "in", "on", "and", "or", "for", "to", "with",
-    "from", "by", "at", "its", "is", "are", "was", "were", "be", "been",
-    "being", "have", "has", "had", "do", "does", "did", "not", "but",
-    "that", "this", "these", "those", "as", "if", "than", "so",
+STOP_WORDS = _BASE_STOP_WORDS | {
     "el", "la", "los", "las", "de", "del", "en", "un", "una", "y", "o",
     "le", "les", "des", "du", "et", "der", "die", "das", "und", "von",
 }
 
 
-def parse_bib_entries(bib_path: Path) -> list[dict]:
-    """Parse a .bib file into a list of entry dicts."""
-    entries = []
-    text = bib_path.read_text(errors="replace")
-    entry_starts = list(re.finditer(r"@(\w+)\s*\{([^,\s]+)\s*,", text))
-
-    for idx, match in enumerate(entry_starts):
-        entry_type = match.group(1).lower()
-        cite_key = match.group(2).strip()
-        if entry_type in ("comment", "preamble", "string"):
-            continue
-
-        start_pos = match.end()
-        end_pos = entry_starts[idx + 1].start() if idx + 1 < len(entry_starts) else len(text)
-        body = text[start_pos:end_pos]
-
-        fields = {}
-        for field_match in re.finditer(
-            r"(\w+)\s*=\s*(?:\{((?:[^{}]|\{[^{}]*\})*)\}|\"([^\"]*)\"|(\d+))",
-            body,
-        ):
-            field_name = field_match.group(1).lower()
-            field_value = (
-                field_match.group(2) or field_match.group(3) or field_match.group(4) or ""
-            )
-            field_value = field_value.replace("{", "").replace("}", "")
-            fields[field_name] = field_value.strip()
-
-        year = fields.get("year", "")
-        if not year and "date" in fields:
-            ym = re.search(r"(\d{4})", fields["date"])
-            if ym:
-                year = ym.group(1)
-
-        entries.append({
-            "cite_key": cite_key,
-            "entry_type": entry_type,
-            "author": fields.get("author", ""),
-            "editor": fields.get("editor", ""),
-            "title": fields.get("title", ""),
-            "shorttitle": fields.get("shorttitle", ""),
-            "booktitle": fields.get("booktitle", ""),
-            "origtitle": fields.get("origtitle", ""),
-            "journaltitle": fields.get("journaltitle", fields.get("journal", "")),
-            "year": year,
-            "crossref": fields.get("crossref", ""),
-            "bib_file": str(bib_path),
-        })
-
+def _parse_bib_entries_for_matching(bib_path: Path) -> list[dict]:
+    """Parse bib entries with brace-stripped fields for orderless matching."""
+    entries = parse_bib_entries(
+        bib_path,
+        strip_braces=True,
+        extra_fields=[
+            "shorttitle", "booktitle", "origtitle",
+            "journaltitle", "crossref",
+        ],
+        field_fallbacks={"journaltitle": "journal"},
+    )
+    # Add bib_file path to each entry
+    for entry in entries:
+        entry["bib_file"] = str(bib_path)
     return entries
 
 
@@ -308,7 +257,7 @@ def main():
         if not bib_path.exists():
             print(f"  WARNING: {bib_path} not found, skipping")
             continue
-        entries = parse_bib_entries(bib_path)
+        entries = _parse_bib_entries_for_matching(bib_path)
         print(f"  {bib_path.name}: {len(entries)} entries")
         all_entries.extend(entries)
     print(f"  Total: {len(all_entries)} bib entries")
