@@ -38,7 +38,7 @@
     <h2>Notes citing this work</h2>
     <ul>
       {{ range (sort . "Title") }}
-      <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+      <li><a href="{{ .RelPermalink }}">{{ .Title | safeHTML }}</a></li>
       {{ end }}
     </ul>
   </section>
