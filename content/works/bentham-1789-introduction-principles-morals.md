@@ -1,9 +1,0 @@
----
-title: "An Introduction to the Principles of Morals and Legislation"
-author: "Jeremy Bentham"
-entry_type: "book"
-year: 1789
-location: "London"
----
-
-This work is an extended introduction to a system of morals and legislation.  It begins by presenting the principle of utility, which argues that the standard of right and wrong is the tendency of an act to increase or diminish the happiness of the person or group whose interest is in question.  The principle of utility is contrasted with a number of other principles, including asceticism, sympathy and antipathy, and the theological principle.  The work then turns to the concept of ‘sanctions’, arguing that pleasures and pains issue from four sources – the physical, the political, the moral, and the religious.   In a lengthy discussion, the work considers how pleasures and pains can be measured in terms of their intensity, duration, certainty, proximity, fecundity, and purity.  The work then turns to human actions, classifying them according to their nature, their consequences, their intentionality, and their consciousness.  A chapter is devoted to motives, arguing that there is no such thing as a sort of motive that is bad in itself.  Another chapter treats human dispositions, arguing that an individual’s disposition is harmful when it makes him more likely to perform acts of a pernicious tendency than ones that are beneficial.  A key idea in this discussion is that the strength of the temptation to perform a harmful act is the ratio between the force of the seducing motives and the force of the tutelary motives.  The work concludes with a chapter that distinguishes between private ethics and legislation, arguing that legislation ought to focus on the general happiness of the community, while private ethics concerns the happiness of an individual, guided by the principles of prudence, probity, and beneficence. – AI-generated abstract.
