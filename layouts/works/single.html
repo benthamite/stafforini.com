@@ -15,17 +15,6 @@
   {{ $workSlug := "" }}
   {{ with .File }}{{ $workSlug = .ContentBaseName }}{{ end }}
 
-  {{/* Find all quotes that cite this work */}}
-  {{ $citingQuotes := where (where .Site.RegularPages "Section" "quotes") ".Params.work" $workSlug }}
-  {{ with $citingQuotes }}
-  <section class="backlinks" aria-label="Citing quotes" data-pagefind-ignore>
-    <h2>Quotes from this work</h2>
-    {{ range (sort . "Date" "desc") }}
-      {{ partial "quote-entry.html" . }}
-    {{ end }}
-  </section>
-  {{ end }}
-
   {{/* Find all notes that cite this work (via rendered cite shortcode links) */}}
   {{ $citingNotes := slice }}
   {{ $workPath := printf "/works/%s/" $workSlug }}
@@ -42,6 +31,17 @@
       <li><a href="{{ .RelPermalink }}">{{ .Title | safeHTML }}</a></li>
       {{ end }}
     </ul>
+  </section>
+  {{ end }}
+
+  {{/* Find all quotes that cite this work */}}
+  {{ $citingQuotes := where (where .Site.RegularPages "Section" "quotes") ".Params.work" $workSlug }}
+  {{ with $citingQuotes }}
+  <section class="backlinks" aria-label="Citing quotes" data-pagefind-ignore>
+    <h2>Quotes from this work</h2>
+    {{ range (sort . "Date" "desc") }}
+      {{ partial "quote-entry.html" . }}
+    {{ end }}
   </section>
   {{ end }}
 </article>
