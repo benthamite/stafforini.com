@@ -3,7 +3,7 @@
     <a class="site-title" href="/">{{ .Site.Title }}</a>
     <ul class="nav-links">
       {{ range .Site.Menus.main }}
-      <li><a href="{{ .URL }}"{{ if $.IsMenuCurrent "main" . }} aria-current="page"{{ end }}>{{ .Name }}</a></li>
+      <li><a href="{{ .URL }}"{{ if or ($.IsMenuCurrent "main" .) ($.HasMenuCurrent "main" .) }} aria-current="page"{{ end }}>{{ .Name }}</a></li>
       {{ end }}
     </ul>
     <div class="nav-search">
@@ -14,17 +14,21 @@
     <button class="dark-mode-toggle" aria-label="Toggle dark mode" type="button">
       <span class="icon-sun" aria-hidden="true">&#9788;</span>
       <span class="icon-moon" aria-hidden="true">&#9790;</span>
+      <span class="icon-system" aria-hidden="true">&#9680;</span>
     </button>
   </nav>
 </header>
-<div class="search-overlay" hidden>
+<div class="search-overlay" hidden role="dialog" aria-modal="true" aria-label="Search">
   <div class="search-container">
     <div class="search-box">
+      <label for="search-input" class="visually-hidden">Search</label>
       <input type="text" id="search-input" class="search-input" placeholder="Search..." autocomplete="off" />
     </div>
     <div id="search-results" class="search-results"></div>
   </div>
 </div>
+{{ $searchUtils := resources.Get "js/search-utils.js" | minify | fingerprint }}
+<script src="{{ $searchUtils.RelPermalink }}" integrity="{{ $searchUtils.Data.Integrity }}"></script>
 <script>
 (function() {
   var toggle = document.querySelector('.search-toggle');
@@ -33,6 +37,7 @@
   var resultsEl = document.getElementById('search-results');
   var pagefind = null;
   var debounceTimer = null;
+  var searchGeneration = 0;
 
   var sections = [
     { key: 'notes', label: 'Notes' },
@@ -40,10 +45,16 @@
     { key: 'works', label: 'Works' }
   ];
 
+  var utils = window._searchUtils;
+
   async function initPagefind() {
     if (pagefind) return;
-    pagefind = await import('/pagefind/pagefind.js');
-    await pagefind.init();
+    try {
+      pagefind = await import('/pagefind/pagefind.js');
+      await pagefind.init();
+    } catch (e) {
+      resultsEl.innerHTML = '<p class="search-no-results">Search is unavailable. Please try again later.</p>';
+    }
   }
 
   function openSearch() {
@@ -58,32 +69,11 @@
     resultsEl.innerHTML = '';
   }
 
-  function escapeHtml(s) {
-    var d = document.createElement('div');
-    d.textContent = s;
-    return d.innerHTML;
-  }
-
   var currentQuery = '';
 
-  function renderResult(r, section) {
-    var label;
-    if (r.meta.work_author && r.meta.work_title) {
-      label = escapeHtml(r.meta.work_author) + ', <em>' + escapeHtml(r.meta.work_title) + '</em>';
-    } else {
-      label = escapeHtml(r.meta.title || r.url);
-    }
-    var html = '<li><a href="' + escapeHtml(r.url) + '">' + label + '</a>';
-    if (section === 'works') {
-      if (r.meta.work_abstract) html += '<p class="search-excerpt">' + escapeHtml(r.meta.work_abstract) + '</p>';
-    } else {
-      if (r.excerpt) html += '<p class="search-excerpt">' + r.excerpt + '</p>';
-    }
-    html += '</li>';
-    return html;
-  }
-
   async function runSearch(query) {
+    var gen = ++searchGeneration;
+
     if (!query || !pagefind) {
       resultsEl.innerHTML = '';
       return;
@@ -97,16 +87,20 @@
         filters: { section: [sec.key] }
       });
 
+      if (gen !== searchGeneration) return;
+
       if (search.results.length === 0) continue;
 
       var items = search.results.slice(0, 5);
       var results = await Promise.all(items.map(function(r) { return r.data(); }));
 
+      if (gen !== searchGeneration) return;
+
       html += '<div class="search-section">';
       html += '<h3 class="search-section-heading">' + sec.label + '</h3>';
       html += '<ul class="search-section-list">';
       for (var j = 0; j < results.length; j++) {
-        html += renderResult(results[j], sec.key);
+        html += utils.renderResult(results[j], sec.key, currentQuery);
       }
       html += '</ul>';
       if (search.results.length > 5) {
@@ -115,6 +109,8 @@
       }
       html += '</div>';
     }
+
+    if (gen !== searchGeneration) return;
 
     if (!html) {
       html = '<p class="search-no-results">No results found.</p>';

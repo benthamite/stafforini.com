@@ -18,11 +18,15 @@
 {{/* Dark mode: runs before render to prevent FOUC */}}
 <script>
 (function() {
-  var theme = localStorage.getItem('theme');
-  if (!theme) {
-    theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  }
+  var validPrefs = ['light', 'dark', 'system'];
+  var pref = 'system';
+  try { pref = localStorage.getItem('theme') || 'system'; } catch (e) {}
+  if (validPrefs.indexOf(pref) === -1) pref = 'system';
+  var theme = pref === 'system'
+    ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+    : pref;
   document.documentElement.setAttribute('data-theme', theme);
+  document.documentElement.setAttribute('data-theme-pref', pref);
 })();
 </script>
 
