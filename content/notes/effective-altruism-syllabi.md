@@ -1,7 +1,8 @@
 +++
-title = "Effective Altruism Syllabi"
+title = "Effective altruism syllabi"
 author = ["Pablo Stafforini"]
 date = 2016-04-13
+tags = ["project"]
 draft = false
 +++
 
