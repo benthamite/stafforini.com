@@ -19,6 +19,8 @@ from pathlib import Path
 
 from markdownify import markdownify as md
 
+from lib import escape_yaml_string
+
 # === Constants ===
 
 SCRIPTS_DIR = Path(__file__).parent
@@ -48,11 +50,6 @@ def slugify(title: str) -> str:
     s = re.sub(r"[^a-z0-9]+", "-", s)
     s = s.strip("-")
     return s or "untitled"
-
-
-def escape_yaml_string(s: str) -> str:
-    """Escape a string for YAML double-quoted value."""
-    return s.replace("\\", "\\\\").replace('"', '\\"')
 
 
 def convert_html_to_markdown(html_content: str) -> str:

@@ -53,20 +53,15 @@ CROSSREF_RATE_LIMIT = 0.5  # seconds between requests
 DUCKDUCKGO_HTML_URL = "https://html.duckduckgo.com/html/"
 DUCKDUCKGO_RATE_LIMIT = 2.5  # seconds between requests (be polite)
 
-BIB_FILES = [
-    Path.home() / "Library/CloudStorage/Dropbox/bibliography/new.bib",
-    Path.home() / "Library/CloudStorage/Dropbox/bibliography/old.bib",
-    Path.home() / "Library/CloudStorage/Dropbox/repos/babel-refs/bib/fluid.bib",
-    Path.home() / "Library/CloudStorage/Dropbox/repos/babel-refs/bib/stable.bib",
-    Path.home() / "Library/CloudStorage/Dropbox/repos/babel-refs/bib/db.bib",
-]
+from lib import BIB_FILES as _ALL_BIB_FILES
+from lib import STOP_WORDS as _BASE_STOP_WORDS
+from lib import normalize, parse_bib_entries
+
+# This script only uses the five core bib files (not migration.bib)
+BIB_FILES = [f for f in _ALL_BIB_FILES if "migration" not in f.name]
 
 # Stop words for cite key title extraction (EN/ES/FR/DE/IT)
-STOP_WORDS = {
-    "a", "an", "the", "of", "in", "on", "and", "or", "for", "to", "with",
-    "from", "by", "at", "its", "is", "are", "was", "were", "be", "been",
-    "being", "have", "has", "had", "do", "does", "did", "not", "but",
-    "that", "this", "these", "those", "as", "if", "than", "so",
+STOP_WORDS = _BASE_STOP_WORDS | {
     "how", "what", "why", "who", "which", "when", "where", "all", "some",
     "any", "no", "into", "about", "over", "after", "before", "between",
     "through", "during", "upon", "toward", "towards", "new",
@@ -138,16 +133,6 @@ FIELD_ORDER = [
 
 
 # === Utility functions ===
-
-
-def normalize(text):
-    """Lowercase, strip accents, remove punctuation, collapse whitespace."""
-    text = unicodedata.normalize("NFD", text)
-    text = "".join(c for c in text if unicodedata.category(c) != "Mn")
-    text = text.lower()
-    text = re.sub(r"[^\w\s-]", " ", text)
-    text = re.sub(r"\s+", " ", text).strip()
-    return text
 
 
 def strip_accents(text):
@@ -232,47 +217,9 @@ def get_timestamp():
 # === Bib file parsing ===
 
 
-def parse_bib_entries(bib_path):
-    """Parse a .bib file into a list of entry dicts."""
-    entries = []
-    text = bib_path.read_text(errors="replace")
-    entry_starts = list(re.finditer(r"@(\w+)\s*\{([^,\s]+)\s*,", text))
-
-    for idx, match in enumerate(entry_starts):
-        entry_type = match.group(1).lower()
-        cite_key = match.group(2).strip()
-        if entry_type in ("comment", "preamble", "string"):
-            continue
-
-        start_pos = match.end()
-        end_pos = (
-            entry_starts[idx + 1].start() if idx + 1 < len(entry_starts) else len(text)
-        )
-        body = text[start_pos:end_pos]
-
-        fields = {}
-        for fm in re.finditer(
-            r"(\w+)\s*=\s*(?:\{((?:[^{}]|\{[^{}]*\})*)\}|\"([^\"]*)\"|(\d+))",
-            body,
-        ):
-            field_name = fm.group(1).lower()
-            field_value = fm.group(2) or fm.group(3) or fm.group(4) or ""
-            fields[field_name] = field_value.strip()
-
-        year = fields.get("year", "")
-        if not year and "date" in fields:
-            ym = re.search(r"(\d{4})", fields["date"])
-            if ym:
-                year = ym.group(1)
-
-        author = fields.get("author", "").replace("{", "").replace("}", "")
-        title = fields.get("title", "").replace("{", "").replace("}", "")
-
-        entries.append(
-            {"cite_key": cite_key, "author": author, "title": title, "year": year}
-        )
-
-    return entries
+def _parse_bib_entries_for_keys(bib_path):
+    """Parse bib entries with brace-stripped author/title for key generation."""
+    return parse_bib_entries(bib_path, strip_braces=["author", "title"])
 
 
 def load_existing_keys(bib_files):
@@ -284,7 +231,7 @@ def load_existing_keys(bib_files):
     for bib_path in bib_files:
         if not bib_path.exists():
             continue
-        for entry in parse_bib_entries(bib_path):
+        for entry in _parse_bib_entries_for_keys(bib_path):
             existing[entry["cite_key"]] = {
                 "author": entry["author"],
                 "title": entry["title"],
@@ -1267,7 +1214,7 @@ def main():
     print("\nLoading existing bib entries for collision detection...")
     existing_entries = load_existing_keys(BIB_FILES)
     if MIGRATION_BIB.exists():
-        for entry in parse_bib_entries(MIGRATION_BIB):
+        for entry in _parse_bib_entries_for_keys(MIGRATION_BIB):
             existing_entries[entry["cite_key"]] = {
                 "author": entry["author"],
                 "title": entry["title"],

@@ -17,6 +17,8 @@ import argparse
 import re
 from pathlib import Path
 
+from lib import BIB_FILES, cite_key_to_slug, escape_yaml_string, parse_bib_entries
+
 # === Constants ===
 
 SCRIPTS_DIR = Path(__file__).parent
@@ -24,70 +26,21 @@ HUGO_ROOT = SCRIPTS_DIR.parent
 QUOTES_DIR = HUGO_ROOT / "content" / "quotes"
 WORKS_DIR = HUGO_ROOT / "content" / "works"
 
-BIB_FILES = [
-    Path.home() / "Library/CloudStorage/Dropbox/bibliography/new.bib",
-    Path.home() / "Library/CloudStorage/Dropbox/bibliography/old.bib",
-    Path.home() / "Library/CloudStorage/Dropbox/repos/babel-refs/bib/fluid.bib",
-    Path.home() / "Library/CloudStorage/Dropbox/repos/babel-refs/bib/stable.bib",
-    Path.home() / "Library/CloudStorage/Dropbox/repos/babel-refs/bib/db.bib",
-    Path.home() / "Library/CloudStorage/Dropbox/bibliography/migration.bib",
-]
+
+# === Bib file parsing ===
 
 
-# === Bib file parsing (reused from write-quotes-to-org.py) ===
-
-
-def parse_bib_entries(bib_path: Path) -> list[dict]:
-    """Parse a .bib file into a list of entry dicts."""
-    entries = []
-    text = bib_path.read_text(errors="replace")
-    entry_starts = list(re.finditer(r"@(\w+)\s*\{([^,\s]+)\s*,", text))
-
-    for idx, match in enumerate(entry_starts):
-        entry_type = match.group(1).lower()
-        cite_key = match.group(2).strip()
-        if entry_type in ("comment", "preamble", "string"):
-            continue
-
-        start_pos = match.end()
-        end_pos = entry_starts[idx + 1].start() if idx + 1 < len(entry_starts) else len(text)
-        body = text[start_pos:end_pos]
-
-        fields = {}
-        for field_match in re.finditer(
-            r"(\w+)\s*=\s*(?:\{((?:[^{}]|\{[^{}]*\})*)\}|\"([^\"]*)\"|(\d+))",
-            body,
-        ):
-            field_name = field_match.group(1).lower()
-            field_value = (
-                field_match.group(2) or field_match.group(3) or field_match.group(4) or ""
-            )
-            fields[field_name] = field_value.strip()
-
-        year = fields.get("year", "")
-        if not year and "date" in fields:
-            ym = re.search(r"(\d{4})", fields["date"])
-            if ym:
-                year = ym.group(1)
-
-        entries.append({
-            "cite_key": cite_key,
-            "entry_type": entry_type,
-            "author": fields.get("author", ""),
-            "editor": fields.get("editor", ""),
-            "title": fields.get("title", ""),
-            "year": year,
-            "location": fields.get("location", fields.get("address", "")),
-            "booktitle": fields.get("booktitle", ""),
-            "journaltitle": fields.get("journaltitle", ""),
-            "volume": fields.get("volume", ""),
-            "number": fields.get("number", ""),
-            "bookauthor": fields.get("bookauthor", ""),
-            "crossref": fields.get("crossref", ""),
-            "abstract": fields.get("abstract", ""),
-        })
-
-    return entries
+def _parse_bib_entries_for_works(bib_path: Path) -> list[dict]:
+    """Parse bib entries with extra fields needed for work page generation."""
+    return parse_bib_entries(
+        bib_path,
+        strip_braces=False,
+        extra_fields=[
+            "location", "booktitle", "journaltitle",
+            "volume", "number", "bookauthor", "crossref", "abstract",
+        ],
+        field_fallbacks={"location": "address"},
+    )
 
 
 def resolve_crossrefs(bib_by_key: dict) -> None:
@@ -253,22 +206,6 @@ def postprocess_quotes(dry_run: bool = False) -> dict:
 
 
 # === Work page generation ===
-
-
-def cite_key_to_slug(cite_key: str) -> str:
-    """Convert CamelCase cite key to kebab-case slug.
-
-    Singer1972FamineAffluence -> singer-1972-famine-affluence
-    """
-    s = re.sub(r"([a-zA-Z])(\d)", r"\1-\2", cite_key)
-    s = re.sub(r"(\d)([a-zA-Z])", r"\1-\2", s)
-    s = re.sub(r"([a-z])([A-Z])", r"\1-\2", s)
-    return s.lower()
-
-
-def escape_yaml_string(s: str) -> str:
-    """Escape a string for YAML double-quoted value."""
-    return s.replace("\\", "\\\\").replace('"', '\\"')
 
 
 def generate_work_page(entry: dict) -> str:
@@ -441,7 +378,7 @@ def main():
             if not bib_path.exists():
                 print(f"  WARNING: {bib_path} not found, skipping")
                 continue
-            entries = parse_bib_entries(bib_path)
+            entries = _parse_bib_entries_for_works(bib_path)
             for entry in entries:
                 bib_by_key[entry["cite_key"]] = entry
             print(f"    {bib_path.name}: {len(entries)} entries")
