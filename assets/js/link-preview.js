@@ -2,6 +2,7 @@
   var cache = new Map();
   var popup = null;
   var timer = null;
+  var activeLink = null;
 
   function createPopup() {
     var el = document.createElement('div');
@@ -13,9 +14,13 @@
 
   function showPreview(link) {
     var href = link.getAttribute('href');
-    if (!href) return;
+    if (!href || !href.startsWith('/notes/')) return;
+
+    activeLink = link;
 
     timer = setTimeout(function () {
+      if (activeLink !== link) return;
+
       if (cache.has(href)) {
         displayPopup(link, cache.get(href));
       } else {
@@ -28,9 +33,11 @@
             var text = p ? p.textContent.trim() : '';
             if (text.length > 200) text = text.substring(0, 200) + '\u2026';
             cache.set(href, text);
-            displayPopup(link, text);
+            if (activeLink === link) {
+              displayPopup(link, text);
+            }
           })
-          .catch(function () {});
+          .catch(function () { cache.set(href, ''); });
       }
     }, 150);
   }
@@ -47,6 +54,7 @@
   }
 
   function hidePreview() {
+    activeLink = null;
     clearTimeout(timer);
     if (popup) popup.classList.remove('visible');
   }
@@ -58,7 +66,9 @@
 
   document.addEventListener('pointerleave', function (e) {
     var link = e.target.closest('a[href^="/notes/"]');
-    if (link) hidePreview();
+    if (link && (!e.relatedTarget || !link.contains(e.relatedTarget))) {
+      hidePreview();
+    }
   }, true);
 
   document.addEventListener('keydown', function (e) {
