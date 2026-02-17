@@ -12,8 +12,14 @@ import re
 import sqlite3
 import sys
 
-DB_PATH = "/Users/pablostafforini/.config/emacs-profiles/var/org/org-roam.db"
-NOTES_DIR = "/Users/pablostafforini/Library/CloudStorage/Dropbox/notes/"
+DB_PATH = os.environ.get(
+    "ORGROAM_DB",
+    os.path.expanduser("~/.config/emacs-profiles/var/org/org-roam.db"),
+)
+NOTES_DIR = os.environ.get(
+    "NOTES_DIR",
+    os.path.expanduser("~/Library/CloudStorage/Dropbox/notes/"),
+)
 # Use % prefix in LIKE pattern to match the leading " in Elisp-quoted values
 NOTES_LIKE = "%" + NOTES_DIR + "%"
 OUTPUT_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "backlinks.json")
@@ -42,7 +48,7 @@ def main():
         print(f"Error: org-roam database not found at {DB_PATH}", file=sys.stderr)
         sys.exit(1)
 
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
 
     # Get all page-level nodes (level 0 or 1) in the notes directory.
