@@ -81,7 +81,7 @@ _What interests me most are the metaphysical questions whose answers can affect 
 
 _With thanks to David Edmonds, Johan Gustafsson, and Matthew van der Merwe._
 
-–––––––
+---
 
 _What now matters most is how we respond to various risks to the survival of humanity. We are creating some of these risks, and we are discovering how we could respond to these and other risks. If we reduce these risks, and humanity survives the next few centuries, our descendants or successors could end these risks by spreading through this galaxy._
 
