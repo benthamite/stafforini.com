@@ -8,18 +8,21 @@
     {{ .Content }}
   </div>
 
-  {{/* References — works cited in this note */}}
-  {{/* Params.works (plural, array) contains slugs of cited works under /works/ */}}
-  {{ with .Params.works }}
+  {{/* References — works cited in this note (extracted from rendered cite shortcode links) */}}
+  {{ $citedWorks := slice }}
+  {{ range where .Site.RegularPages "Section" "works" }}
+    {{ $workPath := printf "/works/%s/" .File.ContentBaseName }}
+    {{ if in $.Content $workPath }}
+      {{ $citedWorks = $citedWorks | append . }}
+    {{ end }}
+  {{ end }}
+  {{ with $citedWorks }}
   <section class="references" aria-label="References">
     <h2>References</h2>
     <ul>
-      {{ range . }}
-        {{ $work := $.Site.GetPage (printf "/works/%s" .) }}
-        {{ with $work }}
-          {{ $type := .Params.entry_type | default "book" }}
-        <li>{{ partial "citation-format.html" (dict "work" . "type" $type "link" true) }}</li>
-        {{ end }}
+      {{ range (sort . "Title") }}
+        {{ $type := .Params.entry_type | default "book" }}
+      <li>{{ partial "citation-format.html" (dict "work" . "type" $type "link" true) }}</li>
       {{ end }}
     </ul>
   </section>
