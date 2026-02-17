@@ -35,12 +35,6 @@ I've been helping some friends create a syllabus for a course on effective altr
 
 ## Other reading lists {#other-reading-lists}
 
-:CUSTOM_ID: other-reading-lists
-:ID:       C7703937-5A5A-4204-AC83-3D810184E3FD
-:POST_DATE: <span class="timestamp-wrapper"><span class="timestamp">[2022-10-16 Sun 02:42]</span></span>
-   Pablo's miscellany
-:POSTID:   2712
-
 -   [Tyler Alterman](https://medium.com/@tyleralterman/recommended-reading-for-pareto-fellows-38f26179cd3a#.57zbnsnyn)
 -   [Richard Batty &amp; Oisin Moran](http://effective-altruism.com/ea/5f/effective_altruism_reading_list/)
 -   [Jakub Kraus](https://docs.google.com/document/d/1Xwhu3HGG2BtjLNpLcbFGLdmZm2kPbDi1-XlBukYf-0o/edit?usp=sharing)
@@ -54,6 +48,3 @@ I've been helping some friends create a syllabus for a course on effective altr
 **Update (July 2021)**: I have created a separate list with [courses on longtermism](https://www.stafforini.com/blog/courses-on-longtermism/).
 
 _With thanks to Niel Bowerman, Michael Chen, Pepper, Rohin Shah and Bastian Stern._
-
-
-## <span class="org-todo todo TODO">TODO</span> Archive all sillabi {#archive-all-sillabi}
