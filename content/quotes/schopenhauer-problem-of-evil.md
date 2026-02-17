@@ -7,4 +7,4 @@ draft = false
 work = "schopenhauer-1985-handschriftliche-nachlass"
 locator = "p. 104"
 +++
-> Un monde où le mal es la conditio sine qua non du bien, est un mauvais monde.
+> Un monde où le mal es la *conditio sine qua non* du bien, est un mauvais monde.

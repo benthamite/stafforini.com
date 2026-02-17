@@ -7,4 +7,4 @@ draft = false
 work = "malcolm-1958-ludwig-wittgenstein-memoir"
 locator = "p. 51"
 +++
-> Although I cannot give affection, I have a great need for it.
+> Although I cannot *give* affection, I have a great *need* for it.

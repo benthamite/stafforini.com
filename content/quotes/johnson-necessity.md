@@ -7,4 +7,4 @@ draft = false
 work = "johnson-1744-life-mr-richard"
 locator = "p. 108"
 +++
-> What must be done, Sir, will be done.
+> What *must *be done, Sir, *will *be done.
