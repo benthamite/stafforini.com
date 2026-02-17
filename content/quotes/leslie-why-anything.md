@@ -7,4 +7,4 @@ draft = false
 work = "leslie-1989-universes"
 locator = "p. 108"
 +++
-> We do not want our theories to tell us that what we see is surprising in the last analysis, i.e., surprising even when every explanation has been found; for that would just show that our theories are probably wrong. Our project must be one of showing instead that all this smoke, so to speak, could in the end be very much to be expected, were there a fire.
+> We do not want our theories to tell us that what we see is *surprising in the last analysis*, i.e., surprising even when every explanation has been found; for that would just show that our theories are probably wrong. Our project must be one of showing instead that all this smoke, so to speak, could in the end be very much to be expected, were there a fire.

@@ -6,4 +6,4 @@ tags = ["article", "biblio", "public"]
 draft = false
 work = "kahane-2017-if-nothing-matters"
 +++
-> There is no reason to fear nihilism. What we should fear is mistaken belief in nihilism.
+> There is no reason to fear nihilism. What we should fear is *mistaken belief* in nihilism.

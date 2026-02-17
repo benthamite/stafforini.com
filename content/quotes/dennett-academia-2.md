@@ -7,4 +7,4 @@ draft = false
 work = "dennett-2003-freedom-evolves"
 locator = "p. 16"
 +++
-> Scholars in their traditional ivory towers have typically not worried much about their responsibility for the environmental impact of their work.
+> Scholars in their traditional ivory towers have typically not worried much about their responsibility for the *environmental impact* of their work.

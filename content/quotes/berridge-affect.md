@@ -7,4 +7,4 @@ draft = false
 work = "berridge-2003-pleasures-brain"
 locator = "p. 106"
 +++
-> Emotional reactions typically involve extensive cognitive processing, but affective neuroscience is distinguishable from cognitive neuroscience in that emotional processes must also always involve an aspect of affect, the psychological quality of being good or bad.
+> Emotional reactions typically involve extensive cognitive processing, but affective neuroscience is distinguishable from cognitive neuroscience in that emotional processes must also always involve an aspect of *affect*, the psychological quality of being good or bad.
