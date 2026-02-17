@@ -1,3 +1,6 @@
+// Two data attributes on <html>:
+//   data-theme      — resolved visual theme ("light" or "dark"), used by CSS for styling
+//   data-theme-pref — user's preference ("light", "dark", or "system"), used by CSS for icon state
 (function () {
   var toggle = document.querySelector('.dark-mode-toggle');
   if (!toggle) return;
@@ -14,6 +17,8 @@
     document.documentElement.setAttribute('data-theme-pref', pref);
     try {
       if (pref === 'system') {
+        // Removing the key (rather than storing "system") signals "follow OS preference"
+        // to the inline script in head.html that runs before first paint
         localStorage.removeItem('theme');
       } else {
         localStorage.setItem('theme', pref);

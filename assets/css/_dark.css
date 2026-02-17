@@ -1,3 +1,9 @@
+/* Theme system uses two data attributes on <html>:
+   data-theme      — resolved visual theme ("light" or "dark"), set by JS
+   data-theme-pref — user preference ("light", "dark", or "system"), set by JS
+   CSS uses data-theme for styling; data-theme-pref for icon state in _components.css.
+   See assets/js/dark-mode.js for the implementation. */
+
 /* Dark mode */
 [data-theme="dark"] {
   --color-bg: #1a1a1a;

@@ -6,7 +6,9 @@
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
   {{- partial "header.html" . -}}
+  {{/* Only index individual content pages, not list/home pages */}}
   <main id="main-content"{{ if .IsPage }} data-pagefind-body{{ end }}>
+    {{/* Pagefind section facet: hidden span provides filterable metadata. data-pagefind-ignore prevents the text itself from appearing in search results */}}
     <span data-pagefind-filter="section" data-pagefind-ignore class="visually-hidden">{{ .Section }}</span>
     {{- block "main" . }}{{ end -}}
   </main>

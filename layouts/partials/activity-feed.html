@@ -5,6 +5,7 @@
 <section class="activity-feed">
   <h2>Recently updated notes</h2>
   <ul>
+    {{/* Show 10 most recently updated notes */}}
     {{ range (sort . "Lastmod" "desc" | first 10) }}
     <li>
       <a href="{{ .RelPermalink }}">{{ .Title }}</a>
@@ -21,10 +22,12 @@
 <section class="activity-feed">
   <h2>Recent quotes</h2>
   <ul>
+    {{/* Show 5 most recently added quotes (fewer than notes since quotes are shorter) */}}
     {{ range (sort . "Date" "desc" | first 5) }}
     <li>
       {{ $quote := . }}
       {{ with .Params.work }}
+        {{/* Params.work is a slug matching a page under /works/ (bibliographic entries) */}}
         {{ $work := $.Site.GetPage (printf "/works/%s" .) }}
         <a href="{{ $quote.RelPermalink }}">{{ with $work }}{{ .Params.author }}{{ else }}{{ $quote.Title }}{{ end }}</a>
       {{ else }}

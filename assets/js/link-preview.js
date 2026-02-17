@@ -14,6 +14,7 @@
 
   function showPreview(link) {
     var href = link.getAttribute('href');
+    // Link previews only apply to notes (other sections don't have prose content to preview)
     if (!href || !href.startsWith('/notes/')) return;
 
     activeLink = link;
@@ -31,15 +32,15 @@
             var body = doc.querySelector('.note-body');
             var p = body ? body.querySelector('p') : null;
             var text = p ? p.textContent.trim() : '';
-            if (text.length > 200) text = text.substring(0, 200) + '\u2026';
+            if (text.length > 200) text = text.substring(0, 200) + '\u2026'; // Roughly one paragraph for the popup
             cache.set(href, text);
             if (activeLink === link) {
               displayPopup(link, text);
             }
           })
-          .catch(function () { cache.set(href, ''); });
+          .catch(function () { cache.set(href, ''); }); // Cache empty string on failure to prevent repeated fetch attempts
       }
-    }, 150);
+    }, 150); // Debounce: avoid fetching on brief hover-throughs
   }
 
   function displayPopup(link, text) {
@@ -49,7 +50,7 @@
 
     var rect = link.getBoundingClientRect();
     popup.style.left = rect.left + window.scrollX + 'px';
-    popup.style.top = (rect.bottom + window.scrollY + 6) + 'px';
+    popup.style.top = (rect.bottom + window.scrollY + 6) + 'px'; // 6px visual gap between link and popup
     popup.classList.add('visible');
   }
 
@@ -59,6 +60,7 @@
     if (popup) popup.classList.remove('visible');
   }
 
+  // Capture phase required: pointerenter/pointerleave don't bubble, so delegation only works via capture
   document.addEventListener('pointerenter', function (e) {
     var link = e.target.closest('a[href^="/notes/"]');
     if (link) showPreview(link);

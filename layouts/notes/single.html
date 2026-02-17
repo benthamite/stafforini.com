@@ -9,6 +9,7 @@
   </div>
 
   {{/* References — works cited in this note */}}
+  {{/* Params.works (plural, array) contains slugs of cited works under /works/ */}}
   {{ with .Params.works }}
   <section class="references" aria-label="References">
     <h2>References</h2>
@@ -26,6 +27,7 @@
   {{ partial "backlinks.html" . }}
 </article>
 
+{{/* Link preview only needed on note pages (other sections don't have internal prose links to preview) */}}
 {{ $linkPreview := resources.Get "js/link-preview.js" | minify | fingerprint }}
 <script src="{{ $linkPreview.RelPermalink }}" integrity="{{ $linkPreview.Data.Integrity }}"></script>
 {{ end }}

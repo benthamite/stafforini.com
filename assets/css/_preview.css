@@ -1,7 +1,7 @@
 /* Link preview popup */
 .link-preview {
   position: absolute;
-  z-index: 50;
+  z-index: 50; /* see z-index scale in _base.css */
   max-width: 22rem;
   padding: 0.85rem 1rem;
   background: var(--color-bg);

@@ -1,4 +1,7 @@
 {{ define "main" }}
+{{/* Extract work metadata for Pagefind: quote pages lack author/title in their own front matter,
+     so we resolve the linked work and inject its metadata as hidden spans for search indexing.
+     data-pagefind-meta="title" overrides Pagefind's default title extraction. */}}
 {{ $workAuthor := "" }}{{ $workTitle := "" }}
 {{ with .Params.work }}
   {{ $work := $.Site.GetPage (printf "/works/%s" .) }}
