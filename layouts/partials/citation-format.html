@@ -25,7 +25,7 @@
   {{- else -}}
     {{ $work.Title | safeHTML }},
   {{- end }}
-  {{- with $work.Params.editor }} in {{ . }} (ed.){{ end }} <em>{{ $work.Params.booktitle | default $work.Title | safeHTML }}</em>
+  {{- with $work.Params.editor }} in {{ . }} {{ if or (in . " and ") (in . ", ") }}(eds.){{ else }}(ed.){{ end }}{{ end }} <em>{{ $work.Params.booktitle | default $work.Title | safeHTML }}</em>
   {{- with $work.Params.location }}, {{ . }}{{ end -}}
   {{- with $work.Params.year }}, {{ . }}{{ end -}}
   {{- with $locator }}, {{ . }}{{ end -}}
