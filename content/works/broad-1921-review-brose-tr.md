@@ -1,0 +1,9 @@
+---
+title: "Review of H. L. Brose (tr.), /Space and time in contemporary physics/ by M. Schlick"
+author: "C. D. Broad"
+entry_type: "article"
+year: 1921
+journaltitle: "Mind"
+volume: "30"
+number: "118"
+---
