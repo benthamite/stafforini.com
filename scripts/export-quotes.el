@@ -21,7 +21,7 @@
 ;; Silence unnecessary output during batch export
 (setq org-export-with-broken-links t)
 ;; Exclude :ARCHIVE: tagged headings from export
-(setq org-export-exclude-tags '("ARCHIVE"))
+(setq org-export-exclude-tags '("noexport" "ARCHIVE"))
 (setq org-hugo-suppress-lastmod-period 0)
 
 ;; Disable citation processing entirely — register a no-op export processor
