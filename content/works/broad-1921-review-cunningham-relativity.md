@@ -1,5 +1,5 @@
 ---
-title: "Review of E. Cunningham, /Relativity, the Electron Theory, and Gravitation/"
+title: "Review of E. Cunningham, <em>Relativity, the Electron Theory, and Gravitation</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1921

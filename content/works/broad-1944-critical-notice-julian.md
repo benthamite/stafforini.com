@@ -1,5 +1,5 @@
 ---
-title: "Critical notice of Julian S. Huxley, /Evolutionary Ethics/"
+title: "Critical notice of Julian S. Huxley, <em>Evolutionary Ethics</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1944

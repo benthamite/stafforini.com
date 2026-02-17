@@ -1,5 +1,5 @@
 ---
-title: "Review of E. Mach, /Science of Mechanics/"
+title: "Review of E. Mach, <em>Science of Mechanics</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1916

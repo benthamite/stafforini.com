@@ -1,5 +1,5 @@
 ---
-title: "Review of Anders Wedberg, /Filosofins Historia (från Bolzano till Wittgenstein)/"
+title: "Review of Anders Wedberg, <em>Filosofins Historia (från Bolzano till Wittgenstein)</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1968

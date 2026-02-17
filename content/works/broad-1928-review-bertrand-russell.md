@@ -1,5 +1,5 @@
 ---
-title: "Review of Bertrand Russell, /The Analysis of Matter/"
+title: "Review of Bertrand Russell, <em>The Analysis of Matter</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1928

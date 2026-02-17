@@ -1,5 +1,5 @@
 ---
-title: "Critical notice of Ernest Jones, /Papers on Psycho-Analysis/"
+title: "Critical notice of Ernest Jones, <em>Papers on Psycho-Analysis</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1919

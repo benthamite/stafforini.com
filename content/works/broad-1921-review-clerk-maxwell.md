@@ -1,5 +1,5 @@
 ---
-title: "Review of Clerk Maxwell, /Matter and Motion/"
+title: "Review of Clerk Maxwell, <em>Matter and Motion</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1921

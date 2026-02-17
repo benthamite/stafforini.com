@@ -1,5 +1,5 @@
 ---
-title: "Review of L. T. More, /The Limitations of Science/"
+title: "Review of L. T. More, <em>The Limitations of Science</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1916

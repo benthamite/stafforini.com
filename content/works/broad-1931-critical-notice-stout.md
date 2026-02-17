@@ -1,5 +1,5 @@
 ---
-title: "Critical notice of G. F. Stout, /Mind and Matter/"
+title: "Critical notice of G. F. Stout, <em>Mind and Matter</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1931

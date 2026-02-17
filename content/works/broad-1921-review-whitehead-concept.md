@@ -1,5 +1,5 @@
 ---
-title: "Review of A. N. Whitehead, /The Concept of Nature/"
+title: "Review of A. N. Whitehead, <em>The Concept of Nature</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1921

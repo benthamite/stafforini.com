@@ -1,5 +1,5 @@
 ---
-title: "Review of J. McT. Ellis McTaggart, /Philosophical Studies/"
+title: "Review of J. McT. Ellis McTaggart, <em>Philosophical Studies</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1935

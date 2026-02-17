@@ -1,5 +1,5 @@
 ---
-title: "Review of H. Wildon Carr, /The Philosophy of Change/"
+title: "Review of H. Wildon Carr, <em>The Philosophy of Change</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1915

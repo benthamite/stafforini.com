@@ -1,5 +1,5 @@
 ---
-title: "Critical notice of Bernard Bosanquet, /Implication and Linear Inference/"
+title: "Critical notice of Bernard Bosanquet, <em>Implication and Linear Inference</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1920

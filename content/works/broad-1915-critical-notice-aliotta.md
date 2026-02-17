@@ -1,5 +1,5 @@
 ---
-title: "Critical notice of Aliotta, /The Idealistic Reaction against Science/, translated by Agnes McCaskill"
+title: "Critical notice of Aliotta, <em>The Idealistic Reaction against Science</em>, translated by Agnes McCaskill"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1915

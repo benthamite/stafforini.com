@@ -1,5 +1,5 @@
 ---
-title: "Review of G. A. Johnston, /An Introduction to Ethics/"
+title: "Review of G. A. Johnston, <em>An Introduction to Ethics</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1916

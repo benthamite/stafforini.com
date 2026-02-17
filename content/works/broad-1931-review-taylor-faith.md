@@ -1,5 +1,5 @@
 ---
-title: "Review of A. E. Taylor, /The Faith of a Moralist/"
+title: "Review of A. E. Taylor, <em>The Faith of a Moralist</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1931

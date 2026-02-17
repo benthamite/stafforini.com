@@ -1,5 +1,5 @@
 ---
-title: "Critical notice of J. M. Keynes, /A treatise on probability/"
+title: "Critical notice of J. M. Keynes, <em>A treatise on probability</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1922

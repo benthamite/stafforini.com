@@ -1,5 +1,5 @@
 ---
-title: "Critical notice of Federigo Enriques, /The Problems of Science/"
+title: "Critical notice of Federigo Enriques, <em>The Problems of Science</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1915

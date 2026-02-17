@@ -1,5 +1,5 @@
 ---
-title: "Review of Bertrand Russell, /A History of Western Philosophy, and its Connection with political and social Circumstances from the earliest Times to the present Day/"
+title: "Review of Bertrand Russell, <em>A History of Western Philosophy, and its Connection with political and social Circumstances from the earliest Times to the present Day</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1947

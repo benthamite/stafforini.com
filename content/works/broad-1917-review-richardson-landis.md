@@ -1,5 +1,5 @@
 ---
-title: "Review of P. Richardson \\& E. H. Landis, /Numbers Variables, and Mr. Russell's Philosophy/"
+title: "Review of P. Richardson \\& E. H. Landis, <em>Numbers Variables, and Mr. Russell's Philosophy</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1917

@@ -1,5 +1,5 @@
 ---
-title: "Critical notice of A. Meinong, /Über Annahmen/"
+title: "Critical notice of A. Meinong, <em>Über Annahmen</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1913

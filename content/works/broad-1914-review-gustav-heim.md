@@ -1,5 +1,5 @@
 ---
-title: "Review of Gustav Heim, /Ursache und Bedingung: Widerlegung des Konditionalismus und Aufbau der Kausalitätslehre auf der Mechanik/"
+title: "Review of Gustav Heim, <em>Ursache und Bedingung: Widerlegung des Konditionalismus und Aufbau der Kausalitätslehre auf der Mechanik</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1914

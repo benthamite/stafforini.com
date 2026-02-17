@@ -1,5 +1,5 @@
 ---
-title: "Review of H. Wildon Carr, /The Problem of Truth/"
+title: "Review of H. Wildon Carr, <em>The Problem of Truth</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1913

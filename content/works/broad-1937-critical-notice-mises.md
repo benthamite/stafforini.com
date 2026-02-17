@@ -1,5 +1,5 @@
 ---
-title: "Critical notice of R. von Mises, /Wahrscheinlichkeit, Statistik, und Wahrheit/"
+title: "Critical notice of R. von Mises, <em>Wahrscheinlichkeit, Statistik, und Wahrheit</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1937

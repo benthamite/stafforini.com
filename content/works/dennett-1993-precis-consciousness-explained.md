@@ -1,5 +1,5 @@
 ---
-title: "Précis of /Consciousness Explained/"
+title: "Précis of <em>Consciousness Explained</em>"
 author: "Daniel C. Dennett"
 entry_type: "article"
 year: 1993

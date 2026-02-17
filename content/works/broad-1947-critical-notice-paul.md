@@ -1,5 +1,5 @@
 ---
-title: "Critical notice of Paul Arthur Schilpp, /The Philosophy of Bertrand Russell/"
+title: "Critical notice of Paul Arthur Schilpp, <em>The Philosophy of Bertrand Russell</em>"
 author: "C. D. Broad"
 entry_type: "article"
 year: 1947
