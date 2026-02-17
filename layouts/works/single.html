@@ -28,7 +28,8 @@
     <div class="work-body">{{ . }}</div>
   {{ end }}
 
-  {{ $workSlug := .File.ContentBaseName }}
+  {{ $workSlug := "" }}
+  {{ with .File }}{{ $workSlug = .ContentBaseName }}{{ end }}
 
   {{/* Find all quotes that cite this work */}}
   {{ $citingQuotes := where (where .Site.RegularPages "Section" "quotes") ".Params.work" $workSlug }}

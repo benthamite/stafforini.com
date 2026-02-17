@@ -23,8 +23,13 @@
   <ul>
     {{ range (sort . "Date" "desc" | first 5) }}
     <li>
-      {{ $work := $.Site.GetPage (printf "/works/%s" .Params.work) }}
-      <a href="{{ .RelPermalink }}">{{ with $work }}{{ .Params.author }}{{ else }}{{ .Title }}{{ end }}</a>
+      {{ $quote := . }}
+      {{ with .Params.work }}
+        {{ $work := $.Site.GetPage (printf "/works/%s" .) }}
+        <a href="{{ $quote.RelPermalink }}">{{ with $work }}{{ .Params.author }}{{ else }}{{ $quote.Title }}{{ end }}</a>
+      {{ else }}
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+      {{ end }}
       <span class="feed-date">
         <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
       </span>

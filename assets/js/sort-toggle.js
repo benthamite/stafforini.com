@@ -14,9 +14,13 @@
 
       items.sort(function (a, b) {
         if (sortBy === 'date') {
-          return b.getAttribute('data-date').localeCompare(a.getAttribute('data-date'));
+          var dateA = a.getAttribute('data-date') || '';
+          var dateB = b.getAttribute('data-date') || '';
+          return dateB.localeCompare(dateA);
         }
-        return a.getAttribute('data-title').localeCompare(b.getAttribute('data-title'));
+        var titleA = a.getAttribute('data-title') || '';
+        var titleB = b.getAttribute('data-title') || '';
+        return titleA.localeCompare(titleB);
       });
 
       items.forEach(function (item) { list.appendChild(item); });
