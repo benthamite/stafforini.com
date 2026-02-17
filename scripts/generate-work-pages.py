@@ -38,7 +38,7 @@ def _parse_bib_entries_for_works(bib_path: Path) -> list[dict]:
         strip_braces=False,
         extra_fields=[
             "location", "booktitle", "journaltitle",
-            "volume", "number", "bookauthor", "crossref", "abstract",
+            "volume", "number", "pages", "bookauthor", "crossref", "abstract",
         ],
         field_fallbacks={"location": "address"},
     )
@@ -227,6 +227,7 @@ def generate_work_page(entry: dict) -> str:
     journaltitle = clean(entry.get("journaltitle", ""))
     volume = clean(entry.get("volume", ""))
     number = clean(entry.get("number", ""))
+    pages = clean(entry.get("pages", ""))
     editor_raw = entry.get("editor", "")
     editor = bib_author_to_display(editor_raw) if editor_raw else ""
 
@@ -248,6 +249,8 @@ def generate_work_page(entry: dict) -> str:
         lines.append(f'volume: "{escape_yaml_string(volume)}"')
     if number:
         lines.append(f'number: "{escape_yaml_string(number)}"')
+    if pages:
+        lines.append(f'pages: "{escape_yaml_string(pages)}"')
     if editor and entry.get("author", ""):
         # Only include editor when there's also an author (i.e. for incollection)
         lines.append(f'editor: "{escape_yaml_string(editor)}"')
