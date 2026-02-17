@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <style xmlns="http://purl.org/net/xbiblio/csl" class="in-text" version="1.0" and="symbol" delimiter-precedes-et-al="never" delimiter-precedes-last="never" et-al-min="4" et-al-use-first="1" initialize="false" page-range-format="expanded" demote-non-dropping-particle="never" default-locale="en-US">
+  <!-- Global formatting rules:
+       et-al-min="4"           — use "et al." for 4+ authors in bibliography
+       et-al-use-first="1"     — show first author before "et al."
+       and="symbol"            — use "&" between last two authors
+       initialize="false"      — show full given names (no initials)
+       page-range-format="expanded" — full page ranges (e.g. "120-128" not "120-8")
+       demote-non-dropping-particle="never" — particles like "van" sort with surname -->
   <info>
-    <title>Long</title>
-    <title-short>LONG</title-short>
+    <title>Stafforini.com citations (long form)</title>
+    <title-short>stafforini-long</title-short>
+    <!-- ID retained from original style (biblioteca-altruismo-eficaz); changing it would break Zotero references -->
     <id>https://www.zotero.org/styles/biblioteca-altruismo-eficaz</id>
     <link href="https://www.zotero.org/styles/biblioteca-altruismo-eficaz" rel="self"/>
+    <!-- Derived from APA 6th edition, heavily customized -->
     <link href="https://www.zotero.org/styles/apa-6th-edition" rel="template"/>
     <link href="https://altruismoeficaz.net/estilo-citado" rel="documentation"/>
     <author>
@@ -17,6 +26,8 @@
     <updated>2022-01-03T14:11:14+00:00</updated>
     <rights license="https://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>
   </info>
+  <!-- Spanish locale overrides: used when citing Spanish-language works.
+       Provides Spanish translations for editor/translator roles and date formatting. -->
   <locale xml:lang="es">
     <terms>
       <term name="editortranslator" form="short">
@@ -306,6 +317,14 @@
       </else>
     </choose>
   </macro>
+  <!-- Title macro: renders the work title as a Markdown hyperlink when possible.
+       Uses prefix "[" and suffix "]" on the title text, followed by the URL in parentheses,
+       producing [Title](URL) in the output — which Markdown renderers convert to clickable links.
+
+       Fallback chain for the link target: DOI → URL → ISBN (via WorldCat search) → plain text (no link).
+
+       Handles different entry types: manuscript, chapter/paper-conference, dataset,
+       post/post-weblog, and book (default). -->
   <macro name="title">
     <choose>
       <if variable="title">
@@ -914,6 +933,8 @@
           </group>
         </group>
       </else-if>
+      <!-- NOTE: "de" is Spanish; this renders correctly for Spanish-language sources
+           but would produce "15 de January" for English sources using this macro path. -->
       <else-if type="speech">
         <group delimiter=", ">
           <group delimiter=", ">
@@ -1178,6 +1199,9 @@
       </else-if>
     </choose>
   </macro>
+  <!-- Citation uses different et-al thresholds than bibliography:
+       6+ authors → "et al." on first cite (vs. 4+ in bibliography)
+       3+ authors → "et al." on subsequent cites -->
   <citation et-al-min="6" et-al-use-first="1" et-al-subsequent-min="3" et-al-subsequent-use-first="1" disambiguate-add-year-suffix="true" disambiguate-add-names="true" disambiguate-add-givenname="true" collapse="year" givenname-disambiguation-rule="primary-name">
     <sort>
       <key macro="author" names-min="8" names-use-first="6"/>
