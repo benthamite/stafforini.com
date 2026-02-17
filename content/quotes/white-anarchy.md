@@ -7,4 +7,5 @@ draft = false
 work = "white-2011-atrocities-deadliest-episodes"
 locator = "p. xvii"
 +++
+
 > Chaos is deadlier than tyranny. More [...] multicides result from the breakdown of authority rather than the exercise of authority.

@@ -7,4 +7,5 @@ draft = false
 work = "ng-1995-welfare-biology-evolutionary"
 locator = "p. 259"
 +++
+
 > Though […] feelings are subjective to the sentient concerned, they exist objectively. That my toothache is subjective to me does not make it non-existent.

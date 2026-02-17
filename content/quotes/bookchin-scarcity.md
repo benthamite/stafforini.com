@@ -6,4 +6,5 @@ tags = ["book", "biblio", "public"]
 draft = false
 work = "bookchin-1971-postscarcity-anarchism"
 +++
+
 > A century ago, scarcity had to be endured; today, it has to be enforced[.]

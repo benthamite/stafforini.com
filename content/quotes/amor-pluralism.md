@@ -7,4 +7,5 @@ draft = false
 work = "amor-1999-revista-latinoamericana-filosofia"
 locator = "p. 235"
 +++
+
 > Dualidad valorativa es personalidad dividida.

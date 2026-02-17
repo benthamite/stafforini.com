@@ -7,4 +7,5 @@ draft = false
 work = "dennett-1987-intentional-stance"
 locator = "p. 50"
 +++
+
 > [E]volution does not give us a best of all possible worlds.

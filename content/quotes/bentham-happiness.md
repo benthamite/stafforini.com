@@ -6,4 +6,5 @@ tags = ["book", "biblio", "public"]
 draft = false
 work = "bentham-1791-panopticon-inspection-house"
 +++
+
 > Happiness is a very pretty thing to feel, but very dry to talk about.

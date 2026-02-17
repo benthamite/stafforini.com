@@ -6,4 +6,5 @@ tags = ["incollection", "biblio", "public"]
 draft = false
 work = "laski-1929-harper-s"
 +++
+
 > [C]ivilization means, above all, an unwillingness to inflict unnecessary pain.

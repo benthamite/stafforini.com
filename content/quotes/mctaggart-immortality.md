@@ -7,4 +7,5 @@ draft = false
 work = "mc-taggart-1903-considerations-relating-human"
 locator = "p. 170"
 +++
+
 > The opinion that a belief in immortality is logically indefensible gains strength, paradoxical as it may seem, from the very fact that most of the western world desire that the belief may be true.

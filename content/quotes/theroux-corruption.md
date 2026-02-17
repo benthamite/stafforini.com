@@ -7,4 +7,5 @@ draft = false
 work = "theroux-1995-pillars-hercules-grand"
 locator = "p. 425"
 +++
+
 > Any country which displays more than one statue of the same living politician is a country which is headed for trouble.

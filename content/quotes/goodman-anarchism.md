@@ -7,4 +7,5 @@ draft = false
 work = "goodman-1994-crazy-hope-finite"
 locator = "p. 56"
 +++
+
 > [T]he main principle of anarchism is not freedom but autonomy[.]

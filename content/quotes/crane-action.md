@@ -7,4 +7,5 @@ draft = false
 work = "crane-1960-psychology-applied"
 locator = "p. 594"
 +++
+
 > Remember, motions are the precursors of emotions. You can't control the latter directly but only through your choice of motions or actions.

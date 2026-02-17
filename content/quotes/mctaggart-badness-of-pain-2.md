@@ -7,4 +7,5 @@ draft = false
 work = "mc-taggart-1906-dogmas-religion"
 locator = "p. 15"
 +++
+
 > Pain [...] may not be the only evil, but it cannot be denied to be evil.

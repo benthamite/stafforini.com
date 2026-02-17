@@ -7,4 +7,5 @@ draft = false
 work = "ebadi-2004-progressive"
 locator = "p. 37"
 +++
+
 > The idea of cultural relativism is nothing but an excuse to violate human rights.

@@ -6,4 +6,5 @@ tags = ["book", "biblio", "public"]
 draft = false
 work = "nietzsche-gotzen-dammerung-spruche"
 +++
+
 > Ohne Musik wäre das Leben ein Irrtum.

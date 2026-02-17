@@ -7,4 +7,5 @@ draft = false
 work = "levi-1982-conflict-social-agency"
 locator = "p. 237"
 +++
+
 > Agency is undoubtedly a morally relevant trait; but it is one among many.

@@ -7,4 +7,5 @@ draft = false
 work = "chaplin-1964-my-autobiography"
 locator = "p. 251"
 +++
+
 > Like playing the violin or the piano, thinking needs everyday practice[.]

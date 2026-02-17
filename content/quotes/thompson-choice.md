@@ -7,4 +7,5 @@ draft = false
 work = "thompson-2014-letters-note-eclectic"
 locator = "p. 67"
 +++
+
 > [A] man who procrastinates in his CHOOSING will inevitably have his choice made for him by circumstance.

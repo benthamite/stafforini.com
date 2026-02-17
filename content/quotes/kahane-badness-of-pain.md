@@ -7,4 +7,5 @@ draft = false
 work = "kahane-2004-sovereignty-suffering-reflections"
 locator = "p. 2"
 +++
+
 > When I am in pain, it is plain, as plain as anything is, that what I am experiencing is bad.

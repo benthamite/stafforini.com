@@ -7,4 +7,5 @@ draft = false
 work = "dennett-1993-precis-consciousness-explained"
 locator = "p. 449"
 +++
+
 > Human beings are not the only creatures smart enough to suffer[.]

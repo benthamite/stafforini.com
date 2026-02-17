@@ -6,4 +6,5 @@ tags = ["book", "biblio", "public"]
 draft = false
 work = "herrick-1985-against-faith"
 +++
+
 > My whole religion is this: do every duty, and expect no reward for it, either here or hereafter.

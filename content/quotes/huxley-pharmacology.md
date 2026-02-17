@@ -7,4 +7,5 @@ draft = false
 work = "huxley-1977-moksha-writings-psychedelics"
 locator = "p. 99"
 +++
+
 > Rational and kindly behavior tends to produce good results and these results remain good even when the behavior which produced them was itself produced by a pill.

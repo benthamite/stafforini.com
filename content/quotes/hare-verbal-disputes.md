@@ -7,4 +7,5 @@ draft = false
 work = "hare-1963-freedom-reason"
 locator = "p. 195"
 +++
-> The naturalist seeks to tie certain moral judgements analytically to a certain *content*. This really is to try to make verbal legislation do the work of moral thought.
+
+> The naturalist seeks to tie certain moral judgements analytically to a certain _content_. This really is to try to make verbal legislation do the work of moral thought.

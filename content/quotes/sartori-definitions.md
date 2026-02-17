@@ -7,4 +7,5 @@ draft = false
 work = "sartori-1962-democratic-theory"
 locator = "p. 6"
 +++
-> *Omnis definitio est periculosa*. Certain writers make such a point of repeating the statement, "It is dangerous to define," that at times one wonders whether defining might not be especially dangerous for their own thinking.
+
+> _Omnis definitio est periculosa_. Certain writers make such a point of repeating the statement, "It is dangerous to define," that at times one wonders whether defining might not be especially dangerous for their own thinking.

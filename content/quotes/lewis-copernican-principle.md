@@ -7,4 +7,5 @@ draft = false
 work = "lewis-2014-flash-boys-wall"
 locator = "p. 14"
 +++
+
 > “When something becomes obvious to you,” he said, “you immediately think surely someone else is doing this.”

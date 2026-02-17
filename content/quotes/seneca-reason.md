@@ -6,4 +6,5 @@ tags = ["biblio", "public"]
 draft = false
 work = "seneca-65-epistulae-morales-ad"
 +++
+
 > [S]i vis omnia tibi subicere, te subice rationi[.]

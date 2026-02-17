@@ -7,4 +7,5 @@ draft = false
 work = "lyons-1981-reading-nozick"
 locator = "p. 378"
 +++
+
 > Property rights are not sacrosanct. They must bend to the needs and interests of human beings.

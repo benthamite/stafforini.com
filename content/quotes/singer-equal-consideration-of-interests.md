@@ -7,4 +7,5 @@ draft = false
 work = "singer-1993-practical-ethics"
 locator = "p. 21"
 +++
+
 > [A]n interest is an interest, whoever's interest it may be.

@@ -6,4 +6,5 @@ tags = ["incollection", "biblio", "public"]
 draft = false
 work = "rachels-1998-animals-ethics"
 +++
+
 > The idea that it is wrong to cause suffering, unless there is a sufficient justification, is one of the most basic moral principles, shared by virtually anyone.

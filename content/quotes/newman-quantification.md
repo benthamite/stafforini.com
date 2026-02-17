@@ -7,4 +7,5 @@ draft = false
 work = "newman-1956-world-mathematicsa"
 locator = "p. 1169"
 +++
+
 > Whenever you can, count.

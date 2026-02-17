@@ -7,4 +7,5 @@ draft = false
 work = "harvey-2008-money-well-spent"
 locator = "p. 143"
 +++
+
 > The next best thing to learning that a social intervention succeeds is determining conclusively that it does not succeed—so that funders will seek better options rather than pouring money down the drain.

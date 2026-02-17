@@ -7,4 +7,5 @@ draft = false
 work = "krishnamurti-1969-freedom-known"
 locator = "ch. 2"
 +++
+
 > A confident man is a dead human being.

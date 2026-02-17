@@ -7,4 +7,5 @@ draft = false
 work = "fatone-1953-introduccion-existencialismo"
 locator = "p. 12"
 +++
+
 > Parecería que la vida de un pensador debiese ser la más rica de las vidas; pero la del pensador abstracto no lo es.

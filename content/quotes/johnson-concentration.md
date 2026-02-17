@@ -7,4 +7,5 @@ draft = false
 work = "johnson-1744-life-mr-richard"
 locator = "p. 152"
 +++
+
 > [W]hen a man knows he is to be hanged in a fortnight, it concentrates his mind wonderfully.

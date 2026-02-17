@@ -7,4 +7,5 @@ draft = false
 work = "oakeshott-1932-cambridge-review"
 locator = "p. 73"
 +++
+
 > [E]verywhere what has been fatal to liberalism is its boundless but capricious moderation.

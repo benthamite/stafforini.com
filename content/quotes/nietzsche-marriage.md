@@ -6,4 +6,5 @@ tags = ["book", "biblio", "public"]
 draft = false
 work = "nietzsche-1887-zur-genealogie-moral"
 +++
+
 > Ein verheirateter Philosoph gehört in die Komödie.

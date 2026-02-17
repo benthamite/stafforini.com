@@ -7,4 +7,5 @@ draft = false
 work = "tannsjo-2007-narrow-hedonism"
 locator = "p. 80"
 +++
+
 > Being a utilitarian, my interest is in the universe.

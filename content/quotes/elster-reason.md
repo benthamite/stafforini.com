@@ -7,4 +7,5 @@ draft = false
 work = "elster-1986-market-forum-three"
 locator = "p. 113"
 +++
+
 > By speaking with the voice of reason, one is also exposing oneself to reason.

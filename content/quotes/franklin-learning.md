@@ -6,4 +6,5 @@ tags = ["biblio", "public"]
 draft = false
 work = "franklin-0000-poor-richard-almanack"
 +++
+
 > The Things which hurt, instruct.

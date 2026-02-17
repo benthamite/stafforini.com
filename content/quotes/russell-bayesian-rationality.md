@@ -7,4 +7,5 @@ draft = false
 work = "russell-1946-history-of-western"
 locator = "p. 816"
 +++
+
 > Give to any hypothesis which is worth your while to consider just that degree of credence which the evidence warrants.

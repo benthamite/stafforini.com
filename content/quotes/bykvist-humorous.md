@@ -7,4 +7,5 @@ draft = false
 work = "bykvist-2007-good-bad-ethically"
 locator = "p. 105"
 +++
+
 > My advice to Broome is to be less sadistic.

@@ -7,4 +7,5 @@ draft = false
 work = "bioy-casares-2001-descanso-caminantes"
 locator = "p. 89"
 +++
-> *Pérdida de tiempo*. Para las mujeres, la duración de un amor que no concluye en matrimonio. "Con Prudencio, perdí siete años."
+
+> _Pérdida de tiempo_. Para las mujeres, la duración de un amor que no concluye en matrimonio. "Con Prudencio, perdí siete años."

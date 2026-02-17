@@ -7,4 +7,5 @@ draft = false
 work = "hare-1963-freedom-reason"
 locator = "p. 23"
 +++
-> A man who wholeheartedly accepts a [moral] rule is likely to *live*, not merely *talk*, differently from one who does not.
+
+> A man who wholeheartedly accepts a [moral] rule is likely to _live_, not merely _talk_, differently from one who does not.

@@ -7,4 +7,5 @@ draft = false
 work = "mora-1971-hombre-medio-otros"
 locator = "p. 128"
 +++
+
 > [L]os tiempos [actuales] [...] no sólo son alarmantes, sino también, y sobre todo, deprimentes.

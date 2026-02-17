@@ -7,4 +7,5 @@ draft = false
 work = "adams-1980-camera"
 locator = "p. xiii"
 +++
+
 > Too many people merely do what they are told to do.

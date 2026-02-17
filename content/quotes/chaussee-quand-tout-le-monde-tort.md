@@ -6,4 +6,5 @@ tags = ["book", "biblio", "public"]
 draft = false
 work = "chaussee-1747-gouvernante"
 +++
+
 > Quand tout le monde a tort, tout le monde a raison.
