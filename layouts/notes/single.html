@@ -17,7 +17,8 @@
       {{ range . }}
         {{ $work := $.Site.GetPage (printf "/works/%s" .) }}
         {{ with $work }}
-        <li><a href="{{ .RelPermalink }}">{{ .Params.author }}, <em>{{ .Title }}</em> ({{ .Params.year }})</a></li>
+          {{ $type := .Params.entry_type | default "book" }}
+        <li>{{ partial "citation-format.html" (dict "work" . "type" $type "link" true) }}</li>
         {{ end }}
       {{ end }}
     </ul>
