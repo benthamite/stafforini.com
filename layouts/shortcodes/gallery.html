@@ -1,0 +1,23 @@
+{{/*
+  Render an image gallery as a responsive grid.
+
+  Usage:
+    {{< gallery dir="images/rialta" >}}
+
+  Displays all images in the given directory under /static as a grid of
+  clickable thumbnails that open the full-size image in a new tab.
+*/}}
+
+{{- $dir := .Get "dir" -}}
+{{- $images := readDir (printf "static/%s" $dir) -}}
+
+<div class="gallery">
+  {{- range $images -}}
+    {{- $ext := lower (path.Ext .Name) -}}
+    {{- if or (eq $ext ".jpg") (eq $ext ".jpeg") (eq $ext ".png") (eq $ext ".gif") (eq $ext ".webp") -}}
+    <a href="/{{ $dir }}/{{ .Name }}" class="gallery-item" target="_blank" rel="noopener">
+      <img src="/{{ $dir }}/{{ .Name }}" alt="{{ .Name }}" loading="lazy">
+    </a>
+    {{- end -}}
+  {{- end -}}
+</div>

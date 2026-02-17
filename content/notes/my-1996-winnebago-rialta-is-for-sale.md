@@ -5,7 +5,7 @@ date = 2018-03-14
 draft = false
 +++
 
-{{< figure src="http://www.stafforini.com/blog/wp-content/uploads/12.jpeg" >}}
+{{< figure src="/images/rialta/12.jpeg" >}}
 
 **_Note: The Rialta is now sold._**
 
@@ -125,7 +125,7 @@ The RV is pretty dirty on the outside, but clean on the inside.
 
 I did a lot of the work myself and while I'm competent, I'm not a finish carpenter. So maybe just decrease expectations for fit and finish by 10% and be pleasantly surprised in some cases.
 
-[gallery ids="2100,2099,2098,2097,2096,2095,2093,2092,2091,2090,2089,2088,2087,2086,2085,2084,2083,2082,2225,2224,2223,2222,2221,2215"]
+{{< gallery dir="images/rialta" >}}
 
 
 ## More info {#more-info}
