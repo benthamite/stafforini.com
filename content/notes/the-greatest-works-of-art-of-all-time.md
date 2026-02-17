@@ -1,9 +1,8 @@
----
-title: "The greatest works of art of all time"
-date: 2013-09-03T12:03:13
-lastmod: 2013-09-03T12:03:13
-draft: true
----
++++
+title = "The greatest works of art of all time"
+author = ["Pablo Stafforini"]
+draft = true
++++
 
 Greatest films
 

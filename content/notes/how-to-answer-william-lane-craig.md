@@ -1,32 +1,36 @@
----
-title: "How to answer William Lane Craig"
-date: 2015-01-30T23:21:53
-lastmod: 2015-01-30T23:21:53
-draft: true
----
++++
+title = "How to answer William Lane Craig"
+author = ["Pablo Stafforini"]
+draft = true
++++
 
-## The Leibnizian cosmological argument
+## The Leibnizian cosmological argument {#the-leibnizian-cosmological-argument}
 
-*strong*
+_strong_
 
-## The *kalam*cosmological argument
 
-*weak*
+## The /kalam /cosmological argument {#the-kalam-cosmological-argument}
 
-- Is predicated on an A theory of time, which most philosophers, and nearly all physicists, reject.
+_weak_
 
-## The teleological argument from fine tuning
+-   Is predicated on an A theory of time, which most philosophers, and nearly all physicists, reject.
 
-*strong*
 
-## The moral argument
+## The teleological argument from fine tuning {#the-teleological-argument-from-fine-tuning}
 
-*weak*
+_strong_
 
-## The resurrection argument
 
-*extremely weak*
+## The moral argument {#the-moral-argument}
 
-## The argument from proper basicality
+_weak_
 
-*extremely weak*
+
+## The resurrection argument {#the-resurrection-argument}
+
+_extremely weak_
+
+
+## The argument from proper basicality {#the-argument-from-proper-basicality}
+
+_extremely weak_
