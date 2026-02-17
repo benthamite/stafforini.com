@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Generate Hugo work pages and post-process exported quote markdown files.
 
-Phase 5 of the quote migration pipeline:
-1. Strip citation placeholders from exported quote markdown
-2. Generate work pages for all cite keys referenced by quotes
+Creates or updates work pages under content/works/ from BibTeX data for
+all cite keys referenced by notes (via {{< cite >}} shortcodes) and
+quotes (via front matter work param). Re-running after a BibTeX change
+will update any existing work pages whose data has changed.
 
 Usage:
     python generate-work-pages.py                    # Full run
@@ -262,31 +263,40 @@ def generate_work_page(entry: dict) -> str:
     return "\n".join(lines)
 
 
-def collect_work_slugs_from_quotes() -> set[str]:
-    """Scan all quote markdown files and collect unique work slugs."""
+def collect_work_slugs() -> set[str]:
+    """Scan all quote and note markdown files and collect unique work slugs."""
     slugs = set()
-    if not QUOTES_DIR.exists():
-        return slugs
 
-    for md_file in QUOTES_DIR.glob("*.md"):
-        if md_file.name == "_index.md":
-            continue
-        content = md_file.read_text()
-        # Match work = "slug" (TOML) or work: "slug" (YAML)
-        m = re.search(r'work\s*[=:]\s*"([^"]+)"', content)
-        if m:
-            slugs.add(m.group(1))
+    # From quotes: work = "slug" or work: "slug" in front matter
+    if QUOTES_DIR.exists():
+        for md_file in QUOTES_DIR.glob("*.md"):
+            if md_file.name == "_index.md":
+                continue
+            content = md_file.read_text()
+            m = re.search(r'work\s*[=:]\s*"([^"]+)"', content)
+            if m:
+                slugs.add(m.group(1))
+
+    # From notes: {{< cite "CiteKey" >}} shortcodes in body
+    notes_dir = HUGO_ROOT / "content" / "notes"
+    if notes_dir.exists():
+        for md_file in notes_dir.glob("*.md"):
+            if md_file.name == "_index.md":
+                continue
+            content = md_file.read_text()
+            for m in re.finditer(r'cite\s+"([^"]+)"', content):
+                slugs.add(cite_key_to_slug(m.group(1)))
 
     return slugs
 
 
 def generate_work_pages(bib_by_key: dict, dry_run: bool = False, limit: int = 0) -> dict:
-    """Generate work pages for all cite keys referenced by quotes."""
-    stats = {"created": 0, "skipped_exists": 0, "missing_bib": 0}
+    """Generate or update work pages for all cite keys referenced by quotes and notes."""
+    stats = {"created": 0, "updated": 0, "unchanged": 0, "missing_bib": 0}
     missing_bib_keys = []
 
-    work_slugs = collect_work_slugs_from_quotes()
-    print(f"  Found {len(work_slugs)} unique work slugs in quote files")
+    work_slugs = collect_work_slugs()
+    print(f"  Found {len(work_slugs)} unique work slugs in content files")
 
     if not WORKS_DIR.exists():
         WORKS_DIR.mkdir(parents=True, exist_ok=True)
@@ -304,11 +314,6 @@ def generate_work_pages(bib_by_key: dict, dry_run: bool = False, limit: int = 0)
 
         work_path = WORKS_DIR / f"{slug}.md"
 
-        # Skip if work page already exists
-        if work_path.exists():
-            stats["skipped_exists"] += 1
-            continue
-
         # Find bib entry for this slug
         cite_key = slug_to_key.get(slug)
         if not cite_key:
@@ -319,17 +324,28 @@ def generate_work_pages(bib_by_key: dict, dry_run: bool = False, limit: int = 0)
         entry = bib_by_key[cite_key]
         page_content = generate_work_page(entry)
 
-        if dry_run:
-            if processed < 5:
-                print(f"  [CREATE] {slug}.md")
+        if work_path.exists():
+            if work_path.read_text() == page_content:
+                stats["unchanged"] += 1
+                continue
+            stats["updated"] += 1
+            if dry_run:
+                if processed < 5:
+                    print(f"  [UPDATE] {slug}.md")
+            else:
+                work_path.write_text(page_content)
         else:
-            work_path.write_text(page_content)
+            stats["created"] += 1
+            if dry_run:
+                if processed < 5:
+                    print(f"  [CREATE] {slug}.md")
+            else:
+                work_path.write_text(page_content)
 
-        stats["created"] += 1
         processed += 1
 
         if processed % 200 == 0:
-            print(f"  ... {processed} work pages created")
+            print(f"  ... {processed} work pages processed")
 
     if missing_bib_keys:
         print(f"\n  WARNING: {len(missing_bib_keys)} work slugs have no matching bib entry:")
@@ -393,7 +409,8 @@ def main():
 
         wp_stats = generate_work_pages(bib_by_key, dry_run=args.dry_run, limit=args.limit)
         print(f"\n  Work pages created:    {wp_stats['created']}")
-        print(f"  Skipped (exists):      {wp_stats['skipped_exists']}")
+        print(f"  Work pages updated:    {wp_stats['updated']}")
+        print(f"  Unchanged:             {wp_stats['unchanged']}")
         print(f"  Missing bib entries:   {wp_stats['missing_bib']}")
         if args.dry_run:
             print("  *** DRY RUN — no files created ***")
