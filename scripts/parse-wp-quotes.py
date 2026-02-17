@@ -37,6 +37,35 @@ def strip_html(html: str) -> str:
     return text
 
 
+def html_to_text_preserving_emphasis(html: str) -> str:
+    """Convert HTML to plain text, preserving emphasis as markdown.
+
+    Converts <em>/<i> → *...* and <strong>/<b> → **...**
+    before stripping remaining tags.
+    """
+    text = html
+    # Bold first (so ** doesn't get caught by italic conversion)
+    text = re.sub(
+        r"<(strong|b)\b[^>]*>(.*?)</\1>",
+        r"**\2**",
+        text,
+        flags=re.DOTALL | re.IGNORECASE,
+    )
+    # Italic
+    text = re.sub(
+        r"<(em|i)\b[^>]*>(.*?)</\1>",
+        r"*\2*",
+        text,
+        flags=re.DOTALL | re.IGNORECASE,
+    )
+    # Strip remaining HTML tags
+    text = re.sub(r"<[^>]+>", "", text)
+    text = unescape(text)
+    # Normalize whitespace
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
+
+
 def extract_quote_and_attribution(content_html: str) -> tuple[str, str, str]:
     """Split HTML content into quote text and attribution.
 
@@ -51,7 +80,7 @@ def extract_quote_and_attribution(content_html: str) -> tuple[str, str, str]:
     )
     if bq_match:
         quote_html = bq_match.group(1)
-        quote_text = strip_html(quote_html)
+        quote_text = html_to_text_preserving_emphasis(quote_html)
 
         # Everything after the last </blockquote> is the attribution
         parts = re.split(r"</blockquote>", content_html, flags=re.IGNORECASE)
@@ -59,7 +88,7 @@ def extract_quote_and_attribution(content_html: str) -> tuple[str, str, str]:
         attr_text = strip_html(attr_html)
     else:
         # No blockquote — treat entire content as quote, no attribution
-        quote_text = strip_html(content_html)
+        quote_text = html_to_text_preserving_emphasis(content_html)
         attr_html = ""
         attr_text = ""
 
