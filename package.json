@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "build": "hugo --minify && npx pagefind --site public",
-    "dev": "hugo server --navigateToChanged",
+    "dev": "bash scripts/build-search-index.sh; hugo server --navigateToChanged",
+    "reindex": "bash scripts/build-search-index.sh",
     "index": "npx pagefind --site public"
   },
   "devDependencies": {
