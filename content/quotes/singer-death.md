@@ -7,4 +7,5 @@ draft = false
 work = "singer-1993-practical-ethics"
 locator = "p. 197"
 +++
+
 > Probability is the guide of life, and of death, too.

@@ -7,4 +7,5 @@ draft = false
 work = "singer-1981-expanding-circle-ethics"
 locator = "p. 131"
 +++
+
 > [R]eason can master our genes.

@@ -7,4 +7,5 @@ draft = false
 work = "smith-1995-moral-problem"
 locator = "p. 67"
 +++
+
 > [A]moralists are among the more popular heroes of both philosophical fantasy and non-philosophical fiction.

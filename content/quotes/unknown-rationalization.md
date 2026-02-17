@@ -7,4 +7,5 @@ draft = false
 work = "galbraith-toronto-globe-mail"
 locator = "p. 38"
 +++
+
 > The modern conservative is engaged in one of man's oldest exercises in moral philosophy; that is, the search for a superior moral justification for selfishness.

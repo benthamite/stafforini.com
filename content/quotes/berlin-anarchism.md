@@ -7,4 +7,5 @@ draft = false
 work = "berlin-1978-russian-thinkers"
 locator = "p. 110"
 +++
+
 > [B]akunin is opposed to the imposition of any restraints upon anyone at any time under any conditions.

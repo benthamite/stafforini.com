@@ -7,4 +7,5 @@ draft = false
 work = "parfit-1999-experiences-subjects-conceptual"
 locator = "pp. 223-224"
 +++
+
 > To think about reality we must use concepts, and certain truths about concepts may reveal, or reflect, truths about reality.

@@ -7,4 +7,5 @@ draft = false
 work = "glover-1975-proceedings-aristotelian-society"
 locator = "pp. vol"
 +++
+
 > A morality is not incoherent simply because, in its own terms, it would be better not propagated.

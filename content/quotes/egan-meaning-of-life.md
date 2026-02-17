@@ -7,4 +7,5 @@ draft = false
 work = "egan-1998-luminous"
 locator = "p. 171"
 +++
-> At some level, we still hadn’t swallowed the hardest-won truth of all: *The universe is indifferent*.
+
+> At some level, we still hadn’t swallowed the hardest-won truth of all: _The universe is indifferent_.

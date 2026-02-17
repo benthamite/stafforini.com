@@ -7,4 +7,5 @@ draft = false
 work = "miller-1984-anarchism"
 locator = "p. 175"
 +++
+
 > [A]narchism can be regarded as the extreme expression of the modernizing ideals of the French Revolution—liberty, equality and fraternity carried to their logical conclusion.

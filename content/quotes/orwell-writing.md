@@ -7,4 +7,5 @@ draft = false
 work = "orwell-1965-decline-english-murder"
 locator = "p. 186"
 +++
+
 > The job is to reconcile my ingrained likes and dislikes with the essentially public, non-individual activities that this age forces on all of us.

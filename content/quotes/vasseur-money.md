@@ -6,4 +6,5 @@ tags = ["book", "biblio", "public"]
 draft = false
 work = "steiner-2003-independent"
 +++
+
 > Money has an enormous voice. It has never spoken louder.

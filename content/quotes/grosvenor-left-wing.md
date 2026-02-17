@@ -7,4 +7,5 @@ draft = false
 work = "grosvenor-2002-perspectives-biology-medicine"
 locator = "p. 446"
 +++
+
 > T]he intellectual left is likely to be the prime beneficiary if the social sciences and the humanities can be rescued from residual Marxism and obscurantist postmodernism.

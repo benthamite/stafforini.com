@@ -52,7 +52,7 @@ _What interests me most are the metaphysical questions whose answers can affect 
 -   {{< cite "Parfit1987ReplySterba" >}}
 -   {{< cite "Parfit1987DividedMindsNature" >}}
 -   {{< cite "Parfit1986Comments" >}}
--   {{< cite "Parfit2004OverpopulationQualityLife" >}}
+-   {{< cite "Parfit1986OverpopulationAndQuality" >}}
 -   {{< cite "Parfit1984RationalityTime" >}}
 -   {{< cite "Parfit1984ReasonsPersons" >}}
 -   {{< cite "Parfit1983EnergyPolicyFurther" >}}

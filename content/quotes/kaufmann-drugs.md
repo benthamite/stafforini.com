@@ -7,4 +7,5 @@ draft = false
 work = "kaufmann-1958-critique-religion-philosophy"
 locator = "p. 23"
 +++
+
 > All that is needed is a little acid.

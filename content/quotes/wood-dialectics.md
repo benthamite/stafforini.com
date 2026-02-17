@@ -7,4 +7,5 @@ draft = false
 work = "wood-1990-hegel-ethical-thought"
 locator = "p. 5"
 +++
+
 > Hegel's system of dialectical logic has never won acceptance outside an isolated and dwindling group of incorrigible enthusiasts.

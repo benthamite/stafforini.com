@@ -7,4 +7,5 @@ draft = false
 work = "highsmith-1955-talented-mr-ripley"
 locator = "p. 179"
 +++
+
 > But what had he said about risks? Risks were what made the whole thing fun.

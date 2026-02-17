@@ -6,4 +6,5 @@ tags = ["book", "biblio", "public"]
 draft = false
 work = "white-2000-elements-style"
 +++
+
 > Buy the gold-plate faucets if you will, but do not accessorize your prose.

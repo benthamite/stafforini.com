@@ -7,4 +7,5 @@ draft = false
 work = "rawls-1971-theory-justice"
 locator = "p. 30"
 +++
+
 > All ethical doctrines worth our attention take consequences into account in judging rightness. One which did not would simply be irrational, crazy.

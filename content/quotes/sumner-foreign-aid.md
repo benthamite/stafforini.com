@@ -6,4 +6,5 @@ tags = ["article", "biblio", "public"]
 draft = false
 work = "sumner-2014"
 +++
-> It’s more useful to ask *when* aid works, not whether.
+
+> It’s more useful to ask _when_ aid works, not whether.

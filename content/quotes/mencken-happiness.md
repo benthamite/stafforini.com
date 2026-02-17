@@ -7,4 +7,5 @@ draft = false
 work = "mencken-1949-mencken-chrestomathy-his"
 locator = "ch. 30"
 +++
+
 > Puritanism – The haunting fear that someone, somewhere, may be happy.

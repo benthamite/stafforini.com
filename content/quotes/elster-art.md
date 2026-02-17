@@ -7,4 +7,5 @@ draft = false
 work = "elster-2016-states-that-are"
 locator = "p. 446"
 +++
+
 > Good art is impressive; art designed to impress rarely is.

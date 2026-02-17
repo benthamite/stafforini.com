@@ -6,4 +6,5 @@ tags = ["book", "biblio", "public"]
 draft = false
 work = "cicero-amicitia"
 +++
+
 > Amicus certus in re incerta cernitur.

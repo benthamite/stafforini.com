@@ -7,4 +7,5 @@ draft = false
 work = "harris-1999-steal-book-get"
 locator = "p. 8"
 +++
+
 > Excuse me? Use your eyes and years. When CNN stands for the Chomsky News Network, we can resume this discussion.

@@ -7,4 +7,5 @@ draft = false
 work = "bostrom-2005-defense-posthuman-dignity"
 locator = "p. 211"
 +++
+
 > Had Mother Nature been a real parent, she would have been in jail for child abuse and murder.

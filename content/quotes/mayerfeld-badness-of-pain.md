@@ -7,4 +7,5 @@ draft = false
 work = "mayerfeld-1999-suffering-moral-responsibility"
 locator = "p. 111"
 +++
+
 > [S]uffering cries out for its own abolition[.]

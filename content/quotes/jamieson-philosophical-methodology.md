@@ -7,4 +7,5 @@ draft = false
 work = "solomon-1999-singer-his-critics"
 locator = "p. 78"
 +++
+
 > Philosophy should provide edification and concern, but it too often encourages escape through rationalization.

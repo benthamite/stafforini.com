@@ -7,4 +7,5 @@ draft = false
 work = "egan-2004-reasons-be-cheerful"
 locator = "p. 191"
 +++
+
 > Happiness always brought with it the belief that it would last[.]

@@ -6,4 +6,5 @@ tags = ["incollection", "biblio", "public"]
 draft = false
 work = "kravinsky-2004-daily-telegraph"
 +++
+
 > Sometimes I feel that the moral life is so close now, I can almost touch it.

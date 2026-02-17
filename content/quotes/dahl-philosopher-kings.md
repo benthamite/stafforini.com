@@ -7,4 +7,5 @@ draft = false
 work = "dahl-1956-preface-democratic-theory"
 locator = "p. 50"
 +++
+
 > Philosopher kings are hard to come by.

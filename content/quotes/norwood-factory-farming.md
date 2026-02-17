@@ -7,4 +7,5 @@ draft = false
 work = "norwood-2011-compassion-pound-economics"
 locator = "p. 327"
 +++
-> If there is one salient fact we have learned talking with thousands of people about farm animal welfare, it is this: *people do not know much about the way farm animals are raised*.
+
+> If there is one salient fact we have learned talking with thousands of people about farm animal welfare, it is this: _people do not know much about the way farm animals are raised_.

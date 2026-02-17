@@ -7,4 +7,5 @@ draft = false
 work = "parfit-2011-what-matters"
 locator = "p. 101"
 +++
+
 > On all plausible theories, everyone's well-being consists at least in part in being happy, and avoiding suffering.

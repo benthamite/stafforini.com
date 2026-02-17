@@ -7,4 +7,5 @@ draft = false
 work = "scruton-1982-kant-very-short"
 locator = "p. 44"
 +++
-> I could never be in the position that Dickens in *Hard Times* attributes to Mrs Gradgrind on her deathbed, knowing that there is a pain in the room somewhere, but not knowing that it is mine.
+
+> I could never be in the position that Dickens in _Hard Times_ attributes to Mrs Gradgrind on her deathbed, knowing that there is a pain in the room somewhere, but not knowing that it is mine.

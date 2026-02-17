@@ -7,4 +7,5 @@ draft = false
 work = "carnap-1931-erkenntnis"
 locator = "p. 240"
 +++
+
 > Metaphysiker sind Musiker ohne musikalische Fähigkeit.

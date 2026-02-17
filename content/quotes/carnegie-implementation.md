@@ -7,4 +7,5 @@ draft = false
 work = "carnegie-1984-how-stop-worrying"
 locator = "p. xvii"
 +++
+
 > We already know enough to lead perfect lives. [...] Our trouble is not ignorance, but inaction.

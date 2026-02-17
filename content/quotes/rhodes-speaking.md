@@ -7,4 +7,5 @@ draft = false
 work = "rhodes-1986-making-atomic-bomba"
 locator = "p. 77"
 +++
+
 > I try not to speak more clearly than I think.

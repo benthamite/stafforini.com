@@ -7,4 +7,5 @@ draft = false
 work = "seligman-2002-authentic-happiness-using"
 locator = "p. 97"
 +++
+
 > Sometimes the consequences of holding a belief matter more than its truth.

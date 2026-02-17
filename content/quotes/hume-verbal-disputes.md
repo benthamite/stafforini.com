@@ -6,4 +6,5 @@ tags = ["biblio", "public"]
 draft = false
 work = "hume-1978-treatise-human-nature"
 +++
+
 > Provided we agree about the thing, ’tis needless to dispute about the terms.

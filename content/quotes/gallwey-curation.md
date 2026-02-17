@@ -7,4 +7,5 @@ draft = false
 work = "gallwey-1975-inner-game-tennis"
 locator = "p. 71"
 +++
+
 > Once you learn how to learn, you have only to discover what is worth learning.

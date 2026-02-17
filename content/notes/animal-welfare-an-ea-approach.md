@@ -44,9 +44,9 @@ So that's the general background on effective altruism and animal welfare. Let'
 
 To assess the importance of a problem, effective altruists commonly rely on a framework that breaks the problem down into three separate factors:
 
-1.  /scale: /how big is the problem?
-2.  /neglectedness: /how many resources are currently being devoted to it?
-3.  /solvability: /how much progress can we expect to make?
+1.  _scale_: how big is the problem?
+2.  _neglectedness_: how many resources are currently being devoted to it?
+3.  _solvability_: how much progress can we expect to make?
 
 
 ### Scale {#scale}
@@ -55,14 +55,14 @@ Let's first consider scale. We can, in turn, break this down into how many being
 
 In terms of number of beings affected, the scale of the problem is just mind-boggling. Just in the United States, over nine billion sentient beings are killed for food every year. And if we were to include other countries (such as China) and other animals (such as fish), for which our data is not as reliable or current, the figure would be about two orders of magnitude higher!
 
-Moreover, the conditions under which these animals are pretty appalling. They include extremely distressful confinement and crowding, inhibition of the most basic and natural behaviors, untreated health conditions, and much more.
+Moreover, the conditions under which these animals are pretty appalling. They include extremely distressful confinement and crowding, inhibition of the most basic and natural behaviors, untreated health conditions, and much more.
 
-In sum, there are lots of animals---at least nine billion land-dwelling animals killed every year, though the figure for the world at large may be closer to a trillion---, and there is lots of suffering---the vast majority of these animals live in factory-farms, under inhumane conditions.
+In sum, there are lots of animals---at least nine billion land-dwelling animals killed every year, though the figure for the world at large may be closer to a trillion---, and there is lots of suffering---the vast majority of these animals live in factory-farms, under inhumane conditions.
 
 
 ### Neglectedness {#neglectedness}
 
-That's the scale of the problem. How about its neglectedness? How many resources do we currently allocate to this problem, relative to its scale? If we look at donations to charity, we find that only a tiny amount---about 3 percent---is donated to animal charities.
+That's the scale of the problem. How about its neglectedness? How many resources do we currently allocate to this problem, relative to its scale? If we look at donations to charity, we find that only a tiny amount---about 3 percent---is donated to animal charities.
 
 {{< figure src="http://www.stafforini.com/blog/wp-content/uploads/Animal-welfare-EAGxPrague.png" >}}
 
@@ -72,16 +72,16 @@ Moreover, if we look at donations to _animal_ charities, we find that an even ti
 
 As we've seen, over nine billion land animals are killed every year in the US. We also know that about twenty million dollars were donated to the top-ten American charities focusing on farm animals. So, by a simple calculation, we can conclude that about one-fifth of one cent of one dollar was donated per animal to such charities.
 
-To put these numbers in perspective, consider another problem that effective altruists regard---correctly---as highly neglected: malaria. In 2015, about 438,000 people died of malaria. We also know that over 49 million dollars were donated to the Against Malaria Foundation, one of the charities focusing on this problem. So, by a similar calculation, we can conclude that about 118 dollars were donated per death to AMF.
+To put these numbers in perspective, consider another problem that effective altruists regard---correctly---as highly neglected: malaria. In 2015, about 438,000 people died of malaria. We also know that over 49 million dollars were donated to the Against Malaria Foundation, one of the charities focusing on this problem. So, by a similar calculation, we can conclude that about 118 dollars were donated per death to AMF.
 
-There is a sense, then, in which factory farming is at least fifty thousand times more neglected than malaria, which is itself a highly neglected area relative to most others. As we will see later, these numbers shouldn't be taken literally. But they do give us a rough sense of the degree to which the welfare of farm animals is a neglected cause area.
+There is a sense, then, in which factory farming is at least fifty thousand times more neglected than malaria, which is itself a highly neglected area relative to most others. As we will see later, these numbers shouldn't be taken literally. But they should be taken seriously, because they provide a rough measure of the degree to which the welfare of farm animals is a neglected cause area.
 
 
 ### Solvability {#solvability}
 
 Neglectedness was the second of the three factors that effective altruists consider when assessing the promise of a cause area. Let's now turn to the final factor: tractability. The idea here is that even if a problem is large-scale and largely neglected, we may still reasonably refuse to allocate resources to it if we think there's little or nothing we can do about it.
 
-But how tractable is factory farming as a problem? I think the problem is highly tractable, for two reasons. First, the problem persists only because of human will. There is no natural law that says all these animals should suffer. Humans, unlike other species, are not obligate carnivores: they can live healthy lives---perhaps even healthier lives---without consuming animal products. There are many other problems---like, say, aging, or space travel---that aren't contingent on human choice in this way. Whereas in the case of factory farming, it's really up to us.
+But how tractable is factory farming as a problem? I think the problem is highly tractable, for two reasons. First, the problem persists only because of human will. There is no natural law that says all these animals should suffer. Humans, unlike other species, are not obligate carnivores: they can live healthy lives---perhaps even healthier lives---without consuming animal products. There are many other problems---like, say, aging, or space travel---that aren't contingent on human choice in this way. Whereas in the case of factory farming, it's really up to us.
 
 Second, the solutions to the problem are scaleable. We don't need to wait until everyone or a large fraction of the population chooses to refrain from consuming animal products. Many other problems that are also choice-dependent don't have this second feature: for example, lots of good policies could be implemented if sufficiently many people wanted them, but until that critical mass is reached, nothing will happen. By contrast, we can each make a difference to the lives of farm animals, regardless of what others decide to do. If I abstain from consuming an animal, then in expectation roughly one fewer animal will suffer ('roughly', because of [supply and demand elasticities](http://reducing-suffering.org/comments-on-compassion-by-the-pound/#Elasticities)).
 
@@ -90,7 +90,7 @@ In sum, then, the problem of animal suffering in factory farms is large-scale, e
 
 ## What can we do about it? {#what-can-we-do-about-it}
 
-In the remainder of this talk, I'm going to examine three different promising interventions. First, we can change our diets, and persuade others to change theirs. Second, we can pressure corporations to improve farm conditions. Third, we can support research into animal product alternatives.
+In the remainder of this talk, I'm going to examine three different promising interventions. First, we can change our diets, and persuade others to change theirs. Second, we can pressure corporations to improve farm conditions. Third, we can support research into animal product alternatives.
 
 
 ### Dietary change {#dietary-change}
@@ -111,7 +111,7 @@ It turns out that removing just those three animal products would get rid of mos
 
 {{< figure src="http://www.stafforini.com/blog/wp-content/uploads/Animal-welfare-EAGxPrague-5.png" >}}
 
-And this would be so even if you account for substitution effects. Here I have assumed that people replace _all_ the calories they were getting from eggs, chicken and fish with the remaining animal products, in proportion to how much of each they were eating before.  Even accounting for these substitution effects, the reduction in suffering is huge. Do you want to guess how much suffering this new diet averts?
+And this would be so even if you account for substitution effects. Here I have assumed that people replace _all_ the calories they were getting from eggs, chicken and fish with the remaining animal products, in proportion to how much of each they were eating before.  Even accounting for these substitution effects, the reduction in suffering is huge. Do you want to guess how much suffering this new diet averts?
 
 {{< figure src="http://www.stafforini.com/blog/wp-content/uploads/Animal-welfare-EAGxPrague-6.png" >}}
 
@@ -127,22 +127,22 @@ In general, when you have a choice among different options---like causes, career
 
 Having said that, I think that if we are interested in reducing as much animal suffering as possible, we shouldn't focus on our own dietary choices so much.
 
-First, this focus drastically limits our impact. In effect, by focusing on my own personal consumption I'm narrowing down the set of possible interventions to the tiny subset of those that target me. But of all the things in the world I could change, why focus on the minuscule class of changes that involve me personally?
+First, this focus drastically limits our impact. In effect, by focusing on my own personal consumption I'm narrowing down the set of possible interventions to the tiny subset of those that target me. But of all the things in the world I could change, why focus on the minuscule class of changes that involve me personally?
 
 Second, focus on personal consumption tends to cloud our thinking. For one thing, it can undermine the kind of impact-based and evidence-based mindset we want to promote. When people learn that their actual impact from changes in personal consumption is dwarfed by the potential impact they could have in other ways---as we will see shortly---, this often creates cognitive dissonance. And people frequently reduce this dissonance either by abandoning the idea that we should have the most impact we can or by ignoring or disputing the existing evidence of impact.
 
 In addition, focus on personal consumption tends to foster tribalism. So much emphasis on dietary choice often causes people to become personally attached to a particular diet, like vegetarianism or veganism, which for these people often becomes part of their identity. But then it becomes much harder to think clearly about the issue. This is something Paul Graham warns against in his illuminating essay, “Keep your identity small”. (I'm a lacto-vegetarian, but partly for this reason I don't mention it publicly often---except at conferences.)
 
-One way you can reduce animal suffering beyond reducing the animals you personally consume is by supporting organizations, such as the Humane League, that do leafleting and online ads to make people eat fewer animal products.  According to ACE, an animal charity evaluator, a donation of $1 to one of these organizations averts between 1.1 and 7.2 years of suffering in a factory farm.  Note that the Standard American Diet causes about 700 days of factory-farm suffering per year, or a little less than two years. So if these estimates are accurate---and it should be stressed that considerable uncertainty surrounds these figures---, by donating just a couple dollars to the Humane League you can reduce as much suffering as by going vegan for an entire year. Clearly, we can do incalculably more good by donating to these organizations than by changing our own diets.
+One way you can reduce animal suffering beyond reducing the animals you personally consume is by supporting organizations, such as the Humane League, that do leafleting and online ads to make people eat fewer animal products.  According to ACE, an animal charity evaluator, a donation of $1 to one of these organizations averts between 1.1 and 7.2 years of suffering in a factory farm.  Note that the Standard American Diet causes about 700 days of factory-farm suffering per year, or a little less than two years. So if these estimates are accurate---and it should be stressed that considerable uncertainty surrounds these figures---, by donating just a couple dollars to the Humane League you can reduce as much suffering as by going vegan for an entire year. Clearly, we can do incalculably more good by donating to these organizations than by changing our own diets.
 
 
 ### Corporate reform campaigns {#corporate-reform-campaigns}
 
-But there are ways of helping animals besides trying to reduce the number and types of animal products that we and others consume. A particularly promising approach involves corporate reform campaigns to improve the conditions under which factory-farmed animals live and die.
+But there are ways of helping animals besides trying to reduce the number and types of animal products that we and others consume. A particularly promising approach involves corporate reform campaigns to improve the conditions under which factory-farmed animals live and die.
 
 The Open Philanthropy Project, a foundation established by Cari Tuna and Dustin Moskovitz, estimates that each dollar spent so far in campaigns to make corporations go cage-free has averted about 150 years of cage confinement. It should be noted that the years of cage confinement are being compared to cage-free systems, which are not by any means ideal. But the conditions in cages are so bad that any improvement, however small, translates into a significant reduction in suffering.
 
-To put this figures in perspective, let's again draw a comparison with malaria interventions. The Against Malaria Foundation tops the ranking of charities recommended by GiveWell, a highly respected charity evaluator founded by many of the same folks that run the Open Philanthropy Project. According to GiveWell, each dollar donated to AMF averts 0.0023 disability-adjusted life years. (Such DALYs measure the number of years lost due to ill-health, disability or early death.)
+To put this figures in perspective, let's again draw a comparison with malaria interventions. The Against Malaria Foundation tops the ranking of charities recommended by GiveWell, a highly respected charity evaluator founded by many of the same folks that run the Open Philanthropy Project. According to GiveWell, each dollar donated to AMF averts 0.0023 disability-adjusted life years. (Such DALYs measure the number of years lost due to ill-health, disability or early death.)
 
 So here again we see how animal interventions score much better than even the best human interventions. If OpenPhil's estimates are accurate, we can avert over a hundred thousand times more years in factory farms than we can avert human DALYs.
 
@@ -150,12 +150,12 @@ Of course, this is a _very_ crude comparison, for two reasons.
 
 First, it's unclear how we should compare the welfare of different species of animals. Some animals have much larger brains than others, which suggests that they are capable of having much more intense subjective experiences. Interspecies comparisons of welfare will involve considerable uncertainty until progress in neuroscience gives us a much better picture than we have at present of how sentience scales with brain size.
 
-Second, this scientific uncertainty is compounded by philosophical uncertainty in population ethics. It's unclear whether there is a fundamental moral difference between bringing a new life into existence and prolonging a life that already exists. This is relevant because, in the case of factory farm animals, many interventions result in fewer animals being born---interventions such as those involving dietary change, but also those involving the development of animal product alternatives, as we will see shortly. By contrast, with malaria control the outcome of the intervention is to prolong the life of a child who would have otherwise died.
+Second, this scientific uncertainty is compounded by philosophical uncertainty in population ethics. It's unclear whether there is a fundamental moral difference between bringing a new life into existence and prolonging a life that already exists. This is relevant because, in the case of factory farm animals, many interventions result in fewer animals being born---interventions such as those involving dietary change, but also those involving the development of animal product alternatives, as we will see shortly. By contrast, with malaria control the outcome of the intervention is to prolong the life of a child who would have otherwise died.
 
 
 ### Animal product alternatives {#animal-product-alternatives}
 
-So we've considered dietary change and corporate reform campaigns. Let's now take a look at the final promising intervention: the development of adequate animal product alternatives.
+So we've considered dietary change and corporate reform campaigns. Let's now take a look at the final promising intervention: the development of adequate animal product alternatives.
 
 If animal product alternatives were price- and taste-competitive with the real thing, they could greatly reduce demand for animal products. They would taste just as good, and they could be cheaper, so many people---though perhaps not everyone---would buy them. There are two main types of animal product alternatives.
 
@@ -165,13 +165,13 @@ First, there are plant-based alternatives, which try to mimic the taste and text
 
 This is a burger made entirely of vegetable products. Someone earlier today was telling me that they tried this burger in San Francisco and it was one of the best burgers they ever had.
 
-Bill Gates wrote about his experience tasting a chicken taco made entirely from Beyond Chicken strips. He noted that he wasn't able to tell the difference.  Mark Bittman, a New York Times food correspondent and author of a best-selling cookbook, also tried Beyond Chicken in a blind taste test.  “It fooled me badly,” he remarked.
+Bill Gates wrote about his experience tasting a chicken taco made entirely from Beyond Chicken strips. He noted that he wasn't able to tell the difference.  Mark Bittman, a New York Times food correspondent and author of a best-selling cookbook, also tried Beyond Chicken in a blind taste test.  “It fooled me badly,” he remarked.
 
 Still, it's unclear how much these plant-based alternatives will replace real meat. Many people have an intrinsic preference for meat, and despite this enthusiasm, it's still the case that most of the types of meat people eat---such as beef steaks and chicken breasts---can't at the moment be replaced with a product that is sufficiently similar in taste and texture. The nutritional profile of these meat substitutes is also different. And they aren't yet price-competitive.
 
 Here's where the second type of animal product alternative becomes relevant. In fact, calling these products “alternatives” is misleading: they are the real thing. It's just that they are not produced in the usual way. Instead of growing an animal over a period of months or years to then kill it and eat its flesh, we instead grow the meat directly in cell cultures.
 
-Remarkably, this technology was described and predicted by no other than Sir Winston Churchill in a prescient essay from 1931. Churchill wrote:
+Remarkably, this technology was described and predicted by no other than Sir Winston Churchill in a prescient essay from 1931. Churchill wrote:
 
 > We shall escape the absurdity of growing a whole chicken in order to eat the breast or wing, by growing these parts separately under a suitable medium.
 
@@ -179,7 +179,7 @@ And three years ago, his prediction came true.
 
 {{< figure src="http://www.stafforini.com/blog/wp-content/uploads/Animal-welfare-EAGxPrague-8.png" >}}
 
-This burger that you see here, unlike the one I showed you before, is made from real meat---but meat entirely produced in a lab from cow stem cells.  At the moment, the main technical barrier is reducing the cost of animal-free medium. Mark Post estimates this is still about a decade ahead into the future. I was present at the first ever cultured meat conference, held in Ås, Norway, in 2008. Back then some people were saying that we would have commercially available cultured meat in 10 years. So I'm somewhat pessimistic about the timelines.
+This burger that you see here, unlike the one I showed you before, is made from real meat---but meat entirely produced in a lab from cow stem cells.  At the moment, the main technical barrier is reducing the cost of animal-free medium. Mark Post estimates this is still about a decade ahead into the future. I was present at the first ever cultured meat conference, held in Ås, Norway, in 2008. Back then some people were saying that we would have commercially available cultured meat in 10 years. So I'm somewhat pessimistic about the timelines.
 
 Clara Foods uses genetically modified yeast in fermentation processes, in a way similar to how beer is made. But because this yeast carries the genes that code for egg white protein in chicken, what the fermentation process produces is egg white protein instead. Here I'm more optimistic because producing egg whites only requires manufacturing a small number of proteins, which is much simpler than producing the tissues required for cultured meat. Besides, cultured egg white protein production is more similar to industrial biotech processes that have already been demonstrated. So the technical challenges are less daunting. And, as we've seen, consumption of eggs accounts for a disproportionate share of the suffering experienced by farm animals, as we have seen.
 

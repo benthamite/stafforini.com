@@ -7,4 +7,5 @@ draft = false
 work = "egan-1995-teranesia"
 locator = "p. 179"
 +++
+
 > What evolution had done, design could do better. There would always be a chance to take what you needed, take what was good, then cut yourself free and move on.

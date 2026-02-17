@@ -7,4 +7,5 @@ draft = false
 work = "hare-1964-pain-evil"
 locator = "pp. vol"
 +++
+
 > Logic cannot make me suffer.
