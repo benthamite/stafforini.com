@@ -21,8 +21,10 @@
 
 ;; Allow broken links (some old WordPress links may be dead)
 (setq org-export-with-broken-links t)
-;; Exclude :ARCHIVE: tagged headings from export
+;; Exclude :ARCHIVE: and :noexport: tagged headings from export
 (setq org-export-exclude-tags '("noexport" "ARCHIVE"))
+;; Don't render TODO keywords in exported headings
+(setq org-export-with-todo-keywords nil)
 (setq org-hugo-suppress-lastmod-period 0)
 
 ;; Register a cite export processor that emits Hugo {{< cite >}} shortcodes.
