@@ -1,6 +1,6 @@
 # Publishing workflow
 
-How to get changes in org source files reflected on the Hugo site.
+How to get changes in org source files or BibTeX files reflected on the Hugo site.
 
 ## Prerequisites
 
@@ -34,6 +34,7 @@ hugo server --buildDrafts --navigateToChanged
 |--------------|----------------------------------------------------------------------------------|-------------------|
 | Notes        | `~/Library/CloudStorage/Dropbox/websites/pablos-miscellany/*.org`                | `content/notes/`  |
 | Quotes       | `~/Library/CloudStorage/Dropbox/bibliographic-notes/*.org` (`:public:` subtrees) | `content/quotes/` |
+| Works        | `.bib` files (see SPEC.md for paths)                                             | `content/works/`  |
 
 ## Pipeline overview
 
@@ -75,10 +76,17 @@ The `.dir-locals.el` in `pablos-miscellany/` activates the `hugo-cite` processor
 
 The `.dir-locals.el` in `bibliographic-notes/` activates the `hugo-cite-noop` processor, which suppresses citation text (quotes get their attribution from work pages instead).
 
+### Editing a BibTeX entry
+
+1. Edit the `.bib` file
+2. Run `python scripts/generate-work-pages.py --skip-postprocess`
+3. If `hugo server` is running, the site updates automatically
+
+The script reads all `.bib` files listed in `scripts/lib.py`, regenerates work pages for every cited key, and updates any that have changed. It is safe to re-run at any time.
+
 ### When you need extra steps
 
 - **New org file**: run `python scripts/prepare-org-notes.py` first to add ox-hugo metadata (`:EXPORT_FILE_NAME:`, `:EXPORT_HUGO_SECTION:`, etc.)
-- **New cite keys**: run `python scripts/generate-work-pages.py` to create `content/works/` pages for any new citations
 - **Changed links**: run `python scripts/generate-backlinks.py` to regenerate backlink data from the org-roam database
 
 ## Batch workflow
