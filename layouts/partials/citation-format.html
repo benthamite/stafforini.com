@@ -18,23 +18,23 @@
 {{- $link := .link -}}
 {{- if or (eq $type "incollection") (eq $type "inbook") (eq $type "inproceedings") -}}
   {{/* Chapter/section in a book: Author, 'Title', in Editor (ed.) *BookTitle*, Place, Year */}}
-  {{ $work.Params.author }}, &lsquo;{{ $work.Title }}&rsquo;,
+  {{ $work.Params.author }}, &lsquo;{{ $work.Title | safeHTML }}&rsquo;,
   {{- with $work.Params.editor }} in {{ . }} (ed.){{ end }}
   {{- if $link -}}
-    <a href="{{ $work.RelPermalink }}"><em>{{ $work.Params.booktitle | default $work.Title }}</em></a>
+    <a href="{{ $work.RelPermalink }}"><em>{{ $work.Params.booktitle | default $work.Title | safeHTML }}</em></a>
   {{- else -}}
-    <em>{{ $work.Params.booktitle | default $work.Title }}</em>
+    <em>{{ $work.Params.booktitle | default $work.Title | safeHTML }}</em>
   {{- end -}}
   {{- with $work.Params.location }}, {{ . }}{{ end -}}
   {{- with $work.Params.year }}, {{ . }}{{ end -}}
   {{- with $locator }}, {{ . }}{{ end -}}
 {{- else if eq $type "article" -}}
   {{/* Journal article: Author, 'Title', *Journal*, vol. X, no. Y, Year */}}
-  {{ $work.Params.author }}, &lsquo;{{ $work.Title }}&rsquo;,
+  {{ $work.Params.author }}, &lsquo;{{ $work.Title | safeHTML }}&rsquo;,
   {{- if $link -}}
-    <a href="{{ $work.RelPermalink }}"><em>{{ $work.Params.journaltitle | default $work.Title }}</em></a>
+    <a href="{{ $work.RelPermalink }}"><em>{{ $work.Params.journaltitle | default $work.Title | safeHTML }}</em></a>
   {{- else -}}
-    <em>{{ $work.Params.journaltitle | default $work.Title }}</em>
+    <em>{{ $work.Params.journaltitle | default $work.Title | safeHTML }}</em>
   {{- end -}}
   {{- with $work.Params.volume }}, vol. {{ . }}{{ end -}}
   {{- with $work.Params.number }}, no. {{ . }}{{ end -}}
@@ -44,9 +44,9 @@
   {{/* Book and everything else: Author, *Title*, Place, Year */}}
   {{ $work.Params.author }},
   {{- if $link -}}
-    {{- " " -}}<a href="{{ $work.RelPermalink }}"><em>{{ $work.Title }}</em></a>
+    {{- " " -}}<a href="{{ $work.RelPermalink }}"><em>{{ $work.Title | safeHTML }}</em></a>
   {{- else -}}
-    {{- " " -}}<em>{{ $work.Title }}</em>
+    {{- " " -}}<em>{{ $work.Title | safeHTML }}</em>
   {{- end -}}
   {{- with $work.Params.location }}, {{ . }}{{ end -}}
   {{- with $work.Params.year }}, {{ . }}{{ end -}}
