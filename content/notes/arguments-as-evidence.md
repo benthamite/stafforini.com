@@ -1,9 +1,8 @@
----
-title: "Arguments as evidence"
-date: 2014-12-03T05:45:53
-lastmod: 2014-12-03T05:45:53
-draft: true
----
++++
+title = "Arguments as evidence"
+author = ["Pablo Stafforini"]
+draft = true
++++
 
 Standard view: you should believe what follows from sound arguments.
 "Bayesian" approach: arguments are just another piece of evidence. In Bayesian terms:

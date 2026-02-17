@@ -1,325 +1,325 @@
----
-title: "Useful concepts"
-date: 2015-12-31T09:10:58
-lastmod: 2015-12-31T09:10:58
-draft: true
----
++++
+title = "Useful concepts"
+author = ["Pablo Stafforini"]
+date = 2015-12-31
+draft = false
++++
 
-[Add concepts listed here: http://lesswrong.com/lw/hhl/useful\_concepts\_repository/]
+[Add concepts listed here: <http://lesswrong.com/lw/hhl/useful_concepts_repository/>]
 
-- “Because”
-- 5 second skills
-- 80:20 rule, low hanging fruit
-- A priori, a posteriori
-- Adaptation executor not fitness maximizer
-- Aether variables
-- Affect heuristic
-- Affordance
-- Affordance (brain shaped, overlearning)
-- Alternative hypothesis generation
-- Ambiguity avoidance/effect (variance avoidance)
-- Ammortization
-- Apophenia
-- Approach/avoid
-- Arbitrage
-- Archetype
-- Arrow’s impossibility
-- Ask-guess-tell culture
-- Attribution Substitution
-- Attribution substitution
-- Availability heuristic
-- Back chaining vs forward chaining
-- Base rate neglect
-- Be vs Do
-- Best/worst/average case
-- Beware what you wish for
-- Bias gradients
-- Biases
-- Big five personality traits
-- Body language energy
-- Bottleneck (Theory of Constraints)
-- Brainstorming questions/problems rather than answers
-- Breadth vs depth first search
-- Business analysis concepts
-- Calibrated scaffolding (i.e build as much scaffolding as necessary and no more)
-- Can’t bullshit yourself
-- CAR model
-- Carrot and stick
-- Causal graph
-- Challenge
-- Check-in
-- Chesterton fence
-- Clump vs Spread
-- Cognitive behavioral therapy
-- Cognitive dissonance avoidance
-- Common distributions (bimodal, normal, log-normal, power law, etc.)
-- Common knowledge
-- Communication concepts
-- Comparative advantage
-- Confabulation
-- Confidence Interval
-- Confirmation bias
-- Confusion matrix
-- Control Calibration
-- Counterfactual simulations
-- CoZE
-- Critical path
-- Critical thresholds in nonlinear systems
-- Cross impact analysis
-- Daily Plan
-- Daily Review
-- Data biases
-- Decision fatigue (microdecisions)
-- Deduction vs induction
-- Degree
-- Deliberate practice
-- Denotation and Connotation
-- Dependency hell (goal or aversion factoring)
-- Derivatives
-- Diffusion of innovation
-- Dimensionality reduction/Clusters in thing space
-- Diminishing returns
-- Directed graph
-- Diversify vs Focus
-- Dominance, communality, or reciprocity relationships
-- Dramatic vs Marginal
-- Dual process theories
-- Dunbar’s number
-- Economic concepts
-- Effect size
-- Effectuation
-- Efficient markets
-- Elasticity
-- Endorse on reflection
-- Endorse vs Record evals
-- Epistemic concepts
-- Epistemological rigor->methodological rigor (expert on experts)
-- Essentialism
-- Evidence/update proportionality
-- Evolutionary psychology concepts
-- Expected value
-- Exploration neglect
-- Exploration neglect
-- Externalities
-- Farmer vs forager
-- Feedback loop tightness
-- Focused grit
-- Focusing effect
-- Forest plot
-- Fox vs hedgehog
-- Foxy elimination
-- Fragile vs antifragile (hormesis)
-- Framing/Reframing
-- Free riders
-- Frictional costs
-- Fully general counterargument
-- Functional programming (mental heuristics)
-- Fundamental attribution error (braitenberg vehicles)
-- Funnel plot
-- Game theory concepts
-- Gartner hype cycle
-- Geographic sensitivity
-- Gifts
-- Good vs bad proxies
-- Graphs
-- Greedy algorithm
-- Habit formation concepts
-- Halo effect/affiliation
-- Hamming question
-- Handicap principle
-- Hard work avoidance
-- High variance blindness
-- Hindsight and prehindsight
-- Holding off on solutions
-- Identity-Consistency
-- Impression management
-- Inception
-- Incoherent discount rate
-- Increasing marginal utility of attention (monkey mind)
-- Increasing returns
-- Information asymmetry
-- Inner loop/outer loop
-- Inner simulator
-- Instrumental/terminal values
-- Internal censor
-- Internal family systems
-- Introspection illusion
-- Inversion
-- Justifiability
-- Kayfabe
-- Key assumptions check
-- Key trade-off analysis (synthesis of form)
-- Key Uncertainties
-- Leaky abstraction
-- Levels of abstraction
-- Liking vs wanting
-- Linear vs nonlinear functions
-- Local and global maxima, hill climbing
-- Locked to each other (unblending variables)
-- Locked vs unlocked dials
-- Locus of control
-- Love languages
-- Low-hanging fruit
-- Low status blindness
-- Low-status avoidance
-- Lowering cognitive overhead (trivial inconveniences)
-- Making beliefs load bearing
-- Marginal Thinking
-- Market segmentation
-- Math concepts
-- Mean world syndrome
-- Median voter theorem
-- Medicalization (deprivation of agency)
-- Meditation
-- Memetics
-- Mental contrasting
-- Misweight because came first
-- Misweight because familiar
-- Misweight because of source
-- Misweight because simpler
-- Moat
-- Moloch
-- Momentum vs lightness
-- Moral Foundations theory
-- Moral hazard
-- Moral licensing
-- Moral trade
-- Moral uncertainty
-- Motivation equation
-- Napkin math
-- Narrative bias
-- Nash equilibrium
-- Natural kind (cutting at the joints)
-- Near vs far
-- Negative visualization
-- Net present value
-- Network effects
-- Neurodiversity (typical mind fallacy)
-- Next action
-- Nominal fallacy
-- Non-violent communication
-- Now vs later
-- Offline training
-- Ontological crisis
-- OODA loop
-- Open vs closed modes
-- Open vs closed posture, taking up space
-- Opportunity cost
-- Optimal brainstorming
-- Optimal brainstorming
-- Over/underdetermined
-- Overton window
-- Parallelization
-- Pareto improvement
-- Participate vs Support
-- Path dependence
-- Pattern completion
-- Permuting concepts
-- Plurality (voting)
-- Pointing at the moon
-- Political concepts
-- Pomodoro distraction log
-- Positive vs normative
-- Post hoc ergo propter hoc
-- Power
-- Power-law world vs Normal world
-- Precision and accuracy
-- Precommitment
-- Premature decisions
-- Premature sharing
-- Premortem
-- Prerequisite tree
-- Prestige vs Results
-- Principal agent problem/Lost purposes
-- Prisoner’s Dilemma
-- Production-possibility frontier
-- Programming concepts
-- Proving too much (non-falsifiability)
-- Proximity bias
-- Proxy measure ratios
-- Psychotherapy concepts
-- Public choice theory
-- Quality time
-- r/K selection
-- Rationalism/empircisim
-- Rationality concepts
-- Realpolitik
-- Red queen
-- Red team
-- Redescribing to self or others (rubber ducking)
-- Reference class forecasting (Inside view/outside view)
-- Regression
-- Regression to the mean
-- Regression to the mean
-- Representativeness heuristic
-- Risk tolerance
-- Sample size
-- Scenario planning (matrices)
-- Scenario/evidence matrix
-- Schelling fence
-- Schelling point
-- Schlep blindness
-- Scope insensitivity
-- Searching under the streetlight
-- Selection effects
-- Self care
-- Self Denial
-- Self Help/Motivation concepts
-- Self-signaling/self trust
-- Semmelweis effect
-- Separation and recombination (both append and insert)
-- Service
-- Show vs Is
-- Signal/noise
-- Signaling/Countersignaling/Meta Contrarianism
-- Simplicity, unexpectedness, concreteness, credibility, emotions, stories
-- State machine
-- Stated and revealed preference
-- Statistics concepts
-- Status quo/absurdity
-- Stealing cheat codes (opposite of not invented here)
-- Sticky concepts
-- Stoicism
-- Straussian reading
-- Straw/steelman
-- Structured analytic techniques
-- Structured entropy injection
-- Subject object distinction
-- Sunk costs
-- Superstimulus
-- Survivorship bias
-- System 1 can’t do math
-- System 1 vs system 2
-- Systems vs goal
-- Taboo words
-- Tacit knowledge
-- Tail miscalibration/model uncertainty
-- Talk vs Bet
-- TDT
-- Temporal sensitivity
-- Time/money value of time/money
-- Touch
-- Tragedy of the commons
-- Transfer of learning
-- Trend analysis
-- Trigger Action Plan
-- Trivial inconvenience
-- Type error
-- Type I and II errors
-- Ugh fields
-- Universal prior (epistemic luck)
-- Upstream/downstream
-- Urge propogation
-- Us vs Them
-- Valley of bad X (tends towards hedgehogging)
-- Value of Information (xkcd chart)
-- Variance
-- Virality coefficient
-- Wastebasket taxon
-- Weighted edges
-- What if
-- Why/How/What hierarchy
-- Words of affirmation
-- Workbooks
-- Zeigarnik effect
-- Zero vs positive sum thinking
+-   “Because”
+-   5 second skills
+-   80:20 rule, low hanging fruit
+-   A priori, a posteriori
+-   Adaptation executor not fitness maximizer
+-   Aether variables
+-   Affect heuristic
+-   Affordance
+-   Affordance (brain shaped, overlearning)
+-   Alternative hypothesis generation
+-   Ambiguity avoidance/effect (variance avoidance)
+-   Ammortization
+-   Apophenia
+-   Approach/avoid
+-   Arbitrage
+-   Archetype
+-   Arrow's impossibility
+-   Ask-guess-tell culture
+-   Attribution Substitution
+-   Attribution substitution
+-   Availability heuristic
+-   Back chaining vs forward chaining
+-   Base rate neglect
+-   Be vs Do
+-   Best/worst/average case
+-   Beware what you wish for
+-   Bias gradients
+-   Biases
+-   Big five personality traits
+-   Body language energy
+-   Bottleneck (Theory of Constraints)
+-   Brainstorming questions/problems rather than answers
+-   Breadth vs depth first search
+-   Business analysis concepts
+-   Calibrated scaffolding (i.e build as much scaffolding as necessary and no more)
+-   Can't bullshit yourself
+-   CAR model
+-   Carrot and stick
+-   Causal graph
+-   Challenge
+-   Check-in
+-   Chesterton fence
+-   Clump vs Spread
+-   Cognitive behavioral therapy
+-   Cognitive dissonance avoidance
+-   Common distributions (bimodal, normal, log-normal, power law, etc.)
+-   Common knowledge
+-   Communication concepts
+-   Comparative advantage
+-   Confabulation
+-   Confidence Interval
+-   Confirmation bias
+-   Confusion matrix
+-   Control Calibration
+-   Counterfactual simulations
+-   CoZE
+-   Critical path
+-   Critical thresholds in nonlinear systems
+-   Cross impact analysis
+-   Daily Plan
+-   Daily Review
+-   Data biases
+-   Decision fatigue (microdecisions)
+-   Deduction vs induction
+-   Degree
+-   Deliberate practice
+-   Denotation and Connotation
+-   Dependency hell (goal or aversion factoring)
+-   Derivatives
+-   Diffusion of innovation
+-   Dimensionality reduction/Clusters in thing space
+-   Diminishing returns
+-   Directed graph
+-   Diversify vs Focus
+-   Dominance, communality, or reciprocity relationships
+-   Dramatic vs Marginal
+-   Dual process theories
+-   Dunbar's number
+-   Economic concepts
+-   Effect size
+-   Effectuation
+-   Efficient markets
+-   Elasticity
+-   Endorse on reflection
+-   Endorse vs Record evals
+-   Epistemic concepts
+-   Epistemological rigor-&gt;methodological rigor (expert on experts)
+-   Essentialism
+-   Evidence/update proportionality
+-   Evolutionary psychology concepts
+-   Expected value
+-   Exploration neglect
+-   Exploration neglect
+-   Externalities
+-   Farmer vs forager
+-   Feedback loop tightness
+-   Focused grit
+-   Focusing effect
+-   Forest plot
+-   Fox vs hedgehog
+-   Foxy elimination
+-   Fragile vs antifragile (hormesis)
+-   Framing/Reframing
+-   Free riders
+-   Frictional costs
+-   Fully general counterargument
+-   Functional programming (mental heuristics)
+-   Fundamental attribution error (braitenberg vehicles)
+-   Funnel plot
+-   Game theory concepts
+-   Gartner hype cycle
+-   Geographic sensitivity
+-   Gifts
+-   Good vs bad proxies
+-   Graphs
+-   Greedy algorithm
+-   Habit formation concepts
+-   Halo effect/affiliation
+-   Hamming question
+-   Handicap principle
+-   Hard work avoidance
+-   High variance blindness
+-   Hindsight and prehindsight
+-   Holding off on solutions
+-   Identity-Consistency
+-   Impression management
+-   Inception
+-   Incoherent discount rate
+-   Increasing marginal utility of attention (monkey mind)
+-   Increasing returns
+-   Information asymmetry
+-   Inner loop/outer loop
+-   Inner simulator
+-   Instrumental/terminal values
+-   Internal censor
+-   Internal family systems
+-   Introspection illusion
+-   Inversion
+-   Justifiability
+-   Kayfabe
+-   Key assumptions check
+-   Key trade-off analysis (synthesis of form)
+-   Key Uncertainties
+-   Leaky abstraction
+-   Levels of abstraction
+-   Liking vs wanting
+-   Linear vs nonlinear functions
+-   Local and global maxima, hill climbing
+-   Locked to each other (unblending variables)
+-   Locked vs unlocked dials
+-   Locus of control
+-   Love languages
+-   Low-hanging fruit
+-   Low status blindness
+-   Low-status avoidance
+-   Lowering cognitive overhead (trivial inconveniences)
+-   Making beliefs load bearing
+-   Marginal Thinking
+-   Market segmentation
+-   Math concepts
+-   Mean world syndrome
+-   Median voter theorem
+-   Medicalization (deprivation of agency)
+-   Meditation
+-   Memetics
+-   Mental contrasting
+-   Misweight because came first
+-   Misweight because familiar
+-   Misweight because of source
+-   Misweight because simpler
+-   Moat
+-   Moloch
+-   Momentum vs lightness
+-   Moral Foundations theory
+-   Moral hazard
+-   Moral licensing
+-   Moral trade
+-   Moral uncertainty
+-   Motivation equation
+-   Napkin math
+-   Narrative bias
+-   Nash equilibrium
+-   Natural kind (cutting at the joints)
+-   Near vs far
+-   Negative visualization
+-   Net present value
+-   Network effects
+-   Neurodiversity (typical mind fallacy)
+-   Next action
+-   Nominal fallacy
+-   Non-violent communication
+-   Now vs later
+-   Offline training
+-   Ontological crisis
+-   OODA loop
+-   Open vs closed modes
+-   Open vs closed posture, taking up space
+-   Opportunity cost
+-   Optimal brainstorming
+-   Optimal brainstorming
+-   Over/underdetermined
+-   Overton window
+-   Parallelization
+-   Pareto improvement
+-   Participate vs Support
+-   Path dependence
+-   Pattern completion
+-   Permuting concepts
+-   Plurality (voting)
+-   Pointing at the moon
+-   Political concepts
+-   Pomodoro distraction log
+-   Positive vs normative
+-   Post hoc ergo propter hoc
+-   Power
+-   Power-law world vs Normal world
+-   Precision and accuracy
+-   Precommitment
+-   Premature decisions
+-   Premature sharing
+-   Premortem
+-   Prerequisite tree
+-   Prestige vs Results
+-   Principal agent problem/Lost purposes
+-   Prisoner's Dilemma
+-   Production-possibility frontier
+-   Programming concepts
+-   Proving too much (non-falsifiability)
+-   Proximity bias
+-   Proxy measure ratios
+-   Psychotherapy concepts
+-   Public choice theory
+-   Quality time
+-   r/K selection
+-   Rationalism/empircisim
+-   Rationality concepts
+-   Realpolitik
+-   Red queen
+-   Red team
+-   Redescribing to self or others (rubber ducking)
+-   Reference class forecasting (Inside view/outside view)
+-   Regression
+-   Regression to the mean
+-   Regression to the mean
+-   Representativeness heuristic
+-   Risk tolerance
+-   Sample size
+-   Scenario planning (matrices)
+-   Scenario/evidence matrix
+-   Schelling fence
+-   Schelling point
+-   Schlep blindness
+-   Scope insensitivity
+-   Searching under the streetlight
+-   Selection effects
+-   Self care
+-   Self Denial
+-   Self Help/Motivation concepts
+-   Self-signaling/self trust
+-   Semmelweis effect
+-   Separation and recombination (both append and insert)
+-   Service
+-   Show vs Is
+-   Signal/noise
+-   Signaling/Countersignaling/Meta Contrarianism
+-   Simplicity, unexpectedness, concreteness, credibility, emotions, stories
+-   State machine
+-   Stated and revealed preference
+-   Statistics concepts
+-   Status quo/absurdity
+-   Stealing cheat codes (opposite of not invented here)
+-   Sticky concepts
+-   Stoicism
+-   Straussian reading
+-   Straw/steelman
+-   Structured analytic techniques
+-   Structured entropy injection
+-   Subject object distinction
+-   Sunk costs
+-   Superstimulus
+-   Survivorship bias
+-   System 1 can't do math
+-   System 1 vs system 2
+-   Systems vs goal
+-   Taboo words
+-   Tacit knowledge
+-   Tail miscalibration/model uncertainty
+-   Talk vs Bet
+-   TDT
+-   Temporal sensitivity
+-   Time/money value of time/money
+-   Touch
+-   Tragedy of the commons
+-   Transfer of learning
+-   Trend analysis
+-   Trigger Action Plan
+-   Trivial inconvenience
+-   Type error
+-   Type I and II errors
+-   Ugh fields
+-   Universal prior (epistemic luck)
+-   Upstream/downstream
+-   Urge propogation
+-   Us vs Them
+-   Valley of bad X (tends towards hedgehogging)
+-   Value of Information (xkcd chart)
+-   Variance
+-   Virality coefficient
+-   Wastebasket taxon
+-   Weighted edges
+-   What if
+-   Why/How/What hierarchy
+-   Words of affirmation
+-   Workbooks
+-   Zeigarnik effect
+-   Zero vs positive sum thinking

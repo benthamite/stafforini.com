@@ -1,9 +1,8 @@
----
-title: "Productivity: inputs and outputs"
-date: 2015-09-20T19:42:51
-lastmod: 2015-09-20T19:42:51
-draft: true
----
++++
+title = "Productivity: inputs and outputs"
+author = ["Pablo Stafforini"]
+draft = true
++++
 
 I finally realized with my latest productivity system (Trello + Pomello) works so well. It's because it decouples the management of inputs from the management of outputs. In other words, it decouples time-management from task-management.
 

@@ -1,9 +1,8 @@
----
-title: "How to find films you'll love (and avoid films you'll hate)"
-date: 2015-03-09T20:55:55
-lastmod: 2015-03-09T20:55:55
-draft: true
----
++++
+title = "How to find films you'll love (and avoid films you'll hate)"
+author = ["Pablo Stafforini"]
+draft = true
++++
 
 Movielens
 

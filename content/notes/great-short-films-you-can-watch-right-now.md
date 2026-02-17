@@ -1,9 +1,7 @@
----
-title: "Great short films you can watch right now"
-date: 2014-03-01T20:38:29
-lastmod: 2014-03-01T20:38:29
-draft: true
-categories: ["Film", "Things I like"]
----
++++
+title = "Great short films you can watch right now"
+author = ["Pablo Stafforini"]
+draft = true
++++
 
-http://youtu.be/\_FrdVdKlxUk
+<http://youtu.be/_FrdVdKlxUk>

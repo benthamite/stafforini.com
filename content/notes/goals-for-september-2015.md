@@ -1,9 +1,8 @@
----
-title: "Goals for September 2015"
-date: 2015-08-25T11:22:39
-lastmod: 2015-08-25T11:22:39
-draft: true
----
++++
+title = "Goals for September 2015"
+author = ["Pablo Stafforini"]
+draft = true
++++
 
 Read the Old Testament
 

@@ -1,10 +1,9 @@
----
-title: "Sleep restriction and calorie restriction"
-date: 2015-08-15T18:13:41
-lastmod: 2015-08-15T18:13:41
-draft: true
-categories: ["Misc"]
----
++++
+title = "Sleep restriction and calorie restriction"
+author = ["Pablo Stafforini"]
+date = 2015-08-15
+draft = false
++++
 
 A while ago Amanda Askell wrote a fascinating article arguing that [oversleeping shortens people's lives](http://www.vox.com/2015/2/4/7972077/against-oversleeping). Her point wasn't that those who sleep more die earlier. Rather, she argued that sleeping reduces the years of life we get to experience.
 
@@ -12,7 +11,7 @@ I agree with Amanda, and have little to add to her analysis. However, I thought 
 
 CR involves restricting calories to levels below those the organism would consume under normal circumstances. When the nutrient density of food is increased so that the resulting diet is at least as nutritious as the one that is being replaced, CR has been observed to extend both mean and maximum lifespan in a wide variety of animal species. Furthermore, the extension observed is (within limits) proportional to the percent restricted. Thus, restricting calories 30% will extend life roughly twice as much as restricting calories 15%. At the same time, the conversion rate seems to vary from species to species: in some animals a restriction of 30% extends remaining life by about 30%, whereas in others that same restriction will extend life by only about 15%.
 
-Does CR work in humans? The evidence is messy and inconclusive, though I'd personally be surprised if CR didn't have at least *some* positive effects on lifespan. If I had to guess, I'd say that the conversion rate for humans is around ⅓, so that a restriction of e.g. 30% will on average extend remaining life by 10%. Of course, these estimates are highly speculative, and are based on the limited knowledge I acquired as a result of following the CR Society mailing list and reading various academic papers and online articles on the subject back when I was practicing CR several years ago.
+Does CR work in humans? The evidence is messy and inconclusive, though I'd personally be surprised if CR didn't have at least _some_ positive effects on lifespan. If I had to guess, I'd say that the conversion rate for humans is around ⅓, so that a restriction of e.g. 30% will on average extend remaining life by 10%. Of course, these estimates are highly speculative, and are based on the limited knowledge I acquired as a result of following the CR Society mailing list and reading various academic papers and online articles on the subject back when I was practicing CR several years ago.
 
 CR and SR are similar in some respects. First, both interventions yield benefits that scale linearly with a person's remaining years of life. Starting CR at 30 confers proportionally greater benefits than starting it at 50, because you have more years ahead of you the younger you are, and CR extends life by multiplying these remaining years by a constant factor. This is also the case for SR, though not because of any slowing down of the aging process, but simply due to the fact that, excluding childhood, people sleep more or less the same number of hours throughout their lives.
 
@@ -20,7 +19,7 @@ Second, both interventions yield benefits that scale linearly with the level of 
 
 Finally, CR and SR have major negative side effects. Irritability, lethargy and depression are only some of the known adverse consequences of both sleeping less and eating less. In addition, CR may cause musculoskeletal loss, eating disorders and infertility, while SR may cause impaired cognition, hypertension, and obesity.
 
-In other respects, however, CR and SR are dissimilar. CR extends life exclusively by making people live physically longer; this is not the case for SR. This consideration may be very important for people whose reason for doing life extension is at least in part to increase their chances of reaching [longevity escape velocity](https://en.wikipedia.org/wiki/Longevity_escape_velocity).  One may also want to have a longer physical life if one thinks, [perhaps not unreasonably](http://www.independent.co.uk/life-style/gadgets-and-tech/news/sex-with-robots-will-be-the-norm-in-50-years-10438330.html), that over the coming decades life will get better and better. On the other hand, extension of mere conscious life has the advantage of giving us more time with the people we know and love—people who are themselves very unlikely to practice CR.
+In other respects, however, CR and SR are dissimilar. CR extends life exclusively by making people live physically longer; this is not the case for SR. This consideration may be very important for people whose reason for doing life extension is at least in part to increase their chances of reaching [longevity escape velocity](https://en.wikipedia.org/wiki/Longevity_escape_velocity).  One may also want to have a longer physical life if one thinks, [perhaps not unreasonably](http://www.independent.co.uk/life-style/gadgets-and-tech/news/sex-with-robots-will-be-the-norm-in-50-years-10438330.html), that over the coming decades life will get better and better. On the other hand, extension of mere conscious life has the advantage of giving us more time with the people we know and love---people who are themselves very unlikely to practice CR.
 
 There is another, related difference. [The epidemiological evidence](http://www.journalsleep.org/ViewAbstract.aspx?pid=27780) indicates that sleeping more than 7.5-8 hours per day is associated with shorter lifespans. So SR may have additional benefits for those who sleep more than that amount. Such people would not only live more metaphorically, in the sense of having a longer conscious life, but also live more literally, in the sense of having a longer biological life. Of course, this evidence is correlational rather than experimental, and hence of limited causal significance. There are, to my knowledge, no obvious mechanisms to explain why people who sleep longer would live less, and there are also plausible confounding factors, so it's unclear how much weight, if any, we should give to these findings.
 

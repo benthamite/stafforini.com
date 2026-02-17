@@ -1,10 +1,9 @@
----
-title: "I'm available to talk"
-date: 2014-09-08T01:19:30
-lastmod: 2014-09-08T01:19:30
-draft: true
-categories: ["Announcements"]
----
++++
+title = "I'm available to talk"
+author = ["Pablo Stafforini"]
+date = 2014-09-08
+draft = false
++++
 
 I've recently reached the conclusion that having more one-to-one interactions with effective altruists will likely increase my positive impact. So if you are an EA (broadly defined) and would like to have a conversation with me, please do get in touch.  Originally I posted a similar announcement to the [EA self-help Facebook group](https://www.facebook.com/profile.php?id=600419023315408), and the focus was on helping people with personal issues. But I'm equally happy to discuss EA ideas and related subjects.
 

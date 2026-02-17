@@ -1,9 +1,8 @@
----
-title: "Supporting old policies with new reasons"
-date: 2016-08-18T10:46:47
-lastmod: 2016-08-18T10:46:47
-draft: true
----
++++
+title = "Supporting old policies with new reasons"
+author = ["Pablo Stafforini"]
+draft = true
++++
 
 As my thinking evolves, I find myself concluding that my reasons for doing various things have little to do with the reasons that originally prompted me to do those things.
 
