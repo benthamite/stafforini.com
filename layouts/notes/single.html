@@ -4,10 +4,6 @@
 
   {{ partial "note-meta.html" . }}
 
-  {{ if gt .WordCount 300 }}
-    {{ partial "toc.html" . }}
-  {{ end }}
-
   <div class="note-body">
     {{ .Content }}
   </div>
