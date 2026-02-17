@@ -1,9 +1,0 @@
----
-title: "Ending aging: The rejuvenation breakthroughs that could reverse human aging in our lifetime"
-author: "Aubrey De Grey and Michael Rae"
-entry_type: "incollection"
-year: 2007
-location: "New York"
----
-
-A long life in a healthy, vigorous, youthful body has always been one of humanity’s greatest dreams. Recent progress in genetic manipulations and calorie-restricted diets in laboratory animals hold forth the promise that someday science will enable us to exert total control over our own biological aging. Nearly all scientists who study the biology of aging agree that we will someday be able to substantially slow down the aging process, extending our productive, youthful lives. Dr. Aubrey de Grey is perhaps the most bullish of all such researchers. As has been reported in media outlets ranging from 60 Minutes to The New York Times, Dr. de Grey believes that the key biomedical technology required to eliminate aging-derived debilitation and death entirely—technology that would not only slow but periodically reverse age-related physiological decay, leaving us biologically young into an indefinite future—is now within reach. In Ending Aging, Dr. de Grey and his research assistant Michael Rae describe the details of this biotechnology. They explain that the aging of the human body, just like the aging of man-made machines, results from an accumulation of various types of damage. As with man-made machines, this damage can periodically be repaired, leading to indefinite extension of the machine’s fully functional lifetime, just as is routinely done with classic cars. We already know what types of damage accumulate in the human body, and we are moving rapidly toward the comprehensive development of technologies to remove that damage. By demystifying aging and its postponement for the nonspecialist reader, de Grey and Rae systematically dismantle the fatalist presumption that aging will forever defeat the efforts of medical science.

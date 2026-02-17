@@ -1,8 +1,0 @@
----
-title: "Examination of McTaggart's philosophy"
-author: "C. D. Broad"
-entry_type: "book"
-year: 1933
-location: "Cambridge"
-volume: "1"
----

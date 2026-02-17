@@ -1,7 +1,0 @@
----
-title: "Un país al margen de la ley: Estudio de la anomia como componente del subdesarrollo argentino"
-author: "Carlos Santiago Nino"
-entry_type: "book"
-year: 1992
-location: "Buenos Aires"
----
