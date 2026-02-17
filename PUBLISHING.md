@@ -2,12 +2,38 @@
 
 How to get changes in org source files reflected on the Hugo site.
 
+## Prerequisites
+
+The following must be installed (all available via Homebrew):
+
+- **Hugo** (extended edition, v0.151.2+) — `brew install hugo`
+- **Node.js** (v20+) — managed via nvm; `nvm install 20` if needed
+- **Python 3** — for the helper scripts
+- **Emacs** — for ox-hugo export (both interactive and batch)
+
+## Starting the dev server
+
+From the project root (`~/Library/CloudStorage/Dropbox/repos/stafforini.com/`):
+
+```bash
+npm install     # first time only, or after dependency changes
+npm run dev     # starts hugo server with --navigateToChanged
+```
+
+The site will be available at `http://localhost:1313/`. Hugo watches `content/` for changes, so any file exported via ox-hugo will trigger a live reload.
+
+To also include draft content:
+
+```bash
+hugo server --buildDrafts --navigateToChanged
+```
+
 ## Source files
 
-| Content type | Source directory | Hugo section |
-|---|---|---|
-| Notes | `~/Library/CloudStorage/Dropbox/websites/pablos-miscellany/*.org` | `content/notes/` |
-| Quotes | `~/Library/CloudStorage/Dropbox/bibliographic-notes/*.org` (`:public:` subtrees) | `content/quotes/` |
+| Content type | Source directory                                                                 | Hugo section      |
+|--------------|----------------------------------------------------------------------------------|-------------------|
+| Notes        | `~/Library/CloudStorage/Dropbox/websites/pablos-miscellany/*.org`                | `content/notes/`  |
+| Quotes       | `~/Library/CloudStorage/Dropbox/bibliographic-notes/*.org` (`:public:` subtrees) | `content/quotes/` |
 
 ## Pipeline overview
 
@@ -79,12 +105,6 @@ hugo --minify                                # build the site
 npx pagefind --site public                   # generate search index
 ```
 
-## Local preview
-
-```bash
-hugo server --buildDrafts
-```
-
 ## Deployment
 
 Pushing to the `main` branch triggers a Netlify build. The Netlify build command (`netlify.toml`) runs:
@@ -99,7 +119,7 @@ Note: Netlify only builds from the committed markdown in `content/`. The org-to-
 
 The `hugo-cite` and `hugo-cite-noop` processors are registered in the ox-hugo section of `config.org`. Per-directory activation is handled by `.dir-locals.el`:
 
-| Directory | Processor | Effect |
-|---|---|---|
-| `websites/pablos-miscellany/` | `hugo-cite` | `[cite:@Key]` → `{{< cite "Key" >}}` |
-| `bibliographic-notes/` | `hugo-cite-noop` | Citations suppressed (work pages handle attribution) |
+| Directory                     | Processor        | Effect                                               |
+|-------------------------------|------------------|------------------------------------------------------|
+| `websites/pablos-miscellany/` | `hugo-cite`      | `[cite:@Key]` → `{{< cite "Key" >}}`                 |
+| `bibliographic-notes/`        | `hugo-cite-noop` | Citations suppressed (work pages handle attribution) |
