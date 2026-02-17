@@ -13,7 +13,12 @@ The following must be installed (all available via Homebrew):
 
 ## Starting the dev server
 
-From the project root (`~/Library/CloudStorage/Dropbox/repos/stafforini.com/`):
+From Emacs:
+
+- `M-x stafforini-start-server` — starts the Hugo dev server (`npm run dev`) in a dedicated `*hugo-server*` buffer. If the server is already running, switches to its buffer.
+- `M-x stafforini-stop-server` — stops the server.
+
+Alternatively, from the project root (`~/Library/CloudStorage/Dropbox/repos/stafforini.com/`):
 
 ```bash
 npm install     # first time only, or after dependency changes
@@ -79,19 +84,39 @@ The `.dir-locals.el` in `bibliographic-notes/` activates the `hugo-cite-noop` pr
 ### Editing a BibTeX entry
 
 1. Edit the `.bib` file
-2. Run `python scripts/generate-work-pages.py --skip-postprocess`
+2. Run `M-x stafforini-update-works`
 3. If `hugo server` is running, the site updates automatically
 
 The script reads all `.bib` files listed in `scripts/lib.py`, regenerates work pages for every cited key, and updates any that have changed. It is safe to re-run at any time.
 
 ### When you need extra steps
 
-- **New org file**: run `python scripts/prepare-org-notes.py` first to add ox-hugo metadata (`:EXPORT_FILE_NAME:`, `:EXPORT_HUGO_SECTION:`, etc.)
-- **Changed links**: run `python scripts/generate-backlinks.py` to regenerate backlink data from the org-roam database
+- **New org file**: run `M-x stafforini-prepare-notes` to add ox-hugo metadata (`:EXPORT_FILE_NAME:`, `:EXPORT_HUGO_SECTION:`, etc.)
+- **Changed links**: run `M-x stafforini-update-backlinks` to regenerate backlink data from the org-roam database
+
+## Emacs commands
+
+All build commands are provided by the `stafforini` package. They run asynchronously via `compile`, so output appears in a compilation buffer with proper error highlighting.
+
+| Command | What it does |
+|---|---|
+| `M-x stafforini-prepare-notes` | Add ox-hugo metadata to new org note files |
+| `M-x stafforini-export-all-notes` | Export all notes to Hugo markdown (batch mode) |
+| `M-x stafforini-export-all-quotes` | Export all quotes to Hugo markdown (batch mode) |
+| `M-x stafforini-update-works` | Generate/update work pages from BibTeX data |
+| `M-x stafforini-update-backlinks` | Regenerate backlink data from org-roam |
+| `M-x stafforini-start-server` | Start Hugo dev server (or switch to it) |
+| `M-x stafforini-stop-server` | Stop the Hugo dev server |
+| `M-x stafforini-full-rebuild` | Run the full pipeline (see below) |
 
 ## Batch workflow
 
-For bulk operations (e.g. after a migration or mass edit), batch scripts process all files at once:
+For bulk operations (e.g. after a migration or mass edit), use the batch Emacs commands:
+
+- `M-x stafforini-export-all-notes` — exports all notes
+- `M-x stafforini-export-all-quotes` — exports all quotes
+
+Or from the shell:
 
 ```bash
 # Export all notes
@@ -102,6 +127,18 @@ bash scripts/export-quotes.sh
 ```
 
 ## Full rebuild
+
+Run `M-x stafforini-full-rebuild` to execute the full pipeline sequentially:
+
+1. Prepare notes (add ox-hugo metadata)
+2. Export all notes
+3. Export all quotes
+4. Generate/update work pages
+5. Regenerate backlinks
+6. Hugo build (`hugo --minify`)
+7. Pagefind index (`npx pagefind --site public`)
+
+Or from the shell:
 
 ```bash
 python scripts/prepare-org-notes.py          # add ox-hugo metadata to new files
