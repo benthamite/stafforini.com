@@ -62,11 +62,12 @@
   border-radius: 4px;
   background: var(--color-bg);
   color: var(--color-text);
-  outline: none;
 }
 
-.search-input:focus {
+.search-input:focus-visible {
   border-color: var(--color-link);
+  outline: 2px solid var(--color-link);
+  outline-offset: 2px;
 }
 
 /* Search results */
@@ -120,7 +121,8 @@
   line-height: 1.4;
 }
 
-.search-excerpt mark {
+.search-excerpt mark,
+.search-section-list a mark {
   background: rgba(255, 220, 100, 0.4);
   color: inherit;
   padding: 0 1px;
@@ -146,4 +148,10 @@
 .search-no-results {
   color: var(--color-text-secondary);
   padding: 0.5rem 0;
+}
+
+/* Full-page search overrides */
+.search-results-page {
+  box-shadow: none;
+  border-radius: 0;
 }

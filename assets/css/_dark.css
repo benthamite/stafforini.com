@@ -9,4 +9,18 @@
   --color-code-bg: #242424;
   --color-blockquote-border: #555;
   --color-heading: #e0e0e0;
+
+  .search-overlay {
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  .search-box,
+  .search-results {
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  }
+
+  .search-excerpt mark,
+  .search-section-list a mark {
+    background: rgba(255, 220, 100, 0.25);
+  }
 }
