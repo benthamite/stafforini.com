@@ -5,23 +5,7 @@
   <span data-pagefind-meta="work_title" data-pagefind-ignore class="visually-hidden">{{ .Title }}</span>
   {{ with .Plain }}<span data-pagefind-meta="work_abstract" data-pagefind-ignore class="visually-hidden">{{ . }}</span>{{ end }}
   <h1>
-    {{- if or (eq $type "incollection") (eq $type "inbook") (eq $type "inproceedings") -}}
-      {{ .Params.author }}, &lsquo;{{ .Title }}&rsquo;,
-      {{- with .Params.editor }} in {{ . }} (ed.){{ end }}
-      <em>{{ .Params.booktitle | default .Title }}</em>
-      {{- with .Params.location }}, {{ . }}{{ end -}}
-      {{- with .Params.year }}, {{ . }}{{ end -}}
-    {{- else if eq $type "article" -}}
-      {{ .Params.author }}, &lsquo;{{ .Title }}&rsquo;,
-      <em>{{ .Params.journaltitle | default .Title }}</em>
-      {{- with .Params.volume }}, vol. {{ . }}{{ end -}}
-      {{- with .Params.number }}, no. {{ . }}{{ end -}}
-      {{- with .Params.year }}, {{ . }}{{ end -}}
-    {{- else -}}
-      {{ .Params.author }}, <em>{{ .Title }}</em>
-      {{- with .Params.location }}, {{ . }}{{ end -}}
-      {{- with .Params.year }}, {{ . }}{{ end -}}
-    {{- end -}}
+    {{- partial "citation-format.html" (dict "work" . "type" $type "link" false) -}}
   </h1>
 
   {{ with .Content }}

@@ -1,0 +1,54 @@
+{{/*
+  Shared citation formatting for bibliographic entries. Renders
+  author/title/editor/journal based on BibTeX entry_type. Called from
+  quote-entry.html and works/single.html.
+
+  entry_type maps to BibTeX entry types (incollection, article, book, etc.).
+  Defaults to "book" if not set.
+
+  Parameters (passed as a dict):
+    .work    - The work page (for accessing .Params.author, .Params.year, etc.)
+    .type    - The BibTeX entry_type (already resolved, with default applied)
+    .locator - (optional) The locator string from the quote page's params
+    .link    - (optional) If true, wrap the main title in an <a> link to the work
+*/}}
+{{- $work := .work -}}
+{{- $type := .type -}}
+{{- $locator := .locator -}}
+{{- $link := .link -}}
+{{- if or (eq $type "incollection") (eq $type "inbook") (eq $type "inproceedings") -}}
+  {{/* Chapter/section in a book: Author, 'Title', in Editor (ed.) *BookTitle*, Place, Year */}}
+  {{ $work.Params.author }}, &lsquo;{{ $work.Title }}&rsquo;,
+  {{- with $work.Params.editor }} in {{ . }} (ed.){{ end }}
+  {{- if $link -}}
+    <a href="{{ $work.RelPermalink }}"><em>{{ $work.Params.booktitle | default $work.Title }}</em></a>
+  {{- else -}}
+    <em>{{ $work.Params.booktitle | default $work.Title }}</em>
+  {{- end -}}
+  {{- with $work.Params.location }}, {{ . }}{{ end -}}
+  {{- with $work.Params.year }}, {{ . }}{{ end -}}
+  {{- with $locator }}, {{ . }}{{ end -}}
+{{- else if eq $type "article" -}}
+  {{/* Journal article: Author, 'Title', *Journal*, vol. X, no. Y, Year */}}
+  {{ $work.Params.author }}, &lsquo;{{ $work.Title }}&rsquo;,
+  {{- if $link -}}
+    <a href="{{ $work.RelPermalink }}"><em>{{ $work.Params.journaltitle | default $work.Title }}</em></a>
+  {{- else -}}
+    <em>{{ $work.Params.journaltitle | default $work.Title }}</em>
+  {{- end -}}
+  {{- with $work.Params.volume }}, vol. {{ . }}{{ end -}}
+  {{- with $work.Params.number }}, no. {{ . }}{{ end -}}
+  {{- with $work.Params.year }}, {{ . }}{{ end -}}
+  {{- with $locator }}, {{ . }}{{ end -}}
+{{- else -}}
+  {{/* Book and everything else: Author, *Title*, Place, Year */}}
+  {{ $work.Params.author }},
+  {{- if $link -}}
+    {{- " " -}}<a href="{{ $work.RelPermalink }}"><em>{{ $work.Title }}</em></a>
+  {{- else -}}
+    {{- " " -}}<em>{{ $work.Title }}</em>
+  {{- end -}}
+  {{- with $work.Params.location }}, {{ . }}{{ end -}}
+  {{- with $work.Params.year }}, {{ . }}{{ end -}}
+  {{- with $locator }}, {{ . }}{{ end -}}
+{{- end -}}
