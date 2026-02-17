@@ -257,6 +257,22 @@ def generate_subheading_title(quote: dict) -> str:
 # === Quote text escaping ===
 
 
+def markdown_to_org_emphasis(text: str) -> str:
+    """Convert markdown emphasis to org-mode emphasis.
+
+    **text** → *text* (bold)
+    *text*  → /text/ (italic)
+
+    Bold must be converted before italic so that ** markers
+    are consumed first and don't get partially matched as *.
+    """
+    # Bold: **text** → *text*
+    text = re.sub(r"\*\*(.+?)\*\*", r"*\1*", text)
+    # Italic: *text* → /text/
+    text = re.sub(r"(?<!\*)\*([^*]+?)\*(?!\*)", r"/\1/", text)
+    return text
+
+
 def escape_org_text(text: str) -> str:
     """Escape text for safe inclusion in an org-mode quote block."""
     lines = text.split("\n")
@@ -378,7 +394,7 @@ def build_subheading(
         f":WP_LINK: {quote['link']}",
         ":END:",
         "#+begin_quote",
-        escape_org_text(quote["quote_text"]),
+        escape_org_text(markdown_to_org_emphasis(quote["quote_text"])),
         "#+end_quote",
     ]
 
@@ -405,10 +421,15 @@ def ensure_hugo_base_dir(content: str) -> str:
 def _normalize_for_dedup(text: str) -> str:
     """Normalize text for duplicate comparison.
 
-    Strips org inline markup (e.g. /italics/, *bold*, ~code~) and
-    non-alphanumeric characters so that formatting differences between
+    Strips org block delimiters (including comma-escaped variants like
+    ,#+begin_quote), org inline markup (e.g. /italics/, *bold*, ~code~),
+    and non-alphanumeric characters so that formatting differences between
     existing org content and plain WordPress text don't prevent matching.
     """
+    # Strip org block delimiters (including comma-escaped variants)
+    # before general cleanup, so they don't leave artifact words like
+    # "begin_quote" that break substring matching.
+    text = re.sub(r"^,?#\+(?:begin|end)_\w+\s*$", "", text, flags=re.MULTILINE)
     text = re.sub(r"\s+", " ", text.strip())
     text = re.sub(r"[^\w\s]", "", text)
     return text.lower()
