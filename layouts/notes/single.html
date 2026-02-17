@@ -9,6 +9,7 @@
   </div>
 
   {{/* References — works cited in this note (extracted from rendered cite shortcode links) */}}
+  {{ if not .Params.hide_references }}
   {{ $citedWorks := slice }}
   {{ range where .Site.RegularPages "Section" "works" }}
     {{ $workPath := printf "/works/%s/" .File.ContentBaseName }}
@@ -26,6 +27,7 @@
       {{ end }}
     </ul>
   </section>
+  {{ end }}
   {{ end }}
 
   {{ partial "backlinks.html" . }}
