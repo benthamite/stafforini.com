@@ -1,3 +1,8 @@
+/* Z-index scale (keep in sync across files):
+   50  — link preview popup (_preview.css)
+   100 — skip-link (_base.css)
+   200 — search overlay (_search.css) */
+
 /* Custom properties */
 :root {
   /* Colors — light */

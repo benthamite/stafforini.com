@@ -71,6 +71,8 @@
   border-color: var(--color-text-secondary);
 }
 
+/* Toggle icon visibility based on user preference (not resolved theme).
+   See _dark.css header comment for the data-theme vs data-theme-pref distinction. */
 .icon-sun, .icon-moon, .icon-system { display: none; }
 [data-theme-pref="light"] .icon-sun { display: inline; }
 [data-theme-pref="dark"] .icon-moon { display: inline; }

@@ -6,6 +6,7 @@ title = "Pablo Stafforini"
 [markup]
   [markup.goldmark]
     [markup.goldmark.renderer]
+      # Allow raw HTML in Markdown output (required for ox-hugo HTML blocks and citeproc output)
       unsafe = true
   [markup.highlight]
     noClasses = false

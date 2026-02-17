@@ -15,10 +15,12 @@ function highlightText(escaped, query) {
 }
 
 function sanitizeExcerpt(html) {
+  // Strip all HTML tags except <mark>...</mark> (preserves Pagefind search highlighting)
   return html.replace(/<(?!\/?mark\b)[^>]*>/gi, '');
 }
 
 function renderResult(r, section, currentQuery) {
+  // Works have work_author/work_title metadata (from Pagefind indexing); other pages use their title directly
   var label;
   if (r.meta.work_author && r.meta.work_title) {
     label = highlightText(escapeHtml(r.meta.work_author), currentQuery) + ', <em>' + highlightText(escapeHtml(r.meta.work_title), currentQuery) + '</em>';
@@ -37,5 +39,6 @@ function renderResult(r, section, currentQuery) {
 
 // Export for ES module usage
 if (typeof window !== 'undefined') {
+  // Underscore prefix is a namespace convention (not "private"); consumed by header.html and search.html
   window._searchUtils = { escapeHtml: escapeHtml, highlightText: highlightText, sanitizeExcerpt: sanitizeExcerpt, renderResult: renderResult };
 }
