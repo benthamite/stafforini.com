@@ -219,3 +219,112 @@ WP tags should eventually link to corresponding org notes (e.g., "emacs" tag →
 - Multi-volume works: cite the work itself, indicate volume as part of the locator (don't use separate entries per volume)
 - Tags: handle later by linking to corresponding org notes
 - Matching approach: citar-style orderless matching (build searchable string, check all terms appear)
+
+---
+
+# Blog notes migration: WordPress org files to Hugo
+
+## Overview
+
+Migrating ~119 blog posts from individual org files (originally extracted from
+a monolithic `pablos-miscellany.org`) into Hugo notes via ox-hugo.
+
+**Source**: `~/Library/CloudStorage/Dropbox/websites/pablos-miscellany/*.org`
+**Target**: `content/notes/*.md` in the Hugo site
+
+## Architecture
+
+The pipeline has three layers, each with a clear responsibility:
+
+1. **Org files** (canonical source) — authored in org-mode, one file per post
+2. **ox-hugo** (org → markdown) — exports org to Hugo-compatible markdown
+3. **Hugo** (markdown → HTML) — builds the static site
+
+There is **no custom Python conversion layer** between org and markdown.
+All org-to-markdown conversion is handled natively by ox-hugo. Python scripts
+only handle metadata preparation and work page generation.
+
+### How citations work
+
+Citations flow through three stages:
+
+1. **Org source**: `[cite:@Parfit2017WhatMattersVolume]`
+2. **Markdown (after ox-hugo export)**: `{{< cite "Parfit2017WhatMattersVolume" >}}`
+   — the `hugo-cite` processor in `export-notes.el` converts org-cite to Hugo shortcodes
+3. **HTML (after Hugo build)**: formatted citation with link to work page
+   — the `layouts/shortcodes/cite.html` shortcode looks up `content/works/{slug}.md`
+   and renders via `layouts/partials/citation-format.html`
+
+This avoids running slow citeproc at export time while producing rich formatted
+citations at build time, using the same work pages and citation formatting as quotes.
+
+## Scripts
+
+### prepare-org-notes.py — Add ox-hugo metadata
+
+Adds the ox-hugo keywords needed for per-subtree export to each org file:
+
+- **File level**: `#+hugo_base_dir: ~/Library/CloudStorage/Dropbox/repos/stafforini.com/`
+- **Heading level** (in the level-1 PROPERTIES drawer):
+  - `:EXPORT_FILE_NAME:` — slug derived from the org filename
+  - `:EXPORT_HUGO_SECTION: notes` — target Hugo section
+  - `:EXPORT_DATE:` — extracted from `:POST_DATE:` (YYYY-MM-DD)
+  - `:EXPORT_HUGO_DRAFT: true` — if no date (draft posts)
+
+Idempotent: skips files that already have `:EXPORT_FILE_NAME:`.
+
+### export-notes.el — Batch ox-hugo export
+
+Emacs batch script (`emacs --batch -l scripts/export-notes.el`) that:
+
+1. Loads elpaca build directories to find ox-hugo
+2. Registers a `hugo-cite` export processor that converts `[cite:@Key]` to
+   `{{< cite "Key" >}}` (and `[cite:@Key, pp. 3-28]` to `{{< cite "Key" "pp. 3-28" >}}`)
+3. Iterates over all `.org` files with `:EXPORT_FILE_NAME:` metadata
+4. Calls `org-hugo-export-wim-to-md :all-subtrees` for each file
+
+### cite.html shortcode — Hugo citation rendering
+
+`layouts/shortcodes/cite.html` takes a cite key, converts it to a kebab-case slug,
+looks up the corresponding work page, and renders the citation using
+`citation-format.html`. Falls back to a `<span class="cite-unresolved">` if
+no work page exists.
+
+## Full rebuild workflow
+
+To rebuild the site from scratch (e.g. after editing org files):
+
+```bash
+# 1. Add ox-hugo metadata (only needed once, or after adding new org files)
+python scripts/prepare-org-notes.py
+
+# 2. Export org to Hugo markdown via ox-hugo
+emacs --batch -l scripts/export-notes.el
+
+# 3. Generate work pages for any new cite keys in notes
+#    (run the inline script or extend generate-work-pages.py)
+
+# 4. Generate backlinks from org-roam database
+python scripts/generate-backlinks.py
+
+# 5. Build the Hugo site
+hugo --minify
+
+# 6. Generate Pagefind search index
+npx pagefind --site public
+```
+
+For local preview, replace steps 5-6 with `hugo server --buildDrafts`.
+
+## Results
+
+| Metric | Count |
+|--------|-------|
+| Org files prepared | 119 |
+| Notes exported | 119 |
+| Unique cite keys in notes | 287 |
+| Work pages created for notes | 262 |
+| Export errors | 0 |
+| Unresolved citations | 0 |
+| Draft posts | ~45 |
+| Published posts | ~74 |
