@@ -6,4 +6,5 @@ year: 2000
 journaltitle: "Behavioral and Brain Sciences"
 volume: "23"
 number: "4"
+pages: "573--587"
 ---

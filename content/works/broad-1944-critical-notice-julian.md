@@ -6,4 +6,5 @@ year: 1944
 journaltitle: "Mind"
 volume: "58"
 number: "212"
+pages: "344–367"
 ---

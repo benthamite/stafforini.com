@@ -6,4 +6,5 @@ year: 1948
 journaltitle: "Mind"
 volume: "57"
 number: "228"
+pages: "401–402"
 ---

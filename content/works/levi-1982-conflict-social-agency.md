@@ -6,4 +6,5 @@ year: 1982
 journaltitle: "The Journal of Philosophy"
 volume: "79"
 number: "5"
+pages: "231"
 ---

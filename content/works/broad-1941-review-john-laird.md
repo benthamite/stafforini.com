@@ -6,4 +6,5 @@ year: 1941
 journaltitle: "Mind"
 volume: "50"
 number: "199"
+pages: "294–299"
 ---

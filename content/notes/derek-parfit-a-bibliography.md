@@ -3,6 +3,7 @@ title = "Derek Parfit: a bibliography"
 author = ["Pablo Stafforini"]
 date = 2013-05-25
 draft = false
+hide_references = true
 +++
 
 _![](http://www.stafforini.com/blog/wp-content/uploads/parfit.jpg)_
@@ -87,6 +88,3 @@ _What now matters most is how we respond to various risks to the survival of hum
 _Life can be wonderful as well as terrible, and we shall increasingly have the power to make life good. Since human history may be only just beginning, we can expect that future humans, or supra-humans, may achieve some great goods that we cannot now even imagine. In Nietzsche's words, there has never been such a new dawn and clear horizon, and such an open sea._
 
 {{< figure src="http://www.stafforini.com/blog/wp-content/uploads/parfit-1.jpg" >}}
-
-
-## Archive <span class="tag"><span class="ARCHIVE">ARCHIVE</span></span> {#archive}

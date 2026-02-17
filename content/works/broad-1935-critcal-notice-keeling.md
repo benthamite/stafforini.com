@@ -6,4 +6,5 @@ year: 1935
 journaltitle: "Mind"
 volume: "44"
 number: "173"
+pages: "70–75"
 ---

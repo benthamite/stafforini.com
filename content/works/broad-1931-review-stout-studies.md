@@ -6,4 +6,5 @@ year: 1931
 journaltitle: "Mind"
 volume: "40"
 number: "158"
+pages: "230–234"
 ---

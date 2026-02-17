@@ -5,6 +5,7 @@ entry_type: "incollection"
 year: 2008
 location: "New York, New York"
 booktitle: "Year million: Science at the far edge of knowledge"
+pages: "168–189"
 editor: "Damien Broderick"
 ---
 

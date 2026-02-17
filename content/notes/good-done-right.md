@@ -34,6 +34,3 @@ After a bit of detective work, I managed to locate recordings of most of these p
 {{< figure src="http://www.stafforini.com/blog/wp-content/uploads/IMG_6373-1024x683.jpg" >}}
 
 {{< figure src="http://www.stafforini.com/blog/wp-content/uploads/IMG_6179-1024x683.jpg" >}}
-
-
-## Archive <span class="tag"><span class="ARCHIVE">ARCHIVE</span></span> {#archive}

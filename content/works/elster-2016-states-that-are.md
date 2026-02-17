@@ -6,4 +6,5 @@ year: 2016
 journaltitle: "Social Science Information"
 volume: "20"
 number: "3"
+pages: "431–473"
 ---

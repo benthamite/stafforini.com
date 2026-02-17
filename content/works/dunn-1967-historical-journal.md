@@ -6,4 +6,5 @@ year: 1967
 journaltitle: "The Historical Journal"
 volume: "10"
 number: "2"
+pages: "153--182"
 ---

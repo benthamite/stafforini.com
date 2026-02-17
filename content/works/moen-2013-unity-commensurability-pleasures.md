@@ -6,4 +6,5 @@ year: 2013
 journaltitle: "Philosophia"
 volume: "41"
 number: "2"
+pages: "527–543"
 ---

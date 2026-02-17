@@ -6,4 +6,5 @@ year: 1942
 journaltitle: "Theoria"
 volume: "12"
 number: "3"
+pages: "143–168"
 ---

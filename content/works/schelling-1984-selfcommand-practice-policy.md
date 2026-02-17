@@ -6,4 +6,5 @@ year: 1984
 journaltitle: "American economic review"
 volume: "74"
 number: "2"
+pages: "1–11"
 ---

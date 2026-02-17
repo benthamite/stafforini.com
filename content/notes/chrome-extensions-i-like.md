@@ -39,6 +39,3 @@ These are the Chrome extensions I currently use.  My favorite ones are **boldfa
 -   [Zotero Connector](https://chrome.google.com/webstore/detail/zotero-connector/ekhagklcjbdpajgpjgmbionohlpdbjgc). Save references to Zotero from your web browser
 
 _With thanks to Tom Ash, Ryan Carey, Sam Deere, Peter McIntyre, Claudia Shi, James Ting-Edwards and Matthew van der Merwe for valuable suggestions._
-
-
-## Archive <span class="tag"><span class="ARCHIVE">ARCHIVE</span></span> {#archive}

@@ -6,4 +6,5 @@ year: 1982
 journaltitle: "Philosophy \\& Public Affairs"
 volume: "11"
 number: "2"
+pages: "113–172"
 ---

@@ -6,4 +6,5 @@ year: 1908
 journaltitle: "The Philosophical Review"
 volume: "17"
 number: "5"
+pages: "469–488"
 ---

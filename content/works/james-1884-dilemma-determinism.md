@@ -6,4 +6,5 @@ year: 1884
 journaltitle: "Unitarian review and religious magazine"
 volume: "22"
 number: "8"
+pages: "193–224"
 ---

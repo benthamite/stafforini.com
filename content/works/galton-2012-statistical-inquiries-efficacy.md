@@ -6,4 +6,5 @@ year: 2012
 journaltitle: "International Journal of Epidemiology"
 volume: "41"
 number: "4"
+pages: "923–928"
 ---

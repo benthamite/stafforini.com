@@ -302,6 +302,3 @@ I started compiling this bibliography back when I was an undergraduate student a
 
 1.  _Ocho lecciones sobre ética y derecho : para pensar la democracia_, Buenos Aires: Siglo XXI.
 2.  _Una teoría de la justicia para la democracia : hacer justicia, pensar la igualdad y defender libertades_, Buenos Aires: Siglo XXI.
-
-
-## Archive <span class="tag"><span class="ARCHIVE">ARCHIVE</span></span> {#archive}

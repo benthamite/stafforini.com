@@ -6,4 +6,5 @@ year: 1940
 journaltitle: "Mind"
 volume: "49"
 number: "194"
+pages: "228–239"
 ---

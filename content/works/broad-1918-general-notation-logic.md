@@ -6,4 +6,5 @@ year: 1918
 journaltitle: "Mind"
 volume: "27"
 number: "3"
+pages: "284–303"
 ---

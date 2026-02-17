@@ -6,4 +6,5 @@ year: 1984
 journaltitle: "Osgoode Hall Law Journal"
 volume: "22"
 number: "2"
+pages: "297--307"
 ---

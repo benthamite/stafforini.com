@@ -6,4 +6,5 @@ year: 1921
 journaltitle: "Mind"
 volume: "30"
 number: "118"
+pages: "129–150"
 ---

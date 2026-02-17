@@ -4,4 +4,5 @@ author: "Geoffrey Lean"
 entry_type: "article"
 year: 1980
 journaltitle: "The Observer"
+pages: "5"
 ---

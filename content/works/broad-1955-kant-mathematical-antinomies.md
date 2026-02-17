@@ -6,4 +6,5 @@ year: 1955
 journaltitle: "Proceedings of the Aristotelian Society"
 volume: "55"
 number: "1"
+pages: "1–22"
 ---

@@ -5,5 +5,6 @@ entry_type: "incollection"
 year: 1924
 location: "London"
 booktitle: "Contemporary British Philosophy"
+pages: "75–100"
 editor: "J. H. Muirhead"
 ---

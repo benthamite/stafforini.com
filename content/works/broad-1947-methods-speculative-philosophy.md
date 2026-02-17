@@ -6,4 +6,5 @@ year: 1947
 journaltitle: "Aristotelian Society Supplementary Volume"
 volume: "21"
 number: "1"
+pages: "1–32"
 ---

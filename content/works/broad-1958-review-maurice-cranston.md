@@ -6,4 +6,5 @@ year: 1958
 journaltitle: "Mind"
 volume: "67"
 number: "268"
+pages: "548–554"
 ---

@@ -6,4 +6,5 @@ year: 1954
 journaltitle: "Mind"
 volume: "63"
 number: "251"
+pages: "390–403"
 ---

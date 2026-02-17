@@ -6,4 +6,5 @@ year: 1942
 journaltitle: "Proceedings of the Aristotelian Society"
 volume: "42"
 number: "1"
+pages: "100A--100H"
 ---

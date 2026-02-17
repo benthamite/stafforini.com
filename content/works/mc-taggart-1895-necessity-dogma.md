@@ -6,4 +6,5 @@ year: 1895
 journaltitle: "International journal of ethics"
 volume: "5"
 number: "2"
+pages: "147"
 ---

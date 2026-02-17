@@ -6,4 +6,5 @@ year: 1914
 journaltitle: "The International Journal of Ethics"
 volume: "24"
 number: "3"
+pages: "293–320"
 ---

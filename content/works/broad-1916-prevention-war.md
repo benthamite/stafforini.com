@@ -6,4 +6,5 @@ year: 1916
 journaltitle: "The International Journal of Ethics"
 volume: "26"
 number: "2"
+pages: "241–257"
 ---

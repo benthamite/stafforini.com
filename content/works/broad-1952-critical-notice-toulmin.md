@@ -6,4 +6,5 @@ year: 1952
 journaltitle: "Mind"
 volume: "61"
 number: "241"
+pages: "93–101"
 ---

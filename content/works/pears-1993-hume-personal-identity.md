@@ -6,5 +6,6 @@ year: 1993
 journaltitle: "Hume studies"
 volume: "19"
 number: "2"
+pages: "289–299"
 editor: "David Pears"
 ---

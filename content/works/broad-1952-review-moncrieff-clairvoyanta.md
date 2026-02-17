@@ -6,4 +6,5 @@ year: 1952
 journaltitle: "Philosophy"
 volume: "27"
 number: "102"
+pages: "255–259"
 ---

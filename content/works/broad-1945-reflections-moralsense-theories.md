@@ -6,4 +6,5 @@ year: 1945
 journaltitle: "Proceedings of the Aristotelian Society"
 volume: "45"
 number: "1"
+pages: "131–166"
 ---

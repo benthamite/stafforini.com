@@ -6,4 +6,5 @@ year: 1940
 journaltitle: "Philosophy"
 volume: "15"
 number: "59"
+pages: "301–312"
 ---

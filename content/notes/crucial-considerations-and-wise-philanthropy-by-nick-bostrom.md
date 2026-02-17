@@ -13,6 +13,3 @@ On July 9th, 2014, Nick Bostrom gave a talk on 'Crucial Considerations and Wise 
 ## WAITING Update 'Crucial considerations and wise philanthropy' {#waiting-update-crucial-considerations-and-wise-philanthropy}
 
 With Leo's revised version. We are waiting for the BAE site to go live so that I can load the images directly from that server instead of having to upload them to Wordpress.
-
-
-## Archive <span class="tag"><span class="ARCHIVE">ARCHIVE</span></span> {#archive}

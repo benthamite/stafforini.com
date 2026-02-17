@@ -6,4 +6,5 @@ year: 1928
 journaltitle: "Aristotelian Society Supplementary Volume"
 volume: "8"
 number: "1"
+pages: "175–188"
 ---

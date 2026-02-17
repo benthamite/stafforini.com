@@ -6,4 +6,5 @@ year: 1980
 journaltitle: "Philosophy \\& Public Affairs"
 volume: "9"
 number: "4"
+pages: "325–337"
 ---

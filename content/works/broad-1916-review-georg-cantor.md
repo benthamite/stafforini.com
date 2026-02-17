@@ -6,4 +6,5 @@ year: 1916
 journaltitle: "Mind"
 volume: "25"
 number: "97"
+pages: "120–121"
 ---

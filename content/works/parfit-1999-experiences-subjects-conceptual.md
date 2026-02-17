@@ -6,4 +6,5 @@ year: 1999
 journaltitle: "Philosophical topics"
 volume: "26"
 number: "1"
+pages: "217–270"
 ---

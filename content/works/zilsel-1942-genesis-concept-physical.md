@@ -6,4 +6,5 @@ year: 1942
 journaltitle: "Philosophical review"
 volume: "51"
 number: "3"
+pages: "245–279"
 ---

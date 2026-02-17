@@ -6,5 +6,6 @@ year: 1973
 location: "London"
 booktitle: "Philosophy and personal relations: an Anglo-French study"
 number: "C"
+pages: "137–169"
 editor: "Alan Montefiore"
 ---

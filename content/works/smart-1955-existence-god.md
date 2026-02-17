@@ -6,4 +6,5 @@ year: 1955
 journaltitle: "Church quarterly review"
 volume: "156"
 number: "319"
+pages: "178–94"
 ---

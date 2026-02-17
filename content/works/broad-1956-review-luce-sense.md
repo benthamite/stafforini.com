@@ -6,4 +6,5 @@ year: 1956
 journaltitle: "Philosophy"
 volume: "31"
 number: "117"
+pages: "169–171"
 ---

@@ -6,4 +6,5 @@ year: 1997
 journaltitle: "Aristotelian Society Supplementary Volume"
 volume: "71"
 number: "1"
+pages: "247–267"
 ---

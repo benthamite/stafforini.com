@@ -6,4 +6,5 @@ year: 1924
 journaltitle: "Mind"
 volume: "33"
 number: "131"
+pages: "242–261"
 ---

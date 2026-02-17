@@ -5,6 +5,7 @@ entry_type: "incollection"
 year: 2020
 location: "Cham"
 booktitle: "Lewis Fry Richardson: His Intellectual Legacy and Influence in the Social Sciences"
+pages: "113–127"
 editor: "Nils Petter Gleditsch"
 ---
 

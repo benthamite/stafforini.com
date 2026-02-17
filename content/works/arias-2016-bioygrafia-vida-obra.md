@@ -6,4 +6,5 @@ year: 2018
 journaltitle: "Madrygal. Revista de Estudios Gallegos"
 volume: "21"
 number: "0"
+pages: "355--379"
 ---

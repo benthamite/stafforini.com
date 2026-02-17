@@ -6,4 +6,5 @@ year: 2000
 journaltitle: "Political Theory"
 volume: "28"
 number: "2"
+pages: "230–253"
 ---

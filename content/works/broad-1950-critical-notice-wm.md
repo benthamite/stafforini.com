@@ -6,4 +6,5 @@ year: 1950
 journaltitle: "Mind"
 volume: "59"
 number: "233"
+pages: "94–115"
 ---

@@ -6,4 +6,5 @@ year: 1982
 journaltitle: "Australasian Journal of Philosophy"
 volume: "60"
 number: "3"
+pages: "203–223"
 ---

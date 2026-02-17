@@ -6,4 +6,5 @@ year: 1923
 journaltitle: "Mind"
 volume: "23"
 number: "127"
+pages: "374"
 ---

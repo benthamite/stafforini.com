@@ -6,4 +6,5 @@ year: 2011
 journaltitle: "Philosophy \\& Public Affairs"
 volume: "39"
 number: "2"
+pages: "105–141"
 ---

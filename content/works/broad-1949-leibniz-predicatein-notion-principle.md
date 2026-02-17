@@ -6,4 +6,5 @@ year: 1949
 journaltitle: "Theoria"
 volume: "15"
 number: "1"
+pages: "54–70"
 ---

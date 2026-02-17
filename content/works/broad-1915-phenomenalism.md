@@ -5,4 +5,5 @@ entry_type: "article"
 year: 1915
 journaltitle: "Proceedings of the Aristotelian Society"
 volume: "15"
+pages: "227–251"
 ---

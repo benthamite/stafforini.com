@@ -6,4 +6,5 @@ year: 1877
 journaltitle: "Mind"
 volume: "2"
 number: "5"
+pages: "27–38"
 ---

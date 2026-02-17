@@ -6,4 +6,5 @@ year: 2017
 journaltitle: "Noûs"
 volume: "51"
 number: "2"
+pages: "327–353"
 ---

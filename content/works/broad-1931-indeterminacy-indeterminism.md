@@ -6,4 +6,5 @@ year: 1931
 journaltitle: "Aristotelian Society Supplementary Volume"
 volume: "10"
 number: "1"
+pages: "135–160"
 ---

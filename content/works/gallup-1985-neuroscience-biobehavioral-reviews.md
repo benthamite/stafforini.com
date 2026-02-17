@@ -6,4 +6,5 @@ year: 1985
 journaltitle: "Neuroscience \\& Biobehavioral Reviews"
 volume: "9"
 number: "4"
+pages: "631--641"
 ---

@@ -6,4 +6,5 @@ year: 1919
 journaltitle: "Proceedings of the Aristotelian Society"
 volume: "19"
 number: "1"
+pages: "86–124"
 ---

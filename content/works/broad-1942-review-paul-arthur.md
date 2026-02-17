@@ -6,4 +6,5 @@ year: 1942
 journaltitle: "The Mathematical Gazette"
 volume: "26"
 number: "272"
+pages: "223–225"
 ---

@@ -6,4 +6,5 @@ year: 2002
 journaltitle: "Perspectives in Biology and Medicine"
 volume: "45"
 number: "3"
+pages: "433--448"
 ---

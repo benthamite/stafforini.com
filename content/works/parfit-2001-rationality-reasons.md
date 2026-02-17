@@ -5,6 +5,7 @@ entry_type: "incollection"
 year: 2001
 location: "Aldershot"
 booktitle: "Exploring practical philosophy: from action to values"
+pages: "17–39"
 editor: "Dan Egonsson et al."
 ---
 

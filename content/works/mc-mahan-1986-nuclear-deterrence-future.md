@@ -5,6 +5,7 @@ entry_type: "incollection"
 year: 1986
 location: "Totowa, New Jersey"
 booktitle: "Nuclear weapons and the future of humanity: the fundamental questions"
+pages: "319–339"
 editor: "Avner Cohen and Steven Lee"
 ---
 

@@ -6,4 +6,5 @@ year: 1922
 journaltitle: "Mind"
 volume: "31"
 number: "121"
+pages: "72–85"
 ---

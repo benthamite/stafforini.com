@@ -6,4 +6,5 @@ year: 1917
 journaltitle: "Mind"
 volume: "26"
 number: "1"
+pages: "235–236"
 ---

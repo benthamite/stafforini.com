@@ -6,4 +6,5 @@ year: 2008
 journaltitle: "Perspectives on Psychological Science"
 volume: "3"
 number: "5"
+pages: "370--386"
 ---

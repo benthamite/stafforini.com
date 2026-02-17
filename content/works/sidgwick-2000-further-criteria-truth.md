@@ -5,5 +5,6 @@ entry_type: "inbook"
 year: 2000
 location: "Oxford"
 booktitle: "Essays on Ethics and Method"
+pages: "166–170"
 editor: "Marcus G. Singer"
 ---

@@ -6,4 +6,5 @@ year: 2017
 journaltitle: "Philosophy \\& Public Affairs"
 volume: "45"
 number: "2"
+pages: "118–157"
 ---

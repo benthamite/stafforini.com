@@ -6,4 +6,5 @@ year: 1956
 journaltitle: "The journal of parapsychology"
 volume: "20"
 number: "4"
+pages: "209–228"
 ---

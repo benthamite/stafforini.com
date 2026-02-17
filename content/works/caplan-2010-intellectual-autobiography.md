@@ -5,6 +5,7 @@ entry_type: "incollection"
 year: 2010
 location: "Auburn"
 booktitle: "I chose liberty"
+pages: "73–82"
 editor: "Walter Block"
 ---
 

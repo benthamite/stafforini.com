@@ -6,4 +6,5 @@ year: 2000
 journaltitle: "Philosophical studies"
 volume: "98"
 number: "1"
+pages: "1–14"
 ---

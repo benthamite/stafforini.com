@@ -6,4 +6,5 @@ year: 2007
 journaltitle: "Nutrition"
 volume: "23"
 number: "11"
+pages: "911–912"
 ---

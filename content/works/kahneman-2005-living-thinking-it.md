@@ -5,5 +5,6 @@ entry_type: "incollection"
 year: 2005
 location: "Oxford"
 booktitle: "The Science of Well-Being"
+pages: "284–305"
 editor: "Felicia A. Huppert, Nick Baylis, and Barry Keverne"
 ---

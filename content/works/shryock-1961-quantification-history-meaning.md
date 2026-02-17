@@ -6,4 +6,5 @@ year: 1936
 journaltitle: "The ANNALS of the American Academy of Political and Social Science"
 volume: "188"
 number: "1"
+pages: "362--363"
 ---

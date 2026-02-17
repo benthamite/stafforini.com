@@ -6,4 +6,5 @@ year: 1921
 journaltitle: "The Hibbert Journal"
 volume: "19"
 number: "2"
+pages: "360–366"
 ---

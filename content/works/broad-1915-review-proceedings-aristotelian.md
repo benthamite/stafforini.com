@@ -6,4 +6,5 @@ year: 1915
 journaltitle: "Mind"
 volume: "24"
 number: "3"
+pages: "419–421"
 ---

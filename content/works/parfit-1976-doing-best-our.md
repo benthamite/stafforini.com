@@ -5,6 +5,7 @@ entry_type: "incollection"
 year: 1976
 location: "Cambridge,Mass"
 booktitle: "Ethics and population"
+pages: "100–115"
 editor: "Michael D. Bayles"
 ---
 

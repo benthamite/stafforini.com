@@ -6,4 +6,5 @@ year: 1939
 journaltitle: "The Journal of Theological Studies"
 volume: "os-XL"
 number: "2"
+pages: "156–167"
 ---

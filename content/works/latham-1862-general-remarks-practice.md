@@ -6,4 +6,5 @@ year: 1862
 journaltitle: "BMJ"
 volume: "1"
 number: "78"
+pages: "677–680"
 ---

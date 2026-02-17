@@ -6,4 +6,5 @@ year: 1968
 journaltitle: "The Philosophical Quarterly"
 volume: "18"
 number: "72"
+pages: "269–271"
 ---

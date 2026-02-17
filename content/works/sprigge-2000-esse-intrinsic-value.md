@@ -5,5 +5,6 @@ entry_type: "incollection"
 year: 2000
 location: "Cambridge"
 booktitle: "Philosophy, the Good, the True and the Beautiful"
+pages: "119–140"
 editor: "Anthony O'Hear"
 ---

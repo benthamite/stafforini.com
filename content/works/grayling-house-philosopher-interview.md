@@ -5,4 +5,5 @@ entry_type: "article"
 year: 2008
 journaltitle: "The Philosophers' Magazine"
 number: "40"
+pages: "42--43"
 ---

@@ -6,4 +6,5 @@ year: 1936
 journaltitle: "Aristotelian Society Supplementary Volume"
 volume: "15"
 number: "1"
+pages: "102–117"
 ---

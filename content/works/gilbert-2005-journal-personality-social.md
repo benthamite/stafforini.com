@@ -6,4 +6,5 @@ year: 2005
 journaltitle: "Journal of Personality and Social Psychology"
 volume: "88"
 number: "1"
+pages: "5--21"
 ---

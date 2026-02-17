@@ -6,4 +6,5 @@ year: 1916
 journaltitle: "Mind"
 volume: "XXV"
 number: "4"
+pages: "522–524"
 ---

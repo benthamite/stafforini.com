@@ -6,4 +6,5 @@ year: 1982
 journaltitle: "Synthese"
 volume: "53"
 number: "2"
+pages: "227–241"
 ---

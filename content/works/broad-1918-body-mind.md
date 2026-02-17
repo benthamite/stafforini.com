@@ -6,4 +6,5 @@ year: 1918
 journaltitle: "Monist"
 volume: "28"
 number: "2"
+pages: "234–258"
 ---

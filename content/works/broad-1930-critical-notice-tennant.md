@@ -6,4 +6,5 @@ year: 1930
 journaltitle: "Mind"
 volume: "39"
 number: "156"
+pages: "476–484"
 ---

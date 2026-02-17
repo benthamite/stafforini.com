@@ -6,4 +6,5 @@ year: 1947
 journaltitle: "Philosophy"
 volume: "22"
 number: "83"
+pages: "256–264"
 ---

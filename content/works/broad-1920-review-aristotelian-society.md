@@ -6,4 +6,5 @@ year: 1920
 journaltitle: "Mind"
 volume: "29"
 number: "2"
+pages: "232–235"
 ---

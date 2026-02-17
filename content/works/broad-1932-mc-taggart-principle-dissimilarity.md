@@ -6,4 +6,5 @@ year: 1932
 journaltitle: "Proceedings of the Aristotelian Society"
 volume: "32"
 number: "1"
+pages: "41–52"
 ---

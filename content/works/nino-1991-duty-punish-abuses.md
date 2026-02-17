@@ -6,6 +6,7 @@ year: 1991
 journaltitle: "Yale Law Journal"
 volume: "100"
 number: "8"
+pages: "2619–2640"
 editor: "Neil J. Kritz"
 ---
 

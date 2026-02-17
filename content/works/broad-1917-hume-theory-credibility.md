@@ -6,4 +6,5 @@ year: 1917
 journaltitle: "Proceedings of the Aristotelian Society"
 volume: "17"
 number: "1"
+pages: "77–94"
 ---

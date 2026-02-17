@@ -5,6 +5,7 @@ entry_type: "incollection"
 year: 1987
 location: "Oxford"
 booktitle: "Mindwaves: thoughts on intelligence, identity and consciousness"
+pages: "19–28"
 editor: "Colin Blakemore and Susan Greenfield"
 ---
 

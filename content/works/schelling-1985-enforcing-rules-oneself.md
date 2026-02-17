@@ -6,4 +6,5 @@ year: 1985
 journaltitle: "Journal of law, economics \\& organization"
 volume: "1"
 number: "2"
+pages: "357–374"
 ---

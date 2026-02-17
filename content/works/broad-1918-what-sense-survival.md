@@ -6,4 +6,5 @@ year: 1918
 journaltitle: "The Hibbert Journal"
 volume: "17"
 number: "1"
+pages: "7–20"
 ---
