@@ -15,6 +15,10 @@ if [ ! -d content ]; then
   exit 1
 fi
 
+# Inject lastmod dates from org file modification times
+echo "Injecting lastmod dates..."
+python3 scripts/inject-lastmod.py
+
 # Build
 echo "Building site..."
 hugo --minify
@@ -24,6 +28,6 @@ npx pagefind --site public
 
 # Deploy
 echo "Deploying to Netlify..."
-npx netlify deploy --prod --dir=public
+npx netlify deploy --prod --dir=public --no-build
 
 echo "Done."
