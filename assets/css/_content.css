@@ -55,6 +55,10 @@ pre code {
 }
 
 /* Footnotes */
+.footnotes > hr {
+  display: none;
+}
+
 .footnotes {
   margin-top: 2.5rem;
   padding-top: 1rem;
