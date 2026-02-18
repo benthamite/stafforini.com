@@ -56,6 +56,52 @@ def normalize(text):
     return text
 
 
+def extract_pdf_path(file_field: str) -> Path | None:
+    """Extract the first PDF path from a BibTeX ``file`` field.
+
+    Handles the formats found in our bib files:
+      - Simple:  ``{~/My Drive/library-pdf/Author2020.pdf}``
+      - Multi:   ``{file1.html;~/My Drive/library-pdf/Author2020.pdf}``
+      - Zotero:  ``{Title\\: Subtitle:filename.pdf:application/pdf}``
+
+    Returns the expanded ``Path`` for the first ``.pdf`` entry, or ``None``.
+    """
+    if not file_field:
+        return None
+
+    # Strip outer braces
+    field = file_field.strip().strip("{}")
+
+    # Split on semicolons (multi-file entries)
+    parts = field.split(";")
+
+    for part in parts:
+        part = part.strip()
+        if not part:
+            continue
+
+        # Zotero-style: "Title:path:mimetype" — split on unescaped colons
+        segments = re.split(r"(?<!\\):", part)
+        if len(segments) >= 2:
+            # Try the second segment (path) first, then fall back to the whole part
+            candidate = segments[1].strip() if segments[1].strip() else part
+        else:
+            candidate = part
+
+        if not candidate.lower().endswith(".pdf"):
+            # If the candidate didn't match, try the whole part
+            if part.lower().endswith(".pdf"):
+                candidate = part
+            else:
+                continue
+
+        # Expand tilde
+        expanded = Path(candidate).expanduser()
+        return expanded
+
+    return None
+
+
 def cite_key_to_slug(cite_key: str) -> str:
     """Convert CamelCase cite key to kebab-case slug.
 
