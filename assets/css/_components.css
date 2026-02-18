@@ -351,6 +351,10 @@
   height: auto;
 }
 
+[data-theme="dark"] .pdf-preview-link img {
+  filter: invert(1) hue-rotate(180deg);
+}
+
 /* Gallery */
 .gallery {
   display: grid;
