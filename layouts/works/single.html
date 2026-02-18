@@ -8,12 +8,23 @@
     {{- partial "citation-format.html" (dict "work" . "type" $type "link" false) -}}
   </h1>
 
+  {{ $workSlug := "" }}
+  {{ with .File }}{{ $workSlug = .ContentBaseName }}{{ end }}
+
   {{ with .Content }}
     <div class="work-body">{{ . }}</div>
   {{ end }}
 
-  {{ $workSlug := "" }}
-  {{ with .File }}{{ $workSlug = .ContentBaseName }}{{ end }}
+  {{ $thumbPath := printf "pdf-thumbnails/%s.png" $workSlug }}
+  {{ $pdfPath := printf "pdfs/%s.pdf" $workSlug }}
+  {{ if fileExists (printf "static/%s" $thumbPath) }}
+  <section class="pdf-preview" aria-label="PDF preview">
+    <h2>PDF</h2>
+    <a href="/{{ $pdfPath }}" class="pdf-preview-link" target="_blank" rel="noopener">
+      <img src="/{{ $thumbPath }}" alt="First page of PDF" loading="lazy" width="600">
+    </a>
+  </section>
+  {{ end }}
 
   {{/* Find all notes that cite this work (via rendered cite shortcode links) */}}
   {{ $citingNotes := slice }}

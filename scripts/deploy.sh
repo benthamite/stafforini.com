@@ -19,6 +19,10 @@ fi
 echo "Injecting lastmod dates..."
 python3 scripts/inject-lastmod.py
 
+# Process PDFs (strip annotations, generate thumbnails)
+echo "Processing PDFs..."
+python3 scripts/process-pdfs.py
+
 # Build
 echo "Building site..."
 hugo --minify
