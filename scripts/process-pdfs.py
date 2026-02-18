@@ -19,9 +19,11 @@ import argparse
 import json
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 import pikepdf
+from PIL import Image
 from pikepdf import Name
 
 from lib import BIB_FILES, cite_key_to_slug, extract_pdf_path, parse_bib_entries
@@ -78,11 +80,8 @@ def strip_annotations(src: Path, dst: Path) -> None:
         pdf.save(dst)
 
 
-def render_thumbnail(pdf_path: Path, out_png: Path) -> bool:
-    """Render the first page of *pdf_path* to *out_png* at THUMB_DPI.
-
-    Returns True on success, False on failure.
-    """
+def _render_page(pdf_path: Path, out_png: Path, page_num: int) -> bool:
+    """Render a single page of *pdf_path* to *out_png*. Returns True on success."""
     result = subprocess.run(
         [
             MUTOOL, "draw",
@@ -90,12 +89,70 @@ def render_thumbnail(pdf_path: Path, out_png: Path) -> bool:
             "-r", str(THUMB_DPI),
             "-F", "png",
             str(pdf_path),
-            "1",  # first page only
+            str(page_num),
         ],
         capture_output=True,
         text=True,
     )
     return result.returncode == 0
+
+
+# A page is considered blank when the fraction of near-white pixels exceeds
+# this threshold.  Near-white = every RGB channel >= BLANK_CHANNEL_MIN.
+BLANK_THRESHOLD = 0.99
+BLANK_CHANNEL_MIN = 250
+MAX_PAGES_TO_CHECK = 5
+
+
+def _is_blank(png_path: Path) -> bool:
+    """Return True if the rendered page image is essentially blank (all white)."""
+    img = Image.open(png_path).convert("RGB")
+    pixels = img.getdata()
+    white_count = sum(
+        1 for r, g, b in pixels
+        if r >= BLANK_CHANNEL_MIN and g >= BLANK_CHANNEL_MIN and b >= BLANK_CHANNEL_MIN
+    )
+    return white_count / len(pixels) >= BLANK_THRESHOLD
+
+
+def render_thumbnail(pdf_path: Path, out_png: Path) -> bool:
+    """Render the first non-blank page of *pdf_path* to *out_png* at THUMB_DPI.
+
+    Checks up to MAX_PAGES_TO_CHECK pages, skipping blank ones.
+    Returns True on success, False on failure.
+    """
+    with pikepdf.open(pdf_path) as pdf:
+        num_pages = len(pdf.pages)
+
+    pages_to_check = min(num_pages, MAX_PAGES_TO_CHECK)
+
+    for page_num in range(1, pages_to_check + 1):
+        if page_num == 1:
+            # Render directly to the output path for the common case
+            if not _render_page(pdf_path, out_png, page_num):
+                return False
+            if not _is_blank(out_png):
+                return True
+        else:
+            # Render to a temp file, then move if non-blank
+            with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+                tmp_path = Path(tmp.name)
+            try:
+                if not _render_page(pdf_path, tmp_path, page_num):
+                    tmp_path.unlink(missing_ok=True)
+                    continue
+                if not _is_blank(tmp_path):
+                    tmp_path.replace(out_png)
+                    return True
+                tmp_path.unlink(missing_ok=True)
+            except Exception:
+                tmp_path.unlink(missing_ok=True)
+                raise
+
+    # All checked pages were blank — keep the first page render
+    if not out_png.exists():
+        _render_page(pdf_path, out_png, 1)
+    return True
 
 
 # === Main logic ===
