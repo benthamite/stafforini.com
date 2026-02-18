@@ -4,15 +4,50 @@
   <span data-pagefind-meta="work_author" data-pagefind-ignore class="visually-hidden">{{ .Params.author }}</span>
   <span data-pagefind-meta="work_title" data-pagefind-ignore class="visually-hidden">{{ .Title }}</span>
   {{ with .Plain }}<span data-pagefind-meta="work_abstract" data-pagefind-ignore class="visually-hidden">{{ . }}</span>{{ end }}
-  <h1>
-    {{- partial "citation-format.html" (dict "work" . "type" $type "link" false) -}}
-  </h1>
+
+  <div class="work-header">
+    <h1>{{ .Title | safeHTML }}</h1>
+
+    {{/* Author / editor line */}}
+    {{ if or (eq $type "collection") (eq $type "proceedings") }}
+      {{ with .Params.editor }}
+      <p class="work-author">{{ . }} {{ if or (in . " and ") (in . ", ") }}(eds.){{ else }}(ed.){{ end }}</p>
+      {{ end }}
+    {{ else }}
+      {{ with .Params.author }}
+      <p class="work-author">{{ . }}</p>
+      {{ end }}
+    {{ end }}
+
+    {{/* Publication details line */}}
+    <p class="work-details">
+      {{- if or (eq $type "incollection") (eq $type "inbook") (eq $type "inproceedings") -}}
+        {{- with .Params.editor }}In {{ . }} {{ if or (in . " and ") (in . ", ") }}(eds.){{ else }}(ed.){{ end }}{{ end }} <em>{{ .Params.booktitle | default .Title | safeHTML }}</em>
+        {{- with .Params.location }}, {{ . }}{{ end -}}
+        {{- with .Params.year }}, {{ . }}{{ end -}}
+        {{- with .Params.pages }}, pp. {{ . }}{{ end -}}
+      {{- else if eq $type "article" -}}
+        <em>{{ .Params.journaltitle | default .Title | safeHTML }}</em>
+        {{- with .Params.volume }}, vol. {{ . }}{{ end -}}
+        {{- with .Params.number }}, no. {{ . }}{{ end -}}
+        {{- with .Params.year }}, {{ . }}{{ end -}}
+        {{- with .Params.pages }}, pp. {{ . }}{{ end -}}
+      {{- else -}}
+        {{- $location := $.Params.location -}}
+        {{- with $location }}{{ . }}{{ end -}}
+        {{- with $.Params.year }}{{ if $location }}, {{ end }}{{ . }}{{ end -}}
+      {{- end -}}
+    </p>
+  </div>
 
   {{ $workSlug := "" }}
   {{ with .File }}{{ $workSlug = .ContentBaseName }}{{ end }}
 
   {{ with .Content }}
-    <div class="work-body">{{ . }}</div>
+    <div class="work-body">
+      <h2>Abstract</h2>
+      {{ . }}
+    </div>
   {{ end }}
 
   {{ $thumbPath := printf "pdf-thumbnails/%s.png" $workSlug }}
