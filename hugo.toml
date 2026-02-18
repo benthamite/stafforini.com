@@ -26,17 +26,13 @@ title = "Pablo Stafforini"
 # Menu
 [menus]
   [[menus.main]]
-    name = "Home"
-    pageRef = "/"
-    weight = 1
-  [[menus.main]]
     name = "Notes"
     pageRef = "/notes/"
-    weight = 2
+    weight = 1
   [[menus.main]]
     name = "Quotes"
     pageRef = "/quotes/"
-    weight = 3
+    weight = 2
 
 # Output formats
 [outputFormats]
