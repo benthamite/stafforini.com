@@ -213,6 +213,12 @@ def generate_work_page(entry: dict) -> str:
     """Generate YAML front matter for a work page."""
     def clean(s: str) -> str:
         s = s.replace("{", "").replace("}", "")
+        # Convert BibTeX escape sequences to plain characters
+        s = s.replace("\\&", "&")
+        s = s.replace("\\%", "%")
+        s = s.replace("\\$", "$")
+        s = s.replace("\\_", "_")
+        s = s.replace("\\#", "#")
         # Convert org-mode /italic/ markup to HTML <em>
         s = re.sub(r'(?<!\w)/([^/]+)/(?!\w)', r'<em>\1</em>', s)
         return s
@@ -251,8 +257,7 @@ def generate_work_page(entry: dict) -> str:
         lines.append(f'number: "{escape_yaml_string(number)}"')
     if pages:
         lines.append(f'pages: "{escape_yaml_string(pages)}"')
-    if editor and entry.get("author", ""):
-        # Only include editor when there's also an author (i.e. for incollection)
+    if editor:
         lines.append(f'editor: "{escape_yaml_string(editor)}"')
     lines.append("---")
     lines.append("")
