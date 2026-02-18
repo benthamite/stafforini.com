@@ -43,6 +43,17 @@
   {{- with $work.Params.year }}, {{ . }}{{ end -}}
   {{- with $work.Params.pages }}, pp. {{ . }}{{ end -}}
   {{- with $locator }}, {{ . }}{{ end -}}
+{{- else if or (eq $type "collection") (eq $type "proceedings") -}}
+  {{/* Edited collection: Editor (ed./eds.), *Title*, Place, Year */}}
+  {{ with $work.Params.editor }}{{ . }} {{ if or (in . " and ") (in . ", ") }}(eds.){{ else }}(ed.){{ end }}{{ end -}},
+  {{- if $link -}}
+    {{- " " -}}<a href="{{ $work.RelPermalink }}"><em>{{ $work.Title | safeHTML }}</em></a>
+  {{- else -}}
+    {{- " " -}}<em>{{ $work.Title | safeHTML }}</em>
+  {{- end -}}
+  {{- with $work.Params.location }}, {{ . }}{{ end -}}
+  {{- with $work.Params.year }}, {{ . }}{{ end -}}
+  {{- with $locator }}, {{ . }}{{ end -}}
 {{- else -}}
   {{/* Book and everything else: Author, *Title*, Place, Year */}}
   {{ $work.Params.author }},
