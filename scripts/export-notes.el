@@ -25,6 +25,8 @@
 (setq org-export-exclude-tags '("noexport" "ARCHIVE"))
 ;; Don't render TODO keywords in exported headings
 (setq org-export-with-todo-keywords nil)
+;; Exclude entire headings that have any TODO keyword (TODO, WAITING, DONE, DELEGATED, etc.)
+(setq org-export-with-tasks nil)
 (setq org-hugo-suppress-lastmod-period 0)
 
 ;; Register a cite export processor that emits Hugo {{< cite >}} shortcodes.
@@ -123,5 +125,11 @@
 
 ;; Run the export
 (export-notes-batch)
+
+;; Inject lastmod dates from org file modification times
+(let ((default-directory (expand-file-name
+                          "~/Library/CloudStorage/Dropbox/repos/stafforini.com/")))
+  (message "\nInjecting lastmod dates...")
+  (message "%s" (shell-command-to-string "python3 scripts/inject-lastmod.py")))
 
 ;;; export-notes.el ends here
