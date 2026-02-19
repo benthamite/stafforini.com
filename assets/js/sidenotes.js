@@ -134,7 +134,8 @@
       sn.overlaps = [];
     });
 
-    // Compute top positions
+    // Compute top positions: always align with the reference; only push down
+    // if the previous sidenote's minimum visible area would be violated.
     for (var i = 0; i < sidenotes.length; i++) {
       var sn = sidenotes[i];
 
@@ -142,22 +143,14 @@
         sn.top = sn.refTop;
       } else {
         var prev = sidenotes[i - 1];
-        var prevUsedHeight;
+        // The earliest this sidenote can start: previous note must show
+        // at least MIN_SHOWN_LINES before being occluded.
+        var minPrevEnd = prev.top + minHeight;
+        sn.top = Math.max(sn.refTop, minPrevEnd);
 
-        // If the previous note is short enough to fit fully, use its full height
-        if (prev.fullHeight <= minHeight + minSpacing ||
-            prev.top + prev.fullHeight + minSpacing <= sn.refTop) {
-          prevUsedHeight = prev.fullHeight;
-        } else {
-          prevUsedHeight = minHeight;
-        }
-
-        var topByPrev = prev.top + prevUsedHeight + minSpacing;
-        sn.top = Math.max(sn.refTop, topByPrev);
-
-        // Check if previous sidenote is partially occluded
-        if (prev.top + prev.fullHeight + minSpacing > sn.top) {
-          var availableSpace = sn.top - prev.top - minSpacing;
+        // Check if previous sidenote is partially occluded by this one
+        if (prev.top + prev.fullHeight > sn.top) {
+          var availableSpace = sn.top - prev.top;
           var linesAvailable = Math.floor(availableSpace / lineHeight);
           var visibleLines = Math.max(linesAvailable, MIN_SHOWN_LINES);
           prev.visibleHeight = visibleLines * lineHeight;
