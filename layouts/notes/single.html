@@ -4,13 +4,18 @@
 
   {{ partial "note-meta.html" . }}
 
-  <div class="note-body">
-    {{ .Content }}
+  <div class="content-with-sidenotes">
+    <div class="note-body">
+      {{ .Content }}
+    </div>
+    <aside class="sidenote-column" aria-label="Sidenotes"></aside>
   </div>
 
   {{ partial "backlinks.html" . }}
 </article>
 
+{{ $sidenotes := resources.Get "js/sidenotes.js" | minify | fingerprint }}
+<script src="{{ $sidenotes.RelPermalink }}" integrity="{{ $sidenotes.Data.Integrity }}"></script>
 {{/* Link preview only needed on note pages (other sections don't have internal prose links to preview) */}}
 {{ $linkPreview := resources.Get "js/link-preview.js" | minify | fingerprint }}
 <script src="{{ $linkPreview.RelPermalink }}" integrity="{{ $linkPreview.Data.Integrity }}"></script>
