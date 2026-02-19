@@ -100,6 +100,34 @@
 
   // ── Smooth scrolling ─────────────────────────────────────────
   var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var SCROLL_DURATION = 500; // ms
+
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  var scrollAnimationId = null;
+
+  function animateScrollTo(targetY) {
+    if (scrollAnimationId) cancelAnimationFrame(scrollAnimationId);
+    var startY = window.scrollY;
+    var diff = targetY - startY;
+    if (diff === 0) return;
+    var startTime = null;
+
+    function step(time) {
+      if (!startTime) startTime = time;
+      var progress = Math.min((time - startTime) / SCROLL_DURATION, 1);
+      window.scrollTo(0, startY + diff * easeInOutCubic(progress));
+      if (progress < 1) {
+        scrollAnimationId = requestAnimationFrame(step);
+      } else {
+        scrollAnimationId = null;
+      }
+    }
+
+    scrollAnimationId = requestAnimationFrame(step);
+  }
 
   function handleTocClick(e) {
     var link = e.target.closest('a');
@@ -114,7 +142,7 @@
       if (prefersReducedMotion.matches) {
         window.scrollTo(0, 0);
       } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        animateScrollTo(0);
       }
       return;
     }
@@ -126,7 +154,8 @@
     if (prefersReducedMotion.matches) {
       target.scrollIntoView();
     } else {
-      target.scrollIntoView({ behavior: 'smooth' });
+      var targetY = target.getBoundingClientRect().top + window.scrollY;
+      animateScrollTo(targetY);
     }
   }
 
