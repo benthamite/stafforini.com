@@ -16,6 +16,7 @@
   var searchGeneration = 0;
 
   var core = window._searchCore;
+  var nav = window._searchUtils.createKeyboardNav(resultsEl, input);
 
   var pagefind = null;
   try {
@@ -29,7 +30,7 @@
     core.runSearch(query, pagefind, {
       maxResultsPerSection: 0,
       filterSection: filterSection || undefined,
-      onResults: function(html) { resultsEl.innerHTML = html; },
+      onResults: function(html) { resultsEl.innerHTML = html; nav.refresh(); },
       getGeneration: function() { return searchGeneration; },
       incrementGeneration: function() { return ++searchGeneration; }
     });
