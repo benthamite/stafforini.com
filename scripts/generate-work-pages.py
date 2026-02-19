@@ -267,7 +267,7 @@ def generate_work_page(entry: dict) -> str:
     if editor:
         lines.append(f'editor: "{escape_yaml_string(editor)}"')
     if url:
-        lines.append(f'url: "{escape_yaml_string(url)}"')
+        lines.append(f'external_url: "{escape_yaml_string(url)}"')
     if pub_date:
         lines.append(f'pub_date: "{pub_date}"')
     lines.append("---")
