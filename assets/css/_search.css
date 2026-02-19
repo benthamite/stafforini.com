@@ -108,6 +108,18 @@
 
 .search-section-list li {
   margin-bottom: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.search-section-list li.is-active {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+a.search-more.is-active {
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 4px;
+  padding: 0.125rem 0.25rem;
 }
 
 .search-section-list a {

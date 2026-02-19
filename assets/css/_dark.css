@@ -29,4 +29,12 @@
   .search-section-list a mark {
     background: rgba(255, 220, 100, 0.25);
   }
+
+  .search-section-list li.is-active {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  a.search-more.is-active {
+    background: rgba(255, 255, 255, 0.08);
+  }
 }

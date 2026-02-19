@@ -42,6 +42,7 @@
   var searchGeneration = 0;
 
   var core = window._searchCore;
+  var nav = window._searchUtils.createKeyboardNav(resultsEl, input);
 
   async function initPagefind() {
     if (pagefind) return;
@@ -70,7 +71,7 @@
     debounceTimer = setTimeout(function() {
       core.runSearch(input.value.trim(), pagefind, {
         maxResultsPerSection: 5,
-        onResults: function(html) { resultsEl.innerHTML = html; },
+        onResults: function(html) { resultsEl.innerHTML = html; nav.refresh(); },
         getGeneration: function() { return searchGeneration; },
         incrementGeneration: function() { return ++searchGeneration; }
       });
