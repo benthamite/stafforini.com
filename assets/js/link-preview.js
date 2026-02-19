@@ -62,12 +62,16 @@
 
   // Capture phase required: pointerenter/pointerleave don't bubble, so delegation only works via capture
   document.addEventListener('pointerenter', function (e) {
-    var link = e.target.closest('a[href^="/notes/"]');
+    var el = e.target.nodeType === 1 ? e.target : e.target.parentElement;
+    if (!el) return;
+    var link = el.closest('a[href^="/notes/"]');
     if (link) showPreview(link);
   }, true);
 
   document.addEventListener('pointerleave', function (e) {
-    var link = e.target.closest('a[href^="/notes/"]');
+    var el = e.target.nodeType === 1 ? e.target : e.target.parentElement;
+    if (!el) return;
+    var link = el.closest('a[href^="/notes/"]');
     if (link && (!e.relatedTarget || !link.contains(e.relatedTarget))) {
       hidePreview();
     }
