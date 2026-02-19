@@ -27,6 +27,10 @@ python3 scripts/process-pdfs.py
 echo "Generating citing-notes data..."
 python3 scripts/generate-citing-notes.py
 
+# Clean stale build output (Hugo doesn't remove deleted/renamed pages)
+echo "Cleaning previous build..."
+rm -rf public
+
 # Build
 echo "Building site..."
 hugo --minify

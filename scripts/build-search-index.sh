@@ -18,6 +18,9 @@ fi
 echo "Generating citing-notes data..."
 python3 scripts/generate-citing-notes.py
 
+# Clean stale build output (Hugo doesn't remove deleted/renamed pages)
+rm -rf public
+
 echo "Building site for search indexing..."
 hugo --quiet
 

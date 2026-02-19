@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "hugo --minify && npx pagefind --site public",
-    "dev": "python3 scripts/generate-citing-notes.py; hugo server --navigateToChanged",
+    "dev": "bash scripts/start-dev-server.sh",
     "reindex": "bash scripts/build-search-index.sh",
     "index": "npx pagefind --site public"
   },
