@@ -27,9 +27,17 @@ if [ -d content/notes ]; then
   python3 scripts/generate-citing-notes.py
 fi
 
+# Symlink heavy static directories into public/ so Hugo can serve them
+# without processing 30K+ files during startup.  hugo.dev.toml excludes
+# pdfs, pdf-thumbnails, and pagefind from its static mounts; the symlinks
+# make them available at their normal URLs anyway.
+mkdir -p public
+for dir in pdfs pdf-thumbnails; do
+  [ -d "static/$dir" ] && [ ! -e "public/$dir" ] && \
+    ln -s "$PWD/static/$dir" "public/$dir"
+done
+
 # Start the dev server
-# hugo.dev.toml excludes pdfs/ and pdf-thumbnails/ (30K+ files, 73 GB)
-# from static mounts, reducing startup from ~2 minutes to seconds.
-# PDF/thumbnail links will 404 during dev; run `npm run reindex` for a
-# full build that includes them.
-exec hugo server --config hugo.toml,hugo.dev.toml --renderToMemory --navigateToChanged
+# --renderStaticToDisk serves static files from public/ (including our
+# symlinks) while keeping rendered pages in memory for speed.
+exec hugo server --config hugo.toml,hugo.dev.toml --renderStaticToDisk --navigateToChanged
