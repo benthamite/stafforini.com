@@ -19,11 +19,17 @@ function sanitizeExcerpt(html) {
   return html.replace(/<(?!\/?mark\b)[^>]*>/gi, '');
 }
 
+var MAJOR_WORK_TYPES = { book: 1, mvbook: 1, collection: 1, mvcollection: 1, proceedings: 1, mvproceedings: 1, thesis: 1, phdthesis: 1, mastersthesis: 1, report: 1, techreport: 1 };
+
 function renderResult(r, section, currentQuery) {
   // Works have work_author/work_title metadata (from Pagefind indexing); other pages use their title directly
   var label;
   if (r.meta.work_author && r.meta.work_title) {
-    label = highlightText(escapeHtml(r.meta.work_author), currentQuery) + ', <em>' + highlightText(escapeHtml(r.meta.work_title), currentQuery) + '</em>';
+    var title = highlightText(escapeHtml(r.meta.work_title), currentQuery);
+    if (r.meta.work_type && MAJOR_WORK_TYPES[r.meta.work_type]) {
+      title = '<em>' + title + '</em>';
+    }
+    label = highlightText(escapeHtml(r.meta.work_author), currentQuery) + ', ' + title;
   } else {
     label = highlightText(escapeHtml(r.meta.title || r.url), currentQuery);
   }
