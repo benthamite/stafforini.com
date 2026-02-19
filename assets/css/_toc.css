@@ -1,0 +1,163 @@
+/* Table of contents — floating (left margin), inline, and collapsible variants.
+   Responsive tiers:
+     >=1400px — floating sticky in left margin
+     1100–1399px — inline above article, always visible
+     <1100px — collapsible <details> */
+
+/* ── Variables ───────────────────────────────────────────────────── */
+:root {
+  --toc-width: 13rem;
+  --toc-gap: 1.5rem;
+  --toc-top-offset: 5rem;
+}
+
+/* ── Shared TOC styles ───────────────────────────────────────────── */
+.toc-floating-nav,
+.toc-inline,
+.toc-collapsible-nav {
+  font-size: var(--font-size-sm);
+}
+
+.toc-floating-nav ul,
+.toc-inline ul,
+.toc-collapsible-nav ul {
+  list-style: none;
+  padding-left: 1rem;
+  margin: 0.25rem 0;
+}
+
+.toc-floating-nav > ul,
+.toc-inline > ul,
+.toc-collapsible-nav > ul {
+  padding-left: 0;
+}
+
+.toc-floating-nav li,
+.toc-inline li,
+.toc-collapsible-nav li {
+  margin: 0.2rem 0;
+}
+
+.toc-floating-nav a,
+.toc-inline a,
+.toc-collapsible-nav a {
+  text-decoration: none;
+  color: var(--color-text-secondary);
+}
+
+.toc-floating-nav a:hover,
+.toc-inline a:hover,
+.toc-collapsible-nav a:hover {
+  color: var(--color-link);
+}
+
+/* ── Scroll spy active state ──────────────────────────────────────── */
+.toc-floating-nav a.toc-active {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* ── Title link ───────────────────────────────────────────────────── */
+.toc-title {
+  display: block;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-text);
+  text-decoration: none;
+  margin-bottom: 0.75rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.toc-title.is-visible {
+  opacity: 1;
+}
+
+.toc-title:hover {
+  color: var(--color-link);
+}
+
+/* ── Default: hide floating and inline, show collapsible ──────────── */
+.toc-floating {
+  display: none;
+}
+
+.toc-inline {
+  display: none;
+}
+
+/* ── Collapsible (<1100px) ────────────────────────────────────────── */
+.toc-collapsible {
+  margin-bottom: 2rem;
+  font-size: var(--font-size-sm);
+}
+
+.toc-collapsible summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.toc-collapsible-nav {
+  margin-top: 0.5rem;
+  padding-left: 0.5rem;
+  border-left: 2px solid var(--color-border);
+}
+
+/* ── Medium screens (1100–1399px): inline TOC ─────────────────────── */
+@media (min-width: 1100px) {
+  .toc-collapsible {
+    display: none;
+  }
+
+  .toc-inline {
+    display: block;
+    margin-bottom: 2rem;
+    padding-left: 0.75rem;
+    border-left: 2px solid var(--color-border);
+  }
+}
+
+/* ── Wide screens (>=1400px): floating sticky TOC ─────────────────── */
+@media (min-width: 1400px) {
+  article {
+    position: relative;
+  }
+
+  .toc-inline {
+    display: none;
+  }
+
+  .toc-floating {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: calc(100% + var(--toc-gap));
+    width: var(--toc-width);
+    pointer-events: none;
+  }
+
+  .toc-floating-nav {
+    position: sticky;
+    top: var(--toc-top-offset);
+    max-height: calc(100vh - var(--toc-top-offset) - 2rem);
+    overflow-y: auto;
+    pointer-events: auto;
+  }
+
+  /* Thin scrollbar for overflowing TOC */
+  .toc-floating-nav::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  .toc-floating-nav::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 3px;
+  }
+
+  .toc-floating-nav {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+  }
+}
