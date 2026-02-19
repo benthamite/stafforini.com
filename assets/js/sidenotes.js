@@ -96,16 +96,6 @@
 
   // ── Positioning algorithm ───────────────────────────────────────
 
-  function getOffsetTopRelativeTo(el, ancestor) {
-    var top = 0;
-    var current = el;
-    while (current && current !== ancestor) {
-      top += current.offsetTop;
-      current = current.offsetParent;
-    }
-    return top;
-  }
-
   function positionSidenotes() {
     computeLineHeight();
 
@@ -117,9 +107,11 @@
     var container = sidenoteColumn.closest('.content-with-sidenotes');
     if (!container) return;
 
-    // Measure reference positions relative to the container
+    // Use getBoundingClientRect for accurate positioning of inline elements
+    var containerRect = container.getBoundingClientRect();
     sidenotes.forEach(function (sn) {
-      sn.refTop = getOffsetTopRelativeTo(sn.ref, container);
+      var refRect = sn.ref.getBoundingClientRect();
+      sn.refTop = refRect.top - containerRect.top;
     });
 
     // Temporarily remove height constraints to measure full heights
