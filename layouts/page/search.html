@@ -15,6 +15,8 @@
   var debounceTimer = null;
   var searchGeneration = 0;
 
+  input.focus();
+
   var core = window._searchCore;
   var nav = window._searchUtils.createKeyboardNav(resultsEl, input);
 
@@ -54,6 +56,5 @@
     input.value = q;
     doSearch(q, sec);
   }
-  input.focus();
 </script>
 {{ end }}
