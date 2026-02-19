@@ -1,0 +1,124 @@
+/* Sidenotes — margin notes that replace bottom-of-page footnotes on wide screens.
+   Z-index scale (local, within isolation: isolate on .sidenote):
+     0  — sidenote content
+     1  — fade-out gradient
+     2  — cover (solid background hiding overflow)
+     10 — hovered sidenote (brought to front) */
+
+/* ── Wide-screen layout ──────────────────────────────────────────── */
+
+@media (min-width: 1100px) {
+  /* Widen page containers to accommodate sidenote column */
+  body.has-sidenotes .site-header,
+  body.has-sidenotes main,
+  body.has-sidenotes .site-footer {
+    max-width: calc(var(--max-width) + var(--sidenote-gap) + var(--sidenote-width));
+  }
+
+  /* Two-column grid: content + sidenotes */
+  .content-with-sidenotes {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--sidenote-width);
+    gap: var(--sidenote-gap);
+  }
+
+  .sidenote-column {
+    position: relative;
+  }
+}
+
+/* ── Sidenote elements ───────────────────────────────────────────── */
+
+.sidenote {
+  position: absolute;
+  width: 100%;
+  font-size: var(--sidenote-font-size);
+  line-height: var(--sidenote-line-height);
+  color: var(--color-text-secondary);
+  isolation: isolate;
+}
+
+.sidenote-content {
+  position: relative;
+  z-index: 0;
+}
+
+.sidenote-content p {
+  margin: 0 0 0.4em;
+}
+
+.sidenote-content p:last-child {
+  margin-bottom: 0;
+}
+
+.sidenote-number {
+  position: absolute;
+  right: calc(100% + 4px);
+  font-size: calc(var(--sidenote-font-size) - 1px);
+  font-weight: 600;
+  color: var(--color-link);
+}
+
+/* ── Fade-out and cover layers (overlap handling) ────────────────── */
+
+.sidenote-fadeout {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(to bottom, transparent, var(--color-bg));
+  pointer-events: none;
+}
+
+.sidenote-cover {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  width: 100%;
+  bottom: 0;
+  background: var(--color-bg);
+  pointer-events: none;
+}
+
+/* ── Hover behavior ──────────────────────────────────────────────── */
+
+.sidenote {
+  transition: color 0.15s ease;
+}
+
+.sidenote.is-hovered {
+  color: var(--color-text);
+  z-index: 10;
+}
+
+.sidenote.is-hovered .sidenote-fadeout,
+.sidenote.is-hovered .sidenote-cover {
+  display: none;
+}
+
+.sidenote.is-hidden-by-hover {
+  visibility: hidden;
+}
+
+/* ── Highlight footnote ref when sidenote is hovered ─────────────── */
+
+.footnote-ref.is-active {
+  border: 2px solid var(--color-link);
+  margin: -2px;
+  border-radius: 2px;
+}
+
+/* ── Responsive: below breakpoint ────────────────────────────────── */
+
+@media (max-width: 1099px) {
+  .sidenote-column {
+    display: none;
+  }
+  /* Original footnotes remain visible at the bottom */
+}
+
+/* ── Hide original footnotes when sidenotes are active ───────────── */
+
+body.has-sidenotes .footnotes {
+  display: none;
+}

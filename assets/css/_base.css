@@ -1,7 +1,8 @@
 /* Z-index scale (keep in sync across files):
-   50  — link preview popup (_preview.css)
-   100 — skip-link (_base.css)
-   200 — search overlay (_search.css) */
+   0–10 — sidenotes (local, within isolation: isolate) (_sidenotes.css)
+   50   — link preview popup (_preview.css)
+   100  — skip-link (_base.css)
+   200  — search overlay (_search.css) */
 
 /* Custom properties */
 :root {
@@ -27,6 +28,12 @@
   /* Layout */
   --max-width: 42rem;
   --padding-x: 1.5rem;
+
+  /* Sidenotes */
+  --sidenote-width: 13rem;
+  --sidenote-gap: 1.5rem;
+  --sidenote-font-size: 0.825rem;
+  --sidenote-line-height: 1.4;
 }
 
 /* Reset */

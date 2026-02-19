@@ -16,6 +16,14 @@
   <span data-pagefind-meta="work_author" data-pagefind-ignore class="visually-hidden">{{ $workAuthor }}</span>
   <span data-pagefind-meta="work_title" data-pagefind-ignore class="visually-hidden">{{ $workTitle }}</span>
   {{ end }}
-  {{ partial "quote-entry.html" . }}
+  <div class="content-with-sidenotes">
+    <div class="quote-body">
+      {{ partial "quote-entry.html" . }}
+    </div>
+    <aside class="sidenote-column" aria-label="Sidenotes"></aside>
+  </div>
 </div>
+
+{{ $sidenotesJS := resources.Get "js/sidenotes.js" | minify | fingerprint }}
+<script src="{{ $sidenotesJS.RelPermalink }}" integrity="{{ $sidenotesJS.Data.Integrity }}"></script>
 {{ end }}
