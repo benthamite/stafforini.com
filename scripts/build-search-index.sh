@@ -15,6 +15,9 @@ if [ ! -d content ]; then
   exit 0
 fi
 
+echo "Generating citing-notes data..."
+python3 scripts/generate-citing-notes.py
+
 echo "Building site for search indexing..."
 hugo --quiet
 
