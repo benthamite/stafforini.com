@@ -113,13 +113,13 @@
     var minHeight = MIN_SHOWN_LINES * lineHeight;
     var fadeoutHeight = FADEOUT_LINES * lineHeight;
 
-    // The grid container that holds both the content column and the sidenote column
-    var gridContainer = sidenoteColumn.closest('.content-with-sidenotes');
-    if (!gridContainer) return;
+    // The positioned container that holds the content and the sidenote column
+    var container = sidenoteColumn.closest('.content-with-sidenotes');
+    if (!container) return;
 
-    // Measure reference positions relative to grid container
+    // Measure reference positions relative to the container
     sidenotes.forEach(function (sn) {
-      sn.refTop = getOffsetTopRelativeTo(sn.ref, gridContainer);
+      sn.refTop = getOffsetTopRelativeTo(sn.ref, container);
     });
 
     // Temporarily remove height constraints to measure full heights
