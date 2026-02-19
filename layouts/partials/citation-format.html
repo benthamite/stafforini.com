@@ -28,6 +28,7 @@
   {{- with $work.Params.editor }} in {{ . }} {{ if or (in . " and ") (in . ", ") }}(eds.){{ else }}(ed.){{ end }}{{ end }} <em>{{ $work.Params.booktitle | default $work.Title | safeHTML }}</em>
   {{- with $work.Params.location }}, {{ . }}{{ end -}}
   {{- with $work.Params.year }}, {{ . }}{{ end -}}
+  {{- with $work.Params.pages }}, pp. {{ . }}{{ end -}}
   {{- with $locator }}, {{ . }}{{ end -}}
 {{- else if eq $type "article" -}}
   {{/* Journal article: Author, Title, *Journal*, vol. X, no. Y, Year */}}
