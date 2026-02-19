@@ -39,6 +39,7 @@ def _parse_bib_entries_for_works(bib_path: Path) -> list[dict]:
         extra_fields=[
             "location", "booktitle", "journaltitle",
             "volume", "number", "pages", "bookauthor", "crossref", "abstract",
+            "url", "date",
         ],
         field_fallbacks={"location": "address"},
     )
@@ -236,6 +237,12 @@ def generate_work_page(entry: dict) -> str:
     pages = clean(entry.get("pages", ""))
     editor_raw = entry.get("editor", "")
     editor = bib_author_to_display(editor_raw) if editor_raw else ""
+    url = entry.get("url", "").replace("{", "").replace("}", "")
+    # Extract full date (YYYY-MM-DD) for rich formatting; year-only handled by 'year'
+    raw_date = entry.get("date", "")
+    pub_date = ""
+    if re.match(r"\d{4}-\d{2}-\d{2}", raw_date):
+        pub_date = raw_date[:10]
 
     lines = [
         "---",
@@ -259,6 +266,10 @@ def generate_work_page(entry: dict) -> str:
         lines.append(f'pages: "{escape_yaml_string(pages)}"')
     if editor:
         lines.append(f'editor: "{escape_yaml_string(editor)}"')
+    if url:
+        lines.append(f'url: "{escape_yaml_string(url)}"')
+    if pub_date:
+        lines.append(f'pub_date: "{pub_date}"')
     lines.append("---")
     lines.append("")
 

@@ -6,7 +6,11 @@
   {{ with .Plain }}<span data-pagefind-meta="work_abstract" data-pagefind-ignore class="visually-hidden">{{ . }}</span>{{ end }}
 
   <div class="work-header">
+    {{ if and (eq $type "online") .Params.url }}
+    <h1><a href="{{ .Params.url }}">{{ .Title | safeHTML }}</a></h1>
+    {{ else }}
     <h1>{{ .Title | safeHTML }}</h1>
+    {{ end }}
 
     {{/* Author / editor line */}}
     {{ if or (eq $type "collection") (eq $type "proceedings") }}
@@ -32,6 +36,14 @@
         {{- with .Params.number }}, no. {{ . }}{{ end -}}
         {{- with .Params.year }}, {{ . }}{{ end -}}
         {{- with .Params.pages }}, pp. {{ . }}{{ end -}}
+      {{- else if eq $type "online" -}}
+        {{- with .Params.journaltitle }}<em>{{ . | safeHTML }}</em>{{ end -}}
+        {{- if .Params.pub_date -}}
+          {{- $d := time .Params.pub_date -}}
+          {{- with .Params.journaltitle }}, {{ end -}}{{ $d.Format "January 2, 2006" -}}
+        {{- else -}}
+          {{- with .Params.year }}{{ with $.Params.journaltitle }}, {{ end }}{{ . }}{{ end -}}
+        {{- end -}}
       {{- else -}}
         {{- $location := $.Params.location -}}
         {{- with $location }}{{ . }}{{ end -}}

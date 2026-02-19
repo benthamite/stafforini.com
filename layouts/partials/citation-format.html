@@ -54,7 +54,12 @@
     {{ $work.Title | safeHTML }}
   {{- end -}}
   {{- with $work.Params.journaltitle }}, <em>{{ . | safeHTML }}</em>{{ end -}}
-  {{- with $work.Params.year }}, {{ . }}{{ end -}}
+  {{- if $work.Params.pub_date -}}
+    {{- $d := time $work.Params.pub_date -}}
+    , {{ $d.Format "January 2, 2006" -}}
+  {{- else -}}
+    {{- with $work.Params.year }}, {{ . }}{{ end -}}
+  {{- end -}}
   {{- with $locator }}, {{ . }}{{ end -}}
 {{- else if or (eq $type "collection") (eq $type "proceedings") -}}
   {{/* Edited collection: Editor (ed./eds.), *Title*, Place, Year */}}
