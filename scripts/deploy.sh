@@ -23,6 +23,10 @@ python3 scripts/inject-lastmod.py
 echo "Processing PDFs..."
 python3 scripts/process-pdfs.py
 
+# Generate citing-notes data (pre-computed work->note reverse index)
+echo "Generating citing-notes data..."
+python3 scripts/generate-citing-notes.py
+
 # Build
 echo "Building site..."
 hugo --minify
