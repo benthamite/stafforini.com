@@ -91,43 +91,6 @@
   color: var(--color-text-secondary);
 }
 
-/* TOC */
-.toc-wrapper {
-  margin-bottom: 2rem;
-  font-size: var(--font-size-sm);
-}
-
-.toc-wrapper summary {
-  cursor: pointer;
-  font-weight: 600;
-  color: var(--color-text-secondary);
-}
-
-.toc-wrapper nav {
-  margin-top: 0.5rem;
-  padding-left: 0.5rem;
-  border-left: 2px solid var(--color-border);
-}
-
-.toc-wrapper ul {
-  list-style: none;
-  padding-left: 1rem;
-  margin: 0.25rem 0;
-}
-
-.toc-wrapper li {
-  margin: 0.2rem 0;
-}
-
-.toc-wrapper a {
-  text-decoration: none;
-  color: var(--color-text-secondary);
-}
-
-.toc-wrapper a:hover {
-  color: var(--color-link);
-}
-
 /* Backlinks */
 .backlinks {
   margin-top: 3rem;

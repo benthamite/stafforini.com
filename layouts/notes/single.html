@@ -1,8 +1,12 @@
 {{ define "main" }}
 <article>
+  {{ partial "toc-floating.html" . }}
+
   <h1>{{ .Title | safeHTML }}</h1>
 
   {{ partial "note-meta.html" . }}
+
+  {{ partial "toc-inline.html" . }}
 
   <div class="content-with-sidenotes">
     <div class="note-body">
@@ -16,6 +20,8 @@
 
 {{ $sidenotes := resources.Get "js/sidenotes.js" | minify | fingerprint }}
 <script src="{{ $sidenotes.RelPermalink }}" integrity="{{ $sidenotes.Data.Integrity }}"></script>
+{{ $toc := resources.Get "js/toc.js" | minify | fingerprint }}
+<script src="{{ $toc.RelPermalink }}" integrity="{{ $toc.Data.Integrity }}"></script>
 {{/* Link preview only needed on note pages (other sections don't have internal prose links to preview) */}}
 {{ $linkPreview := resources.Get "js/link-preview.js" | minify | fingerprint }}
 <script src="{{ $linkPreview.RelPermalink }}" integrity="{{ $linkPreview.Data.Integrity }}"></script>

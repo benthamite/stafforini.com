@@ -1,0 +1,14 @@
+{{ with .TableOfContents }}
+{{ $tocInner := . | replaceRE `<nav id="TableOfContents">` "" | replaceRE `</nav>` "" }}
+<div class="toc-inline-wrapper">
+  <nav class="toc-inline" aria-label="Table of contents">
+    {{ $tocInner | safeHTML }}
+  </nav>
+  <details class="toc-collapsible">
+    <summary>Table of contents</summary>
+    <nav class="toc-collapsible-nav" aria-label="Table of contents">
+      {{ $tocInner | safeHTML }}
+    </nav>
+  </details>
+</div>
+{{ end }}
