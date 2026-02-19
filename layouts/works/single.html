@@ -6,8 +6,8 @@
   {{ with .Plain }}<span data-pagefind-meta="work_abstract" data-pagefind-ignore class="visually-hidden">{{ . }}</span>{{ end }}
 
   <div class="work-header">
-    {{ if and (eq $type "online") .Params.url }}
-    <h1><a href="{{ .Params.url }}">{{ .Title | safeHTML }}</a></h1>
+    {{ if and (eq $type "online") .Params.external_url }}
+    <h1><a href="{{ .Params.external_url }}">{{ .Title | safeHTML }}</a></h1>
     {{ else }}
     <h1>{{ .Title | safeHTML }}</h1>
     {{ end }}
