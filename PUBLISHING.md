@@ -15,17 +15,19 @@ The following must be installed (all available via Homebrew):
 
 From Emacs:
 
-- `M-x stafforini-start-server` — starts the Hugo dev server (`npm run dev`) in a dedicated `*hugo-server*` buffer. If the server is already running, switches to its buffer.
+- `M-x stafforini-start-server` — starts the Hugo dev server (`npm run dev`) in a dedicated `*hugo-server*` buffer. If a server is already running, it is killed first to ensure a fresh build (Hugo's incremental rebuild does not track cross-page shortcode dependencies, so reusing a running server after content changes causes stale data).
 - `M-x stafforini-stop-server` — stops the server.
 
 Alternatively, from the project root (`~/Library/CloudStorage/Dropbox/repos/stafforini.com/`):
 
 ```bash
 npm install     # first time only, or after dependency changes
-npm run dev     # starts hugo server with --navigateToChanged
+npm run dev     # kills old servers, regenerates data, starts hugo server
 ```
 
-The site will be available at `http://localhost:1313/`. Hugo watches `content/` for changes, so any file exported via ox-hugo will trigger a live reload.
+The site will be available at `http://localhost:1313/`.
+
+**Important**: Hugo watches `content/` for changes and does live reload, but this only works reliably for changes to the file you're editing. Changes that affect other pages (e.g. updating a BibTeX entry that changes how citations render on note pages) require restarting the server. Always call `stafforini-start-server` after running `stafforini-update-works` or `stafforini-update-backlinks`.
 
 To also include draft content:
 
@@ -85,7 +87,9 @@ The `.dir-locals.el` in `bibliographic-notes/` activates the `hugo-cite-noop` pr
 
 1. Edit the `.bib` file
 2. Run `M-x stafforini-update-works`
-3. If `hugo server` is running, the site updates automatically
+3. Run `M-x stafforini-start-server` to restart the server with fresh data
+
+Hugo's live reload does **not** propagate BibTeX changes to note pages that cite the updated work (shortcode cross-references are not tracked). You must restart the server.
 
 The script reads all `.bib` files listed in `scripts/lib.py`, regenerates work pages for every cited key, and updates any that have changed. It is safe to re-run at any time.
 
@@ -105,7 +109,7 @@ All build commands are provided by the `stafforini` package. They run asynchrono
 | `M-x stafforini-export-all-quotes` | Export all quotes to Hugo markdown (batch mode) |
 | `M-x stafforini-update-works` | Generate/update work pages from BibTeX data |
 | `M-x stafforini-update-backlinks` | Regenerate backlink data from org-roam |
-| `M-x stafforini-start-server` | Start Hugo dev server (or switch to it) |
+| `M-x stafforini-start-server` | Start Hugo dev server (always restarts for fresh data) |
 | `M-x stafforini-stop-server` | Stop the Hugo dev server |
 | `M-x stafforini-full-rebuild` | Run the full pipeline (see below) |
 
@@ -135,8 +139,12 @@ Run `M-x stafforini-full-rebuild` to execute the full pipeline sequentially:
 3. Export all quotes
 4. Generate/update work pages
 5. Regenerate backlinks
-6. Hugo build (`hugo --minify`)
-7. Pagefind index (`npx pagefind --site public`)
+6. Generate citing-notes data
+7. Inject lastmod dates
+8. Process PDFs
+9. Clean `public/` (remove stale files)
+10. Hugo build (`hugo --minify`)
+11. Pagefind index (`npx pagefind --site public`)
 
 Or from the shell:
 
@@ -146,19 +154,29 @@ emacs --batch -l scripts/export-notes.el     # export all notes
 bash scripts/export-quotes.sh                # export all quotes
 python scripts/generate-work-pages.py        # generate/update work pages
 python scripts/generate-backlinks.py         # regenerate backlinks
+python scripts/generate-citing-notes.py      # generate citing-notes data
+python scripts/inject-lastmod.py             # inject lastmod dates
+python scripts/process-pdfs.py               # strip annotations, generate thumbnails
+rm -rf public                                # clean stale build output
 hugo --minify                                # build the site
 npx pagefind --site public                   # generate search index
 ```
 
 ## Deployment
 
-Pushing to the `main` branch triggers a Netlify build. The Netlify build command (`netlify.toml`) runs:
+Run `scripts/deploy.sh` from the project root. There is no CI/CD from git pushes — all deploys are triggered manually by running the script.
 
-```bash
-hugo --minify && npx pagefind --site public
-```
+The deploy script:
 
-Note: Netlify only builds from the committed markdown in `content/`. The org-to-markdown export must be run locally before committing. The org source files are not part of this repository.
+1. Injects lastmod dates from org file modification times
+2. Processes PDFs (strip annotations, generate thumbnails)
+3. Generates citing-notes data
+4. Cleans `public/` (removes stale files from previous builds)
+5. Builds the site with `hugo --minify`
+6. Generates the Pagefind search index
+7. Deploys to Netlify via CLI
+
+Note: The org-to-markdown export must be run locally before deploying. The org source files and `content/` directory are not tracked in this repository.
 
 ## Configuration
 

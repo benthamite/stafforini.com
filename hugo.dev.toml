@@ -1,0 +1,42 @@
+# Dev-only config overlay: excludes heavy static directories (pdfs,
+# pdf-thumbnails, pagefind) to speed up server startup. Without this,
+# Hugo processes 59K+ files (73 GB) on every start, taking ~2 minutes.
+#
+# Used by scripts/start-dev-server.sh via --config flag.
+# PDFs, thumbnails, and search are unavailable during dev; use
+# `npm run reindex` for a full build that includes them.
+
+[module]
+  # Override static mounts to exclude pdfs, pdf-thumbnails, and pagefind.
+  # Hugo's default mount maps the entire static/ directory; specifying
+  # explicit mounts replaces that default.
+  [[module.mounts]]
+    source = "static/fonts"
+    target = "static/fonts"
+  [[module.mounts]]
+    source = "static/images"
+    target = "static/images"
+  [[module.mounts]]
+    source = "static/ox-hugo"
+    target = "static/ox-hugo"
+  [[module.mounts]]
+    source = "static/ltximg"
+    target = "static/ltximg"
+
+  # Content, data, layouts, etc. still use default mounts (Hugo merges
+  # mount types independently, so only "static" is affected here).
+  [[module.mounts]]
+    source = "content"
+    target = "content"
+  [[module.mounts]]
+    source = "data"
+    target = "data"
+  [[module.mounts]]
+    source = "layouts"
+    target = "layouts"
+  [[module.mounts]]
+    source = "assets"
+    target = "assets"
+  [[module.mounts]]
+    source = "archetypes"
+    target = "archetypes"
