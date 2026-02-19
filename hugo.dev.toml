@@ -1,15 +1,19 @@
 # Dev-only config overlay: excludes heavy static directories (pdfs,
-# pdf-thumbnails, pagefind) to speed up server startup. Without this,
-# Hugo processes 59K+ files (73 GB) on every start, taking ~2 minutes.
+# pdf-thumbnails, pagefind) from Hugo's static mounts to speed up
+# server startup.  Without this, Hugo processes 59K+ files on every
+# start, taking ~2 minutes.
+#
+# PDFs and thumbnails are still served via symlinks created by
+# start-dev-server.sh.  Search is unavailable during dev; run
+# `npm run reindex` if needed.
 #
 # Used by scripts/start-dev-server.sh via --config flag.
-# PDFs, thumbnails, and search are unavailable during dev; use
-# `npm run reindex` for a full build that includes them.
 
 [module]
-  # Override static mounts to exclude pdfs, pdf-thumbnails, and pagefind.
+  # Override static mounts to include only lightweight directories.
   # Hugo's default mount maps the entire static/ directory; specifying
-  # explicit mounts replaces that default.
+  # explicit mounts replaces that default.  Heavy directories (pdfs,
+  # pdf-thumbnails, pagefind) are excluded here and served via symlinks.
   [[module.mounts]]
     source = "static/fonts"
     target = "static/fonts"
