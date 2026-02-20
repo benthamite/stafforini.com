@@ -115,6 +115,7 @@ CLASSICAL_AUTHORS_LIST = [
 
 # Preferred field ordering for bib output
 FIELD_ORDER = [
+    "crossref",
     "author", "editor", "translator",
     "title", "shorttitle", "subtitle",
     "booktitle", "journaltitle", "maintitle",
@@ -206,6 +207,26 @@ def to_bib_author(name):
 
     # Default: last word is surname
     return f"{parts[-1]}, {' '.join(parts[:-1])}" + et_al
+
+
+def to_bib_editors(editor_str):
+    """Convert editor string (potentially multiple editors) to BibTeX format.
+
+    Splits on ' and ' and converts each name to 'Last, First' format.
+    """
+    if not editor_str:
+        return ""
+    names = re.split(r"\s+and\s+", editor_str)
+    bib_names = [to_bib_author(n.strip()) for n in names if n.strip()]
+    return " and ".join(bib_names)
+
+
+def extract_first_editor_surname(editor_str):
+    """Extract the first editor's surname for collection key generation."""
+    if not editor_str:
+        return ""
+    editors = re.split(r"\s+and\s+", editor_str)
+    return extract_surname_for_key(editors[0].strip())
 
 
 def get_timestamp():
@@ -1004,6 +1025,49 @@ def build_fallback_entry(work_info, cite_key):
     return format_bib_entry(entry_type, cite_key, fields)
 
 
+def build_collection_entry(work_info, collection_key):
+    """Build a @collection entry for the parent work of an incollection."""
+    fields = {}
+
+    editor = work_info.get("editor", "")
+    if editor:
+        fields["editor"] = to_bib_editors(editor)
+
+    fields["title"] = work_info.get("work_title", "")
+
+    if work_info.get("year"):
+        fields["date"] = work_info["year"]
+
+    if work_info.get("location"):
+        fields["location"] = work_info["location"]
+
+    if work_info.get("edition"):
+        fields["edition"] = work_info["edition"]
+
+    fields["note"] = "Entry auto-generated from WordPress attribution"
+    fields["timestamp"] = get_timestamp()
+
+    return format_bib_entry("collection", collection_key, fields)
+
+
+def build_incollection_entry(work_info, cite_key, collection_key):
+    """Build an @incollection entry with crossref to parent collection."""
+    fields = {"crossref": collection_key}
+
+    bib_author = to_bib_author(work_info.get("bib_author", ""))
+    if bib_author:
+        fields["author"] = bib_author
+
+    fields["title"] = work_info.get("article_title", "")
+
+    if work_info.get("pages"):
+        fields["pages"] = work_info["pages"]
+
+    fields["timestamp"] = get_timestamp()
+
+    return format_bib_entry("incollection", cite_key, fields)
+
+
 # === Processing ===
 
 
@@ -1053,11 +1117,20 @@ def group_by_work(quotes):
     return works
 
 
-def process_work(work_key, work, used_keys, zotra_available, dry_run=False):
+def process_work(work_key, work, used_keys, zotra_available, dry_run=False,
+                  collections=None):
     """Process a single work through the five-tier lookup.
 
     Returns dict with cite_key, tier, bib_entry, status, notes.
+
+    For incollection works (essay/chapter in an edited collection), creates
+    two entries: a @collection for the parent work and an @incollection with
+    crossref.  The collections dict tracks already-created collection entries
+    to avoid duplicates across works.
     """
+    if collections is None:
+        collections = {}
+
     bib_author = work["bib_author"]
     title = work["title"]
     year = work["year"]
@@ -1068,7 +1141,11 @@ def process_work(work_key, work, used_keys, zotra_available, dry_run=False):
 
     # For articles, the search title should be the article_title (the actual paper)
     article_title = work.get("article_title", "")
+    work_title = work.get("work_title", "")
     search_title = article_title or title
+
+    # Detect incollection: needs both an article title and a distinct work title
+    is_incollection = wtype == "incollection" and article_title and work_title
 
     result = {
         "cite_key": None,
@@ -1078,12 +1155,107 @@ def process_work(work_key, work, used_keys, zotra_available, dry_run=False):
         "notes": "",
     }
 
+    # --- Incollection pair builder -------------------------------------------
+
+    def _make_incollection_pair(zotra_biblatex, tier, notes):
+        """Create @collection + @incollection pair.
+
+        If *zotra_biblatex* is provided, the collection metadata is taken from
+        zotra output; otherwise a minimal fallback collection is built from the
+        WP attribution.  Returns True on success (and mutates *result*).
+        """
+        editor = work.get("editor", "")
+        editor_surname = ""
+
+        # Prefer editor from WP metadata
+        if editor:
+            editor_surname = extract_first_editor_surname(editor)
+
+        # Fall back to editor from zotra data
+        if not editor_surname and zotra_biblatex:
+            parsed = parse_biblatex_entry(zotra_biblatex)
+            if parsed:
+                _, _, zfields = parsed
+                if "editor" in zfields:
+                    editor_surname = extract_first_editor_surname(
+                        zfields["editor"]
+                    )
+
+        # Last resort: use essay author surname
+        if not editor_surname:
+            editor_surname = surname
+
+        # ---- Collection entry ------------------------------------------------
+        coll_norm = (
+            f"{normalize(editor_surname)}|{normalize(work_title)}|{year}"
+        )
+
+        coll_entry_str = None
+        if coll_norm in collections:
+            coll_key = collections[coll_norm]
+        else:
+            coll_key = generate_cite_key(
+                editor_surname, year, work_title, used_keys
+            )
+            collections[coll_norm] = coll_key
+
+            if zotra_biblatex:
+                parsed = parse_biblatex_entry(zotra_biblatex)
+                if parsed:
+                    _, _, zfields = parsed
+                    # Remove chapter-level fields
+                    zfields.pop("author", None)
+                    zfields.pop("pages", None)
+                    # booktitle -> title for the collection
+                    if "booktitle" in zfields:
+                        zfields["title"] = zfields.pop("booktitle")
+                    # Ensure editor
+                    if "editor" not in zfields and editor:
+                        zfields["editor"] = to_bib_editors(editor)
+                    # Prefer date over year
+                    if "year" in zfields and "date" not in zfields:
+                        zfields["date"] = zfields.pop("year")
+                    zfields.pop("abstract", None)
+                    zfields["timestamp"] = get_timestamp()
+                    coll_entry_str = format_bib_entry(
+                        "collection", coll_key, zfields
+                    )
+
+            if not coll_entry_str:
+                coll_entry_str = build_collection_entry(work, coll_key)
+
+        # ---- Incollection entry ----------------------------------------------
+        incoll_key = generate_cite_key(
+            surname, year, article_title, used_keys
+        )
+        incoll_entry_str = build_incollection_entry(work, incoll_key, coll_key)
+
+        combined = ""
+        if coll_entry_str:
+            combined = coll_entry_str + "\n\n"
+        combined += incoll_entry_str
+
+        result.update(
+            cite_key=incoll_key,
+            tier=tier,
+            bib_entry=combined,
+            status="success",
+            notes=notes,
+        )
+        return True
+
+    # --- Zotra helpers --------------------------------------------------------
+
     def _try_zotra_search(identifier, tier, note_prefix):
         """Helper: try zotra /search + /export for an identifier."""
         zotero_json = zotra_search(identifier)
         if zotero_json:
             biblatex = zotra_export_biblatex(zotero_json)
             if biblatex and biblatex.strip():
+                if is_incollection:
+                    return _make_incollection_pair(
+                        biblatex, tier, f"{note_prefix} via zotra /search"
+                    )
                 ck = generate_cite_key(surname, year, title, used_keys)
                 entry = build_entry_from_zotra(biblatex, work, ck)
                 if entry:
@@ -1103,6 +1275,10 @@ def process_work(work_key, work, used_keys, zotra_available, dry_run=False):
         if zotero_json:
             biblatex = zotra_export_biblatex(zotero_json)
             if biblatex and biblatex.strip():
+                if is_incollection:
+                    return _make_incollection_pair(
+                        biblatex, tier, f"{note_prefix} via zotra /web"
+                    )
                 ck = generate_cite_key(surname, year, title, used_keys)
                 entry = build_entry_from_zotra(biblatex, work, ck)
                 if entry:
@@ -1170,15 +1346,20 @@ def process_work(work_key, work, used_keys, zotra_available, dry_run=False):
         result["notes"] += f"Tier 4: would search DuckDuckGo for '{search_title}'. "
 
     # === Tier 5: Fallback from WP metadata ===
-    cite_key = generate_cite_key(surname, year, title, used_keys)
-    entry = build_fallback_entry(work, cite_key)
-    result.update(
-        cite_key=cite_key,
-        tier=5,
-        bib_entry=entry,
-        status="success",
-        notes=(result["notes"] or "") + "Tier 5: fallback from WP metadata",
-    )
+    if is_incollection:
+        _make_incollection_pair(
+            None, 5, (result["notes"] or "") + "Tier 5: fallback from WP metadata"
+        )
+    else:
+        cite_key = generate_cite_key(surname, year, title, used_keys)
+        entry = build_fallback_entry(work, cite_key)
+        result.update(
+            cite_key=cite_key,
+            tier=5,
+            bib_entry=entry,
+            status="success",
+            notes=(result["notes"] or "") + "Tier 5: fallback from WP metadata",
+        )
     return result
 
 
@@ -1216,6 +1397,11 @@ def main():
         "--reprocess-fallbacks",
         action="store_true",
         help="Re-process entries that used the WP metadata fallback (old tier 3, new tier 5)",
+    )
+    parser.add_argument(
+        "--reprocess-incollections",
+        action="store_true",
+        help="Re-process incollection entries to create collection+incollection pairs with crossref",
     )
     args = parser.parse_args()
 
@@ -1282,6 +1468,111 @@ def main():
         print(f"\n  Reprocessing: removed {len(fallback_keys)} fallback entries from progress")
         save_progress(progress)
 
+    # --reprocess-incollections: restructure old incollection/collection entries
+    # in-place to create collection+incollection pairs with crossref, preserving
+    # any rich metadata already present (from prior zotra lookups).
+    if args.reprocess_incollections and not args.dry_run:
+        # First pass: build used_keys for collision detection
+        _used = set(existing_entries.keys())
+        for wd in progress["processed"].values():
+            if wd.get("cite_key"):
+                _used.add(wd["cite_key"])
+
+        restructured = 0
+        for k, v in list(progress["processed"].items()):
+            bib_entry = v.get("bib_entry", "")
+            if not bib_entry or "crossref" in bib_entry:
+                continue
+
+            # Identify entries that need restructuring
+            needs_fix = False
+            if "@incollection{" in bib_entry:
+                needs_fix = True
+            elif (
+                "@collection{" in bib_entry
+                and k in works
+                and works[k].get("work_type") == "incollection"
+            ):
+                needs_fix = True
+            if not needs_fix:
+                continue
+
+            work = works.get(k)
+            if not work:
+                continue
+
+            article_title = work.get("article_title", "")
+            work_title = work.get("work_title", "")
+            if not article_title or not work_title:
+                continue
+
+            # Parse the existing entry to preserve its rich metadata
+            parsed = parse_biblatex_entry(bib_entry)
+            if not parsed:
+                continue
+            _, old_key, fields = parsed
+
+            # Determine editor surname
+            editor = work.get("editor", "")
+            editor_surname = ""
+            if "editor" in fields:
+                editor_surname = extract_first_editor_surname(fields["editor"])
+            elif editor:
+                editor_surname = extract_first_editor_surname(editor)
+            if not editor_surname:
+                editor_surname = extract_surname_for_key(work["bib_author"])
+
+            year = work.get("year", "")
+
+            # Free old key before generating new ones
+            _used.discard(old_key)
+
+            # ---- Collection entry (preserve existing rich fields) ----
+            coll_key = generate_cite_key(
+                editor_surname, year, work_title, _used
+            )
+            coll_fields = dict(fields)
+            coll_fields.pop("author", None)
+            coll_fields.pop("pages", None)
+            if "booktitle" in coll_fields:
+                coll_fields["title"] = coll_fields.pop("booktitle")
+            elif not coll_fields.get("title"):
+                coll_fields["title"] = work_title
+            if "editor" not in coll_fields and editor:
+                coll_fields["editor"] = to_bib_editors(editor)
+            if "date" not in coll_fields and year:
+                coll_fields["date"] = year
+            coll_fields["timestamp"] = get_timestamp()
+            coll_entry = format_bib_entry("collection", coll_key, coll_fields)
+
+            # ---- Incollection entry ----
+            surname = extract_surname_for_key(work["bib_author"])
+            incoll_key = generate_cite_key(
+                surname, year, article_title, _used
+            )
+            incoll_entry = build_incollection_entry(work, incoll_key, coll_key)
+
+            combined = coll_entry + "\n\n" + incoll_entry
+
+            progress["processed"][k] = {
+                "cite_key": incoll_key,
+                "tier": v.get("tier"),
+                "status": "success",
+                "bib_entry": combined,
+                "notes": (v.get("notes", "") or "")
+                + " | restructured to collection+incollection pair",
+            }
+
+            # Update quote records
+            for qidx in work["quote_indices"]:
+                quotes[qidx]["new_cite_key"] = incoll_key
+
+            restructured += 1
+
+        if restructured:
+            save_progress(progress)
+        print(f"\n  Restructured {restructured} entries into collection+incollection pairs")
+
     already_done = len(progress["processed"])
     if already_done > 0:
         print(f"\n  Resuming: {already_done} works already processed")
@@ -1291,6 +1582,36 @@ def main():
     for wd in progress["processed"].values():
         if wd.get("cite_key"):
             used_keys.add(wd["cite_key"])
+
+    # Rebuild collections dict from existing progress entries so that new
+    # incollections sharing a parent collection reuse the existing key.
+    collections = {}
+    for wd in progress["processed"].values():
+        bib_entry = wd.get("bib_entry", "")
+        if not bib_entry or "@collection{" not in bib_entry:
+            continue
+        coll_match = re.search(r"@collection\{([^,]+),", bib_entry)
+        if not coll_match:
+            continue
+        coll_key = coll_match.group(1)
+        used_keys.add(coll_key)
+        # Extract the collection's own text (up to next @entry or end)
+        coll_start = coll_match.start()
+        next_at = bib_entry.find("\n@", coll_start + 1)
+        coll_text = (
+            bib_entry[coll_start:next_at] if next_at > 0
+            else bib_entry[coll_start:]
+        )
+        parsed = parse_biblatex_entry(coll_text)
+        if parsed:
+            _, _, cfields = parsed
+            ed = cfields.get("editor", "")
+            ttl = cfields.get("title", "")
+            dt = cfields.get("date", "")
+            ed_surname = extract_first_editor_surname(ed) if ed else ""
+            if ed_surname and ttl:
+                norm = f"{normalize(ed_surname)}|{normalize(ttl)}|{dt}"
+                collections[norm] = coll_key
 
     # Select works to process
     work_items = list(works.items())
@@ -1314,7 +1635,7 @@ def main():
         title_display = (work["title"] or "(no title)")[:40]
         print(f"{prefix} {author_display} -- {title_display}...", end="", flush=True)
 
-        result = process_work(work_key, work, used_keys, zotra_available, args.dry_run)
+        result = process_work(work_key, work, used_keys, zotra_available, args.dry_run, collections)
 
         if result["status"] == "success":
             tier = result["tier"]
