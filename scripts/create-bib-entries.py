@@ -483,6 +483,25 @@ def extract_work_info(quote):
                 if jt and len(jt) > 2:
                     journaltitle = jt
 
+    # Volume, number, pages — extracted directly from attribution_text
+    volume = None
+    vol_match = re.search(r"(?:supp\.\s+)?vol\.\s*(\d+)", attribution_text)
+    if vol_match:
+        volume = vol_match.group(1)
+
+    number = None
+    num_match = re.search(r"no\.\s*(\d+)", attribution_text)
+    if num_match:
+        number = num_match.group(1)
+
+    pages = None
+    pages_match = re.search(
+        r"pp?\.\s*([\d\w]+(?:\s*[-–—]\s*[\d\w]+)?)", attribution_text
+    )
+    if pages_match:
+        # Normalize dashes to en-dash
+        pages = re.sub(r"\s*[-–—]\s*", "--", pages_match.group(1))
+
     work_type = detect_work_type(quote)
 
     return {
@@ -496,6 +515,9 @@ def extract_work_info(quote):
         "edition": edition,
         "editor": editor,
         "journaltitle": journaltitle,
+        "volume": volume,
+        "number": number,
+        "pages": pages,
         "article_title": article_title,
         "work_title": quote.get("work_title", ""),
         "attribution_text": attribution_text,
@@ -939,6 +961,14 @@ def build_fallback_entry(work_info, cite_key):
     if work_info.get("edition"):
         fields["edition"] = work_info["edition"]
 
+    # Volume, number, pages
+    if work_info.get("volume"):
+        fields["volume"] = work_info["volume"]
+    if work_info.get("number"):
+        fields["number"] = work_info["number"]
+    if work_info.get("pages"):
+        fields["pages"] = work_info["pages"]
+
     # Special fields
     if wtype == "classical":
         fields["entrysubtype"] = "classical"
@@ -1007,6 +1037,9 @@ def group_by_work(quotes):
                 "edition": info.get("edition"),
                 "editor": info.get("editor"),
                 "journaltitle": info.get("journaltitle"),
+                "volume": info.get("volume"),
+                "number": info.get("number"),
+                "pages": info.get("pages"),
                 "article_title": info.get("article_title"),
                 "work_title": info.get("work_title"),
                 "attribution_text": info["attribution_text"],
