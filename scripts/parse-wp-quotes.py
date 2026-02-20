@@ -145,6 +145,19 @@ def extract_locator(attr_text: str) -> str:
     return ""
 
 
+def extract_volume(attr_text: str) -> str:
+    """Extract volume number from the attribution."""
+    # Match: vol. 2, supp. vol. 49
+    match = re.search(r"(?:supp\.\s+)?vol\.\s*(\d+)", attr_text)
+    return match.group(1) if match else ""
+
+
+def extract_number(attr_text: str) -> str:
+    """Extract issue number from the attribution."""
+    match = re.search(r"no\.\s*(\d+)", attr_text)
+    return match.group(1) if match else ""
+
+
 def extract_author_from_attribution(attr_text: str) -> str:
     """Extract the author name from the beginning of the attribution string."""
     if not attr_text:
@@ -202,6 +215,8 @@ def parse_item(item: ET.Element) -> dict | None:
     article_title = extract_article_title(attr_html)
     year = extract_year(attr_text)
     locator = extract_locator(attr_text)
+    volume = extract_volume(attr_text)
+    number = extract_number(attr_text)
     author = categories[0] if categories else extract_author_from_attribution(attr_text)
 
     return {
@@ -217,6 +232,8 @@ def parse_item(item: ET.Element) -> dict | None:
         "work_title": work_title,
         "year": year,
         "locator": locator,
+        "volume": volume,
+        "number": number,
         "categories": categories,
         "tags": tags,
     }
@@ -254,12 +271,16 @@ def main():
     with_title = sum(1 for q in quotes if q["work_title"])
     with_year = sum(1 for q in quotes if q["year"])
     with_locator = sum(1 for q in quotes if q["locator"])
+    with_volume = sum(1 for q in quotes if q["volume"])
+    with_number = sum(1 for q in quotes if q["number"])
     no_quote = sum(1 for q in quotes if not q["quote_text"])
     no_attr = sum(1 for q in quotes if not q["attribution_text"])
 
     print(f"  Work title extracted: {with_title}/{len(quotes)}")
     print(f"  Year extracted:       {with_year}/{len(quotes)}")
     print(f"  Locator extracted:    {with_locator}/{len(quotes)}")
+    print(f"  Volume extracted:     {with_volume}/{len(quotes)}")
+    print(f"  Number extracted:     {with_number}/{len(quotes)}")
     print(f"  Missing quote text:   {no_quote}/{len(quotes)}")
     print(f"  Missing attribution:  {no_attr}/{len(quotes)}")
 
