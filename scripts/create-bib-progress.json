@@ -14,13 +14,6 @@
       "bib_entry": "@book{Mill1988CollectedWorksJohn,\n\tauthor = {Mill, John Stuart},\n\ttitle = {The collected works of John Stuart Mill},\n\tdate = {2006},\n\tedition = {Liberty Fund pbk. ed},\n\tpagetotal = {1},\n\tpublisher = {Liberty Fund},\n\tlocation = {Indianapolis, Ind},\n\tisbn = {9780865976580 9780865976504 9780865976511 9780865976528 9780865976535 9780865976542 9780865976559 9780865976566 9780865976573},\n\tkeywords = {Philosophy, Political science, Economics},\n\ttimestamp = {2026-02-15 23:58:51 (GMT)},\n}",
       "notes": "ISBN 0865976589 via zotra"
     },
-    "jorge luis borges|obras completas|1989": {
-      "cite_key": "Borges1989ObrasCompletas",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@incollection{Borges1989ObrasCompletas,\n\tauthor = {Borges, Jorge Luis},\n\ttitle = {Obras completas. 2: 1952 - 1972},\n\tshorttitle = {Obras completas. 2},\n\tdate = {2004},\n\tedition = {2. ed., 13. reimpr},\n\tpublisher = {Emecé},\n\tlocation = {Barcelona},\n\tisbn = {9789500409483},\n\ttimestamp = {2026-02-15 23:59:08 (GMT)},\n}",
-      "notes": "ISBN 9500409488 via zotra"
-    },
     "paul feyerabend|for and against method including lakatos s lectures on scientific method and the lakatos-feyerabend correspondence|1999": {
       "cite_key": "Feyerabend1999AgainstMethodIncluding",
       "tier": 1,
@@ -245,13 +238,6 @@
       "bib_entry": "@book{Nietzsche1883AlsoSprachZarathustra,\n\tauthor = {Nietzsche, Friedrich},\n\ttitle = {Así hablaba Zaratustra},\n\tdate = {1999},\n\tedition = {7a ed},\n\tpublisher = {Porrúa},\n\tlocation = {México},\n\tisbn = {9789684328259},\n\tnote = {{OCLC}: 651500745},\n\ttimestamp = {2026-02-16 00:04:30 (GMT)},\n\teditora = {Tomlin, Eric Walter Frederick},\n\teditoratype = {collaborator},\n}",
       "notes": "OpenLibrary ISBN 9789684328259 via zotra"
     },
-    "rudolf carnap|erkenntnis|1931": {
-      "cite_key": "Carnap1931Erkenntnis",
-      "tier": 2,
-      "status": "success",
-      "bib_entry": "@collection{Carnap1931Erkenntnis,\n\teditor = {Carnap, Rudolf and Reichenbach, Hans and Spohn, Wolfgang},\n\ttitle = {Erkenntnis orientated: a centennial volume for Rudolf Carnap and Hans Reichenbach},\n\tshorttitle = {Erkenntnis orientated},\n\tdate = {1991},\n\tpagetotal = {471},\n\tpublisher = {Boston : Kluwer Academic Publishers},\n\tlocation = {Dordrecht},\n\tisbn = {9780792314080},\n\tkeywords = {Carnap, Rudolf, Reichenbach, Hans, Philosophy},\n\ttimestamp = {2026-02-16 00:04:38 (GMT)},\n}",
-      "notes": "OpenLibrary ISBN 9780792314080 via zotra"
-    },
     "robert graves|the complete poems|1999": {
       "cite_key": "Graves1999CompletePoems",
       "tier": 1,
@@ -300,13 +286,6 @@
       "status": "success",
       "bib_entry": "@book{Huxley1957BottlesWine,\n\tauthor = {Huxley, Julian (Julian Sorell)},\n\ttitle = {New bottles for new wine, essays},\n\tdate = {1959},\n\tpublisher = {Chatto \\& Windus},\n\tlocation = {London},\n\tisbn = {9780701108380},\n\tnote = {{OCLC}: 911772725},\n\ttimestamp = {2026-02-16 00:05:19 (GMT)},\n}",
       "notes": "ISBN 070110838X via zotra"
-    },
-    "james watson|engineering the human germline an exploration of the science and ethics of altering the genes we pass to our children|2000": {
-      "cite_key": "Watson2000EngineeringHumanGermline",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Watson2000EngineeringHumanGermline,\n\teditor = {Stock, Gregory and Campbell, John H.},\n\ttitle = {Engineering the human germline: an exploration of the science and ethics of altering the genes we pass to our children},\n\tshorttitle = {Engineering the human germline},\n\tdate = {2000},\n\tpagetotal = {169},\n\tpublisher = {Oxford University Press},\n\tlocation = {New York},\n\tisbn = {9780195133028},\n\tkeywords = {Medical genetics, Medical genetics, Moral and ethical aspects, Genetic engineering, Genetic engineering, Moral and ethical aspects, Human cloning, Human cloning, Moral and ethical aspects},\n\ttimestamp = {2026-02-16 00:05:21 (GMT)},\n}",
-      "notes": "ISBN 0195133021 via zotra"
     },
     "ronald dworkin|sovereign virtue|2000": {
       "cite_key": "Dworkin2000SovereignVirtue",
@@ -595,20 +574,6 @@
       "bib_entry": "@book{Shaw1999ContemporaryEthicsTaking,\n\tauthor = {Shaw, William H.},\n\ttitle = {Contemporary ethics: taking account of utilitarianism},\n\tshorttitle = {Contemporary ethics},\n\tdate = {1999},\n\tpagetotal = {311},\n\tpublisher = {Blackwell},\n\tlocation = {Malden, Mass},\n\tisbn = {9780631202943 9780631202936},\n\tseries = {Contemporary philosophy},\n\tkeywords = {Utilitarianism},\n\ttimestamp = {2026-02-16 00:13:58 (GMT)},\n}",
       "notes": "ISBN 0631202943 via zotra"
     },
-    "thomas nagel|reading nozick|1981": {
-      "cite_key": "Nagel1981ReadingNozick",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Nagel1981ReadingNozick,\n\teditor = {Paul, Jeffrey and Nozick, Robert},\n\ttitle = {Reading Nozick: essays on Anarchy, state, and Utopia},\n\tshorttitle = {Reading Nozick},\n\tdate = {1981},\n\tpagetotal = {418},\n\tpublisher = {Rowman \\& Littlefield},\n\tlocation = {Totowa, N.J},\n\tisbn = {9780847662791 9780847662807},\n\tseries = {Philosophy and society},\n\tkeywords = {Nozick, Robert, Anarchy, state, and Utopia, State, The, Civil rights, Anarchism, Utopias, Human rights},\n\ttimestamp = {2026-02-16 00:13:58 (GMT)},\n}",
-      "notes": "ISBN 0847662799 via zotra"
-    },
-    "david lyons|reading nozick|1981": {
-      "cite_key": "Lyons1981ReadingNozick",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Lyons1981ReadingNozick,\n\teditor = {Paul, Jeffrey and Nozick, Robert},\n\ttitle = {Reading Nozick: essays on Anarchy, state, and Utopia},\n\tshorttitle = {Reading Nozick},\n\tdate = {1981},\n\tpagetotal = {418},\n\tpublisher = {Rowman \\& Littlefield},\n\tlocation = {Totowa, N.J},\n\tisbn = {9780847662791 9780847662807},\n\tseries = {Philosophy and society},\n\tkeywords = {Nozick, Robert, Anarchy, state, and Utopia, State, The, Civil rights, Anarchism, Utopias, Human rights},\n\ttimestamp = {2026-02-16 00:13:59 (GMT)},\n}",
-      "notes": "ISBN 0847662799 via zotra"
-    },
     "ray carney|the films of mike leigh embracing the world|2000": {
       "cite_key": "Carney2000FilmsMikeLeigh",
       "tier": 1,
@@ -644,27 +609,6 @@
       "bib_entry": "@book{Bunge2003Capsulas,\n\tauthor = {Bunge, Mario},\n\ttitle = {Cápsulas},\n\tdate = {2003},\n\tedition = {1. ed},\n\tpagetotal = {255},\n\tpublisher = {Editorial Gedisa},\n\tlocation = {Barcelona},\n\tisbn = {9788474329520},\n\tseries = {Colección Libertad y cambio},\n\tkeywords = {Filosofía moderna Siglo {XX}},\n\ttimestamp = {2026-02-16 00:14:55 (GMT)},\n}",
       "notes": "ISBN 8474329523 via zotra"
     },
-    "g a cohen|rights equality and liberty|2000": {
-      "cite_key": "Cohen2000RightsEqualityLiberty",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Cohen2000RightsEqualityLiberty,\n\teditor = {Pincione, Guido and Spector, Horacio and {Universidad Torcuato di Tella}},\n\ttitle = {Rights, equality, and liberty: Universidad Torcuato di Tella law and philosophy lectures, 1995-1997},\n\tshorttitle = {Rights, equality, and liberty},\n\tdate = {2000},\n\tpagetotal = {165},\n\tpublisher = {Kluwer Academic Publishers ; Distributed in North, Central, and South America by Kluwer Academic Publishers},\n\tlocation = {Dordrecht ; Boston : Norwell, {MA}},\n\tisbn = {9780792360599},\n\tkeywords = {Human rights, Equality, Liberty},\n\ttimestamp = {2026-02-16 00:14:55 (GMT)},\n}",
-      "notes": "ISBN 0792360591 via zotra"
-    },
-    "carlos santiago nino|el derecho y la justicia|1996": {
-      "cite_key": "Nino1996DerechoJusticia",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Nino1996DerechoJusticia,\n\teditor = {Garzón Valdés, Ernesto},\n\ttitle = {El derecho y la justicia},\n\tdate = {1996},\n\tnumber = {11},\n\tpagetotal = {554},\n\tpublisher = {Ed. Trotta [u.a.]},\n\tlocation = {Madrid},\n\tisbn = {9788481640526},\n\tseries = {Enciclopedia iberoamericana de filosofía / [Comité ed. Manuel Reyes Mate ...]},\n\ttimestamp = {2026-02-16 00:15:12 (GMT)},\n}",
-      "notes": "ISBN 8481640522 via zotra"
-    },
-    "robert goodin|a companion to ethics|1991": {
-      "cite_key": "Goodin1991CompanionEthics",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Goodin1991CompanionEthics,\n\teditor = {Singer, Peter},\n\ttitle = {A companion to ethics},\n\tdate = {2012},\n\tedition = {29. ed},\n\tnumber = {2},\n\tpagetotal = {565},\n\tpublisher = {Blackwell},\n\tlocation = {Malden, Mass.},\n\tisbn = {9780631187851},\n\tseries = {Blackwell companions to philosophy},\n\ttimestamp = {2026-02-16 00:15:28 (GMT)},\n}",
-      "notes": "ISBN 0631187855 via zotra"
-    },
     "ernesto garzon valdes|instituciones suicidas estudios de etica y politica|2000": {
       "cite_key": "Valdes2000InstitucionesSuicidasEstudios",
       "tier": 1,
@@ -672,40 +616,12 @@
       "bib_entry": "@book{Valdes2000InstitucionesSuicidasEstudios,\n\tauthor = {Garzón Valdés, Ernesto},\n\ttitle = {Instituciones suicidas: estudios de ética y política},\n\tshorttitle = {Instituciones suicidas},\n\tdate = {2000},\n\tedition = {1a ed},\n\tpublisher = {Paidós Mexicana : Universidad de Filosofía y Letras, Universidad Nacional Autónoma de México},\n\tlocation = {México, D.F.},\n\tisbn = {9789688534359},\n\tnote = {{OCLC}: 45247193},\n\ttimestamp = {2026-02-16 00:15:47 (GMT)},\n}",
       "notes": "ISBN 9688534358 via zotra"
     },
-    "conrad johnson|consequentialism and its critics|1988": {
-      "cite_key": "Johnson1988ConsequentialismCritics",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Johnson1988ConsequentialismCritics,\n\teditor = {Scheffler, Samuel},\n\ttitle = {Consequentialism and its critics},\n\tdate = {1988},\n\tpagetotal = {294},\n\tpublisher = {Oxford University Press},\n\tlocation = {Oxford ; New York},\n\tisbn = {9780198750888 9780198750734},\n\tseries = {Oxford readings in philosophy},\n\tkeywords = {Consequentialism (Ethics)},\n\ttimestamp = {2026-02-16 00:15:48 (GMT)},\n}",
-      "notes": "ISBN 0198750730 via zotra"
-    },
-    "c l ten|a companion to ethics|1991": {
-      "cite_key": "Ten1991CompanionEthics",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Ten1991CompanionEthics,\n\teditor = {Singer, Peter},\n\ttitle = {A companion to ethics},\n\tdate = {2012},\n\tedition = {29. ed},\n\tnumber = {2},\n\tpagetotal = {565},\n\tpublisher = {Blackwell},\n\tlocation = {Malden, Mass.},\n\tisbn = {9780631187851},\n\tseries = {Blackwell companions to philosophy},\n\ttimestamp = {2026-02-16 00:16:04 (GMT)},\n}",
-      "notes": "ISBN 0631187855 via zotra"
-    },
-    "ken coates|the spokesman|2002": {
-      "cite_key": "Coates2002Spokesman",
-      "tier": 2,
-      "status": "success",
-      "bib_entry": "@collection{Coates2002Spokesman,\n\teditor = {Coates, Kenneth and {Bertrand Russell Peace Foundation}},\n\ttitle = {The suicide bombers},\n\tdate = {2005},\n\tpagetotal = {79},\n\tpublisher = {Spokesman for the Bertrand Russell Peace Foundation},\n\tlocation = {Nottingham?},\n\tisbn = {9780851247137},\n\tseries = {Spokesman},\n\ttimestamp = {2026-02-16 00:16:24 (GMT)},\n}",
-      "notes": "OpenLibrary ISBN 9780851247137 via zotra"
-    },
     "r m hare|essays on bioethics|1999": {
       "cite_key": "Hare1999EssaysBioethics",
       "tier": 1,
       "status": "success",
       "bib_entry": "@book{Hare1999EssaysBioethics,\n\tauthor = {Hare, Richard Mervyn},\n\ttitle = {Essays on bioethics},\n\tdate = {2002},\n\tedition = {Reprint},\n\tpagetotal = {248},\n\tpublisher = {Clarendon Press},\n\tlocation = {Oxford},\n\tisbn = {9780198236788 9780198239833},\n\tseries = {Clarendon paperbacks},\n\ttimestamp = {2026-02-16 00:16:43 (GMT)},\n}",
       "notes": "ISBN 0198236786 via zotra"
-    },
-    "roger crisp|ethical intuitionisms re-evaluations|2003": {
-      "cite_key": "Crisp2003EthicalIntuitionismsRe",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Crisp2003EthicalIntuitionismsRe,\n\teditor = {Stratton-Lake, Philip},\n\ttitle = {Ethical intuitionism: re-evaluations},\n\tshorttitle = {Ethical intuitionism},\n\tdate = {2002},\n\tpagetotal = {305},\n\tpublisher = {Oxford University Press},\n\tlocation = {Oxford ; New York},\n\tisbn = {9780198250999 9780198250982},\n\tkeywords = {Ethical intuitionism},\n\ttimestamp = {2026-02-16 00:16:44 (GMT)},\n}",
-      "notes": "ISBN 0198250983 via zotra"
     },
     "osvaldo guariglia|una etica para el siglo xxi|2001": {
       "cite_key": "Guariglia2001EticaSigloXXI",
@@ -749,26 +665,12 @@
       "bib_entry": "@book{Bunge1998ElogioCuriosidad,\n\tauthor = {Bunge, Mario},\n\ttitle = {Elogio de la curiosidad},\n\tdate = {1998},\n\tpagetotal = {253},\n\tpublisher = {Editorial Sudamericana},\n\tlocation = {Buenos Aires},\n\tisbn = {9789500714129},\n\tseries = {Biblioteca Mario Bunge},\n\ttimestamp = {2026-02-16 00:17:17 (GMT)},\n}",
       "notes": "ISBN 9500714124 via zotra"
     },
-    "frederick douglass|the frederick douglass papers|1985": {
-      "cite_key": "Douglass1985FrederickDouglassPapers",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@incollection{Douglass1985FrederickDouglassPapers,\n\tauthor = {Douglass, Frederick},\n\ttitle = {The Frederick Douglass papers. Vol. 3: Ser. 1, Speeches, debates, and interviews 1855 - 63},\n\tshorttitle = {The Frederick Douglass papers. Vol. 3},\n\tdate = {1985},\n\tpublisher = {Yale Univ. Press},\n\tlocation = {New Haven},\n\tisbn = {9780300029239},\n\ttimestamp = {2026-02-16 00:17:36 (GMT)},\n}",
-      "notes": "ISBN 0300029233 via zotra"
-    },
     "david edwards journalist|the sun|2000": {
       "cite_key": "(journalist)2000Sun",
       "tier": 2,
       "status": "success",
       "bib_entry": "@book{(journalist)2000Sun,\n\tauthor = {Pryce-Jones, David},\n\ttitle = {The afternoon sun},\n\tdate = {1986},\n\tedition = {1st American ed},\n\tpublisher = {Weidenfeld \\& Nicolson},\n\tlocation = {New York},\n\tisbn = {9781555840068},\n\tnote = {{OCLC}: 13426463},\n\ttimestamp = {2026-02-16 00:17:56 (GMT)},\n}",
       "notes": "OpenLibrary ISBN 9781555840068 via zotra"
-    },
-    "robert fisk|the politics of anti-semitism|2003": {
-      "cite_key": "Fisk2003PoliticsAntiSemitism",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Fisk2003PoliticsAntiSemitism,\n\teditor = {Cockburn, Alexander and St. Clair, Jeffrey},\n\ttitle = {The politics of anti-Semitism},\n\tdate = {2003},\n\tpagetotal = {178},\n\tpublisher = {{CounterPunch} ; {AK} Press},\n\tlocation = {Petrolia, Calif. : Oakland, Calif},\n\tisbn = {9781902593777},\n\tkeywords = {Antisemitism, Arab-Israeli conflict},\n\ttimestamp = {2026-02-16 00:17:57 (GMT)},\n}",
-      "notes": "ISBN 1902593774 via zotra"
     },
     "jane austen|pride and prejudice|1813": {
       "cite_key": "Austen1813PridePrejudice",
@@ -903,20 +805,6 @@
       "bib_entry": "@book{Krugman2003GreatUnraveling,\n\tauthor = {Krugman, Paul R.},\n\ttitle = {The great unraveling: losing our way in the new century},\n\tshorttitle = {The great unraveling},\n\tdate = {2003},\n\tedition = {1st ed},\n\tpagetotal = {426},\n\tpublisher = {W.W. Norton},\n\tlocation = {New York},\n\tisbn = {9780393058505},\n\tkeywords = {Economic forecasting, United States, Monetary policy, United States, Stocks, Prices, United States, Finance, United States, United States, Economic policy, 2001-2009, United States, Economic conditions, 2001-2009, United States, Foreign economic relations},\n\ttimestamp = {2026-02-16 00:19:31 (GMT)},\n}",
       "notes": "ISBN 0393058506 via zotra"
     },
-    "colin mcginn|the great ape project equality beyond humanity|1993": {
-      "cite_key": "McGinn1993GreatApeProject",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{McGinn1993GreatApeProject,\n\teditor = {Cavalieri, Paola and Singer, Peter},\n\ttitle = {The Great ape project: equality beyond humanity},\n\tshorttitle = {The Great ape project},\n\tdate = {1994},\n\tedition = {1st U.S. ed},\n\tpagetotal = {312},\n\tpublisher = {St. Martin's Press},\n\tlocation = {New York},\n\tisbn = {9780312104733},\n\tkeywords = {Animal rights, Animal rights movement},\n\ttimestamp = {2026-02-16 00:19:31 (GMT)},\n}",
-      "notes": "ISBN 0312104731 via zotra"
-    },
-    "robert simon|ethics|1982": {
-      "cite_key": "Simon1982Ethics",
-      "tier": 2,
-      "status": "success",
-      "bib_entry": "@collection{Simon1982Ethics,\n\teditor = {Bynum, Terrell Ward and Rogerson, Simon},\n\ttitle = {Computer ethics and professional responsibility},\n\tdate = {2004},\n\tpagetotal = {358},\n\tlocation = {Malden, {MA} : Blackwell Pub},\n\tisbn = {9781855548442 9781855548459},\n\tkeywords = {Electronic data processing, Moral and ethical aspects},\n\ttimestamp = {2026-02-16 00:19:52 (GMT)},\n}",
-      "notes": "OpenLibrary ISBN 9781855548442 via zotra"
-    },
     "r m hare|men of ideas|1978": {
       "cite_key": "Hare1978MenIdeas",
       "tier": 1,
@@ -937,13 +825,6 @@
       "status": "success",
       "bib_entry": "@book{Barry1989TheoriesJustice,\n\tauthor = {Barry, Brian M.},\n\ttitle = {Theories of justice},\n\tdate = {1989},\n\tnumber = {1},\n\tpagetotal = {428},\n\tpublisher = {Univ. of California Pr},\n\tlocation = {Berkeley},\n\tisbn = {9780520076495 9780520038660},\n\tseries = {A treatise on social justice},\n\ttimestamp = {2026-02-16 00:20:28 (GMT)},\n}",
       "notes": "ISBN 0520076494 via zotra"
-    },
-    "felix ovejero|razones para el socialismo|2001": {
-      "cite_key": "Ovejero2001RazonesSocialismo",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Ovejero2001RazonesSocialismo,\n\teditor = {Gargarella, Roberto},\n\ttitle = {Razones para el socialismo},\n\tdate = {2001},\n\tnumber = {91},\n\tpagetotal = {221},\n\tpublisher = {Paidos},\n\tlocation = {Barcelona},\n\tisbn = {9788449311192},\n\tseries = {Paidos Estado y sociedad},\n\ttimestamp = {2026-02-16 00:20:44 (GMT)},\n}",
-      "notes": "ISBN 8449311195 via zotra"
     },
     "jon elster|an introduction to karl marx|1986": {
       "cite_key": "Elster1986IntroductionKarlMarx",
@@ -994,20 +875,6 @@
       "bib_entry": "@book{Carter1988MarxRadicalCritique,\n\tauthor = {Carter, Alan},\n\ttitle = {Marx: a radical critique},\n\tshorttitle = {Marx},\n\tdate = {1988},\n\tpublisher = {Wheatsheaf},\n\tlocation = {Brighton},\n\tisbn = {9780710804495},\n\tnote = {{OCLC}: 16758878},\n\ttimestamp = {2026-02-16 00:22:28 (GMT)},\n}",
       "notes": "ISBN 0745004881 via zotra"
     },
-    "robert solomon|singer and his critics|1999": {
-      "cite_key": "Solomon1999SingerHisCritics",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Solomon1999SingerHisCritics,\n\teditor = {Jamieson, Dale},\n\ttitle = {Singer and his critics},\n\tdate = {1999},\n\tnumber = {8},\n\tpagetotal = {368},\n\tpublisher = {Blackwell Publishers},\n\tlocation = {Oxford, {UK} ; Malden, Mass},\n\tisbn = {9781557869081 9781557869098},\n\tseries = {Philosophers and their critics},\n\tkeywords = {Singer, Peter},\n\ttimestamp = {2026-02-16 00:22:31 (GMT)},\n}",
-      "notes": "ISBN 155786909X via zotra"
-    },
-    "thomas pogge|humanitarian intervention|2006": {
-      "cite_key": "Pogge2006HumanitarianIntervention",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Pogge2006HumanitarianIntervention,\n\teditor = {Nardin, Terry and Williams, Melissa S. and {American Society for Political and Legal Philosophy}},\n\ttitle = {Humanitarian intervention},\n\tdate = {2006},\n\tnumber = {47},\n\tpagetotal = {308},\n\tpublisher = {New York University Press},\n\tlocation = {New York},\n\tisbn = {9780814758311},\n\tseries = {Nomos},\n\tkeywords = {Humanitarian intervention, Congresses, Conference papers and proceedings},\n\ttimestamp = {2026-02-16 00:22:32 (GMT)},\n}",
-      "notes": "ISBN 0814758312 via zotra"
-    },
     "isaiah berlin|the penguin dictionary of philosophy|1996": {
       "cite_key": "Berlin1996PenguinDictionaryPhilosophy",
       "tier": 1,
@@ -1015,26 +882,12 @@
       "bib_entry": "@book{Berlin1996PenguinDictionaryPhilosophy,\n\tauthor = {Mautner, Thomas},\n\ttitle = {The Penguin dictionary of philosophy},\n\tdate = {1997},\n\tedition = {Rev. ed},\n\tpagetotal = {641},\n\tpublisher = {Penguin Books},\n\tlocation = {London ; New York},\n\tisbn = {9780140512502},\n\tseries = {Penguin reference},\n\tkeywords = {Philosophy, Dictionaries},\n\ttimestamp = {2026-02-16 00:22:33 (GMT)},\n}",
       "notes": "ISBN 0140512500 via zotra"
     },
-    "albert einstein|albert einstein philosopher-scientist|1949": {
-      "cite_key": "Einstein1949AlbertEinsteinPhilosopher",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Einstein1949AlbertEinsteinPhilosopher,\n\teditor = {Schilpp, Paul Arthur},\n\ttitle = {Albert Einstein: philosopher-scientist},\n\tshorttitle = {Albert Einstein},\n\tdate = {1995},\n\tedition = {3. ed., 6. pr},\n\tnumber = {7},\n\tpagetotal = {781},\n\tpublisher = {Open Court},\n\tlocation = {La Salle, Ill},\n\tisbn = {9780875482866 9780875481333},\n\tseries = {The library of living philosophers},\n\ttimestamp = {2026-02-16 00:22:51 (GMT)},\n}",
-      "notes": "ISBN 0875482864 via zotra"
-    },
     "sharon beder|global spin the corporate assault on environmentalism|1996": {
       "cite_key": "Beder1996GlobalSpinCorporate",
       "tier": 1,
       "status": "success",
       "bib_entry": "@book{Beder1996GlobalSpinCorporate,\n\tauthor = {Beder, Sharon},\n\ttitle = {Global spin: the corporate assault on environmentalism},\n\tshorttitle = {Global spin},\n\tdate = {2002},\n\tedition = {Rev. ed},\n\tpagetotal = {336},\n\tpublisher = {Green Books ; Chelsea Green Pub},\n\tlocation = {Dartington, Totnes, Devon, {UK} : White River Junction, Vt},\n\tisbn = {9781931498081 9781903998090},\n\tkeywords = {Environmental management, Environmentalism, Industrial management, Environmental aspects, Corporations, Environmental aspects},\n\ttimestamp = {2026-02-16 00:22:57 (GMT)},\n}",
       "notes": "ISBN 1931498083 via zotra"
-    },
-    "david schweickart|market socialism the debate among socialists|1998": {
-      "cite_key": "Schweickart1998MarketSocialismDebate",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Schweickart1998MarketSocialismDebate,\n\teditor = {Ollman, Bertell and Schweickart, David},\n\ttitle = {Market Socialism: the debate among Socialists},\n\tshorttitle = {Market Socialism},\n\tdate = {1998},\n\tpagetotal = {200},\n\tpublisher = {Routledge},\n\tlocation = {New York},\n\tisbn = {9780415919661 9780415919678},\n\tkeywords = {Mixed economy, Socialism, Capitalism},\n\ttimestamp = {2026-02-16 00:22:58 (GMT)},\n}",
-      "notes": "ISBN 0415919673 via zotra"
     },
     "henry david thoreau|walden or life in the woods|1854": {
       "cite_key": "Thoreau1854Walden",
@@ -1155,13 +1008,6 @@
       "bib_entry": "@book{Sunstein1999CostRightsLiberty,\n\tauthor = {Holmes, Stephen and Sunstein, Cass R.},\n\ttitle = {The cost of rights: why liberty depends on taxes},\n\tshorttitle = {The cost of rights},\n\tdate = {1999},\n\tedition = {1. ed},\n\tpagetotal = {255},\n\tpublisher = {Norton},\n\tlocation = {New York},\n\tisbn = {9780393320336 9780393046700},\n\ttimestamp = {2026-02-16 00:27:36 (GMT)},\n}",
       "notes": "ISBN 0393320332 via zotra"
     },
-    "ursula le guin|galaxy|1974": {
-      "cite_key": "LeGuin1974Galaxy",
-      "tier": 2,
-      "status": "success",
-      "bib_entry": "@collection{LeGuin1974Galaxy,\n\teditor = {Pohl, Frederik and Greenberg, Martin Harry and Olander, Joseph D.},\n\ttitle = {Galaxy, thirty years of innovative science fiction},\n\tdate = {1981},\n\tedition = {1st Wideview Books ed},\n\tpagetotal = {465},\n\tpublisher = {Wideview Books},\n\tlocation = {New York},\n\tisbn = {9780872236479},\n\tkeywords = {Galaxy magazine, Indexes, Science fiction, American},\n\ttimestamp = {2026-02-16 00:27:38 (GMT)},\n}",
-      "notes": "OpenLibrary ISBN 9780872236479 via zotra"
-    },
     "jose ferrater mora|el ser y la muerte bosquejo de filosofia integracionista|1988": {
       "cite_key": "Mora1988SerMuerteBosquejo",
       "tier": 1,
@@ -1189,13 +1035,6 @@
       "status": "success",
       "bib_entry": "@book{Stevenson1895SongsTravel,\n\tauthor = {Stevenson, Robert Louis},\n\ttitle = {Songs of Travel: Robert Louis Stevenson},\n\tshorttitle = {Songs of Travel},\n\tdate = {2004},\n\tpagetotal = {47},\n\tpublisher = {Kessinger Publ},\n\tlocation = {Whitefish, Mont},\n\tisbn = {9781419148286},\n\ttimestamp = {2026-02-16 00:29:36 (GMT)},\n}",
       "notes": "ISBN 1419148281 via zotra"
-    },
-    "noam chomsky|men of ideas some creators of contemporary philosophy|1978": {
-      "cite_key": "Chomsky1978MenIdeasCreators",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Chomsky1978MenIdeasCreators,\n\teditor = {Magee, Bryan and Berlin, Isaiah},\n\ttitle = {Men of ideas: some creators of contemporary philosophy; [dialogues with fifteen leading philosophers]},\n\tshorttitle = {Men of ideas},\n\tdate = {1986},\n\tedition = {Reprint},\n\tpagetotal = {275},\n\tpublisher = {Oxford Univ. Press},\n\tlocation = {Oxford},\n\tisbn = {9780192830340},\n\tseries = {Oxford paperbacks},\n\ttimestamp = {2026-02-16 00:29:53 (GMT)},\n}",
-      "notes": "ISBN 0192830341 via zotra"
     },
     "james joyce|ulysses|1921": {
       "cite_key": "Joyce1921Ulysses",
@@ -1259,13 +1098,6 @@
       "status": "success",
       "bib_entry": "@book{GonzalezUnidos,\n\tauthor = {Combe González, Justino E.},\n\ttitle = {Historia de las relaciones entre Panamá y Estados Unidos},\n\tdate = {2004},\n\tedition = {2. Ed},\n\tpagetotal = {144},\n\tpublisher = {Gráfica Digital Editora},\n\tlocation = {Panamá {\\textless}Ciudad{\\textgreater}},\n\tisbn = {9789962024651},\n\ttimestamp = {2026-02-16 00:31:10 (GMT)},\n}",
       "notes": "OpenLibrary ISBN 9789962024651 via zotra"
-    },
-    "jean bricmont|the cambridge companion to chomsky|2005": {
-      "cite_key": "Bricmont2005CambridgeCompanionChomsky",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Bricmont2005CambridgeCompanionChomsky,\n\teditor = {{McGilvray}, James A.},\n\ttitle = {The Cambridge companion to Chomsky},\n\tdate = {2005},\n\tpagetotal = {335},\n\tpublisher = {Cambridge University Press},\n\tlocation = {Cambridge, {UK} ; New York},\n\tisbn = {9780521780131 9780521784313},\n\tkeywords = {Chomsky, Noam},\n\ttimestamp = {2026-02-16 00:31:10 (GMT)},\n}",
-      "notes": "ISBN 052178431X via zotra"
     },
     "roger scruton|kant a very short introduction|1982": {
       "cite_key": "Scruton1982KantVeryShort",
@@ -1337,13 +1169,6 @@
       "bib_entry": "@book{Berlin1978RussianThinkers,\n\tauthor = {Berlin, Isaiah},\n\ttitle = {Russian Thinkers},\n\tdate = {1994},\n\tedition = {New ed},\n\tpagetotal = {312},\n\tpublisher = {Penguin},\n\tlocation = {London},\n\tisbn = {9780140136258},\n\tseries = {Penguin Philosophy Series},\n\ttimestamp = {2026-02-16 00:32:45 (GMT)},\n}",
       "notes": "ISBN 0140136258 via zotra"
     },
-    "r m hare|philosophical perspectives on bioethics|1996": {
-      "cite_key": "Hare1996PhilosophicalPerspectivesBioethics",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Hare1996PhilosophicalPerspectivesBioethics,\n\teditor = {Sumner, L. W. and Boyle, Joseph M.},\n\ttitle = {Philosophical perspectives on bioethics},\n\tdate = {1996},\n\tpagetotal = {299},\n\tpublisher = {University of Toronto Press},\n\tlocation = {Toronto ; Buffalo},\n\tisbn = {9780802007711 9780802071392},\n\tseries = {Toronto studies in philosophy},\n\tkeywords = {Medical ethics, Bioethics},\n\ttimestamp = {2026-02-16 00:32:45 (GMT)},\n}",
-      "notes": "ISBN 0802071392 via zotra"
-    },
     "ted honderich|philosopher a kind of life|2001": {
       "cite_key": "Honderich2001PhilosopherKindLife",
       "tier": 1,
@@ -1372,33 +1197,12 @@
       "bib_entry": "@book{Russell1910PhilosophicalEssays,\n\tauthor = {Russell, Bertrand},\n\ttitle = {Philosophical essays},\n\tdate = {1994},\n\tpagetotal = {159},\n\tpublisher = {Routledge},\n\tlocation = {London ; New York},\n\tisbn = {9780415105798},\n\tkeywords = {Philosophy},\n\ttimestamp = {2026-02-16 00:32:48 (GMT)},\n}",
       "notes": "ISBN 041510579X via zotra"
     },
-    "j j c smart|metaphysics and morality essays in honour of j j c smart|1987": {
-      "cite_key": "Smart1987MetaphysicsMoralityEssays",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Smart1987MetaphysicsMoralityEssays,\n\teditor = {Smart, J. J. C. and Pettit, Philip and Sylvan, Richard and Norman, Jean},\n\ttitle = {Metaphysics and morality: essays in honour of J.J.C. Smart},\n\tshorttitle = {Metaphysics and morality},\n\tdate = {1987},\n\tpagetotal = {212},\n\tpublisher = {B. Blackwell},\n\tlocation = {Oxford, {UK} ; New York, {NY}, {USA}},\n\tisbn = {9780631150435},\n\tkeywords = {Smart, J. J. C, John Jamieson Carswell, Philosophy, Ethics},\n\ttimestamp = {2026-02-16 00:32:48 (GMT)},\n}",
-      "notes": "ISBN 0631150439 via zotra"
-    },
     "g a cohen|if you re an egalitarian how come you re so rich|2000": {
       "cite_key": "Cohen2000YouReEgalitarian",
       "tier": 1,
       "status": "success",
       "bib_entry": "@book{Cohen2000YouReEgalitarian,\n\tauthor = {Cohen, Gerald A.},\n\ttitle = {If you're an egalitarian, how come you're so rich?},\n\tdate = {2002},\n\tedition = {4. print},\n\tpagetotal = {233},\n\tpublisher = {Harvard Univ. Press},\n\tlocation = {Cambridge, Mass.},\n\tisbn = {9780674006935 9780674002180},\n\ttimestamp = {2026-02-16 00:33:05 (GMT)},\n}",
       "notes": "ISBN 0674006933 via zotra"
-    },
-    "thomas hurka|the future for philosophy|2004": {
-      "cite_key": "Hurka2004FuturePhilosophy",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Hurka2004FuturePhilosophy,\n\teditor = {Leiter, Brian},\n\ttitle = {The future for philosophy},\n\tdate = {2004},\n\tpagetotal = {357},\n\tpublisher = {Clarendon Press ; Oxford University Press},\n\tlocation = {Oxford : New York},\n\tisbn = {9780199247288},\n\tkeywords = {Philosophy, Modern, 21st century},\n\ttimestamp = {2026-02-16 00:33:06 (GMT)},\n}",
-      "notes": "ISBN 0199247285 via zotra"
-    },
-    "a j ayer|modern british philosophy|1986": {
-      "cite_key": "Ayer1986ModernBritishPhilosophy",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Ayer1986ModernBritishPhilosophy,\n\teditor = {Magee, Bryan and Quinton, Anthony},\n\ttitle = {Modern British philosophy},\n\tdate = {1986},\n\tpagetotal = {287},\n\tpublisher = {Oxford University Press},\n\tlocation = {Oxford [Oxfordshire] ; New York},\n\tisbn = {9780192830470},\n\tseries = {Oxford paperbacks},\n\tkeywords = {Philosophy, English, 20th century},\n\ttimestamp = {2026-02-16 00:33:07 (GMT)},\n}",
-      "notes": "ISBN 0192830473 via zotra"
     },
     "fred feldman|pleasure and the good life concerning the nature varieties and plausibility of hedonism|2004": {
       "cite_key": "Feldman2004PleasureGoodLifea",
@@ -1511,13 +1315,6 @@
       "status": "success",
       "bib_entry": "@book{Orwell1939ComingUpAir,\n\tauthor = {Orwell, George},\n\ttitle = {Coming up for air},\n\tdate = {1999},\n\tpagetotal = {278},\n\tpublisher = {Harcourt Brace},\n\tlocation = {San Diego},\n\tisbn = {9780156196253},\n\tseries = {A Harvest book},\n\tkeywords = {Insurance agents, Fiction, Middle-aged men, Fiction, Married people, Fiction, Suburban life, Fiction, England, Fiction, Psychological fiction, Humorous stories, Fiction},\n\ttimestamp = {2026-02-16 00:35:11 (GMT)},\n}",
       "notes": "ISBN 0156196255 via zotra"
-    },
-    "allen wood|the cambridge companion to kant and modern philosophy|2006": {
-      "cite_key": "Wood2006CambridgeCompanionKant",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Wood2006CambridgeCompanionKant,\n\teditor = {Guyer, Paul},\n\ttitle = {The Cambridge companion to Kant and modern philosophy},\n\tdate = {2006},\n\tpagetotal = {722},\n\tpublisher = {Cambridge University Press},\n\tlocation = {Cambridge ; New York},\n\tisbn = {9780521823036 9780521529952},\n\tkeywords = {Kant, Immanuel, Philosophy, Modern},\n\ttimestamp = {2026-02-16 00:35:13 (GMT)},\n}",
-      "notes": "ISBN 0521529956 via zotra"
     },
     "ayn rand|the fountainhead|1943": {
       "cite_key": "Rand1943Fountainhead",
@@ -1799,13 +1596,6 @@
       "bib_entry": "@book{Thomas2006MillionsWomenWaiting,\n\tauthor = {Thomas, Sean},\n\ttitle = {Millions of women are waiting to meet you: a story of life, love and Internet dating},\n\tshorttitle = {Millions of women are waiting to meet you},\n\tdate = {2007},\n\tedition = {1st De Capo Press ed},\n\tpagetotal = {300},\n\tpublisher = {Da Capo Press},\n\tlocation = {Cambridge, {MA}},\n\tisbn = {9780306815485},\n\tkeywords = {Thomas, Sean, Online dating, Humor, Man-woman relationships, Humor, Dating (Social customs), Humor, Humor},\n\ttimestamp = {2026-02-16 00:44:44 (GMT)},\n}",
       "notes": "ISBN 0306815486 via zotra"
     },
-    "quentin smith|the cambridge companion to atheism|2006": {
-      "cite_key": "Smith2006CambridgeCompanionAtheism",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Smith2006CambridgeCompanionAtheism,\n\teditor = {Martin, Michael},\n\ttitle = {The Cambridge companion to atheism},\n\tdate = {2007},\n\tpagetotal = {331},\n\tpublisher = {Cambridge University Press},\n\tlocation = {New York},\n\tisbn = {9780521842709 9780521603676},\n\tseries = {Cambridge companions to philosophy},\n\tkeywords = {Atheism},\n\ttimestamp = {2026-02-16 00:44:45 (GMT)},\n}",
-      "notes": "ISBN 0521603676 via zotra"
-    },
     "william lane craig|no easy answers finding hope in doubt failure and unanswered prayer|1990": {
       "cite_key": "Craig1990EasyAnswersFinding",
       "tier": 1,
@@ -1820,13 +1610,6 @@
       "bib_entry": "@book{Einstein1972AlbertEinsteinCorrespondance,\n\tauthor = {Einstein, Albert and Besso, Michele and Speziali, Pierre},\n\ttitle = {Correspondance: 1903 - 1955},\n\tshorttitle = {Correspondance},\n\tdate = {1979},\n\tpagetotal = {327},\n\tpublisher = {Hermann},\n\tlocation = {Paris},\n\tisbn = {9782705658984},\n\tseries = {Collection savoir},\n\ttimestamp = {2026-02-16 00:45:02 (GMT)},\n}",
       "notes": "ISBN 270565898X via zotra"
     },
-    "sheldon reaven|the worst enemy of science essays in memory of paul feyerabend|2000": {
-      "cite_key": "Reaven2000WorstEnemyScience",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Reaven2000WorstEnemyScience,\n\teditor = {Feyerabend, Paul and Preston, John and Munévar, Gonzalo and Lamb, David},\n\ttitle = {The worst enemy of science? essays in memory of Paul Feyerabend},\n\tshorttitle = {The worst enemy of science?},\n\tdate = {2000},\n\tpagetotal = {171},\n\tpublisher = {Oxford University Press},\n\tlocation = {New York},\n\tisbn = {9780195128741},\n\tkeywords = {Feyerabend, Paul},\n\ttimestamp = {2026-02-16 00:45:03 (GMT)},\n}",
-      "notes": "ISBN 0195128745 via zotra"
-    },
     "edgardo cozarinsky|galaxia borges|2007": {
       "cite_key": "Cozarinsky2007GalaxiaBorges",
       "tier": 1,
@@ -1840,13 +1623,6 @@
       "status": "success",
       "bib_entry": "@book{Searle1992RediscoveryMind,\n\tauthor = {Searle, John R.},\n\ttitle = {The rediscovery of the mind},\n\tdate = {1992},\n\tpagetotal = {270},\n\tpublisher = {{MIT} Press},\n\tlocation = {Cambridge, Mass},\n\tisbn = {9780262193214 9780262691543},\n\tseries = {Representation and mind},\n\tkeywords = {Philosophy of mind, Consciousness},\n\ttimestamp = {2026-02-16 00:45:21 (GMT)},\n}",
       "notes": "ISBN 026269154X via zotra"
-    },
-    "randolph nesse|the science of well-being|2005": {
-      "cite_key": "Nesse2005ScienceWell",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Nesse2005ScienceWell,\n\teditor = {Huppert, Felicia A. and Baylis, N. and Keverne, B.},\n\ttitle = {The science of well-being},\n\tdate = {2005},\n\tpagetotal = {546},\n\tpublisher = {Oxford University Press},\n\tlocation = {Oxford ; New York},\n\tisbn = {9780198567523 9780198567516},\n\tseries = {Philosophical transactions of the Royal Society of London},\n\tkeywords = {Success, Psychological aspects, Happiness, Well-being},\n\ttimestamp = {2026-02-16 00:45:22 (GMT)},\n}",
-      "notes": "ISBN 0198567529 via zotra"
     },
     "tim harford|the logic of life the rational economics of an irrational world|2008": {
       "cite_key": "Harford2008LogicLifeRational",
@@ -1924,20 +1700,6 @@
       "status": "success",
       "bib_entry": "@book{Brownlee2002LifeDeathPlanet,\n\tauthor = {Ward, Peter D. and Ward, Peter D. and Brownlee, Donald},\n\ttitle = {The life and death of planet earth: how the new science of astrobiology charts the ultimate fate of our world},\n\tshorttitle = {The life and death of planet earth},\n\tdate = {2003},\n\tedition = {1. ed},\n\tpagetotal = {240},\n\tpublisher = {Times Books},\n\tlocation = {New York, {NY}},\n\tisbn = {9780805075120 9780805067811},\n\ttimestamp = {2026-02-16 00:47:57 (GMT)},\n}",
       "notes": "ISBN 0805075127 via zotra"
-    },
-    "colin mcginn|philosophers explore the matrix|2005": {
-      "cite_key": "McGinn2005PhilosophersExploreMatrix",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{McGinn2005PhilosophersExploreMatrix,\n\teditor = {Grau, Christopher},\n\ttitle = {Philosophers explore The Matrix},\n\tdate = {2005},\n\tpagetotal = {341},\n\tpublisher = {Oxford University Press},\n\tlocation = {New York},\n\tisbn = {9780195181067 9780195181074},\n\tkeywords = {Matrix (Motion picture), Motion pictures, Philosophy},\n\ttimestamp = {2026-02-16 00:48:02 (GMT)},\n}",
-      "notes": "ISBN 0195181077 via zotra"
-    },
-    "david schmidtz|robert nozick|2002": {
-      "cite_key": "Schmidtz2002RobertNozick",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Schmidtz2002RobertNozick,\n\teditor = {Schmidtz, David},\n\ttitle = {Robert Nozick},\n\tdate = {2002},\n\tpagetotal = {230},\n\tpublisher = {Cambridge University Press},\n\tlocation = {Cambridge, {UK} ; New York},\n\tisbn = {9780521782265 9780521006712},\n\tseries = {Contemporary philosophy in focus},\n\tkeywords = {Nozick, Robert},\n\ttimestamp = {2026-02-16 00:48:02 (GMT)},\n}",
-      "notes": "ISBN 0521006716 via zotra"
     },
     "jeff mcmahan|normative ethics 5 questions|2007": {
       "cite_key": "McMahan2007NormativeEthicsQuestions",
@@ -2043,13 +1805,6 @@
       "status": "success",
       "bib_entry": "@book{Rogers1999,\n\tauthor = {Rogers, Ben},\n\ttitle = {A.J. Ayer: a life},\n\tshorttitle = {A.J. Ayer},\n\tdate = {1999},\n\tedition = {1st American ed},\n\tpublisher = {Grove Press},\n\tlocation = {New York},\n\tisbn = {9780802116734},\n\tnote = {{OCLC}: 43952093},\n\ttimestamp = {2026-02-16 00:50:45 (GMT)},\n}",
       "notes": "ISBN 0802138691 via zotra"
-    },
-    "stewart goetz|the blackwell companion to natural theology|2009": {
-      "cite_key": "Goetz2009BlackwellCompanionNatural",
-      "tier": 1,
-      "status": "success",
-      "bib_entry": "@collection{Goetz2009BlackwellCompanionNatural,\n\teditor = {Craig, William Lane and Moreland, James Porter},\n\ttitle = {The Blackwell companion to natural theology},\n\tdate = {2009},\n\tpagetotal = {683},\n\tpublisher = {Wiley-Blackwell},\n\tlocation = {Chichester, U.K. ; Malden, {MA}},\n\tisbn = {9781405176576},\n\tkeywords = {Natural theology},\n\ttimestamp = {2026-02-16 00:50:46 (GMT)},\n}",
-      "notes": "ISBN 1405176571 via zotra"
     },
     "jaegwon kim|physicalism or something near enough|2005": {
       "cite_key": "Kim2005PhysicalismSomethingNear",
@@ -2170,13 +1925,6 @@
       "bib_entry": "@book{Greene2013MoralTribesEmotion,\n\tauthor = {Greene, Joshua},\n\ttitle = {Moral tribes: emotion, reason, and the gap between us and them},\n\tshorttitle = {Moral tribes},\n\tdate = {2015},\n\tedition = {Paperback edition},\n\tpagetotal = {422},\n\tpublisher = {Atlantic Books},\n\tlocation = {London},\n\tisbn = {9781782393368 9781782393399},\n\ttimestamp = {2026-02-16 00:55:29 (GMT)},\n}",
       "notes": "OpenLibrary ISBN 9781782393368 via zotra"
     },
-    "james newman|the world of mathematics|1956": {
-      "cite_key": "Newman1956WorldMathematicsa",
-      "tier": 2,
-      "status": "success",
-      "bib_entry": "@incollection{Newman1956WorldMathematicsa,\n\teditor = {Newman, James R.},\n\ttitle = {The world of mathematics. Volume 1},\n\tdate = {2000},\n\tpublisher = {Dover Publications, Inc},\n\tlocation = {Mineola, New York},\n\tisbn = {9780486411538},\n\ttimestamp = {2026-02-16 00:55:54 (GMT)},\n}",
-      "notes": "OpenLibrary ISBN 9780486411538 via zotra"
-    },
     "g k chesterton|george bernard shaw|1909": {
       "cite_key": "Chesterton1909GeorgeBernardShaw",
       "tier": 2,
@@ -2225,13 +1973,6 @@
       "status": "success",
       "bib_entry": "@collection{Rhodes1986MakingAtomicBomba,\n\teditor = {Rhodes, Richard},\n\ttitle = {The making of the atomic bomb},\n\tdate = {2012},\n\tedition = {25th anniversary ed},\n\tpagetotal = {838},\n\tpublisher = {Simon \\& Schuster Paperbacks},\n\tlocation = {New York, N.Y.},\n\tisbn = {9781451677614},\n\ttimestamp = {2026-02-16 00:59:09 (GMT)},\n}",
       "notes": "OpenLibrary ISBN 9781451677614 via zotra"
-    },
-    "alain de botton|how to think more about sex|2013": {
-      "cite_key": "DeBotton2013ThinkMoreSex",
-      "tier": 2,
-      "status": "success",
-      "bib_entry": "@incollection{DeBotton2013ThinkMoreSex,\n\tauthor = {De Botton, Alain and {The School of Life}},\n\ttitle = {Toolkit for Life 1: 6 Guides for Life. How to think more about sex / Alain de Botton},\n\tshorttitle = {Toolkit for Life 1},\n\tdate = {2012},\n\tlocation = {London},\n\tisbn = {9781447202271},\n\ttimestamp = {2026-02-16 00:59:35 (GMT)},\n}",
-      "notes": "OpenLibrary ISBN 9781447202271 via zotra"
     },
     "ashlee vance|elon musk tesla spacex and the quest for a fantastic future|2015": {
       "cite_key": "Vance2015ElonMuskTesla",
@@ -2730,13 +2471,6 @@
       "bib_entry": "@misc{SmithInterviewQuentinSmitha,\n\tauthor = {Smith, Quentin},\n\ttitle = {An interview with Quentin Smith},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:06:24 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
-    "arthur miller|the cubicle|1996": {
-      "cite_key": "Miller1996Cubiclea",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Miller1996Cubiclea,\n\tauthor = {Miller, Arthur},\n\ttitle = {Why I Wrote The Cubicle: an Artist},\n\tbooktitle = {The Cubicle},\n\tdate = {1996},\n\tpages = {163--164},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:06:27 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
     "a c grayling|house philosopher an interview with ac grayling|": {
       "cite_key": "GraylingHousePhilosopherInterviewa",
       "tier": 3,
@@ -2744,40 +2478,12 @@
       "bib_entry": "@article{GraylingHousePhilosopherInterviewa,\n\tauthor = {Grayling, A. C. and {TPM: The Philosophers' Magazine}},\n\ttitle = {Interview - A. C. Grayling:},\n\tshorttitle = {Interview - A. C. Grayling},\n\tjournaltitle = {The Philosophers' Magazine},\n\tdate = {2008},\n\tnumber = {40},\n\tpages = {42--43},\n\tissn = {1354-814X},\n\tdoi = {10.5840/tpm200840108},\n\turl = {http://www.pdcnet.org/oom/service?url_ver=Z39.88-2004&rft_val_fmt=&rft.imuse_id=tpm_2008_0040_0042_0043&svc_id=info:www.pdcnet.org/collection},\n\turldate = {2026-02-20},\n\ttimestamp = {2026-02-20 12:06:29 (GMT)},\n}",
       "notes": "DOI 10.5840/tpm200840108 via zotra /search"
     },
-    "john maynard keynes|two memoirs|1949": {
-      "cite_key": "Keynes1949TwoMemoirsa",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Keynes1949TwoMemoirsa,\n\tauthor = {Keynes, John Maynard},\n\ttitle = {My Early Beliefs},\n\tbooktitle = {Two Memoirs},\n\tdate = {1949},\n\tlocation = {London},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:06:31 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
     "john harris|journal of medical ethics|2003": {
       "cite_key": "Harris2003JournalMedicalEthicsa",
       "tier": 3,
       "status": "success",
       "bib_entry": "@article{Harris2003JournalMedicalEthicsa,\n\tauthor = {Harris, John},\n\ttitle = {Organ procurement: dead interests, living needs},\n\tshorttitle = {Organ procurement},\n\tjournaltitle = {Journal of Medical Ethics},\n\tdate = {2003-06},\n\tvolume = {29},\n\tnumber = {3},\n\tpages = {130--134},\n\tissn = {0306-6800, 1473-4257},\n\tdoi = {10.1136/jme.29.3.130},\n\turl = {https://jme.bmj.com/lookup/doi/10.1136/jme.29.3.130},\n\turldate = {2026-02-20},\n\tlangid = {english},\n\ttimestamp = {2026-02-20 12:06:33 (GMT)},\n\tshortjournal = {J Med Ethics},\n}",
       "notes": "DOI 10.1136/jme.29.3.130 via zotra /search"
-    },
-    "eugenio zaffaroni|no hay derecho|1992": {
-      "cite_key": "Zaffaroni1992HayDerechoa",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Zaffaroni1992HayDerechoa,\n\tauthor = {Zaffaroni, Eugenio},\n\ttitle = {¿Vale la pena?},\n\tbooktitle = {No hay derecho},\n\tdate = {1992},\n\tvolume = {2},\n\tnumber = {5},\n\tpages = {5--8},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:06:35 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "norman finkelstein|counterpunch|2001": {
-      "cite_key": "Finkelstein2001Counterpuncha",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Finkelstein2001Counterpuncha,\n\tauthor = {Finkelstein, Norman},\n\ttitle = {How to Lose Friends and Alienate People},\n\tbooktitle = {Counterpunch},\n\tdate = {2001},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:06:38 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "norman birnbaum|et al|": {
-      "cite_key": "Birnbauma",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Birnbauma,\n\tauthor = {Birnbaum, Norman},\n\ttitle = {An Appeal from United States Citizens to Friends in Europe},\n\tbooktitle = {et al},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:06:40 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
     "aleksandr sokurov|the san francisco chronicle|2003": {
       "cite_key": "Sokurov2003SanFranciscoChroniclea",
@@ -2791,13 +2497,6 @@
       "tier": 5,
       "status": "success",
       "bib_entry": "@book{Koestler1949InsightOutlookInquirya,\n\tauthor = {Koestler, Arthur},\n\ttitle = {Insight and Outlook: An Inquiry into the Common Foundations of Science, Art, and Social Ethics},\n\tdate = {1949},\n\tpages = {ix},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:06:46 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "peter singer|the tanner lectures on human values|2002": {
-      "cite_key": "Singer2002TannerLecturesHumana",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Singer2002TannerLecturesHumana,\n\tauthor = {Singer, Peter},\n\ttitle = {A Reply to Martha Nussbaum},\n\tbooktitle = {The Tanner Lectures on Human Values},\n\tdate = {2002},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:06:48 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
     "friedrich nietzsche||1865": {
@@ -2814,26 +2513,12 @@
       "bib_entry": "@book{Situaciones2002HipotesisAllaPiquetesa,\n\tauthor = {Situaciones, Colectivo},\n\ttitle = {La hipótesis 891: más allá de los piquetes},\n\tdate = {2002},\n\tpages = {76},\n\tlocation = {Buenos Aires},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:06:52 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
-    "jose ferrater mora|el hombre y su medio y otros ensayos|1971": {
-      "cite_key": "Mora1971HombreMedioOtrosa",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Mora1971HombreMedioOtrosa,\n\tauthor = {Mora, José Ferrater},\n\ttitle = {Lecturas matinales},\n\tbooktitle = {El hombre y su medio y otros ensayos},\n\tdate = {1971},\n\tpages = {128},\n\tlocation = {Madrid},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:06:55 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
     "francisco romero|que es la filosofia|1953": {
       "cite_key": "Romero1953EsFilosofiaa",
       "tier": 3,
       "status": "success",
       "bib_entry": "@inbook{Romero1953EsFilosofiaa,\n\tauthor = {Herrera Romero, Wilson},\n\ttitle = {Introducción. El para qué de la enseñanza de la filosofía},\n\tbooktitle = {Actualidad y defensa de la filosofía},\n\tdate = {2022},\n\tpages = {XI--XXVII},\n\tpublisher = {Universidad del Rosario},\n\tisbn = {9789587848182},\n\tdoi = {10.12804/urosario9789587848182.00},\n\turl = {https://editorial.urosario.edu.co/catalog/product/view/id/6965/s/gpd-actualidad-y-defensa-de-la-filosofia-9789587848175/},\n\turldate = {2026-02-20},\n\ttimestamp = {2026-02-20 12:06:57 (GMT)},\n\tbookauthor = {Herrera Romero, Wilson},\n}",
       "notes": "DOI 10.12804/urosario9789587848182.00 via zotra /search"
-    },
-    "genaro carrio|notas sobre derecho y lenguaje|1965": {
-      "cite_key": "Carrio1965NotasDerechoLenguajea",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Carrio1965NotasDerechoLenguajea,\n\tauthor = {Carrió, Genaro},\n\ttitle = {Lenguaje, interpretación y desacuerdos en el terreno del derecho},\n\tbooktitle = {Notas sobre derecho y lenguaje},\n\tdate = {1965},\n\tpages = {3},\n\tlocation = {Buenos Aires},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:06:59 (GMT)},\n}",
-      "notes": "Tier 2 failed (1 ISBNs tried). Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
     "h l a hart|punishment and responsibility essays in the philosophy of law|1968": {
       "cite_key": "Hart1968PunishmentResponsibilityEssaysa",
@@ -2868,20 +2553,6 @@
       "tier": 5,
       "status": "success",
       "bib_entry": "@book{Sarmiento1939PaginasSelectasSarmientoa,\n\tauthor = {Sarmiento, Domingo Faustino},\n\ttitle = {Páginas selectas de Sarmiento sobre bibliotecas populares},\n\tdate = {1939},\n\tpages = {131},\n\tlocation = {Buenos Aires},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:07:16 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "claudio amor|cuestiones publicas|2001": {
-      "cite_key": "Amor2001CuestionesPublicasa",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Amor2001CuestionesPublicasa,\n\tauthor = {Amor, Claudio},\n\ttitle = {La riqueza y la pobreza de las democracias liberales},\n\tbooktitle = {Cuestiones públicas},\n\tdate = {2001},\n\tvolume = {2},\n\tnumber = {2},\n\tpages = {16},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:07:19 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "claudio amor|revista latinoamericana de filosofia|1999": {
-      "cite_key": "Amor1999RevistaLatinoamericanaFilosofiaa",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Amor1999RevistaLatinoamericanaFilosofiaa,\n\tauthor = {Amor, Claudio},\n\ttitle = {Liberalismo y esquizofrenia},\n\tbooktitle = {Revista latinoamericana de filosofía},\n\tdate = {1999},\n\tvolume = {25},\n\tnumber = {2},\n\tpages = {235},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:07:22 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
     "carl oglesby|boston magazine|1981": {
@@ -2947,13 +2618,6 @@
       "bib_entry": "@article{Mill1840LondonWestminsterReviewa,\n\tauthor = {Mill, John Stuart},\n\ttitle = {Coleridge},\n\tjournaltitle = {London and Westminster Review},\n\tdate = {1840},\n\tnumber = {65},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:07:56 (GMT)},\n}",
       "notes": "Tier 2 failed (2 ISBNs tried). Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
-    "zell kravinsky|the daily telegraph|2004": {
-      "cite_key": "Kravinsky2004DailyTelegrapha",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Kravinsky2004DailyTelegrapha,\n\tauthor = {Kravinsky, Zell},\n\ttitle = {I Feel Better for Giving Everything—Whether My Money or My Organs},\n\tbooktitle = {The Daily Telegraph},\n\tdate = {2004},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:07:58 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
     "michael pearce|three little pigs|": {
       "cite_key": "PearceThreeLittlePigsa",
       "tier": 5,
@@ -2974,13 +2638,6 @@
       "status": "success",
       "bib_entry": "@misc{Turing1952a,\n\tauthor = {Turing, Alan},\n\tdate = {1952},\n\thowpublished = {Letter to Norman Routledge},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:08:05 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 5: fallback from WP metadata"
-    },
-    "ted honderich|counterpunch|2005": {
-      "cite_key": "Honderich2005CounterPuncha",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Honderich2005CounterPuncha,\n\tauthor = {Honderich, Ted},\n\ttitle = {On Being Persona Non Grata},\n\tbooktitle = {CounterPunch},\n\tdate = {2005},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:08:07 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
     "macedonio fernandez|el mundo es un almismo|": {
       "cite_key": "FernandezMundoEsAlmismoa",
@@ -3024,13 +2681,6 @@
       "bib_entry": "@article{Sidgwick1896InternationalJournalEthicsa,\n\tauthor = {Sidgwick, H.},\n\ttitle = {The Ethics of Religious Conformity},\n\tjournaltitle = {Ethics},\n\tdate = {1896-04},\n\tvolume = {6},\n\tnumber = {3},\n\tpages = {273},\n\tissn = {0014-1704, 1539-297X},\n\tdoi = {10.1086/205421},\n\turl = {https://www.journals.uchicago.edu/doi/abs/10.1086/205421},\n\turldate = {2026-02-20},\n\tlangid = {english},\n\ttimestamp = {2026-02-20 12:08:22 (GMT)},\n\tshortjournal = {{ETHICS}},\n}",
       "notes": "DOI 10.1086/205421 via zotra /search"
     },
-    "dani rodrik|dice report|2002": {
-      "cite_key": "Rodrik2002DICEReporta",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Rodrik2002DICEReporta,\n\tauthor = {Rodrik, Dani},\n\ttitle = {Getting Institutions Right},\n\tbooktitle = {DICE Report},\n\tdate = {2002},\n\tvolume = {2},\n\tnumber = {2},\n\tpages = {13},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:08:24 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
     "frederick maurice|eustace conway or the brother and sister a novel|1834": {
       "cite_key": "Maurice1834EustaceConwayBrothera",
       "tier": 5,
@@ -3073,20 +2723,6 @@
       "bib_entry": "@book{Marx1847MiserePhilosophieReponsea,\n\tauthor = {Marx, Karl},\n\ttitle = {Misère de la philosophie: Réponse à la Philosophie de la misère de M. Proudhon},\n\tdate = {1847},\n\tpages = {2},\n\tlocation = {Paris},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:08:37 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
-    "ludwig von mises|planning for freedom and other essays and addresses|1952": {
-      "cite_key": "Mises1952PlanningFreedomOthera",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Mises1952PlanningFreedomOthera,\n\tauthor = {Mises, Ludwig von},\n\ttitle = {Lord Keynes and Say},\n\tbooktitle = {Planning for Freedom, and other essays and addresses},\n\tdate = {1952},\n\tpages = {69},\n\tlocation = {Illinois},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:08:40 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "derek parfit|synthese|1982": {
-      "cite_key": "Parfit1982Synthesea",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Parfit1982Synthesea,\n\tauthor = {Parfit, Derek},\n\ttitle = {Summary of Discussion},\n\tbooktitle = {Synthese},\n\tdate = {1982},\n\tvolume = {53},\n\tnumber = {2},\n\tpages = {255},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:08:43 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
     "branko milanovic|worlds apart measuring international and global inequality|2005": {
       "cite_key": "Milanovic2005WorldsApartMeasuringa",
       "tier": 3,
@@ -3099,20 +2735,6 @@
       "tier": 5,
       "status": "success",
       "bib_entry": "@article{Stevenson1880CornhillMagazinea,\n\tauthor = {Stevenson, Robert Louis},\n\ttitle = {Henry David Thoreau: His Character and Opinions},\n\tjournaltitle = {Cornhill Magazine},\n\tdate = {1880},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:08:47 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "jens timmermann|the harvard review of philosophy|2000": {
-      "cite_key": "Timmermann2000HarvardReviewPhilosophya",
-      "tier": 3,
-      "status": "success",
-      "bib_entry": "@incollection{Timmermann2000HarvardReviewPhilosophya,\n\tauthor = {Timmermann, Jens},\n\teditor = {Golob, Sacha and Timmermann, Jens},\n\ttitle = {Kant},\n\tbooktitle = {The Cambridge History of Moral Philosophy},\n\tdate = {2017-12-07},\n\tedition = {1},\n\tpages = {394--409},\n\tpublisher = {Cambridge University Press},\n\tisbn = {9781139519267 9781107033054},\n\tdoi = {10.1017/9781139519267.031},\n\turl = {https://www.cambridge.org/core/product/identifier/9781139519267%23CN-bp-30/type/book_part},\n\turldate = {2026-02-20},\n\ttimestamp = {2026-02-20 12:08:50 (GMT)},\n}",
-      "notes": "DOI 10.1017/9781139519267.031 via zotra /search"
-    },
-    "frances kamm|imprints|2006": {
-      "cite_key": "Kamm2006Imprintsa",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Kamm2006Imprintsa,\n\tauthor = {Kamm, Frances},\n\ttitle = {In Search of the Deep Structure of Morality},\n\tbooktitle = {Imprints},\n\tdate = {2006},\n\tvolume = {9},\n\tnumber = {2},\n\tpages = {93--117},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:08:51 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
     "gordon gallup|neuroscience and biobehavioral reviews|1985": {
@@ -3129,32 +2751,11 @@
       "bib_entry": "@article{Ng1991BehavioralBrainSciencesa,\n\tauthor = {Ng, Yew-Kwang},\n\ttitle = {The case for and difficulties in using “demand areas” to measure changes in well-being},\n\tjournaltitle = {Behavioral and Brain Sciences},\n\tdate = {1990-03},\n\tvolume = {13},\n\tnumber = {1},\n\tpages = {30--31},\n\tissn = {0140-525X, 1469-1825},\n\tdoi = {10.1017/S0140525X00077359},\n\turl = {https://www.cambridge.org/core/product/identifier/S0140525X00077359/type/journal_article},\n\turldate = {2026-02-20},\n\tlangid = {english},\n\ttimestamp = {2026-02-20 12:08:59 (GMT)},\n\tshortjournal = {Behav Brain Sci},\n}",
       "notes": "DOI 10.1017/s0140525x00077359 via zotra /search"
     },
-    "samuel butler|the note-books of samuel butler|1912": {
-      "cite_key": "Butler1912NoteBooksSamuela",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Butler1912NoteBooksSamuela,\n\tauthor = {Butler, Samuel},\n\ttitle = {On Knowing what Gives us Pleasure},\n\tbooktitle = {The Note-Books of Samuel Butler},\n\tdate = {1912},\n\tlocation = {London},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:09:23 (GMT)},\n}",
-      "notes": "Tier 2 failed (6 ISBNs tried). Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
     "bob harris|prisoner of trebekistan a decade in jeopardy|2006": {
       "cite_key": "Harris2006PrisonerTrebekistanDecadea",
       "tier": 5,
       "status": "success",
       "bib_entry": "@book{Harris2006PrisonerTrebekistanDecadea,\n\tauthor = {Harris, Bob},\n\ttitle = {Prisoner of Trebekistan: A Decade in Jeopardy!},\n\tdate = {2006},\n\tpages = {287},\n\tlocation = {New York},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:09:25 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "louis menand|the new yorker|2007": {
-      "cite_key": "Menand2007Yorkera",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Menand2007Yorkera,\n\tauthor = {Menand, Louis},\n\ttitle = {Fractured Franchise},\n\tbooktitle = {The New Yorker},\n\tdate = {2007},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:09:28 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "adolfo bioy casares|retratos y autorretratos|1973": {
-      "cite_key": "BioyCasares1973RetratosAutorretratosa",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{BioyCasares1973RetratosAutorretratosa,\n\tauthor = {Bioy Casares, Adolfo},\n\teditor = {D'Amico, Sara Facio y Alicia},\n\ttitle = {Yo y mi cara},\n\tbooktitle = {Retratos y autorretratos},\n\tdate = {1973},\n\tlocation = {Buenos Aires},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:09:31 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
     "william wordsworth|french revolution|1805": {
@@ -3199,13 +2800,6 @@
       "bib_entry": "@article{Łukasiewicz1971ReviewMetaphysicsa,\n\tauthor = {Łukasiewicz, Jan},\n\ttitle = {On the Principle of Contradiction in Aristotle},\n\tjournaltitle = {Review of Metaphysics},\n\tdate = {1971},\n\tvolume = {24},\n\tnumber = {3},\n\tpages = {508},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:09:49 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
-    "h l mencken|the american mercury|1924": {
-      "cite_key": "Mencken1924AmericanMercurya",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Mencken1924AmericanMercurya,\n\tauthor = {Mencken, H. L.},\n\ttitle = {The Malevolent Jobholder},\n\tbooktitle = {The American Mercury},\n\tdate = {1924},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:09:52 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
     "jane brown thompson|i get along without you very well except sometimes|": {
       "cite_key": "ThompsonGetAlongWithouta",
       "tier": 3,
@@ -3234,13 +2828,6 @@
       "bib_entry": "@misc{Davobe1961SerPolvoa,\n\tauthor = {Davobe, Santiago},\n\ttitle = {Ser polvo},\n\tdate = {1961},\n\tlocation = {Buenos Aires},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:10:02 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
-    "caitlin flanagan|the atlantic|2006": {
-      "cite_key": "Flanagan2006Atlantica",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Flanagan2006Atlantica,\n\tauthor = {Flanagan, Caitlin},\n\ttitle = {Are You There God? It},\n\tbooktitle = {The Atlantic},\n\tdate = {2006},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:10:05 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
     "irene tracey|nature reviews neuroscience|2008": {
       "cite_key": "Tracey2008NatureReviewsNeurosciencea",
       "tier": 3,
@@ -3267,27 +2854,6 @@
       "tier": 5,
       "status": "success",
       "bib_entry": "@book{Grover1987GodAbsenceEvidencea,\n\tauthor = {Grover, Stephen},\n\ttitle = {God and the Absence of Evidence},\n\tdate = {1987},\n\tpages = {185},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:10:16 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "carlos santiago nino|la autonomia personal investigacion colectiva del centro de estudios institucionales de buenos aires|1992": {
-      "cite_key": "Nino1992AutonomiaPersonalInvestigaciona",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Nino1992AutonomiaPersonalInvestigaciona,\n\tauthor = {Nino, Carlos Santiago},\n\teditor = {Nino and others},\n\ttitle = {La autonomía personal},\n\tbooktitle = {La autonomía personal: investigación colectiva del Centro de Estudios Institucionales de Buenos Aires},\n\tdate = {1992},\n\tpages = {37},\n\tlocation = {Madrid},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:10:19 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "geoffrey landis|asimov s science fiction|2002": {
-      "cite_key": "Landis2002AsimovSSciencea",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Landis2002AsimovSSciencea,\n\tauthor = {Landis, Geoffrey},\n\ttitle = {The Long Chase},\n\tbooktitle = {Asimov's Science Fiction},\n\tdate = {2002},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:10:23 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "john crowley|omni|1985": {
-      "cite_key": "Crowley1985Omnia",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Crowley1985Omnia,\n\tauthor = {Crowley, John},\n\ttitle = {Snow},\n\tbooktitle = {Omni},\n\tdate = {1985},\n\tvolume = {2},\n\tnumber = {2},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:10:26 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
     "ruth hurmence green|the born again sleptic s guide to the bible|1979": {
@@ -3332,13 +2898,6 @@
       "bib_entry": "@book{NietzscheGotzenDammerungSpruchea,\n\tauthor = {Nietzsche, Friedrich},\n\ttitle = {Götzen-Dämmerung, Sprüche und Pfeile},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:10:41 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
-    "e e cummings|e e cummings a miscellany|1958": {
-      "cite_key": "Cummings1958Ea",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Cummings1958Ea,\n\tauthor = {Cummings, E. E.},\n\teditor = {Firmage, George J.},\n\ttitle = {A Poet},\n\tbooktitle = {E. E. Cummings: A Miscellany},\n\tdate = {1958},\n\tpages = {13},\n\tlocation = {New York},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:10:44 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
     "the meadow keepers and constables of christ church||": {
       "cite_key": "Churcha",
       "tier": 5,
@@ -3346,39 +2905,11 @@
       "bib_entry": "@book{Churcha,\n\tauthor = {Church, The Meadow Keepers and Constables of Christ},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:10:46 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 5: fallback from WP metadata"
     },
-    "joseph epstein|the new criterion|2008": {
-      "cite_key": "Epstein2008Criteriona",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Epstein2008Criteriona,\n\tauthor = {Epstein, Joseph},\n\ttitle = {A Literary Education},\n\tbooktitle = {The New Criterion},\n\tdate = {2008},\n\tvolume = {26},\n\tnumber = {10},\n\tpages = {11},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:10:49 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "chris hardwick|wired|2009": {
-      "cite_key": "Hardwick2009Wireda",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Hardwick2009Wireda,\n\tauthor = {Hardwick, Chris},\n\ttitle = {Diary of a Self-Help Dropout: Flirting With the 4-Hour Workweek},\n\tbooktitle = {Wired},\n\tdate = {2009},\n\tvolume = {17},\n\tnumber = {1},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:10:52 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "leonardo favio|favio sinfonia de un sentimiento|2007": {
-      "cite_key": "Favio2007FavioSinfoniaSentimientoa",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Favio2007FavioSinfoniaSentimientoa,\n\tauthor = {Favio, Leonardo},\n\teditor = {Cangi, Adrián},\n\ttitle = {Recuerdos del amor (autobiografía en relatos)},\n\tbooktitle = {Favio: sinfonía de un sentimiento},\n\tdate = {2007},\n\tpages = {30},\n\tlocation = {Buenos Aires},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:10:55 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
     "george bernard shaw|the intelligent woman s guide to socialism and capitalism|1828": {
       "cite_key": "Shaw1828IntelligentWomanSa",
       "tier": 5,
       "status": "success",
       "bib_entry": "@book{Shaw1828IntelligentWomanSa,\n\tauthor = {Shaw, George Bernard},\n\ttitle = {The Intelligent Woman's Guide to Socialism and Capitalism},\n\tdate = {1828},\n\tlocation = {London},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:10:58 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "c d broad|some dogmas of religion|1930": {
-      "cite_key": "Broad1930DogmasReligiona",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Broad1930DogmasReligiona,\n\tauthor = {Broad, C. D.},\n\ttitle = {Introduction},\n\tbooktitle = {Some Dogmas of Religion},\n\tdate = {1930},\n\tpages = {xxxi},\n\tlocation = {London},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:11:02 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
     "mark johnston|on myself and other less important subjects|2009": {
@@ -3408,20 +2939,6 @@
       "status": "success",
       "bib_entry": "@misc{Franklin1772a,\n\tauthor = {Franklin, Benjamin},\n\tdate = {1772},\n\thowpublished = {Letter to Joseph Priestley, September 19, 1772},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:11:13 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 5: fallback from WP metadata"
-    },
-    "leonardo filippini|entre el perdon y el paredon preguntas y dilemas de la justicia transicional|2005": {
-      "cite_key": "Filippini2005PerdonParedonPreguntasa",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Filippini2005PerdonParedonPreguntasa,\n\tauthor = {Filippini, Leonardo},\n\teditor = {Rettberg, Angelika},\n\ttitle = {Instituciones de la justicia de transición y contexto político},\n\tbooktitle = {Entre el perdón y el paredón: preguntas y dilemas de la justicia transicional},\n\tdate = {2005},\n\tpages = {156},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:11:16 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "gregorio klimovsky|analisis filosofico|1981": {
-      "cite_key": "Klimovsky1981AnalisisFilosoficoa",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Klimovsky1981AnalisisFilosoficoa,\n\tauthor = {Klimovsky, Gregorio},\n\ttitle = {Tipos de base empírica},\n\tbooktitle = {Análisis filosófico},\n\tdate = {1981},\n\tvolume = {1},\n\tnumber = {1},\n\tpages = {65},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:11:19 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
     "fernando pessoa|obra poetica|1976": {
       "cite_key": "Pessoa1976ObraPoeticaa",
@@ -3456,13 +2973,6 @@
       "tier": 5,
       "status": "success",
       "bib_entry": "@misc{Yeats1939Thena,\n\tauthor = {Yeats, William Butler},\n\ttitle = {What then?},\n\tdate = {1939},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:12:01 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "richard muller|scientific american|2011": {
-      "cite_key": "Muller2011ScientificAmericana",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Muller2011ScientificAmericana,\n\tauthor = {Muller, Richard},\n\ttitle = {I Stick to the Science},\n\tbooktitle = {Scientific American},\n\tdate = {2011},\n\tvolume = {304},\n\tnumber = {6},\n\tpages = {68},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:12:19 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
     "jaime kurtz|positively happy routes to sustainable happiness|2008": {
@@ -3591,25 +3101,11 @@
       "bib_entry": "@book{ZaillianSchindlerSLista,\n\tauthor = {Zaillian, Steven},\n\ttitle = {Schindler's List},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:16:30 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
-    "robin hanson|overcoming bias|2009": {
-      "cite_key": "Hanson2009OvercomingBiasa",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Hanson2009OvercomingBiasa,\n\tauthor = {Hanson, Robin},\n\ttitle = {Contrarian Excuses},\n\tbooktitle = {Overcoming Bias},\n\tdate = {2009},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:16:47 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
     "ewa szymanska|the science of giving experimental approaches to the study of charity|2011": {
       "cite_key": "Szymanska2011ScienceGivingExperimentala",
       "tier": 5,
       "status": "success",
       "bib_entry": "@book{Szymanska2011ScienceGivingExperimentala,\n\tauthor = {Szymanska, Ewa},\n\teditor = {Charity, in Daniel Oppenheimer & Christopher Olivola},\n\ttitle = {The Science of Giving: Experimental Approaches to the Study of Charity},\n\tdate = {2011},\n\tpages = {215},\n\tlocation = {New York},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:17:05 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "james sinclair|kalam|": {
-      "cite_key": "SinclairKalama",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{SinclairKalama,\n\tauthor = {Sinclair, James},\n\teditor = {Moreland, William Lane Craig & J. P.},\n\ttitle = {The kalam Cosmological Argument},\n\tbooktitle = {kalam},\n\tpages = {184},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:17:22 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
     "paul streeten|banca nazionale del lavoro quarterly review|1983": {
@@ -3633,13 +3129,6 @@
       "bib_entry": "@book{Morgan1842PennyCyclopædiaSocietya,\n\tauthor = {Morgan, Augustus De},\n\ttitle = {The Penny Cyclopædia of the Society for the Difusion of Useful Knowledge},\n\tdate = {1842},\n\tvolume = {23},\n\tpages = {444},\n\tlocation = {London},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:18:15 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
-    "philip oppenheim|the spectator|2005": {
-      "cite_key": "Oppenheim2005Spectatora",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Oppenheim2005Spectatora,\n\tauthor = {Oppenheim, Philip},\n\ttitle = {Fairtrade Fat Cats},\n\tbooktitle = {The Spectator},\n\tdate = {2005},\n\tpages = {17--18},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:18:32 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
     "lant pricthett|let their people come breaking the gridlock on international labor mobility|2006": {
       "cite_key": "Pricthett2006LetTheirPeoplea",
       "tier": 5,
@@ -3659,20 +3148,6 @@
       "tier": 5,
       "status": "success",
       "bib_entry": "@book{Thompson2014LettersNoteEclectica,\n\tauthor = {Thompson, Hunter},\n\teditor = {Usher, Shaun},\n\ttitle = {Letters of Note: An Eclectic Collection of Correspondence Deserving of a Wider Audience},\n\tdate = {2014},\n\tpages = {67},\n\tlocation = {San Francisco},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:19:10 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "adolfo bioy casares|museo textos ineditos|2002": {
-      "cite_key": "BioyCasares2002MuseoTextosIneditosa",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{BioyCasares2002MuseoTextosIneditosa,\n\tauthor = {Bioy Casares, Adolfo},\n\ttitle = {El séptimo círculo},\n\tbooktitle = {Museo: textos inéditos},\n\tdate = {2002},\n\tpages = {112},\n\tlocation = {Buenos Aires},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:19:28 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "harold laski|harper s|1929": {
-      "cite_key": "Laski1929HarperSa",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Laski1929HarperSa,\n\tauthor = {Laski, Harold},\n\ttitle = {The Dangers of Obedience},\n\tbooktitle = {Harper's},\n\tdate = {1929},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:19:45 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
     "john teasdale|the mindful way through depression freeing yourself from chronic unhappiness|2007": {
@@ -3717,26 +3192,12 @@
       "bib_entry": "@book{Chesterton1929Thinga,\n\tauthor = {Chesterton, G. K.},\n\ttitle = {The Thing},\n\tdate = {1929},\n\tpages = {35},\n\tlocation = {London},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:21:14 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
-    "paul bloom|the new yorker|2013": {
-      "cite_key": "Bloom2013Yorkera",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Bloom2013Yorkera,\n\tauthor = {Bloom, Paul},\n\ttitle = {The Baby in the Well},\n\tbooktitle = {The New Yorker},\n\tdate = {2013},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:21:31 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
     "richard feynman|what do you care what other people think further adventures of a curious character|1988": {
       "cite_key": "Feynman1988YouCareOthera",
       "tier": 5,
       "status": "success",
       "bib_entry": "@book{Feynman1988YouCareOthera,\n\tauthor = {Feynman, Richard},\n\ttitle = {What Do You Care What Other People Think?: Further Adventures of a Curious Character},\n\tdate = {1988},\n\tpages = {11--12},\n\tlocation = {New York},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:21:49 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "daphne patai|heterophobia sexual harassment and the future of feminism|2000": {
-      "cite_key": "Patai2000HeterophobiaSexualHarassmenta",
-      "tier": 3,
-      "status": "success",
-      "bib_entry": "@incollection{Patai2000HeterophobiaSexualHarassmenta,\n\tauthor = {Patai, Daphne},\n\teditor = {Dank, Barry M. and Refinetti, Roberto},\n\ttitle = {The Making of a Social Problem: Sexual Harassment on Campus},\n\tshorttitle = {The Making of a Social Problem},\n\tbooktitle = {Sexual Harassment and Sexual Consent},\n\tdate = {2018-05-04},\n\tedition = {1},\n\tpages = {219--256},\n\tpublisher = {Routledge},\n\tisbn = {9781315129259},\n\tdoi = {10.4324/9781315129259-12},\n\turl = {https://www.taylorfrancis.com/books/9781351491143/chapters/10.4324/9781315129259-12},\n\turldate = {2026-02-20},\n\tlangid = {english},\n\ttimestamp = {2026-02-20 12:21:52 (GMT)},\n}",
-      "notes": "DOI 10.4324/9781315129259-12 via zotra /search"
     },
     "daniel gilbert|tears in the wayback|2006": {
       "cite_key": "Gilbert2006TearsWaybacka",
@@ -3836,13 +3297,6 @@
       "bib_entry": "@book{Edwards1967EncyclopediaPhilosophya,\n\tauthor = {Edwards, Paul},\n\teditor = {Edwards, Paul},\n\ttitle = {The Encyclopedia of Philosophy},\n\tdate = {1967},\n\tvolume = {8},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:25:41 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
-    "dylan matthews|vox|2015": {
-      "cite_key": "Matthews2015Voxa",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Matthews2015Voxa,\n\tauthor = {Matthews, Dylan},\n\ttitle = {The Best Way the US Could Help Syrians: Open the Borders},\n\tbooktitle = {Vox},\n\tdate = {2015},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:25:58 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
     "janet radcliffe richards|the ssceptical feminist a philosophical enquiry|1980": {
       "cite_key": "Richards1980SscepticalFeministPhilosophicala",
       "tier": 5,
@@ -3883,13 +3337,6 @@
       "tier": 5,
       "status": "success",
       "bib_entry": "@book{\"Close-up:ImLookingForAMarketForWisdomLeoSzilard1961Life,\n\tauthor = {\"Close-up: I'm looking for a market for wisdom. Leo Szilard, Scientist\"},\n\ttitle = {Life},\n\tdate = {1961},\n\tpages = {75},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:27:31 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "larissa macfarquhar|the new yorker|2013": {
-      "cite_key": "MacFarquhar2013Yorkera",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{MacFarquhar2013Yorkera,\n\tauthor = {MacFarquhar, Larissa},\n\ttitle = {Requiem for a Dream},\n\tbooktitle = {The New Yorker},\n\tdate = {2013},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:27:49 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
     "carol tavris|mistakes were made but not by me why we justify foolish bbeliefs bad decisions and hurtful acts|2007": {
@@ -3941,13 +3388,6 @@
       "bib_entry": "@misc{James1866a,\n\tauthor = {James, William},\n\tdate = {1866},\n\thowpublished = {Letter to Thomas Ward, June 8, 1866},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:28:53 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 5: fallback from WP metadata"
     },
-    "michael huemer|philosophy politics and economics an anthology|2016": {
-      "cite_key": "Huemer2016PhilosophyPoliticsEconomicsa",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Huemer2016PhilosophyPoliticsEconomicsa,\n\tauthor = {Huemer, Michael},\n\teditor = {Jonathan Anomaly, Geoffrey Brennan, Michael Munger & Geoffrey Sayre-McCord},\n\ttitle = {Why People Are Irrational about Politics},\n\tbooktitle = {Philosophy, Politics, and Economics: An Anthology},\n\tdate = {2016},\n\tpages = {458},\n\tlocation = {Oxford},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:29:10 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
     "david edwards math professor|the math myth|2016": {
       "cite_key": "Professor)2016MathMyth",
       "tier": 5,
@@ -3962,13 +3402,6 @@
       "bib_entry": "@book{Harvey2008MoneyWellSpenta,\n\tauthor = {Harvey, Hal},\n\ttitle = {Money Well Spent: A Strategic Plan for Smart Philanthropy},\n\tdate = {2008},\n\tpages = {143},\n\tlocation = {New York},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:29:45 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
-    "richard feynman|engineering and science|1974": {
-      "cite_key": "Feynman1974EngineeringSciencea",
-      "tier": 3,
-      "status": "success",
-      "bib_entry": "@incollection{Feynman1974EngineeringSciencea,\n\tauthor = {Feynman, Richard P.},\n\ttitle = {Cargo Cult Science},\n\tbooktitle = {The Art and Science of Analog Circuit Design},\n\tdate = {1998},\n\tpages = {55--61},\n\tpublisher = {Elsevier},\n\tisbn = {9780750670623},\n\tdoi = {10.1016/B978-075067062-3/50008-X},\n\turl = {https://linkinghub.elsevier.com/retrieve/pii/B978075067062350008X},\n\turldate = {2026-02-20},\n\tlangid = {english},\n\ttimestamp = {2026-02-20 12:29:47 (GMT)},\n}",
-      "notes": "DOI 10.1016/b978-075067062-3/50008-x via zotra /search"
-    },
     "anne garbett romilly|romilly-edgeworth letters 1813-1818 with an introduction and notes by samuel henry romilly|1936": {
       "cite_key": "Romilly1936RomillyEdgeworthLettersa",
       "tier": 5,
@@ -3981,13 +3414,6 @@
       "tier": 5,
       "status": "success",
       "bib_entry": "@book{Grazer2015CuriousMindSecreta,\n\tauthor = {Grazer, Brian},\n\ttitle = {A Curious Mind: the Secret to a Bigger Life},\n\tdate = {2015},\n\tpages = {7},\n\tlocation = {New York},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:30:21 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "jon elster|rationality and relativism|1982": {
-      "cite_key": "Elster1982RationalityRelativisma",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Elster1982RationalityRelativisma,\n\tauthor = {Elster, Jon},\n\teditor = {Lukes, Martin Hollis & Steven},\n\ttitle = {Belief, Bias, and Ideology},\n\tbooktitle = {Rationality and Relativism},\n\tdate = {1982},\n\tpages = {140},\n\tlocation = {Massachusetts},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:30:39 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
     "nick winter|the habitual hustler daily habits of 50 self-employed entrepreneurs|2016": {
@@ -4004,13 +3430,6 @@
       "bib_entry": "@book{Bostrom2010WorldDreama,\n\tauthor = {Bostrom, Nick},\n\teditor = {Butz, Curt},\n\ttitle = {The World I Dream of},\n\tdate = {2010},\n\tpages = {26},\n\tlocation = {Hants},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:31:14 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
-    "thomas schelling|problems in public expenditure analysis|1968": {
-      "cite_key": "Schelling1968ProblemsPublicExpenditurea",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Schelling1968ProblemsPublicExpenditurea,\n\tauthor = {Schelling, Thomas},\n\teditor = {Chase, Samuel},\n\ttitle = {The Life You Save May Be Your Own},\n\tbooktitle = {Problems in public Expenditure Analysis},\n\tdate = {1968},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:31:32 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
     "silvia renee arias|bioygrafia vida y obra de adolfo bioy casares|2016": {
       "cite_key": "Arias2016BioygrafiaVidaObraa",
       "tier": 3,
@@ -4018,25 +3437,11 @@
       "bib_entry": "@article{Arias2016BioygrafiaVidaObraa,\n\tauthor = {Arias Chachero, Patricia},\n\ttitle = {Aproximación a la vida y obra de Victoria Álvarez Ruiz de Ojeda},\n\tjournaltitle = {Madrygal. Revista de Estudios Gallegos},\n\tdate = {2018-12-19},\n\tvolume = {21},\n\tnumber = {0},\n\tpages = {355--379},\n\tissn = {1988-3285, 1138-9664},\n\tdoi = {10.5209/MADR.62611},\n\turl = {https://revistas.ucm.es/index.php/MADR/article/view/62611},\n\turldate = {2026-02-20},\n\ttimestamp = {2026-02-20 12:31:35 (GMT)},\n\tshortjournal = {Madrygal (Madr.)},\n}",
       "notes": "DOI 10.5209/madr.62611 via zotra /search"
     },
-    "eric ries|linkedin|2013": {
-      "cite_key": "Ries2013LinkedIna",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Ries2013LinkedIna,\n\tauthor = {Ries, Eric},\n\ttitle = {Q&A: Eric Ries on Lean Start Up Principles for Nonprofits},\n\tbooktitle = {LinkedIn},\n\tdate = {2013},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:31:52 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
     "robin hanson|politics isn|2008": {
       "cite_key": "Hanson2008PoliticsIsna",
       "tier": 5,
       "status": "success",
       "bib_entry": "@misc{Hanson2008PoliticsIsna,\n\tauthor = {Hanson, Robin},\n\ttitle = {Politics isn},\n\tdate = {2008},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:32:10 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "dylan matthews|vox|2016": {
-      "cite_key": "Matthews2016Voxa",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Matthews2016Voxa,\n\tauthor = {Matthews, Dylan},\n\ttitle = {The Alt-right Is More than Warmed-over White Supremacy. It},\n\tbooktitle = {Vox},\n\tdate = {2016},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:32:27 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
     "paul graham|taste for makers|2002": {
@@ -4095,13 +3500,6 @@
       "bib_entry": "@article{Perry2012ArtProcrastinationGuidea,\n\tauthor = {Brown, Jack Perry},\n\ttitle = {Procedural Guide to Automating an Art Library, edited by Patricia J. Barnett and Amy E. Lucker. Tucson, Arizona: {ARLIS}/{NA}, 1987. 40p. (Occasional Papers of the Art Libraries Society of North America no. 7). {ISBN} 0-942740-06-8. \\$15.00.},\n\tshorttitle = {Procedural Guide to Automating an Art Library, edited by Patricia J. Barnett and Amy E. Lucker. Tucson, Arizona},\n\tjournaltitle = {Art Libraries Journal},\n\tdate = {1988},\n\tvolume = {13},\n\tnumber = {3},\n\tpages = {28--29},\n\tissn = {0307-4722, 2059-7525},\n\tdoi = {10.1017/S0307472200005800},\n\turl = {https://www.cambridge.org/core/product/identifier/S0307472200005800/type/journal_article},\n\turldate = {2026-02-20},\n\tlangid = {english},\n\ttimestamp = {2026-02-20 12:34:03 (GMT)},\n\tshortjournal = {Art Libraries Journal},\n}",
       "notes": "DOI 10.1017/s0307472200005800 via zotra /search"
     },
-    "thomas metzinger|edge org|": {
-      "cite_key": "MetzingerEdgea",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{MetzingerEdgea,\n\tauthor = {Metzinger, Thomas},\n\ttitle = {The Mind Bleeds Into the World},\n\tbooktitle = {edge.org},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:34:20 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
     "steve pavlina|broken edges|2017": {
       "cite_key": "Pavlina2017BrokenEdgesa",
       "tier": 5,
@@ -4115,13 +3513,6 @@
       "status": "success",
       "bib_entry": "@article{Macaulay1830EdinburghReviewa,\n\tauthor = {Macaulay, Thomas Babington},\n\ttitle = {Southey},\n\tjournaltitle = {The Edinburgh Review},\n\tdate = {1830},\n\tvolume = {50},\n\tnumber = {100},\n\tpages = {565},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:35:23 (GMT)},\n}",
       "notes": "Tier 2 failed (6 ISBNs tried). Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "kelton reid here s how maria popova of brain pickings writes|coplyblogger|2013": {
-      "cite_key": "KeltonReid2013Coplybloggera",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{KeltonReid2013Coplybloggera,\n\tauthor = {Kelton Reid, 'Here’s How Maria Popova of Brain Pickings Writes'},\n\ttitle = {Here},\n\tbooktitle = {coplyblogger},\n\tdate = {2013},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:35:40 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
     "kevin dutton|the wisdom of psychopaths what saints spies and serial killers can teach us about success|2012": {
       "cite_key": "Dutton2012WisdomPsychopathsSaintsa",
@@ -4158,26 +3549,12 @@
       "bib_entry": "@book{Recorde1543ArithmeticGroundArtsa,\n\tauthor = {Recorde, Robert},\n\ttitle = {Arithmetic: or, The Ground of Arts},\n\tdate = {1543},\n\tpages = {34},\n\tlocation = {London},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:37:29 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
-    "scott sumner|econlog|2016": {
-      "cite_key": "Sumner2016EconLoga",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Sumner2016EconLoga,\n\tauthor = {Sumner, Scott},\n\ttitle = {Why Bryan Caplan Almost Always Wins His Bets},\n\tbooktitle = {EconLog},\n\tdate = {2016},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:37:47 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
     "scott alexander|slate star codex|2014": {
       "cite_key": "Alexander2014SlateStarCodexa",
       "tier": 3,
       "status": "success",
       "bib_entry": "@inproceedings{Alexander2014SlateStarCodexa,\n\tauthor = {Dolgov, Grigory and Sidorenko, Valentin and Grishchenko, Vyacheslav and Prikhodko, Sergey and Kharchenko, Alexander},\n\ttitle = {The control system of the group pneumatic drive of the revolver head of the machine},\n\tdate = {2023},\n\tpages = {050017},\n\tlocation = {Bandar Lampung, Indonesia},\n\tdoi = {10.1063/5.0112459},\n\turl = {http://aip.scitation.org/doi/abs/10.1063/5.0112459},\n\turldate = {2026-02-20},\n\ttimestamp = {2026-02-20 12:37:50 (GMT)},\n\teventtitle = {{PROCEEDING} {OF} {THE} 7TH {INTERNATIONAL} {CONFERENCE} {OF} {SCIENCE}, {TECHNOLOGY}, {AND} {INTERDISCIPLINARY} {RESEARCH} ({IC}-{STAR} 2021)},\n}",
       "notes": "DOI 10.1063/5.0112459 via zotra /search"
-    },
-    "orson welles|radio s best plays|1947": {
-      "cite_key": "Welles1947RadioSBesta",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Welles1947RadioSBesta,\n\tauthor = {Welles, Orson},\n\teditor = {Liss, Joseph},\n\ttitle = {The Hitch Hiker},\n\tbooktitle = {Radio's Best Plays},\n\tdate = {1947},\n\tpages = {325},\n\tlocation = {New York},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:38:06 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
     "richard shryock|quantification a history of the meaning of measurement in the natural and social sciences|1961": {
       "cite_key": "Shryock1961QuantificationHistoryMeaninga",
@@ -4277,13 +3654,6 @@
       "bib_entry": "@misc{Jefferson1809a,\n\tauthor = {Jefferson, Thomas},\n\tdate = {1809},\n\thowpublished = {Letter to Henri Gregoire Washington, February 25, 1809},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:41:15 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 5: fallback from WP metadata"
     },
-    "jon elster|la lettre du college de france|2007": {
-      "cite_key": "Elster2007LettreCollegeFrancea",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Elster2007LettreCollegeFrancea,\n\tauthor = {Elster, Jon},\n\ttitle = {Entretien avec Jon Elster},\n\tbooktitle = {La lettre du Collège de France},\n\tdate = {2007},\n\tnumber = {21},\n\tpages = {44},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:41:32 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
     "antonio escohotado|entrevista a antonio escohotado|": {
       "cite_key": "EscohotadoEntrevistaAntonioEscohotadoa",
       "tier": 5,
@@ -4319,13 +3689,6 @@
       "bib_entry": "@book{Wolf1999ManWithoutFacea,\n\tauthor = {Wolf, Markus},\n\ttitle = {Man Without a Face: The Autobiography of Communism's Greatest Spymaster},\n\tdate = {1999},\n\tpages = {40},\n\tlocation = {New York},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:42:45 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
-    "david chalmers|the routledge handbook of panpsychism|2018": {
-      "cite_key": "Chalmers2018RoutledgeHandbookPanpsychisma",
-      "tier": 3,
-      "status": "success",
-      "bib_entry": "@incollection{Chalmers2018RoutledgeHandbookPanpsychisma,\n\tauthor = {Chalmers, David},\n\teditor = {Seager, William},\n\ttitle = {Idealism and the Mind-Body Problem 1},\n\tbooktitle = {The Routledge Handbook of Panpsychism},\n\tdate = {2019-12-10},\n\tedition = {1},\n\tpages = {353--373},\n\tpublisher = {Routledge},\n\tisbn = {9781315717708},\n\tdoi = {10.4324/9781315717708-28},\n\turl = {https://www.taylorfrancis.com/books/9781317510796/chapters/10.4324/9781315717708-28},\n\turldate = {2026-02-20},\n\tlangid = {english},\n\ttimestamp = {2026-02-20 12:42:47 (GMT)},\n}",
-      "notes": "DOI 10.4324/9781315717708-28 via zotra /search"
-    },
     "david sumpter|soccermatics mathematical adventures in the beautiful game|2016": {
       "cite_key": "Sumpter2016SoccermaticsMathematicalAdventuresa",
       "tier": 5,
@@ -4346,13 +3709,6 @@
       "status": "success",
       "bib_entry": "@article{Reich2018WeWeGota,\n\tauthor = {Helmut Reich, K.},\n\ttitle = {{HOW} {COULD} {WE} {GET} {TO} A {MORE} {PEACEFUL} {AND} {SUSTAINABLE} {HUMAN} {WORLD} {SOCIETY}? {THE} {ROLE} {OF} {SCIENCE} {AND} {RELIGION}},\n\tshorttitle = {{HOW} {COULD} {WE} {GET} {TO} A {MORE} {PEACEFUL} {AND} {SUSTAINABLE} {HUMAN} {WORLD} {SOCIETY}?},\n\tjournaltitle = {Zygon: Journal of Religion and Science},\n\tdate = {2012-06-02},\n\tvolume = {47},\n\tnumber = {2},\n\tissn = {1467-9744},\n\tdoi = {10.1111/j.1467-9744.2012.01256.x},\n\turl = {https://www.zygonjournal.org/article/id/13955/},\n\turldate = {2026-02-20},\n\ttimestamp = {2026-02-20 12:43:25 (GMT)},\n}",
       "notes": "DOI 10.1111/j.1467-9744.2012.01256.x via zotra /search"
-    },
-    "jason cowley even in old age philosopher bryan magee remains wonder-sruck by the ultimate questions|new statesman|2018": {
-      "cite_key": "JasonCowley2018Statesmana",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{JasonCowley2018Statesmana,\n\tauthor = {Jason Cowley, 'Even in Old Age, Philosopher Bryan Magee Remains Wonder-Sruck by the Ultimate Questions'},\n\ttitle = {Even in Old Age, Philosopher Bryan Magee Remains Wonder-Sruck by the Ultimate Questions},\n\tbooktitle = {New Statesman},\n\tdate = {2018},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:43:42 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
     "david wootton|the invention of science a new history of the scientific revolution|2015": {
       "cite_key": "Wootton2015InventionScienceHistorya",
@@ -4380,13 +3736,6 @@
       "tier": 5,
       "status": "success",
       "bib_entry": "@book{Fowler2009SurprisingPowerOura,\n\tauthor = {Fowler, James},\n\ttitle = {The Surprising Power of Our Social Networks and How They Shape Our Lives},\n\tdate = {2009},\n\tpages = {74},\n\tlocation = {New York},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:44:53 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "bryan caplan|econlog|2009": {
-      "cite_key": "Caplan2009EconLoga",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Caplan2009EconLoga,\n\tauthor = {Caplan, Bryan},\n\ttitle = {The Mankiw-Krugman Non-Bet},\n\tbooktitle = {EconLog},\n\tdate = {2009},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:45:11 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
     "steve andreas|transforming your self becoming who you want to be|2002": {
@@ -4466,25 +3815,11 @@
       "bib_entry": "@article{CadeMetz2018YorkTimesa,\n\tauthor = {Cade Metz, \"Mark Zuckerberg, Elon Musk and the Feud over Killer Robots\"},\n\ttitle = {Mark Zuckerberg, Elon Musk and the Feud over Killer Robots},\n\tjournaltitle = {The New York Times},\n\tdate = {2018},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:48:09 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
-    "iohannes baptista van helmont|ortus medicinæ id est initia physicæ inaudita progressus medicinae novus in morborum ultionem ad vitam longam|1648": {
-      "cite_key": "Helmont1648OrtusMedicinæIda",
-      "tier": 3,
-      "status": "success",
-      "bib_entry": "@incollection{Helmont1648OrtusMedicinæIda,\n\tauthor = {Van Helmont, Jan Baptist},\n\ttitle = {Infantis Nutritio ad Vitam Longam},\n\tbooktitle = {Ortus Medicinæ id est Initia Physicæ Inaudita},\n\tdate = {1652},\n\tpages = {622--624},\n\tpublisher = {Elsevier},\n\tisbn = {9781493303984},\n\tdoi = {10.1016/B978-1-4933-0398-4.50113-9},\n\turl = {https://linkinghub.elsevier.com/retrieve/pii/B9781493303984501139},\n\turldate = {2026-02-20},\n\tlangid = {english},\n\ttimestamp = {2026-02-20 12:48:13 (GMT)},\n}",
-      "notes": "DOI 10.1016/b978-1-4933-0398-4.50113-9 via zotra /search"
-    },
     "geoffrey miller|virtue signaling essays on darwinian politics free speech|2019": {
       "cite_key": "Miller2019VirtueSignalingEssaysa",
       "tier": 5,
       "status": "success",
       "bib_entry": "@misc{Miller2019VirtueSignalingEssaysa,\n\tauthor = {Miller, Geoffrey},\n\ttitle = {Virtue Signaling: Essays on Darwinian Politics & Free Speech},\n\tdate = {2019},\n\tlocation = {New Mexico},\n\thowpublished = {Speech},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:48:30 (GMT)},\n}",
-      "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
-    },
-    "scott aaronson|shtetl-optimized|2015": {
-      "cite_key": "Aaronson2015ShtetlOptimizeda",
-      "tier": 5,
-      "status": "success",
-      "bib_entry": "@incollection{Aaronson2015ShtetlOptimizeda,\n\tauthor = {Aaronson, Scott},\n\ttitle = {Common Knowledge and Aumann},\n\tbooktitle = {Shtetl-Optimized},\n\tdate = {2015},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:48:47 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
     },
     "carlos hernandez blasi|child and adolescent development an integrated approach|2011": {
@@ -4507,6 +3842,671 @@
       "status": "success",
       "bib_entry": "@article{Sen2021HarvardGazettea,\n\tauthor = {Sen, Amartya},\n\ttitle = {I},\n\tjournaltitle = {The Harvard Gazette},\n\tdate = {2021},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 12:49:40 (GMT)},\n}",
       "notes": "Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata"
+    },
+    "jorge luis borges|obras completas|1989": {
+      "cite_key": "Borges1989Disco",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Borges1989ObrasCompletasa,\n\ttitle = {Obras completas},\n\tdate = {1989},\n\tlocation = {Buenos Aires},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Borges1989Disco,\n\tcrossref = {Borges1989ObrasCompletasa},\n\tauthor = {Borges, Jorge Luis},\n\ttitle = {El disco},\n\tpages = {66--67},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "rudolf carnap|erkenntnis|1931": {
+      "cite_key": "Carnap1931UberwindungMetaphysikDurch",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Carnap1931Erkenntnisa,\n\ttitle = {Erkenntnis},\n\tdate = {1931},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Carnap1931UberwindungMetaphysikDurch,\n\tcrossref = {Carnap1931Erkenntnisa},\n\tauthor = {Carnap, Rudolf},\n\ttitle = {Überwindung der Metaphysik durch logische Analyse der Sprache},\n\tpages = {240},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "james watson|engineering the human germline an exploration of the science and ethics of altering the genes we pass to our children|2000": {
+      "cite_key": "Watson2000RoadAhead",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Stock2000EngineeringHumanGermline,\n\teditor = {Stock, Gregory and Campbell, John},\n\ttitle = {Engineering the Human Germline: An Exploration of the Science and Ethics of Altering the Genes We Pass to Our Children},\n\tdate = {2000},\n\tlocation = {Oxford},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Watson2000RoadAhead,\n\tcrossref = {Stock2000EngineeringHumanGermline},\n\tauthor = {Watson, James},\n\ttitle = {The Road Ahead},\n\tpages = {77},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "arthur miller|the cubicle|1996": {
+      "cite_key": "Miller1996WroteCubicleArtist",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Miller1996Cubicle,\n\ttitle = {The Cubicle},\n\tdate = {1996},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Miller1996WroteCubicleArtist,\n\tcrossref = {Miller1996Cubicle},\n\tauthor = {Miller, Arthur},\n\ttitle = {Why I Wrote The Cubicle: an Artist},\n\tpages = {163--164},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "john maynard keynes|two memoirs|1949": {
+      "cite_key": "Keynes1949MyEarlyBeliefs",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Keynes1949TwoMemoirs,\n\ttitle = {Two Memoirs},\n\tdate = {1949},\n\tlocation = {London},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Keynes1949MyEarlyBeliefs,\n\tcrossref = {Keynes1949TwoMemoirs},\n\tauthor = {Keynes, John Maynard},\n\ttitle = {My Early Beliefs},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "thomas nagel|reading nozick|1981": {
+      "cite_key": "Nagel1981LibertarianismWithoutFoundations",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Paul1981ReadingNozick,\n\teditor = {Paul, Jeffrey},\n\ttitle = {Reading Nozick},\n\tdate = {1981},\n\tlocation = {New Jersey},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Nagel1981LibertarianismWithoutFoundations,\n\tcrossref = {Paul1981ReadingNozick},\n\tauthor = {Nagel, Thomas},\n\ttitle = {Libertarianism Without Foundations},\n\tpages = {197},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "david lyons|reading nozick|1981": {
+      "cite_key": "Lyons1981IndianClaimsRights",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@incollection{Lyons1981IndianClaimsRights,\n\tcrossref = {Paul1981ReadingNozick},\n\tauthor = {Lyons, David},\n\ttitle = {New Indian Claims and Rights to Land},\n\tpages = {378},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "eugenio zaffaroni|no hay derecho|1992": {
+      "cite_key": "Zaffaroni1992ValePena",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Zaffaroni1992HayDerecho,\n\ttitle = {No hay derecho},\n\tdate = {1992},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Zaffaroni1992ValePena,\n\tcrossref = {Zaffaroni1992HayDerecho},\n\tauthor = {Zaffaroni, Eugenio},\n\ttitle = {¿Vale la pena?},\n\tpages = {5--8},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "norman finkelstein|counterpunch|2001": {
+      "cite_key": "Finkelstein2001LoseFriendsAlienate",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Finkelstein2001Counterpunch,\n\ttitle = {Counterpunch},\n\tdate = {2001},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Finkelstein2001LoseFriendsAlienate,\n\tcrossref = {Finkelstein2001Counterpunch},\n\tauthor = {Finkelstein, Norman},\n\ttitle = {How to Lose Friends and Alienate People},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "g a cohen|rights equality and liberty|2000": {
+      "cite_key": "Cohen2000You",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Spector2000RightsEqualityLiberty,\n\teditor = {Spector, Horacio and Pincione, Guido},\n\ttitle = {Rights, Equality, and Liberty},\n\tdate = {2000},\n\tlocation = {Dordrecht},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Cohen2000You,\n\tcrossref = {Spector2000RightsEqualityLiberty},\n\tauthor = {Cohen, G. A.},\n\ttitle = {If You},\n\tpages = {4},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "carlos santiago nino|el derecho y la justicia|1996": {
+      "cite_key": "Nino1996Justicia",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Valdes1996DerechoJusticia,\n\teditor = {Valdés, Ernesto Garzón and Laporta, Francisco J.},\n\ttitle = {El derecho y la justicia},\n\tdate = {1996},\n\tlocation = {Madrid},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Nino1996Justicia,\n\tcrossref = {Valdes1996DerechoJusticia},\n\tauthor = {Nino, Carlos Santiago},\n\ttitle = {Justicia},\n\tpages = {471},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "robert goodin|a companion to ethics|1991": {
+      "cite_key": "Goodin1991UtilityGood",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Singer1991CompanionEthicsa,\n\teditor = {Singer, Peter},\n\ttitle = {A Companion to Ethics},\n\tdate = {1991},\n\tlocation = {Oxford},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Goodin1991UtilityGood,\n\tcrossref = {Singer1991CompanionEthicsa},\n\tauthor = {Goodin, Robert},\n\ttitle = {Utility and the Good},\n\tpages = {242},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "conrad johnson|consequentialism and its critics|1988": {
+      "cite_key": "Johnson1988AuthorityMoralAgent",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Scheffler1988ConsequentialismCritics,\n\teditor = {Scheffler, Samuel},\n\ttitle = {Consequentialism and its Critics},\n\tdate = {1988},\n\tlocation = {Oxford},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Johnson1988AuthorityMoralAgent,\n\tcrossref = {Scheffler1988ConsequentialismCritics},\n\tauthor = {Johnson, Conrad},\n\ttitle = {The Authority of the Moral Agent},\n\tpages = {262},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "c l ten|a companion to ethics|1991": {
+      "cite_key": "Ten1991CrimePunishment",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@incollection{Ten1991CrimePunishment,\n\tcrossref = {Singer1991CompanionEthicsa},\n\tauthor = {Ten, C. L.},\n\ttitle = {Crime and Punishment},\n\tpages = {369},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "ken coates|the spokesman|2002": {
+      "cite_key": "Coates2002PostLabour",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Coates2002Spokesmana,\n\ttitle = {The Spokesman},\n\tdate = {2002},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Coates2002PostLabour,\n\tcrossref = {Coates2002Spokesmana},\n\tauthor = {Coates, Ken},\n\ttitle = {Post-Labour},\n\tpages = {39},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "norman birnbaum|et al|": {
+      "cite_key": "BirnbaumAppealUnitedStates",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Birnbaum,\n\ttitle = {et al},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{BirnbaumAppealUnitedStates,\n\tcrossref = {Birnbaum},\n\tauthor = {Birnbaum, Norman},\n\ttitle = {An Appeal from United States Citizens to Friends in Europe},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "roger crisp|ethical intuitionisms re-evaluations|2003": {
+      "cite_key": "Crisp2003SidgwickBoundariesIntuitionism",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Staton-Lake2003EthicalIntuitionismsRe,\n\teditor = {Staton-Lake, Philip},\n\ttitle = {Ethical Intuitionisms: Re-Evaluations},\n\tdate = {2003},\n\tlocation = {Oxford},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Crisp2003SidgwickBoundariesIntuitionism,\n\tcrossref = {Staton-Lake2003EthicalIntuitionismsRe},\n\tauthor = {Crisp, Roger},\n\ttitle = {Sidgwick and the Boundaries of Intuitionism},\n\tpages = {56},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "peter singer|the tanner lectures on human values|2002": {
+      "cite_key": "Singer2002ReplyMarthaNussbaum",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Singer2002TannerLecturesHuman,\n\ttitle = {The Tanner Lectures on Human Values},\n\tdate = {2002},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Singer2002ReplyMarthaNussbaum,\n\tcrossref = {Singer2002TannerLecturesHuman},\n\tauthor = {Singer, Peter},\n\ttitle = {A Reply to Martha Nussbaum},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "jose ferrater mora|el hombre y su medio y otros ensayos|1971": {
+      "cite_key": "Mora1971LecturasMatinales",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Mora1971HombreMedioOtros,\n\ttitle = {El hombre y su medio y otros ensayos},\n\tdate = {1971},\n\tlocation = {Madrid},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Mora1971LecturasMatinales,\n\tcrossref = {Mora1971HombreMedioOtros},\n\tauthor = {Mora, José Ferrater},\n\ttitle = {Lecturas matinales},\n\tpages = {128},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "frederick douglass|the frederick douglass papers|1985": {
+      "cite_key": "Douglass1985SignificanceEmancipationWest",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Douglass1985FrederickDouglassPapersa,\n\ttitle = {The Frederick Douglass Papers},\n\tdate = {1985},\n\tlocation = {New Haven},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Douglass1985SignificanceEmancipationWest,\n\tcrossref = {Douglass1985FrederickDouglassPapersa},\n\tauthor = {Douglass, Frederick},\n\ttitle = {The Significance of Emancipation in the West Indies},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "robert fisk|the politics of anti-semitism|2003": {
+      "cite_key": "Fisk2003JohnMalkovichWant",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Cockburn2003PoliticsAntiSemitism,\n\teditor = {Cockburn, Alexander and Clair, Jeffrey St.},\n\ttitle = {The Politics of Anti-Semitism},\n\tdate = {2003},\n\tlocation = {Oakland},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Fisk2003JohnMalkovichWant,\n\tcrossref = {Cockburn2003PoliticsAntiSemitism},\n\tauthor = {Fisk, Robert},\n\ttitle = {Why Does John Malkovich Want to Kill Me?},\n\tpages = {59},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "genaro carrio|notas sobre derecho y lenguaje|1965": {
+      "cite_key": "Carrio1965LenguajeInterpretacionDesacuerdos",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Carrio1965NotasDerechoLenguaje,\n\ttitle = {Notas sobre derecho y lenguaje},\n\tdate = {1965},\n\tlocation = {Buenos Aires},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Carrio1965LenguajeInterpretacionDesacuerdos,\n\tcrossref = {Carrio1965NotasDerechoLenguaje},\n\tauthor = {Carrió, Genaro},\n\ttitle = {Lenguaje, interpretación y desacuerdos en el terreno del derecho},\n\tpages = {3},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "colin mcginn|the great ape project equality beyond humanity|1993": {
+      "cite_key": "McGinn1993ApesHumansAliens",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Cavalieri1993GreatApeProject,\n\teditor = {Cavalieri, Paola and Singer, Peter},\n\ttitle = {The Great Ape Project: Equality Beyond Humanity},\n\tdate = {1993},\n\tlocation = {New York},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{McGinn1993ApesHumansAliens,\n\tcrossref = {Cavalieri1993GreatApeProject},\n\tauthor = {McGinn, Colin},\n\ttitle = {Apes, Humans, Aliens, Vampires and Robots},\n\tpages = {147},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "robert simon|ethics|1982": {
+      "cite_key": "Simon1982SociobiologyMuddle",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Simon1982Ethicsa,\n\ttitle = {Ethics},\n\tdate = {1982},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Simon1982SociobiologyMuddle,\n\tcrossref = {Simon1982Ethicsa},\n\tauthor = {Simon, Robert},\n\ttitle = {The Sociobiology Muddle},\n\tpages = {327--340},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "felix ovejero|razones para el socialismo|2001": {
+      "cite_key": "Ovejero2001IntroduccionSocialismoTodavia",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Ovejero2001RazonesSocialismoa,\n\ttitle = {Razones para el socialismo},\n\tdate = {2001},\n\tlocation = {Barcelona},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Ovejero2001IntroduccionSocialismoTodavia,\n\tcrossref = {Ovejero2001RazonesSocialismoa},\n\tauthor = {Ovejero, Félix},\n\ttitle = {Introducción: el socialismo, todavía},\n\tpages = {53--54},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "claudio amor|cuestiones publicas|2001": {
+      "cite_key": "Amor2001RiquezaPobrezaDemocracias",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Amor2001CuestionesPublicas,\n\ttitle = {Cuestiones públicas},\n\tdate = {2001},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Amor2001RiquezaPobrezaDemocracias,\n\tcrossref = {Amor2001CuestionesPublicas},\n\tauthor = {Amor, Claudio},\n\ttitle = {La riqueza y la pobreza de las democracias liberales},\n\tpages = {16},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "robert solomon|singer and his critics|1999": {
+      "cite_key": "Solomon1999PeterSinger",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Jamieson1999SingerHisCritics,\n\teditor = {Jamieson, Dale},\n\ttitle = {Singer and His Critics},\n\tdate = {1999},\n\tlocation = {Oxford},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Solomon1999PeterSinger,\n\tcrossref = {Jamieson1999SingerHisCritics},\n\tauthor = {Solomon, Robert},\n\ttitle = {Peter Singer},\n\tpages = {78},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "thomas pogge|humanitarian intervention|2006": {
+      "cite_key": "Pogge2006PowerV",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Nardin2006HumanitarianIntervention,\n\teditor = {Nardin, Terry and Williams, Melissa S.},\n\ttitle = {Humanitarian Intervention},\n\tdate = {2006},\n\tlocation = {New York},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Pogge2006PowerV,\n\tcrossref = {Nardin2006HumanitarianIntervention},\n\tauthor = {Pogge, Thomas},\n\ttitle = {Power v. Truth: Realism and Responsibility},\n\tpages = {166},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "claudio amor|revista latinoamericana de filosofia|1999": {
+      "cite_key": "Amor1999LiberalismoEsquizofrenia",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Amor1999RevistaLatinoamericanaFilosofia,\n\ttitle = {Revista latinoamericana de filosofía},\n\tdate = {1999},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Amor1999LiberalismoEsquizofrenia,\n\tcrossref = {Amor1999RevistaLatinoamericanaFilosofia},\n\tauthor = {Amor, Claudio},\n\ttitle = {Liberalismo y esquizofrenia},\n\tpages = {235},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "albert einstein|albert einstein philosopher-scientist|1949": {
+      "cite_key": "Einstein1949AutobiographicalNotes",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Schilpp1949AlbertEinsteinPhilosopher,\n\teditor = {Schilpp, Paul A.},\n\ttitle = {Albert Einstein: Philosopher-Scientist},\n\tdate = {1949},\n\tlocation = {Berkeley},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Einstein1949AutobiographicalNotes,\n\tcrossref = {Schilpp1949AlbertEinsteinPhilosopher},\n\tauthor = {Einstein, Albert},\n\ttitle = {Autobiographical Notes},\n\tpages = {17},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "david schweickart|market socialism the debate among socialists|1998": {
+      "cite_key": "Schweickart1998MarketSocialismDefense",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Ollman1998MarketSocialismDebatea,\n\teditor = {Ollman, Bertell},\n\ttitle = {Market Socialism: the Debate Among Socialists},\n\tdate = {1998},\n\tlocation = {New York},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Schweickart1998MarketSocialismDefense,\n\tcrossref = {Ollman1998MarketSocialismDebatea},\n\tauthor = {Schweickart, David},\n\ttitle = {Market Socialism: A Defense},\n\tpages = {11},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "ursula le guin|galaxy|1974": {
+      "cite_key": "LeGuin1974DayRevolution",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{LeGuin1974Galaxya,\n\ttitle = {Galaxy},\n\tdate = {1974},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{LeGuin1974DayRevolution,\n\tcrossref = {LeGuin1974Galaxya},\n\tauthor = {LeGuin, Ursula Le},\n\ttitle = {The Day before the Revolution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "zell kravinsky|the daily telegraph|2004": {
+      "cite_key": "Kravinsky2004FeelBetterGiving",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Kravinsky2004DailyTelegraph,\n\ttitle = {The Daily Telegraph},\n\tdate = {2004},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Kravinsky2004FeelBetterGiving,\n\tcrossref = {Kravinsky2004DailyTelegraph},\n\tauthor = {Kravinsky, Zell},\n\ttitle = {I Feel Better for Giving Everything—Whether My Money or My Organs},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "ted honderich|counterpunch|2005": {
+      "cite_key": "Honderich2005PersonaGrata",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Honderich2005CounterPunch,\n\ttitle = {CounterPunch},\n\tdate = {2005},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Honderich2005PersonaGrata,\n\tcrossref = {Honderich2005CounterPunch},\n\tauthor = {Honderich, Ted},\n\ttitle = {On Being Persona Non Grata},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "noam chomsky|men of ideas some creators of contemporary philosophy|1978": {
+      "cite_key": "Chomsky1978IdeasChomsky",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Magee1978MenIdeasCreatorsa,\n\teditor = {Magee, Bryan},\n\ttitle = {Men of Ideas: Some Creators of Contemporary Philosophy},\n\tdate = {1978},\n\tlocation = {London},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Chomsky1978IdeasChomsky,\n\tcrossref = {Magee1978MenIdeasCreatorsa},\n\tauthor = {Chomsky, Noam},\n\ttitle = {The Ideas of Chomsky},\n\tpages = {218},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "jean bricmont|the cambridge companion to chomsky|2005": {
+      "cite_key": "Bricmont2005ResponsibilityIntellectual",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{McGilvray2005CambridgeCompanionChomsky,\n\teditor = {McGilvray, James},\n\ttitle = {The Cambridge Companion to Chomsky},\n\tdate = {2005},\n\tlocation = {Cambridge},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Bricmont2005ResponsibilityIntellectual,\n\tcrossref = {McGilvray2005CambridgeCompanionChomsky},\n\tauthor = {Bricmont, Jean},\n\ttitle = {The Responsibility of the Intellectual},\n\tpages = {280--281},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "dani rodrik|dice report|2002": {
+      "cite_key": "Rodrik2002GettingInstitutionsRight",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Rodrik2002DICEReport,\n\ttitle = {DICE Report},\n\tdate = {2002},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Rodrik2002GettingInstitutionsRight,\n\tcrossref = {Rodrik2002DICEReport},\n\tauthor = {Rodrik, Dani},\n\ttitle = {Getting Institutions Right},\n\tpages = {13},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "r m hare|philosophical perspectives on bioethics|1996": {
+      "cite_key": "Hare1996MethodsBioethicsDefective",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Sumner1996PhilosophicalPerspectivesBioethics,\n\teditor = {Sumner, L. W. and Boyle, Joseph},\n\ttitle = {Philosophical Perspectives on Bioethics},\n\tdate = {1996},\n\tlocation = {Toronto},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Hare1996MethodsBioethicsDefective,\n\tcrossref = {Sumner1996PhilosophicalPerspectivesBioethics},\n\tauthor = {Hare, R. M.},\n\ttitle = {Methods of Bioethics: Some Defective Proposals},\n\tpages = {18},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "j j c smart|metaphysics and morality essays in honour of j j c smart|1987": {
+      "cite_key": "Smart1987ReplySinger",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{PhilipPettit1987MetaphysicsMoralityEssays,\n\teditor = {Philip Pettit, Richard Sylvan and Norman, Jean},\n\ttitle = {Metaphysics and Morality: Essays in Honour of J. J. C. Smart},\n\tdate = {1987},\n\tlocation = {Oxford},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Smart1987ReplySinger,\n\tcrossref = {PhilipPettit1987MetaphysicsMoralityEssays},\n\tauthor = {Smart, J. J. C.},\n\ttitle = {Reply to Singer},\n\tpages = {192},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "thomas hurka|the future for philosophy|2004": {
+      "cite_key": "Hurka2004NormativeEthicsBack",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Leiter2004FuturePhilosophya,\n\teditor = {Leiter, Brian},\n\ttitle = {The Future for Philosophy},\n\tdate = {2004},\n\tlocation = {Oxford},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Hurka2004NormativeEthicsBack,\n\tcrossref = {Leiter2004FuturePhilosophya},\n\tauthor = {Hurka, Thomas},\n\ttitle = {Normative Ethics: Back to the Future},\n\tpages = {261},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "a j ayer|modern british philosophy|1986": {
+      "cite_key": "Ayer1986Conversation",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Ayer1986ModernBritishPhilosophya,\n\ttitle = {Modern British Philosophy},\n\tdate = {1986},\n\tlocation = {Oxford},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Ayer1986Conversation,\n\tcrossref = {Ayer1986ModernBritishPhilosophya},\n\tauthor = {Ayer, A. J.},\n\ttitle = {Conversation with A. J. Ayer},\n\tpages = {84},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "ludwig von mises|planning for freedom and other essays and addresses|1952": {
+      "cite_key": "Mises1952LordKeynesSay",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Mises1952PlanningFreedomOther,\n\ttitle = {Planning for Freedom, and other essays and addresses},\n\tdate = {1952},\n\tlocation = {Illinois},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Mises1952LordKeynesSay,\n\tcrossref = {Mises1952PlanningFreedomOther},\n\tauthor = {Mises, Ludwig von},\n\ttitle = {Lord Keynes and Say},\n\tpages = {69},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "derek parfit|synthese|1982": {
+      "cite_key": "Parfit1982SummaryDiscussion",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Parfit1982Synthese,\n\ttitle = {Synthese},\n\tdate = {1982},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Parfit1982SummaryDiscussion,\n\tcrossref = {Parfit1982Synthese},\n\tauthor = {Parfit, Derek},\n\ttitle = {Summary of Discussion},\n\tpages = {255},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "allen wood|the cambridge companion to kant and modern philosophy|2006": {
+      "cite_key": "Wood2006SupremePrincipleMorality",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Guyer2006CambridgeCompanionKanta,\n\teditor = {Guyer, Paul},\n\ttitle = {The Cambridge Companion to Kant and Modern Philosophy},\n\tdate = {2006},\n\tlocation = {Cambridge},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Wood2006SupremePrincipleMorality,\n\tcrossref = {Guyer2006CambridgeCompanionKanta},\n\tauthor = {Wood, Allen},\n\ttitle = {The Supreme Principle of Morality},\n\tpages = {346},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "jens timmermann|the harvard review of philosophy|2000": {
+      "cite_key": "Timmermann2000HarvardReviewPhilosophy",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@article{Timmermann2000HarvardReviewPhilosophy,\n\tauthor = {Timmermann, Jens},\n\ttitle = {Kant},\n\tjournaltitle = {The Harvard Review of Philosophy},\n\tdate = {2000},\n\tvolume = {8},\n\tpages = {39},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "frances kamm|imprints|2006": {
+      "cite_key": "Kamm2006SearchDeepStructure",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Kamm2006Imprints,\n\ttitle = {Imprints},\n\tdate = {2006},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Kamm2006SearchDeepStructure,\n\tcrossref = {Kamm2006Imprints},\n\tauthor = {Kamm, Frances},\n\ttitle = {In Search of the Deep Structure of Morality},\n\tpages = {93--117},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "samuel butler|the note-books of samuel butler|1912": {
+      "cite_key": "Butler1912KnowingGivesUs",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Butler1912NoteBooksSamuel,\n\ttitle = {The Note-Books of Samuel Butler},\n\tdate = {1912},\n\tlocation = {London},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Butler1912KnowingGivesUs,\n\tcrossref = {Butler1912NoteBooksSamuel},\n\tauthor = {Butler, Samuel},\n\ttitle = {On Knowing what Gives us Pleasure},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "louis menand|the new yorker|2007": {
+      "cite_key": "Menand2007FracturedFranchise",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Menand2007Yorker,\n\ttitle = {The New Yorker},\n\tdate = {2007},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Menand2007FracturedFranchise,\n\tcrossref = {Menand2007Yorker},\n\tauthor = {Menand, Louis},\n\ttitle = {Fractured Franchise},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "adolfo bioy casares|retratos y autorretratos|1973": {
+      "cite_key": "BioyCasares1973YoMiCara",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{DAmico1973RetratosAutorretratos,\n\teditor = {D'Amico, Sara Facio y Alicia},\n\ttitle = {Retratos y autorretratos},\n\tdate = {1973},\n\tlocation = {Buenos Aires},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{BioyCasares1973YoMiCara,\n\tcrossref = {DAmico1973RetratosAutorretratos},\n\tauthor = {Bioy Casares, Adolfo},\n\ttitle = {Yo y mi cara},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "h l mencken|the american mercury|1924": {
+      "cite_key": "Mencken1924MalevolentJobholder",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Mencken1924AmericanMercury,\n\ttitle = {The American Mercury},\n\tdate = {1924},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Mencken1924MalevolentJobholder,\n\tcrossref = {Mencken1924AmericanMercury},\n\tauthor = {Mencken, H. L.},\n\ttitle = {The Malevolent Jobholder},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "quentin smith|the cambridge companion to atheism|2006": {
+      "cite_key": "Smith2006KalamCosmologicalArguments",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Martin2006CambridgeCompanionAtheism,\n\teditor = {Martin, Michael},\n\ttitle = {The Cambridge Companion to Atheism},\n\tdate = {2006},\n\tlocation = {Cambridge},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Smith2006KalamCosmologicalArguments,\n\tcrossref = {Martin2006CambridgeCompanionAtheism},\n\tauthor = {Smith, Quentin},\n\ttitle = {Kalam Cosmological Arguments for Atheism},\n\tpages = {192--193},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "sheldon reaven|the worst enemy of science essays in memory of paul feyerabend|2000": {
+      "cite_key": "Reaven2000TimeWellSpent",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{JohnPreston2000WorstEnemyScience,\n\teditor = {John Preston, Gonzalo Munévar and Lamb, David},\n\ttitle = {The Worst Enemy of Science? Essays in Memory of Paul Feyerabend},\n\tdate = {2000},\n\tlocation = {Oxford},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Reaven2000TimeWellSpent,\n\tcrossref = {JohnPreston2000WorstEnemyScience},\n\tauthor = {Reaven, Sheldon},\n\ttitle = {Time Well Spent},\n\tpages = {24},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "randolph nesse|the science of well-being|2005": {
+      "cite_key": "Nesse2005NaturalSelectionElusiveness",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{FeliciaAHuppert2005ScienceWell,\n\teditor = {Felicia A. Huppert, Nick Baylis and Keverne, Barry},\n\ttitle = {The Science of Well-Being},\n\tdate = {2005},\n\tlocation = {Oxford},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Nesse2005NaturalSelectionElusiveness,\n\tcrossref = {FeliciaAHuppert2005ScienceWell},\n\tauthor = {Nesse, Randolph},\n\ttitle = {Natural Selection and the Elusiveness of Happiness},\n\tpages = {10},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "caitlin flanagan|the atlantic|2006": {
+      "cite_key": "Flanagan2006YouThereGod",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Flanagan2006Atlantic,\n\ttitle = {The Atlantic},\n\tdate = {2006},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Flanagan2006YouThereGod,\n\tcrossref = {Flanagan2006Atlantic},\n\tauthor = {Flanagan, Caitlin},\n\ttitle = {Are You There God? It},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "carlos santiago nino|la autonomia personal investigacion colectiva del centro de estudios institucionales de buenos aires|1992": {
+      "cite_key": "Nino1992AutonomiaPersonal",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Nino1992AutonomiaPersonalInvestigacion,\n\teditor = {Nino and others},\n\ttitle = {La autonomía personal: investigación colectiva del Centro de Estudios Institucionales de Buenos Aires},\n\tdate = {1992},\n\tlocation = {Madrid},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Nino1992AutonomiaPersonal,\n\tcrossref = {Nino1992AutonomiaPersonalInvestigacion},\n\tauthor = {Nino, Carlos Santiago},\n\ttitle = {La autonomía personal},\n\tpages = {37},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "geoffrey landis|asimov s science fiction|2002": {
+      "cite_key": "Landis2002LongChase",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Landis2002AsimovSScience,\n\ttitle = {Asimov's Science Fiction},\n\tdate = {2002},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Landis2002LongChase,\n\tcrossref = {Landis2002AsimovSScience},\n\tauthor = {Landis, Geoffrey},\n\ttitle = {The Long Chase},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "john crowley|omni|1985": {
+      "cite_key": "Crowley1985Snow",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Crowley1985Omni,\n\ttitle = {Omni},\n\tdate = {1985},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Crowley1985Snow,\n\tcrossref = {Crowley1985Omni},\n\tauthor = {Crowley, John},\n\ttitle = {Snow},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "colin mcginn|philosophers explore the matrix|2005": {
+      "cite_key": "McGinn2005MatrixDreams",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Grau2005PhilosophersExploreMatrixa,\n\teditor = {Grau, Christopher},\n\ttitle = {Philosophers Explore The Matrix},\n\tdate = {2005},\n\tlocation = {New York},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{McGinn2005MatrixDreams,\n\tcrossref = {Grau2005PhilosophersExploreMatrixa},\n\tauthor = {McGinn, Colin},\n\ttitle = {The Matrix of Dreams},\n\tpages = {62--63},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "david schmidtz|robert nozick|2002": {
+      "cite_key": "Schmidtz2002MeaningsLife",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Schmidtz2002RobertNozicka,\n\teditor = {Schmidtz},\n\ttitle = {Robert Nozick},\n\tdate = {2002},\n\tlocation = {Cambridge},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Schmidtz2002MeaningsLife,\n\tcrossref = {Schmidtz2002RobertNozicka},\n\tauthor = {Schmidtz, David},\n\ttitle = {The Meanings of Life},\n\tpages = {199},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "e e cummings|e e cummings a miscellany|1958": {
+      "cite_key": "Cummings1958Poet",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Firmage1958E,\n\teditor = {Firmage, George J.},\n\ttitle = {E. E. Cummings: A Miscellany},\n\tdate = {1958},\n\tlocation = {New York},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Cummings1958Poet,\n\tcrossref = {Firmage1958E},\n\tauthor = {Cummings, E. E.},\n\ttitle = {A Poet},\n\tpages = {13},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "joseph epstein|the new criterion|2008": {
+      "cite_key": "Epstein2008LiteraryEducation",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Epstein2008Criterion,\n\ttitle = {The New Criterion},\n\tdate = {2008},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Epstein2008LiteraryEducation,\n\tcrossref = {Epstein2008Criterion},\n\tauthor = {Epstein, Joseph},\n\ttitle = {A Literary Education},\n\tpages = {11},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "chris hardwick|wired|2009": {
+      "cite_key": "Hardwick2009DiarySelfHelp",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Hardwick2009Wired,\n\ttitle = {Wired},\n\tdate = {2009},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Hardwick2009DiarySelfHelp,\n\tcrossref = {Hardwick2009Wired},\n\tauthor = {Hardwick, Chris},\n\ttitle = {Diary of a Self-Help Dropout: Flirting With the 4-Hour Workweek},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "stewart goetz|the blackwell companion to natural theology|2009": {
+      "cite_key": "Goetz2009ArgumentEvil",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Craig2009BlackwellCompanionNaturala,\n\teditor = {Craig, William Lane and Moreland, J. P.},\n\ttitle = {The Blackwell Companion to Natural Theology},\n\tdate = {2009},\n\tlocation = {Oxford},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Goetz2009ArgumentEvil,\n\tcrossref = {Craig2009BlackwellCompanionNaturala},\n\tauthor = {Goetz, Stewart},\n\ttitle = {The Argument from Evil},\n\tpages = {449--450},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "leonardo favio|favio sinfonia de un sentimiento|2007": {
+      "cite_key": "Favio2007RecuerdosAmorAutobiografia",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Cangi2007FavioSinfoniaSentimiento,\n\teditor = {Cangi, Adrián},\n\ttitle = {Favio: sinfonía de un sentimiento},\n\tdate = {2007},\n\tlocation = {Buenos Aires},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Favio2007RecuerdosAmorAutobiografia,\n\tcrossref = {Cangi2007FavioSinfoniaSentimiento},\n\tauthor = {Favio, Leonardo},\n\ttitle = {Recuerdos del amor (autobiografía en relatos)},\n\tpages = {30},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "c d broad|some dogmas of religion|1930": {
+      "cite_key": "Broad1930Introduction",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Broad1930DogmasReligion,\n\ttitle = {Some Dogmas of Religion},\n\tdate = {1930},\n\tlocation = {London},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Broad1930Introduction,\n\tcrossref = {Broad1930DogmasReligion},\n\tauthor = {Broad, C. D.},\n\ttitle = {Introduction},\n\tpages = {xxxi},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "leonardo filippini|entre el perdon y el paredon preguntas y dilemas de la justicia transicional|2005": {
+      "cite_key": "Filippini2005InstitucionesJusticiaTransicion",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Rettberg2005PerdonParedonPreguntas,\n\teditor = {Rettberg, Angelika},\n\ttitle = {Entre el perdón y el paredón: preguntas y dilemas de la justicia transicional},\n\tdate = {2005},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Filippini2005InstitucionesJusticiaTransicion,\n\tcrossref = {Rettberg2005PerdonParedonPreguntas},\n\tauthor = {Filippini, Leonardo},\n\ttitle = {Instituciones de la justicia de transición y contexto político},\n\tpages = {156},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "gregorio klimovsky|analisis filosofico|1981": {
+      "cite_key": "Klimovsky1981TiposBaseEmpirica",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Klimovsky1981AnalisisFilosofico,\n\ttitle = {Análisis filosófico},\n\tdate = {1981},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Klimovsky1981TiposBaseEmpirica,\n\tcrossref = {Klimovsky1981AnalisisFilosofico},\n\tauthor = {Klimovsky, Gregorio},\n\ttitle = {Tipos de base empírica},\n\tpages = {65},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "richard muller|scientific american|2011": {
+      "cite_key": "Muller2011StickScience",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Muller2011ScientificAmerican,\n\ttitle = {Scientific American},\n\tdate = {2011},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Muller2011StickScience,\n\tcrossref = {Muller2011ScientificAmerican},\n\tauthor = {Muller, Richard},\n\ttitle = {I Stick to the Science},\n\tpages = {68},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "robin hanson|overcoming bias|2009": {
+      "cite_key": "Hanson2009ContrarianExcuses",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Hanson2009OvercomingBias,\n\ttitle = {Overcoming Bias},\n\tdate = {2009},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Hanson2009ContrarianExcuses,\n\tcrossref = {Hanson2009OvercomingBias},\n\tauthor = {Hanson, Robin},\n\ttitle = {Contrarian Excuses},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "james sinclair|kalam|": {
+      "cite_key": "SinclairKalamCosmologicalArgument",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{MorelandKalam,\n\teditor = {Moreland, William Lane Craig & J. P.},\n\ttitle = {kalam},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{SinclairKalamCosmologicalArgument,\n\tcrossref = {MorelandKalam},\n\tauthor = {Sinclair, James},\n\ttitle = {The kalam Cosmological Argument},\n\tpages = {184},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "philip oppenheim|the spectator|2005": {
+      "cite_key": "Oppenheim2005FairtradeFatCats",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Oppenheim2005Spectator,\n\ttitle = {The Spectator},\n\tdate = {2005},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Oppenheim2005FairtradeFatCats,\n\tcrossref = {Oppenheim2005Spectator},\n\tauthor = {Oppenheim, Philip},\n\ttitle = {Fairtrade Fat Cats},\n\tpages = {17--18},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "adolfo bioy casares|museo textos ineditos|2002": {
+      "cite_key": "BioyCasares2002SeptimoCirculo",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{BioyCasares2002MuseoTextosIneditos,\n\ttitle = {Museo: textos inéditos},\n\tdate = {2002},\n\tlocation = {Buenos Aires},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{BioyCasares2002SeptimoCirculo,\n\tcrossref = {BioyCasares2002MuseoTextosIneditos},\n\tauthor = {Bioy Casares, Adolfo},\n\ttitle = {El séptimo círculo},\n\tpages = {112},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "harold laski|harper s|1929": {
+      "cite_key": "Laski1929DangersObedience",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Laski1929HarperS,\n\ttitle = {Harper's},\n\tdate = {1929},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Laski1929DangersObedience,\n\tcrossref = {Laski1929HarperS},\n\tauthor = {Laski, Harold},\n\ttitle = {The Dangers of Obedience},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "james newman|the world of mathematics|1956": {
+      "cite_key": "Newman1956WorldMathematicsb",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@book{Newman1956WorldMathematicsb,\n\tauthor = {Newman, James},\n\teditor = {Newman, James},\n\ttitle = {The World of Mathematics},\n\tdate = {1956},\n\tpages = {1169},\n\tlocation = {New York},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "paul bloom|the new yorker|2013": {
+      "cite_key": "Bloom2013BabyWell",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Bloom2013Yorker,\n\ttitle = {The New Yorker},\n\tdate = {2013},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Bloom2013BabyWell,\n\tcrossref = {Bloom2013Yorker},\n\tauthor = {Bloom, Paul},\n\ttitle = {The Baby in the Well},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "daphne patai|heterophobia sexual harassment and the future of feminism|2000": {
+      "cite_key": "Patai2000HeterophobiaSexualHarassment",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@book{Patai2000HeterophobiaSexualHarassment,\n\tauthor = {Patai, Daphne},\n\ttitle = {Heterophobia: Sexual Harassment and the Future of Feminism},\n\tdate = {2000},\n\tpages = {12},\n\tlocation = {New York},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "dylan matthews|vox|2015": {
+      "cite_key": "Matthews2015BestWayUS",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Matthews2015Vox,\n\ttitle = {Vox},\n\tdate = {2015},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Matthews2015BestWayUS,\n\tcrossref = {Matthews2015Vox},\n\tauthor = {Matthews, Dylan},\n\ttitle = {The Best Way the US Could Help Syrians: Open the Borders},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "larissa macfarquhar|the new yorker|2013": {
+      "cite_key": "MacFarquhar2013RequiemDream",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{MacFarquhar2013Yorker,\n\ttitle = {The New Yorker},\n\tdate = {2013},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{MacFarquhar2013RequiemDream,\n\tcrossref = {MacFarquhar2013Yorker},\n\tauthor = {MacFarquhar, Larissa},\n\ttitle = {Requiem for a Dream},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "alain de botton|how to think more about sex|2013": {
+      "cite_key": "DeBotton2013ThinkMoreSexa",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@book{DeBotton2013ThinkMoreSexa,\n\tauthor = {de Botton, Alain},\n\ttitle = {How to Think More about Sex},\n\tdate = {2013},\n\tpages = {5--6},\n\tlocation = {New York},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "michael huemer|philosophy politics and economics an anthology|2016": {
+      "cite_key": "Huemer2016PeopleIrrationalPolitics",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{JonathanAnomaly2016PhilosophyPoliticsEconomics,\n\teditor = {Jonathan Anomaly, Geoffrey Brennan, Michael Munger & Geoffrey Sayre-McCord},\n\ttitle = {Philosophy, Politics, and Economics: An Anthology},\n\tdate = {2016},\n\tlocation = {Oxford},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Huemer2016PeopleIrrationalPolitics,\n\tcrossref = {JonathanAnomaly2016PhilosophyPoliticsEconomics},\n\tauthor = {Huemer, Michael},\n\ttitle = {Why People Are Irrational about Politics},\n\tpages = {458},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "richard feynman|engineering and science|1974": {
+      "cite_key": "Feynman1974CargoCultScience",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Feynman1974EngineeringScience,\n\ttitle = {Engineering and Science},\n\tdate = {1974},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Feynman1974CargoCultScience,\n\tcrossref = {Feynman1974EngineeringScience},\n\tauthor = {Feynman, Richard},\n\ttitle = {Cargo Cult Science},\n\tpages = {11},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "jon elster|rationality and relativism|1982": {
+      "cite_key": "Elster1982BeliefBiasIdeology",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Lukes1982RationalityRelativism,\n\teditor = {Lukes, Martin Hollis & Steven},\n\ttitle = {Rationality and Relativism},\n\tdate = {1982},\n\tlocation = {Massachusetts},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Elster1982BeliefBiasIdeology,\n\tcrossref = {Lukes1982RationalityRelativism},\n\tauthor = {Elster, Jon},\n\ttitle = {Belief, Bias, and Ideology},\n\tpages = {140},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "thomas schelling|problems in public expenditure analysis|1968": {
+      "cite_key": "Schelling1968LifeYouSave",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Chase1968ProblemsPublicExpenditure,\n\teditor = {Chase, Samuel},\n\ttitle = {Problems in public Expenditure Analysis},\n\tdate = {1968},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Schelling1968LifeYouSave,\n\tcrossref = {Chase1968ProblemsPublicExpenditure},\n\tauthor = {Schelling, Thomas},\n\ttitle = {The Life You Save May Be Your Own},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "eric ries|linkedin|2013": {
+      "cite_key": "Ries2013QEricRies",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Ries2013LinkedIn,\n\ttitle = {LinkedIn},\n\tdate = {2013},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Ries2013QEricRies,\n\tcrossref = {Ries2013LinkedIn},\n\tauthor = {Ries, Eric},\n\ttitle = {Q&A: Eric Ries on Lean Start Up Principles for Nonprofits},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "dylan matthews|vox|2016": {
+      "cite_key": "Matthews2016AltRightMore",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Matthews2016Vox,\n\ttitle = {Vox},\n\tdate = {2016},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Matthews2016AltRightMore,\n\tcrossref = {Matthews2016Vox},\n\tauthor = {Matthews, Dylan},\n\ttitle = {The Alt-right Is More than Warmed-over White Supremacy. It},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "thomas metzinger|edge org|": {
+      "cite_key": "MetzingerMindBleedsWorld",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{MetzingerEdge,\n\ttitle = {edge.org},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{MetzingerMindBleedsWorld,\n\tcrossref = {MetzingerEdge},\n\tauthor = {Metzinger, Thomas},\n\ttitle = {The Mind Bleeds Into the World},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "kelton reid here s how maria popova of brain pickings writes|coplyblogger|2013": {
+      "cite_key": "KeltonReid2013Here",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{KeltonReid2013Coplyblogger,\n\ttitle = {coplyblogger},\n\tdate = {2013},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{KeltonReid2013Here,\n\tcrossref = {KeltonReid2013Coplyblogger},\n\tauthor = {Kelton Reid, 'Here’s How Maria Popova of Brain Pickings Writes'},\n\ttitle = {Here},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "scott sumner|econlog|2016": {
+      "cite_key": "Sumner2016BryanCaplanAlmost",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Sumner2016EconLog,\n\ttitle = {EconLog},\n\tdate = {2016},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Sumner2016BryanCaplanAlmost,\n\tcrossref = {Sumner2016EconLog},\n\tauthor = {Sumner, Scott},\n\ttitle = {Why Bryan Caplan Almost Always Wins His Bets},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "orson welles|radio s best plays|1947": {
+      "cite_key": "Welles1947HitchHiker",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Liss1947RadioSBest,\n\teditor = {Liss, Joseph},\n\ttitle = {Radio's Best Plays},\n\tdate = {1947},\n\tlocation = {New York},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Welles1947HitchHiker,\n\tcrossref = {Liss1947RadioSBest},\n\tauthor = {Welles, Orson},\n\ttitle = {The Hitch Hiker},\n\tpages = {325},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "jon elster|la lettre du college de france|2007": {
+      "cite_key": "Elster2007EntretienJonElster",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Elster2007LettreCollegeFrance,\n\ttitle = {La lettre du Collège de France},\n\tdate = {2007},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Elster2007EntretienJonElster,\n\tcrossref = {Elster2007LettreCollegeFrance},\n\tauthor = {Elster, Jon},\n\ttitle = {Entretien avec Jon Elster},\n\tpages = {44},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "david chalmers|the routledge handbook of panpsychism|2018": {
+      "cite_key": "Chalmers2018IdealismMindBody",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Seager2018RoutledgeHandbookPanpsychism,\n\teditor = {Seager, William},\n\ttitle = {The Routledge Handbook of Panpsychism},\n\tdate = {2018},\n\tlocation = {New York},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Chalmers2018IdealismMindBody,\n\tcrossref = {Seager2018RoutledgeHandbookPanpsychism},\n\tauthor = {Chalmers, David},\n\ttitle = {Idealism and the Mind-Body Problem},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "jason cowley even in old age philosopher bryan magee remains wonder-sruck by the ultimate questions|new statesman|2018": {
+      "cite_key": "JasonCowley2018EvenOldAge",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{JasonCowley2018Statesman,\n\ttitle = {New Statesman},\n\tdate = {2018},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{JasonCowley2018EvenOldAge,\n\tcrossref = {JasonCowley2018Statesman},\n\tauthor = {Jason Cowley, 'Even in Old Age, Philosopher Bryan Magee Remains Wonder-Sruck by the Ultimate Questions'},\n\ttitle = {Even in Old Age, Philosopher Bryan Magee Remains Wonder-Sruck by the Ultimate Questions},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "bryan caplan|econlog|2009": {
+      "cite_key": "Caplan2009MankiwKrugmanBet",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Caplan2009EconLog,\n\ttitle = {EconLog},\n\tdate = {2009},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Caplan2009MankiwKrugmanBet,\n\tcrossref = {Caplan2009EconLog},\n\tauthor = {Caplan, Bryan},\n\ttitle = {The Mankiw-Krugman Non-Bet},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "iohannes baptista van helmont|ortus medicinæ id est initia physicæ inaudita progressus medicinae novus in morborum ultionem ad vitam longam|1648": {
+      "cite_key": "Helmont1648OrtusMedicinæId",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@book{Helmont1648OrtusMedicinæId,\n\tauthor = {Helmont, Iohannes Baptista van},\n\ttitle = {Ortus medicinæ: Id est Initia physicæ inaudita. Progressus medicinae novus, in morborum ultionem, ad vitam longam},\n\tdate = {1648},\n\tlocation = {Amsterdam},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
+    },
+    "scott aaronson|shtetl-optimized|2015": {
+      "cite_key": "Aaronson2015CommonKnowledgeAumann",
+      "tier": 5,
+      "status": "success",
+      "bib_entry": "@collection{Aaronson2015ShtetlOptimized,\n\ttitle = {Shtetl-Optimized},\n\tdate = {2015},\n\tnote = {Entry auto-generated from WordPress attribution},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}\n\n@incollection{Aaronson2015CommonKnowledgeAumann,\n\tcrossref = {Aaronson2015ShtetlOptimized},\n\tauthor = {Aaronson, Scott},\n\ttitle = {Common Knowledge and Aumann},\n\ttimestamp = {2026-02-20 19:56:06 (GMT)},\n}",
+      "notes": "Tier 5: fallback from WP metadata"
     }
   }
 }
