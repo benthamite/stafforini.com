@@ -1,8 +1,8 @@
-BibLaTeX creation report -- 2026-02-20 18:00
+BibLaTeX creation report -- 2026-02-20 21:57
 ============================================================
 
-Tier 1 (Amazon ISBN):  31
-Tier 2 (OpenLibrary):  6
+Tier 1 (Amazon ISBN):  0
+Tier 2 (OpenLibrary):  0
 Tier 3 (CrossRef DOI): 47
 Tier 4 (Web URL):      0
 Tier 5 (WP fallback):  218
@@ -52,27 +52,27 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Arthur Miller -- The Cubicle (1996)
-  Key: Miller1996WroteCubicleArtista
+  Key: Miller1996WroteCubicleArtist
   Attribution: Arthur Miller, 'Why I Wrote The Cubicle: an Artist's Answer to Politics', The New Yorker, October 21-28, 1996, pp. 163-164
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] John Maynard Keynes -- Two Memoirs (1949)
-  Key: Keynes1949MyEarlyBeliefsa
+  Key: Keynes1949MyEarlyBeliefs
   Attribution: John Maynard Keynes, 'My Early Beliefs', in Two Memoirs, London, 1949
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Eugenio Zaffaroni -- No hay derecho (1992)
-  Key: Zaffaroni1992ValePenaa
+  Key: Zaffaroni1992ValePena
   Attribution: Eugenio Zaffaroni, '¿Vale la pena?', in No hay derecho, vol. 2, no. 5 (1992), pp. 5-8
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Norman Finkelstein -- Counterpunch (2001)
-  Key: Finkelstein2001LoseFriendsAlienatea
+  Key: Finkelstein2001LoseFriendsAlienate
   Attribution: Norman Finkelstein, 'How to Lose Friends and Alienate People', Counterpunch, December 13, 2001
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Norman Birnbaum -- et al (no year)
-  Key: BirnbaumAppealUnitedStatesa
+  Key: BirnbaumAppealUnitedStates
   Attribution: Norman Birnbaum et al., 'An Appeal from United States Citizens to Friends in Europe'
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -87,7 +87,7 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Peter Singer -- The Tanner Lectures on Human Values (2002)
-  Key: Singer2002ReplyMarthaNussbauma
+  Key: Singer2002ReplyMarthaNussbaum
   Attribution: Peter Singer, 'A Reply to Martha Nussbaum', The Tanner Lectures on Human Values, 2002
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -102,12 +102,12 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] José Ferrater Mora -- El hombre y su medio y otros ensayos (1971)
-  Key: Mora1971LecturasMatinalesa
+  Key: Mora1971LecturasMatinales
   Attribution: José Ferrater Mora, 'Lecturas matinales', in El hombre y su medio y otros ensayos, Madrid, 1971, p. 128
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Genaro Carrió -- Notas sobre derecho y lenguaje (1965)
-  Key: Carrio1965LenguajeInterpretacionDesacuerdosa
+  Key: Carrio1965LenguajeInterpretacionDesacuerdos
   Attribution: Genaro Carrió, 'Lenguaje, interpretación y desacuerdos en el terreno del derecho', in Notas sobre derecho y lenguaje, Buenos Aires, 1965, cap. 3, nota
   Notes: Tier 2 failed (1 ISBNs tried). Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -127,12 +127,12 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Claudio Amor -- Cuestiones públicas (2001)
-  Key: Amor2001RiquezaPobrezaDemocraciasa
+  Key: Amor2001RiquezaPobrezaDemocracias
   Attribution: Claudio Amor, 'La riqueza y la pobreza de las democracias liberales', Cuestiones públicas, vol. 2, no. 2 (abril-junio, 2001), p. 16
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Claudio Amor -- Revista latinoamericana de filosofía (1999)
-  Key: Amor1999LiberalismoEsquizofreniaa
+  Key: Amor1999LiberalismoEsquizofrenia
   Attribution: Claudio Amor, 'Liberalismo y esquizofrenia', Revista latinoamericana de filosofía, vol. 25, no. 2 (1999), p. 235
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -177,7 +177,7 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2 failed (2 ISBNs tried). Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Zell Kravinsky -- The Daily Telegraph (2004)
-  Key: Kravinsky2004FeelBetterGivinga
+  Key: Kravinsky2004FeelBetterGiving
   Attribution: Zell Kravinsky, 'I Feel Better for Giving Everything—Whether My Money or My Organs', The Daily Telegraph, August 8, 2004
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -197,7 +197,7 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Ted Honderich -- CounterPunch (2005)
-  Key: Honderich2005PersonaGrataa
+  Key: Honderich2005PersonaGrata
   Attribution: Ted Honderich, 'On Being Persona Non Grata', CounterPunch, February 19/20, 2005
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -217,7 +217,7 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Dani Rodrik -- DICE Report (2002)
-  Key: Rodrik2002GettingInstitutionsRighta
+  Key: Rodrik2002GettingInstitutionsRight
   Attribution: Dani Rodrik, 'Getting Institutions Right', DICE Report, vol. 2, no. 2 (Summer, 2002), p. 13
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -247,12 +247,12 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Ludwig von Mises -- Planning for Freedom, and other essays and addresses (1952)
-  Key: Mises1952LordKeynesSaya
+  Key: Mises1952LordKeynesSay
   Attribution: Ludwig von Mises, 'Lord Keynes and Say's Law', in Planning for Freedom, and other essays and addresses, South Holland, Illinois, 1952, p. 69
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Derek Parfit -- Synthese (1982)
-  Key: Parfit1982SummaryDiscussiona
+  Key: Parfit1982SummaryDiscussion
   Attribution: Derek Parfit, 'Summary of Discussion', Synthese, vol. 53, no. 2 (1982), p. 255
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -262,12 +262,12 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Frances Kamm -- Imprints (2006)
-  Key: Kamm2006SearchDeepStructurea
+  Key: Kamm2006SearchDeepStructure
   Attribution: Frances Kamm, 'In Search of the Deep Structure of Morality', Imprints, vol. 9, no. 2 (2006), pp. 93-117
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Samuel Butler -- The Note-Books of Samuel Butler (1912)
-  Key: Butler1912KnowingGivesUsa
+  Key: Butler1912KnowingGivesUs
   Attribution: Samuel Butler, The Note-Books of Samuel Butler, London, 1912, 'On Knowing what Gives us Pleasure', sect. 1
   Notes: Tier 2 failed (6 ISBNs tried). Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -277,12 +277,12 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Louis Menand -- The New Yorker (2007)
-  Key: Menand2007FracturedFranchisea
+  Key: Menand2007FracturedFranchise
   Attribution: Louis Menand, 'Fractured Franchise', The New Yorker (July 2, 2007)
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Adolfo Bioy Casares -- Retratos y autorretratos (1973)
-  Key: BioyCasares1973YoMiCaraa
+  Key: BioyCasares1973YoMiCara
   Attribution: Adolfo Bioy Casares, ‘Yo y mi cara’, in Sara Facio y Alicia D'Amico (eds.), Retratos y autorretratos, Buenos Aires, 1973
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -312,7 +312,7 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] H. L. Mencken -- The American Mercury (1924)
-  Key: Mencken1924MalevolentJobholdera
+  Key: Mencken1924MalevolentJobholder
   Attribution: H. L. Mencken, 'The Malevolent Jobholder', The American Mercury, June 1924
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -332,7 +332,7 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Caitlin Flanagan -- The Atlantic (2006)
-  Key: Flanagan2006YouThereGoda
+  Key: Flanagan2006YouThereGod
   Attribution: Caitlin Flanagan, 'Are You There God? It's Me, Monica', The Atlantic, January/February 2006
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -352,17 +352,17 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Carlos Santiago Nino -- La autonomía personal: investigación colectiva del Centro de Estudios Institucionales de Buenos Aires (1992)
-  Key: Nino1992AutonomiaPersonala
+  Key: Nino1992AutonomiaPersonal
   Attribution: Carlos Santiago Nino, 'La autonomía personal', in Nino et al. (eds.), La autonomía personal: investigación colectiva del Centro de Estudios Institucio
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Geoffrey Landis -- Asimov's Science Fiction (2002)
-  Key: Landis2002LongChasea
+  Key: Landis2002LongChase
   Attribution: Geoffrey A. Landis, ‘The Long Chase’, Asimov's Science Fiction, February 2002
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] John Crowley -- Omni (1985)
-  Key: Crowley1985Snowa
+  Key: Crowley1985Snow
   Attribution: John Crowley, 'Snow', Omni, vol. 2, no. 2 (November 1985)
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -382,7 +382,7 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] E. E. Cummings -- E. E. Cummings: A Miscellany (1958)
-  Key: Cummings1958Poeta
+  Key: Cummings1958Poet
   Attribution: E. E. Cummings, 'A Poet's Advice to Students', in George J. Firmage (ed.), E. E. Cummings: A Miscellany, New York, 1958, p. 13
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -392,17 +392,17 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Joseph Epstein -- The New Criterion (2008)
-  Key: Epstein2008LiteraryEducationa
+  Key: Epstein2008LiteraryEducation
   Attribution: Joseph Epstein, 'A Literary Education', The New Criterion, vol. 26, no. 10 (June, 2008), p. 11
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Chris Hardwick -- Wired (2009)
-  Key: Hardwick2009DiarySelfHelpa
+  Key: Hardwick2009DiarySelfHelp
   Attribution: Chris Hardwick, 'Diary of a Self-Help Dropout: Flirting With the 4-Hour Workweek', Wired, vol. 17, no. 1 (January, 2009)
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Leonardo Favio -- Favio: sinfonía de un sentimiento (2007)
-  Key: Favio2007RecuerdosAmorAutobiografiaa
+  Key: Favio2007RecuerdosAmorAutobiografia
   Attribution: Leonardo Favio, ‘Recuerdos del amor (autobiografía en relatos)’, in Adrián Cangi (ed.), Favio: sinfonía de un sentimiento, Buenos Aires, 2007, p. 30
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -412,7 +412,7 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] C. D. Broad -- Some Dogmas of Religion (1930)
-  Key: Broad1930Introductiona
+  Key: Broad1930Introduction
   Attribution: C. D. Broad, 'Introduction', in John McTaggart, Some Dogmas of Religion, London, 1930, p. xxxi
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -432,12 +432,12 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Leonardo Filippini -- Entre el perdón y el paredón: preguntas y dilemas de la justicia transicional (2005)
-  Key: Filippini2005InstitucionesJusticiaTransiciona
+  Key: Filippini2005InstitucionesJusticiaTransicion
   Attribution: Leonardo Filippini and Lisa Margarrell, 'Instituciones de la justicia de transición y contexto político', in Angelika Rettberg (ed.), Entre el perdón 
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Gregorio Klimovsky -- Análisis filosófico (1981)
-  Key: Klimovsky1981TiposBaseEmpiricaa
+  Key: Klimovsky1981TiposBaseEmpirica
   Attribution: Gregorio Klimovsky, 'Tipos de base empírica', Análisis filosófico, vol. 1, no. 1 (May, 1981), p. 65
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -467,7 +467,7 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Richard Muller -- Scientific American (2011)
-  Key: Muller2011StickSciencea
+  Key: Muller2011StickScience
   Attribution: Richard Muller, 'I Stick to the Science', Scientific American, vol. 304, no. 6 (June, 2011), p. 68
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -547,7 +547,7 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Robin Hanson -- Overcoming Bias (2009)
-  Key: Hanson2009ContrarianExcusesa
+  Key: Hanson2009ContrarianExcuses
   Attribution: Robin Hanson, 'Contrarian Excuses', Overcoming Bias, November 15, 2009
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -557,7 +557,7 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] James Sinclair -- kalam (no year)
-  Key: SinclairKalamCosmologicalArgumenta
+  Key: SinclairKalamCosmologicalArgument
   Attribution: William Lane Craig & James Sinclair, 'The kalam Cosmological Argument', in William Lane Craig & J. P. Moreland (eds.), The Blackwell Companion to Natu
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -577,7 +577,7 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Philip Oppenheim -- The Spectator (2005)
-  Key: Oppenheim2005FairtradeFatCatsa
+  Key: Oppenheim2005FairtradeFatCats
   Attribution: Philip Oppenheim, 'Fairtrade Fat Cats', The Spectator, November 5, 2005, pp. 17-18.
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -592,12 +592,12 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Adolfo Bioy Casares -- Museo: textos inéditos (2002)
-  Key: BioyCasares2002SeptimoCirculoa
+  Key: BioyCasares2002SeptimoCirculo
   Attribution: Jorge Luis Borges & Adolfo Bioy Casares, ‘El séptimo círculo’, in Museo: textos inéditos, Buenos Aires, 2002, p. 112
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Harold Laski -- Harper's (1929)
-  Key: Laski1929DangersObediencea
+  Key: Laski1929DangersObedience
   Attribution: Harold Laski, 'The Dangers of Obedience', Harper's, Vol. 159 (June, 1929)
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -632,7 +632,7 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Paul Bloom -- The New Yorker (2013)
-  Key: Bloom2013BabyWella
+  Key: Bloom2013BabyWell
   Attribution: Paul Bloom, 'The Baby in the Well', The New Yorker, May 20, 2013
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -712,7 +712,7 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Dylan Matthews -- Vox (2015)
-  Key: Matthews2015BestWayUSa
+  Key: Matthews2015BestWayUS
   Attribution: Dylan Matthews, 'The Best Way the US Could Help Syrians: Open the Borders', Vox, September 4, 2015
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -737,12 +737,12 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] "Close-up: I'm looking for a market for wisdom. Leo Szilard, Scientist" -- Life (1961)
-  Key: "Close-up:ImLookingForAMarketForWisdomLeoSzilard1961Lifea
+  Key: "Close-up:ImLookingForAMarketForWisdomLeoSzilard1961Life
   Attribution: Leó Szilárd, quoted in "Close-up: I'm looking for a market for wisdom. Leo Szilard, Scientist", Life, Vol. 51, No. 9 (September 1, 1961), p. 75
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Larissa MacFarquhar -- The New Yorker (2013)
-  Key: MacFarquhar2013RequiemDreama
+  Key: MacFarquhar2013RequiemDream
   Attribution: Larissa MacFarquhar, 'Requiem for a Dream', The New Yorker, March 11, 2013
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -777,12 +777,12 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Michael Huemer -- Philosophy, Politics, and Economics: An Anthology (2016)
-  Key: Huemer2016PeopleIrrationalPoliticsa
+  Key: Huemer2016PeopleIrrationalPolitics
   Attribution: Michael Huemer, 'Why People Are Irrational about Politics', in Jonathan Anomaly, Geoffrey Brennan, Michael Munger & Geoffrey Sayre-McCord (eds.), Phil
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] David Edwards (math professor) -- The Math Myth (2016)
-  Key: Professor)2016MathMytha
+  Key: Professor)2016MathMyth
   Attribution: David Edwards, 'The Math Myth', EconLog, September 1, 2016
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -802,7 +802,7 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Jon Elster -- Rationality and Relativism (1982)
-  Key: Elster1982BeliefBiasIdeologya
+  Key: Elster1982BeliefBiasIdeology
   Attribution: Jon Elster, 'Belief, Bias, and Ideology', in Martin Hollis & Steven Lukes (eds.), Rationality and Relativism, Cambridge, Massachusetts, 1982, p. 140
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -817,12 +817,12 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Thomas Schelling -- Problems in public Expenditure Analysis (1968)
-  Key: Schelling1968LifeYouSavea
+  Key: Schelling1968LifeYouSave
   Attribution: Thomas Schelling, 'The Life You Save May Be Your Own', in Samuel Chase (ed.), Problems in public Expenditure Analysis, Washington, D. C., 1968
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Eric Ries -- LinkedIn (2013)
-  Key: Ries2013QEricRiesa
+  Key: Ries2013QEricRies
   Attribution: Eric Ries, in Beth Kanter, 'Q&A: Eric Ries on Lean Start Up Principles for Nonprofits', LinkedIn, December 17, 2013
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -832,7 +832,7 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Dylan Matthews -- Vox (2016)
-  Key: Matthews2016AltRightMorea
+  Key: Matthews2016AltRightMore
   Attribution: Dylan Matthews, 'The Alt-right Is More than Warmed-over White Supremacy. It’s That, but Way Way Weirder', Vox, August, 25, 2016
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -862,7 +862,7 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Thomas Metzinger -- edge.org (no year)
-  Key: MetzingerMindBleedsWorlda
+  Key: MetzingerMindBleedsWorld
   Attribution: Thomas Metzinger, 'The Mind Bleeds Into the World', edge.org
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -877,7 +877,7 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2 failed (6 ISBNs tried). Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Kelton Reid, 'Here’s How Maria Popova of Brain Pickings Writes' -- coplyblogger (2013)
-  Key: KeltonReid2013Herea
+  Key: KeltonReid2013Here
   Attribution: Maria Popova, quoted in Kelton Reid, 'Here’s How Maria Popova of Brain Pickings Writes', coplyblogger, August 7, 2013
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -902,12 +902,12 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Scott Sumner -- EconLog (2016)
-  Key: Sumner2016BryanCaplanAlmosta
+  Key: Sumner2016BryanCaplanAlmost
   Attribution: Scott Sumner, 'Why Bryan Caplan Almost Always Wins His Bets', EconLog, May 26, 2016
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Orson Welles -- Radio's Best Plays (1947)
-  Key: Welles1947HitchHikera
+  Key: Welles1947HitchHiker
   Attribution: Orson Welles, 'The Hitch Hiker', in Joseph Liss (ed.), Radio's Best Plays, New York, 1947, p. 325
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -962,7 +962,7 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Jon Elster -- La lettre du Collège de France (2007)
-  Key: Elster2007EntretienJonElstera
+  Key: Elster2007EntretienJonElster
   Attribution: Jon Elster, in Marc Kirsch, 'Entretien avec Jon Elster', La lettre du Collège de France, no. 21 (December, 2007), p. 44
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -997,7 +997,7 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Jason Cowley, 'Even in Old Age, Philosopher Bryan Magee Remains Wonder-Sruck by the Ultimate Questions' -- New Statesman (2018)
-  Key: JasonCowley2018EvenOldAgea
+  Key: JasonCowley2018EvenOldAge
   Attribution: Bryan Magee, quoted in Jason Cowley, 'Even in Old Age, Philosopher Bryan Magee Remains Wonder-Sruck by the Ultimate Questions', New Statesman, April 4
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -1022,7 +1022,7 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Bryan Caplan -- EconLog (2009)
-  Key: Caplan2009MankiwKrugmanBeta
+  Key: Caplan2009MankiwKrugmanBet
   Attribution: Bryan Caplan, 'The Mankiw-Krugman Non-Bet', EconLog, March 11, 2009
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
@@ -1082,7 +1082,7 @@ Items needing manual review (Tier 5 fallbacks):
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
 [TIER 5 - REVIEW] Scott Aaronson -- Shtetl-Optimized (2015)
-  Key: Aaronson2015CommonKnowledgeAumanna
+  Key: Aaronson2015CommonKnowledgeAumann
   Attribution: Scott Aaronson, 'Common Knowledge and Aumann’s Agreement Theorem', Shtetl-Optimized, August 14, 2015
   Notes: Tier 2: no OpenLibrary results. Tier 3: no CrossRef DOI. Tier 4: no URL found. Tier 5: fallback from WP metadata
 
