@@ -70,6 +70,17 @@
 (unless (fboundp 'git-auto-commit-mode)
   (defun git-auto-commit-mode (&rest _) nil))
 
+;; Clean stale content before exporting — content/notes/ is entirely
+;; generated, so any file not recreated by the export is an orphan.
+(let ((notes-content-dir
+       (expand-file-name "content/notes/"
+                         "~/Library/CloudStorage/Dropbox/repos/stafforini.com/")))
+  (when (file-directory-p notes-content-dir)
+    (message "Cleaning stale files from content/notes/...")
+    (dolist (f (directory-files notes-content-dir t "\\.md$"))
+      (unless (string= (file-name-nondirectory f) "_index.md")
+        (delete-file f)))))
+
 ;; Track stats
 (defvar export-notes-total 0)
 (defvar export-notes-errors '())
