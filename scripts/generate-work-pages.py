@@ -374,6 +374,21 @@ def generate_work_pages(bib_by_key: dict, dry_run: bool = False, limit: int = 0)
         if len(missing_bib_keys) > 10:
             print(f"    ... and {len(missing_bib_keys) - 10} more")
 
+    # Remove stale work pages no longer referenced by any content file
+    stats["removed"] = 0
+    if WORKS_DIR.exists() and not limit:
+        for work_file in sorted(WORKS_DIR.glob("*.md")):
+            if work_file.name == "_index.md":
+                continue
+            slug = work_file.stem
+            if slug not in work_slugs:
+                stats["removed"] += 1
+                if dry_run:
+                    if stats["removed"] <= 5:
+                        print(f"  [REMOVE] {slug}.md")
+                else:
+                    work_file.unlink()
+
     return stats
 
 
@@ -431,6 +446,7 @@ def main():
         print(f"\n  Work pages created:    {wp_stats['created']}")
         print(f"  Work pages updated:    {wp_stats['updated']}")
         print(f"  Unchanged:             {wp_stats['unchanged']}")
+        print(f"  Stale pages removed:   {wp_stats['removed']}")
         print(f"  Missing bib entries:   {wp_stats['missing_bib']}")
         if args.dry_run:
             print("  *** DRY RUN — no files created ***")
