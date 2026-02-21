@@ -124,8 +124,8 @@ def extract_article_title(attr_html: str) -> str:
 
 def extract_year(attr_text: str) -> str:
     """Extract a 4-digit year from the attribution."""
-    # Look for years in the range 1400-2029
-    years = re.findall(r"\b(1[4-9]\d{2}|20[0-2]\d)\b", attr_text)
+    # Look for years in the range 1400-2099
+    years = re.findall(r"\b(1[4-9]\d{2}|20\d{2})\b", attr_text)
     if years:
         # Return the last year found (usually the publication year comes last,
         # or at least after the original date in reprints)
@@ -205,10 +205,14 @@ def parse_item(item: ET.Element) -> dict | None:
             tags.append(name)
 
     # Post metadata
-    title = item.find("title").text or ""
-    post_id = item.find("wp:post_id", NS).text or ""
-    post_date = item.find("wp:post_date", NS).text or ""
-    link = item.find("link").text or ""
+    title_el = item.find("title")
+    title = title_el.text or "" if title_el is not None else ""
+    post_id_el = item.find("wp:post_id", NS)
+    post_id = post_id_el.text or "" if post_id_el is not None else ""
+    post_date_el = item.find("wp:post_date", NS)
+    post_date = post_date_el.text or "" if post_date_el is not None else ""
+    link_el = item.find("link")
+    link = link_el.text or "" if link_el is not None else ""
 
     # Derived fields
     work_title = extract_work_title(attr_html)

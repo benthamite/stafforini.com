@@ -37,9 +37,9 @@
     var num = id.replace('fn:', '');
 
     // Find the corresponding reference in the text
-    var ref = document.querySelector('sup#fnref\\:' + CSS.escape(num));
-    // Also try fnref:N pattern without sup wrapper
-    if (!ref) ref = document.querySelector('#fnref\\:' + CSS.escape(num));
+    var ref = document.getElementById('fnref:' + num);
+    // Ensure we have the sup wrapper (or its closest ancestor)
+    if (ref && ref.tagName !== 'SUP') ref = ref.closest('sup') || ref;
     if (!ref) return;
 
     // Clone content, remove backref link
@@ -91,7 +91,12 @@
 
   function computeLineHeight() {
     var style = getComputedStyle(sidenotes[0].el);
-    lineHeight = parseFloat(style.fontSize) * parseFloat(style.lineHeight);
+    var lh = parseFloat(style.lineHeight);
+    // getComputedStyle returns lineHeight in px (or "normal" which parseFloat → NaN)
+    if (isNaN(lh)) {
+      lh = parseFloat(style.fontSize) * 1.2;
+    }
+    lineHeight = lh;
   }
 
   // ── Positioning algorithm ───────────────────────────────────────

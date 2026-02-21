@@ -319,10 +319,21 @@ def generate_cite_key(author_surname, year, title, used_keys):
             used_keys.add(candidate)
             return candidate
 
-    # Extremely unlikely fallback
-    candidate = f"{key}aa"
-    used_keys.add(candidate)
-    return candidate
+    # Extremely unlikely fallback: try double-letter suffixes
+    for length in range(2, 5):
+        for suffix in "abcdefghijklmnopqrstuvwxyz":
+            candidate = f"{key}{suffix * length}"
+            if candidate not in used_keys:
+                used_keys.add(candidate)
+                return candidate
+    # Last resort: use a unique numeric suffix
+    counter = 2
+    while True:
+        candidate = f"{key}_{counter}"
+        if candidate not in used_keys:
+            used_keys.add(candidate)
+            return candidate
+        counter += 1
 
 
 # === Work type detection ===
@@ -1420,9 +1431,13 @@ def main():
             print(f"  WARNING: zotra server not reachable at {ZOTRA_BASE}")
             print("  Start it with: cd ~/source/zotra-server && npm start")
             print("  Tiers 1-4 will be skipped; all entries use Tier 5 fallback.")
-            resp = input("  Continue anyway? [y/N] ")
-            if resp.lower() != "y":
-                sys.exit(0)
+            if sys.stdin.isatty():
+                resp = input("  Continue anyway? [y/N] ")
+                if resp.lower() != "y":
+                    sys.exit(0)
+            else:
+                print("  Non-interactive mode: exiting.", file=sys.stderr)
+                sys.exit(1)
 
     # Load quotes
     print("\nLoading matched quotes...")

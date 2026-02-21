@@ -312,7 +312,8 @@ def main():
 
     need_attention = stats['ambiguous'] + stats['weak'] + stats['no_match'] + stats['no_candidates'] + stats['no_author']
     print(f"\n  Need attention: {need_attention} quotes")
-    print(f"  Ready to use:   {stats['matched']} quotes ({stats['matched']*100//len(quotes)}%)")
+    pct = (stats['matched'] * 100 // len(quotes)) if quotes else 0
+    print(f"  Ready to use:   {stats['matched']} quotes ({pct}%)")
 
     OUTPUT_JSON.write_text(json.dumps(quotes, indent=2, ensure_ascii=False))
     print(f"\nAugmented JSON written to {OUTPUT_JSON}")

@@ -19,7 +19,7 @@ echo "Generating citing-notes data..."
 python3 scripts/generate-citing-notes.py
 
 # Clean stale build output (Hugo doesn't remove deleted/renamed pages)
-rm -rf public
+trash public 2>/dev/null || true
 
 echo "Building site for search indexing..."
 hugo --quiet
@@ -28,7 +28,8 @@ echo "Building search index..."
 npx pagefind --site public
 
 echo "Copying search index to static/..."
-rm -rf static/pagefind
-cp -R public/pagefind static/pagefind
+cp -R public/pagefind static/pagefind.new
+trash static/pagefind 2>/dev/null || true
+mv static/pagefind.new static/pagefind
 
 echo "Search index ready."

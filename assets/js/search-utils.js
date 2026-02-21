@@ -11,7 +11,8 @@ function highlightText(escaped, query) {
   var words = query.trim().split(/\s+/).filter(function(w) { return w.length > 0; });
   if (!words.length) return escaped;
   var pattern = words.map(function(w) { return w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('|');
-  return escaped.replace(new RegExp('(' + pattern + ')', 'gi'), '<mark>$1</mark>');
+  // Avoid matching inside HTML entities (&amp; &lt; etc.)
+  return escaped.replace(new RegExp('(?!&\\w+;)(' + pattern + ')(?![\\w]*;)', 'gi'), '<mark>$1</mark>');
 }
 
 function sanitizeExcerpt(html) {

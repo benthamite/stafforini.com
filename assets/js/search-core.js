@@ -32,6 +32,10 @@ async function runSearch(query, pagefind, options) {
   }
 
   var utils = window._searchUtils;
+  if (!utils) {
+    options.onResults('<p class="search-no-results">Search is temporarily unavailable.</p>');
+    return;
+  }
   var maxResults = options.maxResultsPerSection || 0;
   var filterKey = options.filterSection;
 
@@ -40,6 +44,7 @@ async function runSearch(query, pagefind, options) {
     : searchSections;
 
   var html = '';
+  try {
   for (var i = 0; i < activeSections.length; i++) {
     var sec = activeSections[i];
     var search = await pagefind.search(query, {
@@ -82,6 +87,11 @@ async function runSearch(query, pagefind, options) {
   }
 
   options.onResults(html);
+  } catch (err) {
+    if (gen === options.getGeneration()) {
+      options.onResults('<p class="search-no-results">Search encountered an error. Please try again.</p>');
+    }
+  }
 }
 
 // Export for use in both header and search page scripts

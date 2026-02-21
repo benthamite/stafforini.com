@@ -9,6 +9,12 @@
 */}}
 
 {{- $dir := .Get "dir" -}}
+{{- if not $dir -}}
+  {{ errorf "gallery shortcode requires a 'dir' parameter: %s" .Position }}
+{{- end -}}
+{{- if in $dir ".." -}}
+  {{ errorf "gallery dir must not contain '..': %s" .Position }}
+{{- end -}}
 {{- $images := readDir (printf "static/%s" $dir) -}}
 
 <div class="gallery">

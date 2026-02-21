@@ -221,7 +221,8 @@ def generate_work_page(entry: dict) -> str:
         s = s.replace("\\_", "_")
         s = s.replace("\\#", "#")
         # Convert org-mode /italic/ markup to HTML <em>
-        s = re.sub(r'(?<!\w)/([^/]+)/(?!\w)', r'<em>\1</em>', s)
+        # Require at least 2 chars between slashes to avoid matching URL path segments
+        s = re.sub(r'(?<!\w)/([^/\n]{2,})/(?!\w)', r'<em>\1</em>', s)
         return s
 
     title = clean(entry["title"])

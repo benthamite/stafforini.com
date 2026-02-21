@@ -112,7 +112,10 @@ def _is_blank(png_path: Path) -> bool:
         1 for r, g, b in pixels
         if r >= BLANK_CHANNEL_MIN and g >= BLANK_CHANNEL_MIN and b >= BLANK_CHANNEL_MIN
     )
-    return white_count / len(pixels) >= BLANK_THRESHOLD
+    total = len(pixels)
+    if total == 0:
+        return True  # treat empty/degenerate image as blank
+    return white_count / total >= BLANK_THRESHOLD
 
 
 def render_thumbnail(pdf_path: Path, out_png: Path) -> bool:
@@ -261,7 +264,7 @@ def process_pdfs(entries: list[dict], *, dry_run: bool, force: bool, limit: int)
         except pikepdf.PasswordError:
             print(f"  WARNING: password-protected, skipping: {slug}")
             stats["errors"] += 1
-        except Exception as exc:
+        except (pikepdf.PdfError, OSError, subprocess.SubprocessError, ValueError) as exc:
             print(f"  WARNING: error processing {slug}: {exc}")
             dst_pdf.unlink(missing_ok=True)
             dst_thumb.unlink(missing_ok=True)

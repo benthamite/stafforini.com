@@ -48,6 +48,8 @@ STOP_WORDS = {
 
 def normalize(text):
     """Lowercase, strip accents, remove punctuation, collapse whitespace."""
+    if not text:
+        return ""
     text = unicodedata.normalize("NFD", text)
     text = "".join(c for c in text if unicodedata.category(c) != "Mn")
     text = text.lower()
@@ -107,9 +109,11 @@ def cite_key_to_slug(cite_key: str) -> str:
 
     Singer1972FamineAffluence -> singer-1972-famine-affluence
     """
-    # Insert hyphens at boundaries: letter->digit, digit->letter, lower->upper
+    # Insert hyphens at boundaries: letter->digit, digit->letter,
+    # consecutive-uppercase->Title, lower->upper
     s = re.sub(r"([a-zA-Z])(\d)", r"\1-\2", cite_key)
     s = re.sub(r"(\d)([a-zA-Z])", r"\1-\2", s)
+    s = re.sub(r"([A-Z]+)([A-Z][a-z])", r"\1-\2", s)
     s = re.sub(r"([a-z])([A-Z])", r"\1-\2", s)
     return s.lower()
 
@@ -178,7 +182,7 @@ def parse_bib_entries(
 
         fields = {}
         for field_match in re.finditer(
-            r"(\w+)\s*=\s*(?:\{((?:[^{}]|\{[^{}]*\})*)\}|\"([^\"]*)\"|(\d+))",
+            r"(\w+)\s*=\s*(?:\{((?:[^{}]|\{(?:[^{}]|\{[^{}]*\})*\})*)\}|\"([^\"]*)\"|(\d+))",
             body,
         ):
             field_name = field_match.group(1).lower()

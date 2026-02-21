@@ -26,7 +26,10 @@
         displayPopup(link, cache.get(href));
       } else {
         fetch(href)
-          .then(function (r) { return r.text(); })
+          .then(function (r) {
+            if (!r.ok) throw new Error(r.status);
+            return r.text();
+          })
           .then(function (html) {
             var doc = new DOMParser().parseFromString(html, 'text/html');
             var body = doc.querySelector('.note-body');
@@ -52,6 +55,12 @@
     popup.style.left = rect.left + window.scrollX + 'px';
     popup.style.top = (rect.bottom + window.scrollY + 6) + 'px'; // 6px visual gap between link and popup
     popup.classList.add('visible');
+
+    // Reposition if popup overflows viewport
+    var popupRect = popup.getBoundingClientRect();
+    if (popupRect.right > window.innerWidth) {
+      popup.style.left = Math.max(0, window.innerWidth - popupRect.width - 8 + window.scrollX) + 'px';
+    }
   }
 
   function hidePreview() {

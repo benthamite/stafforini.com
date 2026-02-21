@@ -20,8 +20,11 @@ NOTES_DIR = os.environ.get(
     "NOTES_DIR",
     os.path.expanduser("~/Library/CloudStorage/Dropbox/notes/"),
 )
-# Use % prefix in LIKE pattern to match the leading " in Elisp-quoted values
-NOTES_LIKE = "%" + NOTES_DIR + "%"
+# Escape SQL LIKE wildcards in path, then wrap with % for substring match
+def _escape_like(s):
+    return s.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+
+NOTES_LIKE = "%" + _escape_like(NOTES_DIR) + "%"
 OUTPUT_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "backlinks.json")
 
 
