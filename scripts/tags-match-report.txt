@@ -1,7 +1,7 @@
 ============================================================
 TAG MATCHING REPORT
 ============================================================
-Generated: 2026-02-21T17:42:57.320382+00:00
+Generated: 2026-02-21T17:55:14.624062+00:00
 Total tags: 1697
 
 MATCHES BY TIER
@@ -11,36 +11,17 @@ MATCHES BY TIER
   Tier 3 - Hyphenation:        10
   Tier 4 - Inflection:          8
   Tier 5 - Prefix:              2
+  Tier 6 - Fuzzy (typo):        1
   ──────────────────────────────────────
-  Total linked:               387
+  Total linked:               388
+  Unlinked:                  1309
 
-  Tier 6 - Fuzzy (review):     19
-  Unlinked:                  1291
-
-  Linked rate: 22% (387/1697)
+  Linked rate: 22% (388/1697)
 
 ============================================================
-REVIEW ITEMS (fuzzy matches — verify manually)
+FUZZY MATCHES (typo corrections)
 ============================================================
   "conterfactuals" -> counterfactuals.org (score: 96.6, dist: 1, dir: notes)
-  "World War I" -> world-war-ii.org (score: 95.7, dist: 1, dir: notes)
-  "immorality" -> immortality.org (score: 95.2, dist: 1, dir: notes)
-  "revolution" -> evolution.org (score: 94.7, dist: 1, dir: notes)
-  "idealism" -> dealism.org (score: 93.3, dist: 1, dir: notes)
-  "distribution" -> redistribution.org (score: 92.3, dist: 2, dir: notes)
-  "Germany" -> german.org (score: 92.3, dist: 1, dir: notes)
-  "modal realism" -> moral-realism.org (score: 92.3, dist: 1, dir: notes)
-  "unpleasantness" -> pleasantness.org (score: 92.3, dist: 2, dir: notes)
-  "irrationality" -> rationality.org (score: 91.7, dist: 2, dir: notes)
-  "moral nonnaturalism" -> moral-naturalism.org (score: 91.4, dist: 3, dir: notes)
-  "difference" -> indifference.org (score: 90.9, dist: 2, dir: notes)
-  "magical thinking" -> marginal-thinking.org (score: 90.9, dist: 2, dir: notes)
-  "rationalism" -> nationalism.org (score: 90.9, dist: 1, dir: notes)
-  "mortality" -> immortality.org (score: 90.0, dist: 2, dir: notes)
-  "relativity" -> creativity.org (score: 90.0, dist: 2, dir: notes)
-  "equality" -> inequality.org (score: 88.9, dist: 2, dir: notes)
-  "socialization" -> specialization.org (score: 88.9, dist: 2, dir: notes)
-  "retribution" -> redistribution.org (score: 88.0, dist: 3, dir: notes)
 
 ============================================================
 PREFIX MATCHES (truncated tags)
@@ -51,8 +32,8 @@ PREFIX MATCHES (truncated tags)
 ============================================================
 UNLINKED TAGS SUMMARY
 ============================================================
-  People (heuristic): 300
-  Topics:             991
+  People (heuristic): 301
+  Topics:             1008
 
 Unlinked people:
   Abraham Lincoln
@@ -354,6 +335,7 @@ Unlinked people:
   William Paley
   William Patrick
   Woody Allen
+  World War I
   Étienne Balibar
 
 Unlinked topics:
@@ -381,6 +363,7 @@ Unlinked topics:
   Everett interpretation
   French intellectuals
   Frenchmen
+  Germany
   Hollywood
   Holocaust
   Humeanism
@@ -612,6 +595,7 @@ Unlinked topics:
   determinism
   dialectics
   diamonds
+  difference
   differential psychology
   digital truth serum
   diminishing marginal utility
@@ -626,6 +610,7 @@ Unlinked topics:
   dissent
   dissidence
   dissonance
+  distribution
   doing and allowing
   doppelgänger
   double-think
@@ -651,6 +636,7 @@ Unlinked topics:
   entertainment
   environment
   epistemology of consciousness
+  equality
   equivocation
   eroticism
   error
@@ -797,6 +783,7 @@ Unlinked topics:
   humorous
   hypocrisy
   hypothetical examples
+  idealism
   ideals
   ideas
   identifiable victim
@@ -805,6 +792,7 @@ Unlinked topics:
   ignorance
   illusion
   imagination
+  immorality
   impartiality
   implementation
   importance of philosophy
@@ -848,6 +836,7 @@ Unlinked topics:
   interpersonal comparisons
   intrerference
   invective
+  irrationality
   is-ought gap
   jargon
   job security
@@ -888,6 +877,7 @@ Unlinked topics:
   luxury
   macroeconomics
   madness
+  magical thinking
   male-female relationships
   man of action
   man of letters
@@ -921,6 +911,7 @@ Unlinked topics:
   mindfulness
   mindware
   miracles
+  modal realism
   modality
   moderation
   modernity
@@ -935,10 +926,12 @@ Unlinked topics:
   moral culture
   moral epistemology
   moral judgment
+  moral nonnaturalism
   moral pluralism
   morality
   mormonism
   morphological freedom
+  mortality
   motivating
   motivation
   moving
@@ -1112,6 +1105,7 @@ Unlinked topics:
   quest for meaning
   race
   rational choice
+  rationalism
   real
   realism
   reality
@@ -1130,6 +1124,7 @@ Unlinked topics:
   reform
   regret
   relativism
+  relativity
   religious diversity
   religious experience
   religious intolerance
@@ -1137,8 +1132,10 @@ Unlinked topics:
   reptiles
   resource allocation
   resourcefulness
+  retribution
   retroactive justice
   reviewing
+  revolution
   rhetoric
   ridicule
   rights
@@ -1227,6 +1224,7 @@ Unlinked topics:
   social psychology
   social science
   socialism
+  socialization
   sociobiology
   sociology of morality
   sociosexuality
@@ -1303,6 +1301,7 @@ Unlinked topics:
   unemployment
   uniformity
   uniqueness
+  unpleasantness
   updating
   urban life
   utility fundamentalism
