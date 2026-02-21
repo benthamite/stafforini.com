@@ -23,3 +23,5 @@ Workflow: export from org-mode, then run `scripts/deploy.sh`.
 ## Companion Emacs package
 
 The [`stafforini.el`](https://github.com/benthamite/stafforini.el) package provides Emacs commands for driving the build pipeline (exporting notes/quotes, regenerating work pages and backlinks, starting the dev server, etc.). See PUBLISHING.md for the full command reference. The package lives in a separate repo but wraps the scripts in this one.
+
+**Local path**: `~/.config/emacs-profiles/7.1.30-target/elpaca/repos/stafforini/stafforini.el`
