@@ -215,6 +215,7 @@ def process_pdfs(entries: list[dict], *, dry_run: bool, force: bool, limit: int)
         "skipped_cached": 0,
         "skipped_missing": 0,
         "errors": 0,
+        "removed": 0,
     }
 
     manifest = load_manifest() if not dry_run else {}
@@ -277,6 +278,19 @@ def process_pdfs(entries: list[dict], *, dry_run: bool, force: bool, limit: int)
             stats["errors"] += 1
 
     if not dry_run:
+        # Remove stale outputs no longer backed by a bib entry
+        valid_slugs = {e["slug"] for e in entries}
+        for pdf_file in sorted(PDFS_DIR.glob("*.pdf")):
+            if pdf_file.stem not in valid_slugs:
+                pdf_file.unlink()
+                stats["removed"] += 1
+        for thumb_file in sorted(THUMBS_DIR.glob("*.png")):
+            if thumb_file.stem not in valid_slugs:
+                thumb_file.unlink()
+                stats["removed"] += 1
+        # Prune manifest entries for removed slugs
+        for stale_key in [k for k in manifest if k not in valid_slugs]:
+            del manifest[stale_key]
         save_manifest(manifest)
 
     return stats
@@ -327,6 +341,7 @@ def main():
     print(f"\n  Processed:       {stats['processed']}")
     print(f"  Cached (skipped): {stats['skipped_cached']}")
     print(f"  Missing source:  {stats['skipped_missing']}")
+    print(f"  Stale removed:   {stats['removed']}")
     print(f"  Errors:          {stats['errors']}")
     if args.dry_run:
         print("  *** DRY RUN — no files written ***")
