@@ -327,8 +327,8 @@ def main():
 
     print("\nDone.")
 
-    # Exit with error code if there were failures but no successes
-    if stats["errors"] and not stats["processed"]:
+    # Exit with error code if there were failures but no successes at all
+    if stats["errors"] and not stats["processed"] and not stats["skipped_cached"]:
         sys.exit(1)
 
 
