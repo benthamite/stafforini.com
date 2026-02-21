@@ -6,7 +6,18 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 ELISP="$SCRIPT_DIR/export-quotes.el"
+
+CONTENT_QUOTES="$REPO_ROOT/content/quotes"
+
+# Remove stale content before exporting — content/quotes/ is entirely
+# generated, so any file not recreated by the export is an orphan
+# (renamed org file, deleted quote, migration artifact, etc.)
+if [ -d "$CONTENT_QUOTES" ]; then
+  echo "Cleaning stale files from content/quotes/..."
+  find "$CONTENT_QUOTES" -name '*.md' ! -name '_index.md' -delete
+fi
 
 echo "Starting batch export..."
 echo "Script: $ELISP"
