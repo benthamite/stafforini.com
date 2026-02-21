@@ -1012,7 +1012,7 @@
       "cite_key": "Goodin1991UtilityGood",
       "tier": 1,
       "status": "success",
-      "bib_entry": "@collection{Singer1991CompanionEthicsa,\n\teditor = {Singer, Peter},\n\ttitle = {A companion to ethics},\n\tdate = {2012},\n\tedition = {29. ed},\n\tnumber = {2},\n\tpagetotal = {565},\n\tpublisher = {Blackwell},\n\tlocation = {Malden, Mass.},\n\tisbn = {9780631187851},\n\tseries = {Blackwell companions to philosophy},\n\ttimestamp = {2026-02-21 01:18:05 (GMT)},\n}\n\n@incollection{Goodin1991UtilityGood,\n\tcrossref = {Singer1991CompanionEthicsa},\n\tauthor = {Goodin, Robert},\n\ttitle = {Utility and the Good},\n\tpages = {242},\n\ttimestamp = {2026-02-21 01:18:05 (GMT)},\n}",
+      "bib_entry": "@collection{Singer1991CompanionEthics,\n\teditor = {Singer, Peter},\n\ttitle = {A companion to ethics},\n\tdate = {2012},\n\tedition = {29. ed},\n\tnumber = {2},\n\tpagetotal = {565},\n\tpublisher = {Blackwell},\n\tlocation = {Malden, Mass.},\n\tisbn = {9780631187851},\n\tseries = {Blackwell companions to philosophy},\n\ttimestamp = {2026-02-21 01:18:05 (GMT)},\n}\n\n@incollection{Goodin1991UtilityGood,\n\tcrossref = {Singer1991CompanionEthics},\n\tauthor = {Goodin, Robert},\n\ttitle = {Utility and the Good},\n\tpages = {242},\n\ttimestamp = {2026-02-21 01:18:05 (GMT)},\n}",
       "notes": "ISBN 0631187855 via zotra /search"
     },
     "ernesto garzon valdes|instituciones suicidas estudios de etica y politica|2000": {
@@ -1033,7 +1033,7 @@
       "cite_key": "Ten1991CrimePunishment",
       "tier": 1,
       "status": "success",
-      "bib_entry": "@incollection{Ten1991CrimePunishment,\n\tcrossref = {Singer1991CompanionEthicsa},\n\tauthor = {Ten, C. L.},\n\ttitle = {Crime and Punishment},\n\tpages = {369},\n\ttimestamp = {2026-02-21 01:18:40 (GMT)},\n}",
+      "bib_entry": "@incollection{Ten1991CrimePunishment,\n\tcrossref = {Singer1991CompanionEthics},\n\tauthor = {Ten, C. L.},\n\ttitle = {Crime and Punishment},\n\tpages = {369},\n\ttimestamp = {2026-02-21 01:18:40 (GMT)},\n}",
       "notes": "ISBN 0631187855 via zotra /search"
     },
     "ken coates|the spokesman|2002": {
@@ -1509,7 +1509,7 @@
       "cite_key": "Schweickart1998MarketSocialismDefense",
       "tier": 1,
       "status": "success",
-      "bib_entry": "@collection{Ollman1998MarketSocialismDebatea,\n\teditor = {Ollman, Bertell and Schweickart, David},\n\ttitle = {Market Socialism: the debate among Socialists},\n\tshorttitle = {Market Socialism},\n\tdate = {1998},\n\tpagetotal = {200},\n\tpublisher = {Routledge},\n\tlocation = {New York},\n\tisbn = {9780415919661 9780415919678},\n\tkeywords = {Mixed economy, Socialism, Capitalism},\n\ttimestamp = {2026-02-21 01:28:10 (GMT)},\n}\n\n@incollection{Schweickart1998MarketSocialismDefense,\n\tcrossref = {Ollman1998MarketSocialismDebatea},\n\tauthor = {Schweickart, David},\n\ttitle = {Market Socialism: A Defense},\n\tpages = {11},\n\ttimestamp = {2026-02-21 01:28:10 (GMT)},\n}",
+      "bib_entry": "@collection{Ollman1998MarketSocialismDebate,\n\teditor = {Ollman, Bertell and Schweickart, David},\n\ttitle = {Market Socialism: the debate among Socialists},\n\tshorttitle = {Market Socialism},\n\tdate = {1998},\n\tpagetotal = {200},\n\tpublisher = {Routledge},\n\tlocation = {New York},\n\tisbn = {9780415919661 9780415919678},\n\tkeywords = {Mixed economy, Socialism, Capitalism},\n\ttimestamp = {2026-02-21 01:28:10 (GMT)},\n}\n\n@incollection{Schweickart1998MarketSocialismDefense,\n\tcrossref = {Ollman1998MarketSocialismDebate},\n\tauthor = {Schweickart, David},\n\ttitle = {Market Socialism: A Defense},\n\tpages = {11},\n\ttimestamp = {2026-02-21 01:28:10 (GMT)},\n}",
       "notes": "ISBN 0415919673 via zotra /search"
     },
     "henry david thoreau|walden or life in the woods|1854": {
@@ -1754,7 +1754,7 @@
       "cite_key": "Chomsky1978IdeasChomsky",
       "tier": 1,
       "status": "success",
-      "bib_entry": "@collection{Magee1978MenIdeasCreatorsa,\n\teditor = {Magee, Bryan and Berlin, Isaiah},\n\ttitle = {Men of ideas: some creators of contemporary philosophy; [dialogues with fifteen leading philosophers]},\n\tshorttitle = {Men of ideas},\n\tdate = {1986},\n\tedition = {Reprint},\n\tpagetotal = {275},\n\tpublisher = {Oxford Univ. Press},\n\tlocation = {Oxford},\n\tisbn = {9780192830340},\n\tseries = {Oxford paperbacks},\n\ttimestamp = {2026-02-21 01:36:44 (GMT)},\n}\n\n@incollection{Chomsky1978IdeasChomsky,\n\tcrossref = {Magee1978MenIdeasCreatorsa},\n\tauthor = {Chomsky, Noam},\n\ttitle = {The Ideas of Chomsky},\n\tpages = {218},\n\ttimestamp = {2026-02-21 01:36:44 (GMT)},\n}",
+      "bib_entry": "@collection{Magee1978MenIdeasCreators,\n\teditor = {Magee, Bryan and Berlin, Isaiah},\n\ttitle = {Men of ideas: some creators of contemporary philosophy; [dialogues with fifteen leading philosophers]},\n\tshorttitle = {Men of ideas},\n\tdate = {1986},\n\tedition = {Reprint},\n\tpagetotal = {275},\n\tpublisher = {Oxford Univ. Press},\n\tlocation = {Oxford},\n\tisbn = {9780192830340},\n\tseries = {Oxford paperbacks},\n\ttimestamp = {2026-02-21 01:36:44 (GMT)},\n}\n\n@incollection{Chomsky1978IdeasChomsky,\n\tcrossref = {Magee1978MenIdeasCreators},\n\tauthor = {Chomsky, Noam},\n\ttitle = {The Ideas of Chomsky},\n\tpages = {218},\n\ttimestamp = {2026-02-21 01:36:44 (GMT)},\n}",
       "notes": "ISBN 0192830341 via zotra /search"
     },
     "james joyce|ulysses|1921": {
@@ -2013,7 +2013,7 @@
       "cite_key": "Hurka2004NormativeEthicsBack",
       "tier": 1,
       "status": "success",
-      "bib_entry": "@collection{Leiter2004FuturePhilosophya,\n\teditor = {Leiter, Brian},\n\ttitle = {The future for philosophy},\n\tdate = {2004},\n\tpagetotal = {357},\n\tpublisher = {Clarendon Press ; Oxford University Press},\n\tlocation = {Oxford : New York},\n\tisbn = {9780199247288},\n\tkeywords = {Philosophy, Modern, 21st century},\n\ttimestamp = {2026-02-21 01:41:37 (GMT)},\n}\n\n@incollection{Hurka2004NormativeEthicsBack,\n\tcrossref = {Leiter2004FuturePhilosophya},\n\tauthor = {Hurka, Thomas},\n\ttitle = {Normative Ethics: Back to the Future},\n\tpages = {261},\n\ttimestamp = {2026-02-21 01:41:37 (GMT)},\n}",
+      "bib_entry": "@collection{Leiter2004FuturePhilosophy,\n\teditor = {Leiter, Brian},\n\ttitle = {The future for philosophy},\n\tdate = {2004},\n\tpagetotal = {357},\n\tpublisher = {Clarendon Press ; Oxford University Press},\n\tlocation = {Oxford : New York},\n\tisbn = {9780199247288},\n\tkeywords = {Philosophy, Modern, 21st century},\n\ttimestamp = {2026-02-21 01:41:37 (GMT)},\n}\n\n@incollection{Hurka2004NormativeEthicsBack,\n\tcrossref = {Leiter2004FuturePhilosophy},\n\tauthor = {Hurka, Thomas},\n\ttitle = {Normative Ethics: Back to the Future},\n\tpages = {261},\n\ttimestamp = {2026-02-21 01:41:37 (GMT)},\n}",
       "notes": "ISBN 0199247285 via zotra /search"
     },
     "jeremy bentham||": {
@@ -2031,10 +2031,9 @@
       "notes": "ISBN 0192830473 via zotra /search"
     },
     "fred feldman|pleasure and the good life concerning the nature varieties and plausibility of hedonism|2004": {
-      "cite_key": "Feldman2004PleasureGoodLifea",
+      "cite_key": "Feldman2004PleasureGoodLife",
       "tier": 1,
       "status": "success",
-      "bib_entry": "@book{Feldman2004PleasureGoodLifea,\n\tauthor = {Feldman, Fred},\n\ttitle = {Pleasure and the good life: concerning the nature, varieties and plausibility of hedonism},\n\tshorttitle = {Pleasure and the good life},\n\tdate = {2004},\n\tpagetotal = {221},\n\tpublisher = {Clarendon Press},\n\tlocation = {Oxford New York},\n\tisbn = {9780199265169},\n\tkeywords = {Hedonism, Pleasure},\n\ttimestamp = {2026-02-21 01:41:40 (GMT)},\n}",
       "notes": "ISBN 019926516X via zotra /search"
     },
     "donald davidson|moral concepts|1969": {
@@ -2195,7 +2194,7 @@
       "cite_key": "Wood2006SupremePrincipleMorality",
       "tier": 1,
       "status": "success",
-      "bib_entry": "@collection{Guyer2006CambridgeCompanionKanta,\n\teditor = {Guyer, Paul},\n\ttitle = {The Cambridge companion to Kant and modern philosophy},\n\tdate = {2006},\n\tpagetotal = {722},\n\tpublisher = {Cambridge University Press},\n\tlocation = {Cambridge ; New York},\n\tisbn = {9780521823036 9780521529952},\n\tkeywords = {Kant, Immanuel, Philosophy, Modern},\n\ttimestamp = {2026-02-21 01:44:57 (GMT)},\n}\n\n@incollection{Wood2006SupremePrincipleMorality,\n\tcrossref = {Guyer2006CambridgeCompanionKanta},\n\tauthor = {Wood, Allen},\n\ttitle = {The Supreme Principle of Morality},\n\tpages = {346},\n\ttimestamp = {2026-02-21 01:44:57 (GMT)},\n}",
+      "bib_entry": "@collection{Guyer2006CambridgeCompanionKant,\n\teditor = {Guyer, Paul},\n\ttitle = {The Cambridge companion to Kant and modern philosophy},\n\tdate = {2006},\n\tpagetotal = {722},\n\tpublisher = {Cambridge University Press},\n\tlocation = {Cambridge ; New York},\n\tisbn = {9780521823036 9780521529952},\n\tkeywords = {Kant, Immanuel, Philosophy, Modern},\n\ttimestamp = {2026-02-21 01:44:57 (GMT)},\n}\n\n@incollection{Wood2006SupremePrincipleMorality,\n\tcrossref = {Guyer2006CambridgeCompanionKant},\n\tauthor = {Wood, Allen},\n\ttitle = {The Supreme Principle of Morality},\n\tpages = {346},\n\ttimestamp = {2026-02-21 01:44:57 (GMT)},\n}",
       "notes": "ISBN 0521529956 via zotra /search"
     },
     "jens timmermann|the harvard review of philosophy|2000": {
@@ -2535,10 +2534,9 @@
       "notes": "ISBN 1400001447 via zotra /search"
     },
     "bart schultz|henry sidgwick eye of the universe an intellectual biography|2004": {
-      "cite_key": "Schultz2004HenrySidgwickEyea",
+      "cite_key": "Schultz2004HenrySidgwickEye",
       "tier": 1,
       "status": "success",
-      "bib_entry": "@book{Schultz2004HenrySidgwickEyea,\n\tauthor = {Schultz, Bart},\n\ttitle = {Henry Sidgwick, eye of the universe: an intellectual biography},\n\tshorttitle = {Henry Sidgwick, eye of the universe},\n\tdate = {2004},\n\tpagetotal = {858},\n\tpublisher = {Cambridge University Press},\n\tlocation = {Cambridge, {UK} ; New York},\n\tisbn = {9780521829670},\n\tkeywords = {Sidgwick, Henry},\n\ttimestamp = {2026-02-21 01:54:02 (GMT)},\n}",
       "notes": "ISBN 0521829674 via zotra /search"
     },
     "oscar wilde|the happy prince and other tales|1888": {
