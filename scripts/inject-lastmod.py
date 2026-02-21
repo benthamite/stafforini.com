@@ -77,14 +77,14 @@ def inject_lastmod(md_path, lastmod_date):
         return False
 
     # Remove existing lastmod if present
-    front_matter = re.sub(r"lastmod = .+\n", "", front_matter)
+    front_matter = re.sub(r"lastmod = .+\n?", "", front_matter)
 
     # Add lastmod after the date line
     front_matter = re.sub(
         r"(date = .+)", rf"\1\nlastmod = {lastmod_date}", front_matter
     )
 
-    new_text = "+++\n" + front_matter + "\n+++" + text[match.end():]
+    new_text = "+++\n" + front_matter.rstrip("\n") + "\n+++" + text[match.end():]
     md_path.write_text(new_text)
     return True
 

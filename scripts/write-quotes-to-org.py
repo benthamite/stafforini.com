@@ -301,7 +301,8 @@ def build_subheading(
     node_id = new_uuid()
 
     # Parse date from WP date string
-    date_str = quote["date"].split(" ")[0]  # "2003-01-01 00:00:00" -> "2003-01-01"
+    date_raw = quote.get("date", "") or ""
+    date_str = date_raw.split(" ")[0] if date_raw else ""
 
     # Build locator string for front matter
     locator = quote.get("locator", "")
@@ -381,14 +382,14 @@ def check_duplicate_quote(content: str, quote_text: str) -> bool:
 def deduplicate_title_in_file(content: str, title: str) -> str:
     """Ensure the subheading title is unique within the file."""
     # Check if this exact title already exists as a heading
-    pattern = re.compile(r"^\*+ " + re.escape(title) + r"\s", re.MULTILINE)
+    pattern = re.compile(r"^\*+ " + re.escape(title) + r"(?:\s|$)", re.MULTILINE)
     if not pattern.search(content):
         return title
 
     counter = 2
     while True:
         candidate = f"{title} {counter}"
-        pattern = re.compile(r"^\*+ " + re.escape(candidate) + r"\s", re.MULTILINE)
+        pattern = re.compile(r"^\*+ " + re.escape(candidate) + r"(?:\s|$)", re.MULTILINE)
         if not pattern.search(content):
             return candidate
         counter += 1
@@ -565,7 +566,16 @@ def main():
                         print(f"    + {line.strip()}")
                         break
         else:
-            org_path.write_text(final_content)
+            import tempfile as _tempfile
+            tmp_fd, tmp_path = _tempfile.mkstemp(dir=org_path.parent, suffix=".tmp")
+            try:
+                import os as _os
+                with _os.fdopen(tmp_fd, "w") as f:
+                    f.write(final_content)
+                Path(tmp_path).replace(org_path)
+            except BaseException:
+                Path(tmp_path).unlink(missing_ok=True)
+                raise
             if not file_existed:
                 stats["files_created"] += 1
             else:

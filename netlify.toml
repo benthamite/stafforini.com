@@ -1,5 +1,5 @@
 [build]
-command = "hugo --minify && npx pagefind --site public"
+command = "echo 'ERROR: Builds are deployed via scripts/deploy.sh, not Netlify CI.' && exit 1"
 publish = "public"
 
 [build.environment]

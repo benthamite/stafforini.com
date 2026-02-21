@@ -6,6 +6,11 @@
 # them), then pushes the built site directly to Netlify via CLI.
 set -euo pipefail
 
+cleanup() {
+  echo "Deploy interrupted. Build state may be inconsistent." >&2
+}
+trap cleanup EXIT
+
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 cd "$REPO_ROOT"
 
@@ -29,7 +34,7 @@ python3 scripts/generate-citing-notes.py
 
 # Clean stale build output (Hugo doesn't remove deleted/renamed pages)
 echo "Cleaning previous build..."
-rm -rf public
+trash public 2>/dev/null || true
 
 # Build
 echo "Building site..."
@@ -42,4 +47,5 @@ npx pagefind --site public
 echo "Deploying to Netlify..."
 npx netlify deploy --prod --dir=public --no-build
 
+trap - EXIT
 echo "Done."

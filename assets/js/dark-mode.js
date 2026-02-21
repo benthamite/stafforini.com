@@ -23,7 +23,9 @@
       } else {
         localStorage.setItem('theme', pref);
       }
-    } catch (e) {}
+    } catch (e) {
+      if (typeof console !== 'undefined') console.warn('Theme preference not saved:', e);
+    }
   }
 
   toggle.addEventListener('click', function () {
