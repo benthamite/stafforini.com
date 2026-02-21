@@ -77,7 +77,13 @@ def strip_annotations(src: Path, dst: Path) -> None:
         for page in pdf.pages:
             if Name.Annots in page:
                 del page[Name.Annots]
-        pdf.save(dst)
+        try:
+            pdf.save(dst)
+        except Exception:
+            pdf.save(dst, fix_metadata_version=False)
+            print(f"  NOTICE: {src.name} has malformed XMP metadata (saved without fixing)")
+            return
+
 
 
 def _render_page(pdf_path: Path, out_png: Path, page_num: int) -> bool:
