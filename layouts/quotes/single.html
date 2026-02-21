@@ -2,12 +2,13 @@
 {{/* Extract work metadata for Pagefind: quote pages lack author/title in their own front matter,
      so we resolve the linked work and inject its metadata as hidden spans for search indexing.
      data-pagefind-meta="title" overrides Pagefind's default title extraction. */}}
-{{ $workAuthor := "" }}{{ $workTitle := "" }}
+{{ $workAuthor := "" }}{{ $workTitle := "" }}{{ $workType := "book" }}
 {{ with .Params.work }}
   {{ $work := $.Site.GetPage (printf "/works/%s" .) }}
   {{ with $work }}
     {{ $workAuthor = .Params.author }}
     {{ $workTitle = .Title }}
+    {{ $workType = .Params.entry_type | default "book" }}
   {{ end }}
 {{ end }}
 <div>
@@ -15,6 +16,7 @@
   <span data-pagefind-meta="title" data-pagefind-ignore class="visually-hidden">{{ $workAuthor }} – {{ $workTitle }}</span>
   <span data-pagefind-meta="work_author" data-pagefind-ignore class="visually-hidden">{{ $workAuthor }}</span>
   <span data-pagefind-meta="work_title" data-pagefind-ignore class="visually-hidden">{{ $workTitle }}</span>
+  <span data-pagefind-meta="work_type" data-pagefind-ignore class="visually-hidden">{{ $workType }}</span>
   {{ end }}
   <div class="content-with-sidenotes">
     <div class="quote-body">
