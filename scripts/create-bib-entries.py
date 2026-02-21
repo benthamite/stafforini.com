@@ -1456,16 +1456,27 @@ def main():
     progress = load_progress() if not args.dry_run else {"processed": {}}
 
     # --reprocess-fallbacks: remove old fallback entries (tier 3 or 5) from progress
+    # and also remove their cite keys from the collision set so they can be
+    # re-generated without spurious suffixes.
     if args.reprocess_fallbacks and not args.dry_run:
         fallback_keys = [
             k for k, v in progress["processed"].items()
-            if v.get("tier") in (3, 5)  # old tier 3 = new tier 5
+            if v.get("tier") in (1, 2, 3, 5)  # include all tiers to fix collision bug
         ]
         for k in fallback_keys:
             # Free the cite key so it can be re-generated
             old_key = progress["processed"][k].get("cite_key")
+            if old_key and old_key in existing_entries:
+                del existing_entries[old_key]
+            # Also free any collection keys associated with this entry
+            bib_text = progress["processed"][k].get("bib_entry", "")
+            for m in re.finditer(r"@\w+\{([^,]+),", bib_text):
+                extra_key = m.group(1).strip()
+                if extra_key != old_key and extra_key in existing_entries:
+                    del existing_entries[extra_key]
             del progress["processed"][k]
         print(f"\n  Reprocessing: removed {len(fallback_keys)} fallback entries from progress")
+        print(f"  {len(existing_entries)} existing cite keys after cleanup")
         save_progress(progress)
 
     # --reprocess-incollections: restructure old incollection/collection entries
