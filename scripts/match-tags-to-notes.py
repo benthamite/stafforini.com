@@ -9,7 +9,7 @@ org file in ~/Dropbox/notes/ or ~/Dropbox/people/ using a tiered cascade:
   3. Hyphenation/possessive normalization
   4. Plural/singular inflection
   5. Prefix match for truncated tags
-  6. Fuzzy match (review bucket only)
+  6. Fuzzy match (auto-accept high-confidence typos only)
 
 Produces:
   - wp-quotes-tags-linked.json  (structured results)
@@ -181,10 +181,9 @@ def is_likely_person(tag: str) -> bool:
 def match_tags(tags: list[str], title_index: dict, filename_index: dict) -> dict:
     """Match tags using the tiered cascade.
 
-    Returns dict with 'linked', 'review', 'unlinked' lists and 'stats'.
+    Returns dict with 'linked' and 'unlinked' lists and 'stats'.
     """
     linked = []
-    review = []
     unlinked = []
     stats = {
         "exact_title": 0,
@@ -192,7 +191,7 @@ def match_tags(tags: list[str], title_index: dict, filename_index: dict) -> dict
         "hyphenation": 0,
         "inflection": 0,
         "prefix": 0,
-        "fuzzy_review": 0,
+        "fuzzy": 0,
     }
     matched_tags = set()
 
@@ -366,7 +365,12 @@ def match_tags(tags: list[str], title_index: dict, filename_index: dict) -> dict
             stats["prefix"] += 1
             matched_tags.add(tag)
 
-    # Tier 6: Fuzzy match (review bucket only)
+    # Tier 6: Fuzzy match (auto-accept at high confidence)
+    # Catches genuine typos like "conterfactuals" → "counterfactuals".
+    # Very strict thresholds (score >= 96, Levenshtein distance == 1) to
+    # avoid false positives from similar-but-distinct concepts (e.g.
+    # "immorality"/"immortality", "modal realism"/"moral realism").
+    # Additional filters: no substring containment, same word count.
     for tag in tags:
         if tag in matched_tags:
             continue
@@ -376,28 +380,30 @@ def match_tags(tags: list[str], title_index: dict, filename_index: dict) -> dict
         best_score = 0
         best_match = None
         for title, entry in title_index.items():
-            # Quick length check to avoid computing distance for obviously different strings
-            if abs(len(title) - len(tag_norm)) > 5:
+            if abs(len(title) - len(tag_norm)) > 2:
+                continue
+            if len(tag_norm.split()) != len(title.split()):
+                continue
+            if tag_norm in title or title in tag_norm:
                 continue
             score = fuzz.ratio(tag_norm, title)
             if score > best_score:
                 best_score = score
                 best_match = (title, entry)
 
-        if best_match and best_score >= 88:
+        if best_match and best_score >= 96:
             title, (filename, directory) = best_match
             dist = Levenshtein.distance(tag_norm, title)
-            if dist <= 3:
-                review.append({
+            if dist == 1:
+                linked.append({
                     "tag": tag,
                     "file": filename,
                     "directory": directory,
                     "tier": "fuzzy",
                     "score": round(best_score, 1),
                     "distance": dist,
-                    "matched_title": title,
                 })
-                stats["fuzzy_review"] += 1
+                stats["fuzzy"] += 1
                 matched_tags.add(tag)
 
     # Collect unlinked tags
@@ -409,7 +415,6 @@ def match_tags(tags: list[str], title_index: dict, filename_index: dict) -> dict
 
     return {
         "linked": linked,
-        "review": review,
         "unlinked": unlinked,
         "stats": stats,
     }
@@ -431,7 +436,6 @@ def write_report(results: dict, total_tags: int) -> str:
     lines.append("MATCHES BY TIER")
     lines.append("-" * 40)
     total_linked = len(results["linked"])
-    total_review = len(results["review"])
     total_unlinked = len(results["unlinked"])
 
     lines.append(f"  Tier 1 - Exact title:     {stats['exact_title']:>5}")
@@ -439,10 +443,9 @@ def write_report(results: dict, total_tags: int) -> str:
     lines.append(f"  Tier 3 - Hyphenation:     {stats['hyphenation']:>5}")
     lines.append(f"  Tier 4 - Inflection:      {stats['inflection']:>5}")
     lines.append(f"  Tier 5 - Prefix:          {stats['prefix']:>5}")
+    lines.append(f"  Tier 6 - Fuzzy (typo):    {stats['fuzzy']:>5}")
     lines.append(f"  {'─' * 38}")
     lines.append(f"  Total linked:             {total_linked:>5}")
-    lines.append("")
-    lines.append(f"  Tier 6 - Fuzzy (review):  {total_review:>5}")
     lines.append(f"  Unlinked:                 {total_unlinked:>5}")
     lines.append("")
 
@@ -450,12 +453,13 @@ def write_report(results: dict, total_tags: int) -> str:
     lines.append(f"  Linked rate: {pct}% ({total_linked}/{total_tags})")
     lines.append("")
 
-    # Review items
-    if results["review"]:
+    # Fuzzy matches
+    fuzzy_items = [i for i in results["linked"] if i["tier"] == "fuzzy"]
+    if fuzzy_items:
         lines.append("=" * 60)
-        lines.append("REVIEW ITEMS (fuzzy matches — verify manually)")
+        lines.append("FUZZY MATCHES (typo corrections)")
         lines.append("=" * 60)
-        for item in sorted(results["review"], key=lambda x: -x["score"]):
+        for item in fuzzy_items:
             lines.append(
                 f"  \"{item['tag']}\" -> {item['file']} "
                 f"(score: {item['score']}, dist: {item['distance']}, "
@@ -519,7 +523,6 @@ def main():
     results = match_tags(tags, title_index, filename_index)
 
     total_linked = len(results["linked"])
-    total_review = len(results["review"])
     total_unlinked = len(results["unlinked"])
     stats = results["stats"]
 
@@ -531,9 +534,9 @@ def main():
     print(f"  Tier 3 - Hyphenation:     {stats['hyphenation']:>5}")
     print(f"  Tier 4 - Inflection:      {stats['inflection']:>5}")
     print(f"  Tier 5 - Prefix:          {stats['prefix']:>5}")
+    print(f"  Tier 6 - Fuzzy (typo):    {stats['fuzzy']:>5}")
     print(f"  {'─' * 38}")
     print(f"  Total linked:             {total_linked:>5}")
-    print(f"  Tier 6 - Fuzzy (review):  {total_review:>5}")
     print(f"  Unlinked:                 {total_unlinked:>5}")
 
     pct = (total_linked * 100 // len(tags)) if tags else 0
@@ -545,11 +548,9 @@ def main():
             "generated": datetime.now(timezone.utc).isoformat(),
             "total_tags": len(tags),
             "linked": total_linked,
-            "review": total_review,
             "unlinked": total_unlinked,
         },
         "linked": results["linked"],
-        "review": results["review"],
         "unlinked": results["unlinked"],
     }
     OUTPUT_JSON.write_text(json.dumps(output, indent=2, ensure_ascii=False))

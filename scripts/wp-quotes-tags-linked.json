@@ -1,10 +1,9 @@
 {
   "meta": {
-    "generated": "2026-02-21T17:42:57.313946+00:00",
+    "generated": "2026-02-21T17:55:14.618272+00:00",
     "total_tags": 1697,
-    "linked": 387,
-    "review": 19,
-    "unlinked": 1291
+    "linked": 388,
+    "unlinked": 1309
   },
   "linked": [
     {
@@ -2330,179 +2329,14 @@
       "directory": "notes",
       "tier": "prefix",
       "matched_title": "pleasure"
-    }
-  ],
-  "review": [
+    },
     {
       "tag": "conterfactuals",
       "file": "counterfactuals.org",
       "directory": "notes",
       "tier": "fuzzy",
       "score": 96.6,
-      "distance": 1,
-      "matched_title": "counterfactuals"
-    },
-    {
-      "tag": "difference",
-      "file": "indifference.org",
-      "directory": "notes",
-      "tier": "fuzzy",
-      "score": 90.9,
-      "distance": 2,
-      "matched_title": "indifference"
-    },
-    {
-      "tag": "distribution",
-      "file": "redistribution.org",
-      "directory": "notes",
-      "tier": "fuzzy",
-      "score": 92.3,
-      "distance": 2,
-      "matched_title": "redistribution"
-    },
-    {
-      "tag": "equality",
-      "file": "inequality.org",
-      "directory": "notes",
-      "tier": "fuzzy",
-      "score": 88.9,
-      "distance": 2,
-      "matched_title": "inequality"
-    },
-    {
-      "tag": "Germany",
-      "file": "german.org",
-      "directory": "notes",
-      "tier": "fuzzy",
-      "score": 92.3,
-      "distance": 1,
-      "matched_title": "german"
-    },
-    {
-      "tag": "idealism",
-      "file": "dealism.org",
-      "directory": "notes",
-      "tier": "fuzzy",
-      "score": 93.3,
-      "distance": 1,
-      "matched_title": "dealism"
-    },
-    {
-      "tag": "immorality",
-      "file": "immortality.org",
-      "directory": "notes",
-      "tier": "fuzzy",
-      "score": 95.2,
-      "distance": 1,
-      "matched_title": "immortality"
-    },
-    {
-      "tag": "irrationality",
-      "file": "rationality.org",
-      "directory": "notes",
-      "tier": "fuzzy",
-      "score": 91.7,
-      "distance": 2,
-      "matched_title": "rationality"
-    },
-    {
-      "tag": "magical thinking",
-      "file": "marginal-thinking.org",
-      "directory": "notes",
-      "tier": "fuzzy",
-      "score": 90.9,
-      "distance": 2,
-      "matched_title": "marginal thinking"
-    },
-    {
-      "tag": "modal realism",
-      "file": "moral-realism.org",
-      "directory": "notes",
-      "tier": "fuzzy",
-      "score": 92.3,
-      "distance": 1,
-      "matched_title": "moral realism"
-    },
-    {
-      "tag": "moral nonnaturalism",
-      "file": "moral-naturalism.org",
-      "directory": "notes",
-      "tier": "fuzzy",
-      "score": 91.4,
-      "distance": 3,
-      "matched_title": "moral naturalism"
-    },
-    {
-      "tag": "mortality",
-      "file": "immortality.org",
-      "directory": "notes",
-      "tier": "fuzzy",
-      "score": 90.0,
-      "distance": 2,
-      "matched_title": "immortality"
-    },
-    {
-      "tag": "rationalism",
-      "file": "nationalism.org",
-      "directory": "notes",
-      "tier": "fuzzy",
-      "score": 90.9,
-      "distance": 1,
-      "matched_title": "nationalism"
-    },
-    {
-      "tag": "relativity",
-      "file": "creativity.org",
-      "directory": "notes",
-      "tier": "fuzzy",
-      "score": 90.0,
-      "distance": 2,
-      "matched_title": "creativity"
-    },
-    {
-      "tag": "retribution",
-      "file": "redistribution.org",
-      "directory": "notes",
-      "tier": "fuzzy",
-      "score": 88.0,
-      "distance": 3,
-      "matched_title": "redistribution"
-    },
-    {
-      "tag": "revolution",
-      "file": "evolution.org",
-      "directory": "notes",
-      "tier": "fuzzy",
-      "score": 94.7,
-      "distance": 1,
-      "matched_title": "evolution"
-    },
-    {
-      "tag": "socialization",
-      "file": "specialization.org",
-      "directory": "notes",
-      "tier": "fuzzy",
-      "score": 88.9,
-      "distance": 2,
-      "matched_title": "specialization"
-    },
-    {
-      "tag": "unpleasantness",
-      "file": "pleasantness.org",
-      "directory": "notes",
-      "tier": "fuzzy",
-      "score": 92.3,
-      "distance": 2,
-      "matched_title": "pleasantness"
-    },
-    {
-      "tag": "World War I",
-      "file": "world-war-ii.org",
-      "directory": "notes",
-      "tier": "fuzzy",
-      "score": 95.7,
-      "distance": 1,
-      "matched_title": "world war ii"
+      "distance": 1
     }
   ],
   "unlinked": [
@@ -3555,6 +3389,10 @@
       "tag_type": "person"
     },
     {
+      "tag": "difference",
+      "tag_type": "topic"
+    },
+    {
       "tag": "differential psychology",
       "tag_type": "topic"
     },
@@ -3608,6 +3446,10 @@
     },
     {
       "tag": "dissonance",
+      "tag_type": "topic"
+    },
+    {
+      "tag": "distribution",
       "tag_type": "topic"
     },
     {
@@ -3780,6 +3622,10 @@
     },
     {
       "tag": "epistemology of consciousness",
+      "tag_type": "topic"
+    },
+    {
+      "tag": "equality",
       "tag_type": "topic"
     },
     {
@@ -4279,6 +4125,10 @@
       "tag_type": "person"
     },
     {
+      "tag": "Germany",
+      "tag_type": "topic"
+    },
+    {
       "tag": "ghost stories",
       "tag_type": "topic"
     },
@@ -4591,6 +4441,10 @@
       "tag_type": "person"
     },
     {
+      "tag": "idealism",
+      "tag_type": "topic"
+    },
+    {
       "tag": "ideals",
       "tag_type": "topic"
     },
@@ -4629,6 +4483,10 @@
     {
       "tag": "Immanuel Kant",
       "tag_type": "person"
+    },
+    {
+      "tag": "immorality",
+      "tag_type": "topic"
     },
     {
       "tag": "impartiality",
@@ -4812,6 +4670,10 @@
     },
     {
       "tag": "Ireland",
+      "tag_type": "topic"
+    },
+    {
+      "tag": "irrationality",
       "tag_type": "topic"
     },
     {
@@ -5251,6 +5113,10 @@
       "tag_type": "topic"
     },
     {
+      "tag": "magical thinking",
+      "tag_type": "topic"
+    },
+    {
       "tag": "male-female relationships",
       "tag_type": "topic"
     },
@@ -5455,6 +5321,10 @@
       "tag_type": "topic"
     },
     {
+      "tag": "modal realism",
+      "tag_type": "topic"
+    },
+    {
       "tag": "modality",
       "tag_type": "topic"
     },
@@ -5511,6 +5381,10 @@
       "tag_type": "topic"
     },
     {
+      "tag": "moral nonnaturalism",
+      "tag_type": "topic"
+    },
+    {
       "tag": "moral pluralism",
       "tag_type": "topic"
     },
@@ -5524,6 +5398,10 @@
     },
     {
       "tag": "morphological freedom",
+      "tag_type": "topic"
+    },
+    {
+      "tag": "mortality",
       "tag_type": "topic"
     },
     {
@@ -6347,6 +6225,10 @@
       "tag_type": "topic"
     },
     {
+      "tag": "rationalism",
+      "tag_type": "topic"
+    },
+    {
       "tag": "Raymond Lull",
       "tag_type": "person"
     },
@@ -6431,6 +6313,10 @@
       "tag_type": "topic"
     },
     {
+      "tag": "relativity",
+      "tag_type": "topic"
+    },
+    {
       "tag": "religious diversity",
       "tag_type": "topic"
     },
@@ -6463,11 +6349,19 @@
       "tag_type": "topic"
     },
     {
+      "tag": "retribution",
+      "tag_type": "topic"
+    },
+    {
       "tag": "retroactive justice",
       "tag_type": "topic"
     },
     {
       "tag": "reviewing",
+      "tag_type": "topic"
+    },
+    {
+      "tag": "revolution",
       "tag_type": "topic"
     },
     {
@@ -6940,6 +6834,10 @@
     },
     {
       "tag": "socialism",
+      "tag_type": "topic"
+    },
+    {
+      "tag": "socialization",
       "tag_type": "topic"
     },
     {
@@ -7419,6 +7317,10 @@
       "tag_type": "person"
     },
     {
+      "tag": "unpleasantness",
+      "tag_type": "topic"
+    },
+    {
       "tag": "updating",
       "tag_type": "topic"
     },
@@ -7629,6 +7531,10 @@
     {
       "tag": "world destruction",
       "tag_type": "topic"
+    },
+    {
+      "tag": "World War I",
+      "tag_type": "person"
     },
     {
       "tag": "writer's block",
