@@ -162,6 +162,15 @@
   font-size: var(--font-size-xs);
 }
 
+/* Topics line in quote entries — targets the classless <p> that follows
+   the blockquote (or verse block) in .Content (only present when topics exist) */
+.quote-entry blockquote ~ p:not([class]),
+.quote-entry .verse ~ p:not([class]) {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-top: 0.5rem;
+}
+
 /* Notes list */
 .notes-list {
   list-style: none;
