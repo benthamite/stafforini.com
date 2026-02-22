@@ -15,7 +15,6 @@
   // ── Constants ───────────────────────────────────────────────────
   var BREAKPOINT = 1100;
   var MIN_SHOWN_LINES = 3;
-  var MIN_SPACING_LINES = 1.5;
   var FADEOUT_LINES = 1.3;
   var RESIZE_DEBOUNCE_MS = 150;
 
@@ -104,7 +103,6 @@
   function positionSidenotes() {
     computeLineHeight();
 
-    var minSpacing = MIN_SPACING_LINES * lineHeight;
     var minHeight = MIN_SHOWN_LINES * lineHeight;
     var fadeoutHeight = FADEOUT_LINES * lineHeight;
 
