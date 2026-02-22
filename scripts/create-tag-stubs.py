@@ -12,9 +12,10 @@ targets for the backlinks-as-taxonomy system.
 """
 
 import json
-import re
 import uuid
 from pathlib import Path
+
+from lib import tag_to_filename
 
 SCRIPTS_DIR = Path(__file__).parent
 INPUT_JSON = SCRIPTS_DIR / "wp-quotes-tags-linked.json"
@@ -53,23 +54,6 @@ def is_person(tag: str) -> bool:
     particles = {"de", "von", "van", "el", "al", "la", "du", "le", "di", "y", "and"}
     capitalized = sum(1 for w in words if w[0].isupper() and w.lower() not in particles)
     return capitalized >= 2
-
-
-def tag_to_filename(tag: str) -> str:
-    """Convert a tag to a kebab-case .org filename.
-
-    "artificial intelligence" -> "artificial-intelligence.org"
-    "Arnold Schwarzenegger." -> "arnold-schwarzenegger.org"
-    """
-    # Lowercase
-    slug = tag.lower()
-    # Remove trailing punctuation
-    slug = slug.rstrip(".")
-    # Replace non-alphanumeric (except hyphens) with hyphens
-    slug = re.sub(r"[^a-z0-9\u00e0-\u00ff-]+", "-", slug)
-    # Collapse multiple hyphens and strip edges
-    slug = re.sub(r"-+", "-", slug).strip("-")
-    return slug + ".org"
 
 
 def make_org_stub(title: str, org_tag: str) -> str:

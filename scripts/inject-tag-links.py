@@ -16,6 +16,8 @@ import json
 import re
 from pathlib import Path
 
+from lib import tag_to_filename
+
 SCRIPTS_DIR = Path(__file__).parent
 MATCHED_JSON = SCRIPTS_DIR / "wp-quotes-matched.json"
 TAGS_JSON = SCRIPTS_DIR / "wp-quotes-tags-linked.json"
@@ -25,14 +27,6 @@ NOTES_DIR = Path.home() / "Library/CloudStorage/Dropbox/notes"
 PEOPLE_DIR = Path.home() / "Library/CloudStorage/Dropbox/people"
 NOTES_TAGS_DIR = NOTES_DIR / "tags"
 PEOPLE_TAGS_DIR = PEOPLE_DIR / "tags"
-
-
-def tag_to_filename(tag: str) -> str:
-    """Convert a tag to a kebab-case .org filename."""
-    slug = tag.lower().rstrip(".")
-    slug = re.sub(r"[^a-z0-9\u00e0-\u00ff-]+", "-", slug)
-    slug = re.sub(r"-+", "-", slug).strip("-")
-    return slug + ".org"
 
 
 def read_org_id(path: Path) -> str | None:

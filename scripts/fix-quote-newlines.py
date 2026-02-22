@@ -24,6 +24,8 @@ from pathlib import Path
 
 from lxml import etree
 
+from lib import escape_org_text, markdown_to_org_emphasis
+
 
 # === Constants ===
 
@@ -31,40 +33,6 @@ SCRIPTS_DIR = Path(__file__).parent
 MATCHED_JSON = SCRIPTS_DIR / "wp-quotes-matched.json"
 WP_XML = Path.home() / "Downloads/notatudignum.WordPress.2026-02-15.xml"
 NOTES_DIR = Path.home() / "Library/CloudStorage/Dropbox/bibliographic-notes"
-
-
-# === Helper functions from write-quotes-to-org.py ===
-
-
-def markdown_to_org_emphasis(text: str) -> str:
-    """Convert markdown emphasis to org-mode emphasis.
-
-    **text** → *text* (bold)
-    *text*  → /text/ (italic)
-
-    Bold must be converted before italic so that ** markers
-    are consumed first and don't get partially matched as *.
-    """
-    # Bold: **text** → *text*
-    text = re.sub(r"\*\*(.+?)\*\*", r"*\1*", text)
-    # Italic: *text* → /text/
-    text = re.sub(r"(?<!\*)\*([^*]+?)\*(?!\*)", r"/\1/", text)
-    return text
-
-
-def escape_org_text(text: str) -> str:
-    """Escape text for safe inclusion in an org-mode quote block."""
-    lines = text.split("\n")
-    escaped = []
-    for line in lines:
-        # Escape * at line start (would be interpreted as heading)
-        if line.startswith("*"):
-            line = "\u200B" + line  # zero-width space prefix
-        # Escape #+ sequences that look like org keywords
-        if line.startswith("#+"):
-            line = "\u200B" + line
-        escaped.append(line)
-    return "\n".join(escaped)
 
 
 # === WP XML parsing ===

@@ -10,7 +10,7 @@ import json
 import re
 from pathlib import Path
 
-from lib import BIB_FILES as _ALL_BIB_FILES
+from lib import CORE_BIB_FILES as BIB_FILES
 from lib import STOP_WORDS as _BASE_STOP_WORDS
 from lib import normalize, parse_bib_entries
 
@@ -18,9 +18,6 @@ SCRIPTS_DIR = Path(__file__).parent
 QUOTES_JSON = SCRIPTS_DIR / "wp-quotes-parsed.json"
 OUTPUT_JSON = SCRIPTS_DIR / "wp-quotes-matched.json"
 REPORT_FILE = SCRIPTS_DIR / "match-report.txt"
-
-# This script only uses the five core bib files (not migration.bib)
-BIB_FILES = [f for f in _ALL_BIB_FILES if "migration" not in f.name]
 
 
 def extract_surname(author_str: str) -> str:

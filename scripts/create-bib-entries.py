@@ -53,12 +53,9 @@ CROSSREF_RATE_LIMIT = 0.5  # seconds between requests
 DUCKDUCKGO_HTML_URL = "https://html.duckduckgo.com/html/"
 DUCKDUCKGO_RATE_LIMIT = 2.5  # seconds between requests (be polite)
 
-from lib import BIB_FILES as _ALL_BIB_FILES
+from lib import CORE_BIB_FILES as BIB_FILES
 from lib import STOP_WORDS as _BASE_STOP_WORDS
 from lib import normalize, parse_bib_entries
-
-# This script only uses the five core bib files (not migration.bib)
-BIB_FILES = [f for f in _ALL_BIB_FILES if "migration" not in f.name]
 
 # Stop words for cite key title extraction (EN/ES/FR/DE/IT)
 STOP_WORDS = _BASE_STOP_WORDS | {

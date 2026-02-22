@@ -22,7 +22,12 @@ from pathlib import Path
 
 from lib import BIB_FILES
 from lib import STOP_WORDS as _BASE_STOP_WORDS
-from lib import cite_key_to_slug, parse_bib_entries
+from lib import (
+    cite_key_to_slug,
+    escape_org_text,
+    markdown_to_org_emphasis,
+    parse_bib_entries,
+)
 
 # === Constants ===
 
@@ -190,40 +195,6 @@ def generate_subheading_title(quote: dict) -> str:
     words = re.findall(r"[a-zA-Z]+", text)
     significant = [w.lower() for w in words if w.lower() not in STOP_WORDS]
     return " ".join(significant[:5]) if significant else "untitled"
-
-
-# === Quote text escaping ===
-
-
-def markdown_to_org_emphasis(text: str) -> str:
-    """Convert markdown emphasis to org-mode emphasis.
-
-    **text** → *text* (bold)
-    *text*  → /text/ (italic)
-
-    Bold must be converted before italic so that ** markers
-    are consumed first and don't get partially matched as *.
-    """
-    # Bold: **text** → *text*
-    text = re.sub(r"\*\*(.+?)\*\*", r"*\1*", text)
-    # Italic: *text* → /text/
-    text = re.sub(r"(?<!\*)\*([^*]+?)\*(?!\*)", r"/\1/", text)
-    return text
-
-
-def escape_org_text(text: str) -> str:
-    """Escape text for safe inclusion in an org-mode quote block."""
-    lines = text.split("\n")
-    escaped = []
-    for line in lines:
-        # Escape * at line start (would be interpreted as heading)
-        if line.startswith("*"):
-            line = "\u200B" + line  # zero-width space prefix
-        # Escape #+ sequences that look like org keywords
-        if line.startswith("#+"):
-            line = "\u200B" + line
-        escaped.append(line)
-    return "\n".join(escaped)
 
 
 # === Export filename generation ===
