@@ -13,6 +13,7 @@ import argparse
 import json
 import os
 import re
+import stat
 import subprocess
 import sys
 import tempfile
@@ -20,6 +21,10 @@ from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parent
+
+# macOS SF_DATALESS flag — set by FileProvider on dehydrated (cloud-only) files.
+# Reading a dataless file blocks indefinitely waiting for Dropbox to hydrate it.
+SF_DATALESS = 0x40000000
 
 SECTIONS = {
     "quotes": {
@@ -79,6 +84,21 @@ def extract_export_file_names(filepath: Path) -> list[str]:
     return names
 
 
+def is_dataless(path: Path) -> bool:
+    """Check if a file has the macOS SF_DATALESS flag (Dropbox dehydrated)."""
+    try:
+        return bool(os.stat(path).st_flags & SF_DATALESS)
+    except (OSError, AttributeError):
+        return False
+
+
+def fix_dataless_files() -> None:
+    """Run the dataless fixer script to restore dehydrated Dropbox files from git."""
+    fixer = SCRIPT_DIR / "fix-dataless-files.sh"
+    if fixer.exists():
+        subprocess.run(["bash", str(fixer)], timeout=120)
+
+
 def scan_source_files(cfg: dict) -> dict[str, float]:
     """Scan source directory, return {filename: mtime} for exportable files."""
     source_dir = cfg["source_dir"]
@@ -86,8 +106,12 @@ def scan_source_files(cfg: dict) -> dict[str, float]:
     skip_files = cfg["skip_files"]
 
     result = {}
+    skipped_dataless = []
     for f in sorted(source_dir.glob("*.org")):
         if f.name in skip_files:
+            continue
+        if is_dataless(f):
+            skipped_dataless.append(f.name)
             continue
         try:
             content = f.read_text(errors="replace")
@@ -95,6 +119,13 @@ def scan_source_files(cfg: dict) -> dict[str, float]:
             continue
         if pre_filter(content):
             result[f.name] = f.stat().st_mtime
+    if skipped_dataless:
+        print(
+            f"WARNING: skipped {len(skipped_dataless)} dataless file(s) "
+            f"(Dropbox dehydrated): {', '.join(skipped_dataless[:5])}"
+            + (f" ... and {len(skipped_dataless) - 5} more" if len(skipped_dataless) > 5 else ""),
+            file=sys.stderr,
+        )
     return result
 
 
@@ -250,6 +281,9 @@ def run_export(section: str, full: bool = False) -> None:
         sys.exit(1)
 
     output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Restore any Dropbox-dehydrated files from git before scanning
+    fix_dataless_files()
 
     # Load manifest
     manifest = None if full else load_manifest(section)
