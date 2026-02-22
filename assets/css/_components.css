@@ -141,6 +141,13 @@
   font-size: 1rem;
 }
 
+.quote-entry .verse {
+  margin: 0 0 0.75rem 0;
+  padding-left: 1.25rem;
+  border-left: 3px solid var(--color-blockquote-border);
+  font-size: 1rem;
+}
+
 .quote-attribution {
   color: var(--color-text-secondary);
 }
