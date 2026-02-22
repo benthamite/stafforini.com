@@ -33,11 +33,13 @@ When telling the user to run a script, always mention the corresponding `staffor
 | `scripts/export-notes.sh` | `stafforini-export-all-notes` | `n` |
 | `scripts/export-quotes.sh` | `stafforini-export-all-quotes` | `q` |
 | `scripts/prepare-org-notes.py` | `stafforini-prepare-notes` | `p` |
+| `scripts/generate-id-slug-map.py` | `stafforini-generate-id-slug-map` | `m` |
 | `scripts/generate-work-pages.py` | `stafforini-update-works` | `w` |
+| `scripts/generate-topic-pages.py` | `stafforini-generate-topic-pages` | `t` |
 | `scripts/generate-backlinks.py` | `stafforini-update-backlinks` | `b` |
+| `scripts/generate-citing-notes.py` | `stafforini-generate-citing-notes` | `c` |
+| `scripts/inject-lastmod.py` | `stafforini-inject-lastmod` | `l` |
 | `scripts/process-pdfs.py` | `stafforini-process-pdfs` | `d` |
-| `scripts/deploy.sh` | (run from terminal) | — |
-| `scripts/generate-id-slug-map.py` | (no command yet) | — |
-| `scripts/generate-topic-pages.py` | (no command yet) | — |
 | Full pipeline | `stafforini-full-rebuild` | `R` |
+| `scripts/deploy.sh` | `stafforini-deploy` | `D` |
 | Hugo dev server | `stafforini-start-server` / `stafforini-stop-server` | `s` / `k` |
