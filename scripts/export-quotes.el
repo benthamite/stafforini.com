@@ -28,6 +28,16 @@
   :export-bibliography (lambda (_keys _files _style _props _backend _info) ""))
 (setq org-cite-export-processors '((t . (noop))))
 
+;; Preserve link description for id: links that ox-hugo can't resolve.
+;; Topic notes (~/notes/tags/, ~/people/tags/) are org-roam stubs without
+;; EXPORT_FILE_NAME, so ox-hugo silently drops the entire link element,
+;; leaving only the middot separators in the Topics line.  Rendering the
+;; description as plain text keeps the topic names visible.
+(org-link-set-parameters
+ "id"
+ :export (lambda (_path desc _backend _info)
+           (or desc "")))
+
 ;; Enable org-id tracking (required by ox-hugo for ID-based exports)
 (setq org-id-track-globally t)
 ;; Use a temp file for the ID locations database (avoid polluting real one)
