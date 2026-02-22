@@ -20,6 +20,8 @@ function sanitizeExcerpt(html) {
   return html.replace(/<(?!\/?mark\b)[^>]*>/gi, '');
 }
 
+// Chicago/Turabian typographic convention: minor works (articles, chapters,
+// web pages) get unitalicized titles; major works (books) get italicized titles.
 var MINOR_WORK_TYPES = { article: 1, incollection: 1, inbook: 1, inproceedings: 1, online: 1, misc: 1, unpublished: 1 };
 
 function renderResult(r, section, currentQuery) {
