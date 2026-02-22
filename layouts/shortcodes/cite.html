@@ -20,7 +20,6 @@
 {{- $slug := $key -}}
 {{- $slug = replaceRE "([a-zA-Z])(\\d)" "${1}-${2}" $slug -}}
 {{- $slug = replaceRE "(\\d)([a-zA-Z])" "${1}-${2}" $slug -}}
-{{- $slug = replaceRE "([A-Z]+)([A-Z][a-z])" "${1}-${2}" $slug -}}
 {{- $slug = replaceRE "([a-z])([A-Z])" "${1}-${2}" $slug -}}
 {{- $slug = lower $slug -}}
 
