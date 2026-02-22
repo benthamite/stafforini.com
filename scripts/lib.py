@@ -30,6 +30,10 @@ BIB_FILES = [
     Path.home() / "Library/CloudStorage/Dropbox/bibliography/migration.bib",
 ]
 
+# BIB_FILES minus auto-generated migration entries. Most scripts want
+# this subset; only the migration pipeline itself needs migration.bib.
+CORE_BIB_FILES = [f for f in BIB_FILES if "migration" not in f.name]
+
 # Base set of English stop words shared across scripts.
 # This is the intersection of common English stop words used by
 # create-bib-entries.py, match-quotes-to-bib.py, and write-quotes-to-org.py.
@@ -227,3 +231,48 @@ def parse_bib_entries(
         entries.append(entry)
 
     return entries
+
+
+def markdown_to_org_emphasis(text: str) -> str:
+    """Convert markdown emphasis to org-mode emphasis.
+
+    **text** → *text* (bold)
+    *text*  → /text/ (italic)
+
+    Bold must be converted before italic so that ** markers
+    are consumed first and don't get partially matched as *.
+    """
+    # Bold: **text** → *text*
+    text = re.sub(r"\*\*(.+?)\*\*", r"*\1*", text)
+    # Italic: *text* → /text/
+    text = re.sub(r"(?<!\*)\*([^*]+?)\*(?!\*)", r"/\1/", text)
+    return text
+
+
+def escape_org_text(text: str) -> str:
+    """Escape text for safe inclusion in an org-mode quote block.
+
+    Prefixes lines starting with ``*`` or ``#+`` with a zero-width space
+    so org-mode does not interpret them as headings or keywords.
+    """
+    lines = text.split("\n")
+    escaped = []
+    for line in lines:
+        if line.startswith("*"):
+            line = "\u200B" + line  # zero-width space prefix
+        if line.startswith("#+"):
+            line = "\u200B" + line
+        escaped.append(line)
+    return "\n".join(escaped)
+
+
+def tag_to_filename(tag: str) -> str:
+    """Convert a tag to a kebab-case .org filename.
+
+    "artificial intelligence" -> "artificial-intelligence.org"
+    "Arnold Schwarzenegger." -> "arnold-schwarzenegger.org"
+    """
+    slug = tag.lower().rstrip(".")
+    slug = re.sub(r"[^a-z0-9\u00e0-\u00ff-]+", "-", slug)
+    slug = re.sub(r"-+", "-", slug).strip("-")
+    return slug + ".org"
