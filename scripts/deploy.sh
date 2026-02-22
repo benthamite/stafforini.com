@@ -20,6 +20,15 @@ if [ ! -d content ]; then
   exit 1
 fi
 
+# Generate org-id → slug mapping (used by export-quotes.el for topic links;
+# also run here so the map is always fresh before topic page generation)
+echo "Generating ID→slug map..."
+python3 scripts/generate-id-slug-map.py
+
+# Generate topic pages from org-roam tag stubs
+echo "Generating topic pages..."
+python3 scripts/generate-topic-pages.py
+
 # Inject lastmod dates from org file modification times
 echo "Injecting lastmod dates..."
 python3 scripts/inject-lastmod.py
