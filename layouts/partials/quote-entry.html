@@ -5,7 +5,7 @@
     {{ if $work }}
     {{ $type := $work.Params.entry_type | default "book" }}
     <p class="quote-attribution">
-      {{- partial "citation-format.html" (dict "work" $work "type" $type "locator" $.Params.locator "link" true) -}}
+      {{- with $.Params.quoted_author -}}{{ . }}, quoted in {{ end -}}{{- partial "citation-format.html" (dict "work" $work "type" $type "locator" $.Params.locator "link" true) -}}
     </p>
     {{ else }}
     {{ warnf "quote-entry: work page not found for slug %q in %s" . $.File.Path }}

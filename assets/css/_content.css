@@ -16,6 +16,14 @@ blockquote {
   color: var(--color-text-secondary);
 }
 
+.verse {
+  margin: 1.25rem 0;
+  padding-left: 1.25rem;
+  border-left: 3px solid var(--color-blockquote-border);
+  color: var(--color-text-secondary);
+  white-space: pre-line;
+}
+
 ul, ol {
   padding-left: 1.5rem;
 }
