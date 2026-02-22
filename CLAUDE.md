@@ -25,3 +25,19 @@ Workflow: export from org-mode, then run `scripts/deploy.sh`.
 The [`stafforini.el`](https://github.com/benthamite/stafforini.el) package provides Emacs commands for driving the build pipeline (exporting notes/quotes, regenerating work pages and backlinks, starting the dev server, etc.). See PUBLISHING.md for the full command reference. The package lives in a separate repo but wraps the scripts in this one.
 
 **Local path**: `~/.config/emacs-profiles/7.1.30-target/elpaca/repos/stafforini/stafforini.el`
+
+When telling the user to run a script, always mention the corresponding `stafforini.el` command (accessible via `stafforini-menu`):
+
+| Script | Emacs command | Menu key |
+|--------|--------------|----------|
+| `scripts/export-notes.sh` | `stafforini-export-all-notes` | `n` |
+| `scripts/export-quotes.sh` | `stafforini-export-all-quotes` | `q` |
+| `scripts/prepare-org-notes.py` | `stafforini-prepare-notes` | `p` |
+| `scripts/generate-work-pages.py` | `stafforini-update-works` | `w` |
+| `scripts/generate-backlinks.py` | `stafforini-update-backlinks` | `b` |
+| `scripts/process-pdfs.py` | `stafforini-process-pdfs` | `d` |
+| `scripts/deploy.sh` | (run from terminal) | — |
+| `scripts/generate-id-slug-map.py` | (no command yet) | — |
+| `scripts/generate-topic-pages.py` | (no command yet) | — |
+| Full pipeline | `stafforini-full-rebuild` | `R` |
+| Hugo dev server | `stafforini-start-server` / `stafforini-stop-server` | `s` / `k` |
