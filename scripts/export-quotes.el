@@ -28,15 +28,31 @@
   :export-bibliography (lambda (_keys _files _style _props _backend _info) ""))
 (setq org-cite-export-processors '((t . (noop))))
 
-;; Preserve link description for id: links that ox-hugo can't resolve.
+;; Load org-id → slug mapping for topic links
+(defvar export-id-slug-map
+  (let ((map-file "/tmp/id-slug-map.json"))
+    (if (file-exists-p map-file)
+        (with-temp-buffer
+          (insert-file-contents map-file)
+          (json-parse-string (buffer-string) :object-type 'hash-table))
+      (progn
+        (message "WARNING: %s not found — id: links will render as plain text" map-file)
+        (make-hash-table :test 'equal))))
+  "Hash-table mapping org IDs to Hugo slugs for topic links.")
+
+;; Resolve id: links to proper Hugo note URLs when possible.
 ;; Topic notes (~/notes/tags/, ~/people/tags/) are org-roam stubs without
-;; EXPORT_FILE_NAME, so ox-hugo silently drops the entire link element,
-;; leaving only the middot separators in the Topics line.  Rendering the
-;; description as plain text keeps the topic names visible.
+;; EXPORT_FILE_NAME, so ox-hugo silently drops the entire link element.
+;; We look up the org ID in export-id-slug-map and emit a markdown link
+;; when found; otherwise fall back to plain text description.
 (org-link-set-parameters
  "id"
- :export (lambda (_path desc _backend _info)
-           (or desc "")))
+ :export (lambda (path desc _backend _info)
+           (let* ((id (upcase path))
+                  (slug (gethash id export-id-slug-map)))
+             (if slug
+                 (format "[%s](/notes/%s/)" (or desc slug) slug)
+               (or desc "")))))
 
 ;; Enable org-id tracking (required by ox-hugo for ID-based exports)
 (setq org-id-track-globally t)
