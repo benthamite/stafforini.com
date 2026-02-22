@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Generate backlinks.json from the org-roam SQLite database.
 
-Reads the org-roam database, extracts id-type links between notes in the
-notes directory, maps sub-heading nodes back to their parent page-level
-node, builds a reverse index, and writes data/backlinks.json.
+Reads the org-roam database, extracts id-type links between nodes in the
+notes, people, and bibliographic-notes directories, maps sub-heading nodes
+back to their parent page-level node, builds a reverse index, and writes
+data/backlinks.json.
 """
 
 import json
@@ -20,11 +21,21 @@ NOTES_DIR = os.environ.get(
     "NOTES_DIR",
     os.path.expanduser("~/Library/CloudStorage/Dropbox/notes/"),
 )
+PEOPLE_DIR = os.environ.get(
+    "PEOPLE_DIR",
+    os.path.expanduser("~/Library/CloudStorage/Dropbox/people/"),
+)
+BIBNOTES_DIR = os.environ.get(
+    "BIBNOTES_DIR",
+    os.path.expanduser("~/Library/CloudStorage/Dropbox/bibliographic-notes/"),
+)
 # Escape SQL LIKE wildcards in path, then wrap with % for substring match
 def _escape_like(s):
     return s.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
 
 NOTES_LIKE = "%" + _escape_like(NOTES_DIR) + "%"
+PEOPLE_LIKE = "%" + _escape_like(PEOPLE_DIR) + "%"
+BIBNOTES_LIKE = "%" + _escape_like(BIBNOTES_DIR) + "%"
 OUTPUT_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "backlinks.json")
 
 
@@ -54,12 +65,13 @@ def main():
     conn = sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
 
-    # Get all page-level nodes (level 0 or 1) in the notes directory.
-    # These are the nodes that correspond to actual Hugo pages.
+    # Get all page-level nodes (level 0 or 1) in the notes, people, and
+    # bibliographic-notes directories.  These correspond to actual Hugo pages.
     page_nodes = {}
     cursor = conn.execute(
-        "SELECT id, file, level, title FROM nodes WHERE file LIKE ? AND level <= 1",
-        (NOTES_LIKE,),
+        "SELECT id, file, level, title FROM nodes"
+        " WHERE (file LIKE ? OR file LIKE ? OR file LIKE ?) AND level <= 1",
+        (NOTES_LIKE, PEOPLE_LIKE, BIBNOTES_LIKE),
     )
     for row in cursor:
         node_id = strip_elisp_quotes(row["id"])
@@ -69,12 +81,13 @@ def main():
             "slug": file_to_slug(row["file"]),
         }
 
-    # Get all sub-heading nodes in the notes directory so we can map them
-    # back to their parent page-level node (by file).
+    # Get all sub-heading nodes so we can map them back to their parent
+    # page-level node (by file).
     subheading_to_page = {}
     cursor = conn.execute(
-        "SELECT id, file FROM nodes WHERE file LIKE ? AND level > 1",
-        (NOTES_LIKE,),
+        "SELECT id, file FROM nodes"
+        " WHERE (file LIKE ? OR file LIKE ? OR file LIKE ?) AND level > 1",
+        (NOTES_LIKE, PEOPLE_LIKE, BIBNOTES_LIKE),
     )
     for row in cursor:
         node_id = strip_elisp_quotes(row["id"])
@@ -85,16 +98,16 @@ def main():
     for node_id, info in page_nodes.items():
         file_to_page[info["file"]] = node_id
 
-    # Get all id-type links where source is in the notes directory.
+    # Get all id-type links where source is in any of the three directories.
     links = conn.execute(
         """
         SELECT l.source, l.dest
         FROM links l
         JOIN nodes n_src ON l.source = n_src.id
         WHERE l.type = '"id"'
-        AND n_src.file LIKE ?
+        AND (n_src.file LIKE ? OR n_src.file LIKE ? OR n_src.file LIKE ?)
         """,
-        (NOTES_LIKE,),
+        (NOTES_LIKE, PEOPLE_LIKE, BIBNOTES_LIKE),
     )
 
     # Build the reverse index.
