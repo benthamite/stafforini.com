@@ -25,7 +25,7 @@
   {{- else -}}
     {{ $work.Title | safeHTML }},
   {{- end }}
-  {{- with $work.Params.editor }} in {{ . }} {{ if or (in . " and ") (in . ", ") }}(eds.){{ else }}(ed.){{ end }}{{ end }} <em>{{ $work.Params.booktitle | default $work.Title | safeHTML }}</em>
+  {{- with $work.Params.editor }} in {{ . }} {{ partial "editor-abbrev.html" . }}{{ end }} <em>{{ $work.Params.booktitle | default $work.Title | safeHTML }}</em>
   {{- with $work.Params.location }}, {{ . }}{{ end -}}
   {{- with $work.Params.year }}, {{ . }}{{ end -}}
   {{- with $work.Params.pages }}, pp. {{ . }}{{ end -}}
@@ -63,7 +63,7 @@
   {{- with $locator }}, {{ . }}{{ end -}}
 {{- else if or (eq $type "collection") (eq $type "proceedings") -}}
   {{/* Edited collection: Editor (ed./eds.), *Title*, Place, Year */}}
-  {{ with $work.Params.editor }}{{ . }} {{ if or (in . " and ") (in . ", ") }}(eds.){{ else }}(ed.){{ end }}{{ end -}},
+  {{ with $work.Params.editor }}{{ . }} {{ partial "editor-abbrev.html" . }}{{ end -}},
   {{- if $link -}}
     {{- " " -}}<a href="{{ $work.RelPermalink }}"><em>{{ $work.Title | safeHTML }}</em></a>
   {{- else -}}

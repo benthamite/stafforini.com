@@ -1,0 +1,9 @@
+{{/*
+  Returns "(ed.)" or "(eds.)" for an editor string.
+
+  Heuristic: if the string contains " and " or ", " it likely has multiple
+  editors. Pass the raw editor string as the context.
+
+  Usage: {{ partial "editor-abbrev.html" .Params.editor }}
+*/}}
+{{- if or (in . " and ") (in . ", ") -}}(eds.){{- else -}}(ed.){{- end -}}

@@ -17,7 +17,7 @@
     {{/* Author / editor line */}}
     {{ if or (eq $type "collection") (eq $type "proceedings") }}
       {{ with .Params.editor }}
-      <p class="work-author">{{ . }} {{ if or (in . " and ") (in . ", ") }}(eds.){{ else }}(ed.){{ end }}</p>
+      <p class="work-author">{{ . }} {{ partial "editor-abbrev.html" . }}</p>
       {{ end }}
     {{ else }}
       {{ with .Params.author }}
@@ -25,10 +25,11 @@
       {{ end }}
     {{ end }}
 
-    {{/* Publication details line */}}
+    {{/* Publication details line — entry-type branching mirrors citation-format.html;
+         keep the two in sync when adding or modifying entry types */}}
     <p class="work-details">
       {{- if or (eq $type "incollection") (eq $type "inbook") (eq $type "inproceedings") -}}
-        {{- with .Params.editor }}In {{ . }} {{ if or (in . " and ") (in . ", ") }}(eds.){{ else }}(ed.){{ end }}{{ end }} <em>{{ .Params.booktitle | default .Title | safeHTML }}</em>
+        {{- with .Params.editor }}In {{ . }} {{ partial "editor-abbrev.html" . }}{{ end }} <em>{{ .Params.booktitle | default .Title | safeHTML }}</em>
         {{- with .Params.location }}, {{ . }}{{ end -}}
         {{- with .Params.year }}, {{ . }}{{ end -}}
         {{- with .Params.pages }}, pp. {{ . }}{{ end -}}
