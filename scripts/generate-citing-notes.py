@@ -15,24 +15,14 @@ import os
 import re
 import sys
 
+from lib import cite_key_to_slug
+
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 NOTES_DIR = os.path.join(REPO_ROOT, "content", "notes")
 OUTPUT_PATH = os.path.join(REPO_ROOT, "data", "citing-notes.json")
 
 # Matches {{< cite "SomeKey" >}} or {{< cite "SomeKey" "pp. 1-2" >}}
 CITE_RE = re.compile(r'\{\{<\s*cite\s+"([^"]+)"')
-
-
-def camel_to_kebab(key):
-    """Convert a CamelCase cite key to a kebab-case slug.
-
-    Mirrors the logic in layouts/shortcodes/cite.html:
-      Parfit2017WhatMattersVolume -> parfit-2017-what-matters-volume
-    """
-    slug = re.sub(r"([a-zA-Z])(\d)", r"\1-\2", key)
-    slug = re.sub(r"(\d)([a-zA-Z])", r"\1-\2", slug)
-    slug = re.sub(r"([a-z])([A-Z])", r"\1-\2", slug)
-    return slug.lower()
 
 
 def main():
@@ -66,7 +56,7 @@ def main():
         # Find all cite shortcode invocations
         for match in CITE_RE.finditer(content):
             cite_key = match.group(1)
-            work_slug = camel_to_kebab(cite_key)
+            work_slug = cite_key_to_slug(cite_key)
 
             if work_slug not in citing:
                 citing[work_slug] = set()
