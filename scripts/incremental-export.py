@@ -107,7 +107,11 @@ def scan_source_files(cfg: dict) -> dict[str, float]:
 
     result = {}
     skipped_dataless = []
-    for f in sorted(source_dir.glob("*.org")):
+    org_files = sorted(source_dir.glob("*.org"))
+    total = len(org_files)
+    for i, f in enumerate(org_files, 1):
+        if i % 200 == 0 or i == total:
+            print(f"  Scanned {i}/{total} files...", flush=True)
         if f.name in skip_files:
             continue
         if is_dataless(f):
