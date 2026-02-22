@@ -27,8 +27,21 @@
   /* NameException */ .chroma .ne { color:#a6e22e }
   /* NameOther */ .chroma .nx { color:#a6e22e }
   /* NameTag */ .chroma .nt { color:#f92672 }
+  /* Name */ .chroma .n { color:#f8f8f2 }
+  /* NameBuiltin */ .chroma .nb { color:#f8f8f2 }
+  /* NameBuiltinPseudo */ .chroma .bp { color:#f8f8f2 }
+  /* NameEntity */ .chroma .ni { color:#f8f8f2 }
+  /* NameLabel */ .chroma .nl { color:#f8f8f2 }
+  /* NameNamespace */ .chroma .nn { color:#f8f8f2 }
+  /* NameProperty */ .chroma .py { color:#f8f8f2 }
+  /* NameVariable */ .chroma .nv { color:#f8f8f2 }
+  /* NameVariableClass */ .chroma .vc { color:#f8f8f2 }
+  /* NameVariableGlobal */ .chroma .vg { color:#f8f8f2 }
+  /* NameVariableInstance */ .chroma .vi { color:#f8f8f2 }
+  /* NameVariableMagic */ .chroma .vm { color:#f8f8f2 }
   /* NameFunction */ .chroma .nf { color:#a6e22e }
   /* NameFunctionMagic */ .chroma .fm { color:#a6e22e }
+  /* Punctuation */ .chroma .p { color:#f8f8f2 }
   /* Literal */ .chroma .l { color:#ae81ff }
   /* LiteralDate */ .chroma .ld { color:#e6db74 }
   /* LiteralString */ .chroma .s { color:#e6db74 }
