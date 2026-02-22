@@ -26,7 +26,11 @@ def scan_directory(directory: Path) -> dict[str, str]:
         print(f"  Warning: directory not found: {directory}", file=sys.stderr)
         return mapping
 
-    for org_file in sorted(directory.glob("*.org")):
+    org_files = sorted(directory.glob("*.org"))
+    total = len(org_files)
+    for i, org_file in enumerate(org_files, 1):
+        if i % 100 == 0 or i == total:
+            print(f"  Scanning {directory.name}: {i}/{total}", flush=True)
         try:
             text = org_file.read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError) as exc:

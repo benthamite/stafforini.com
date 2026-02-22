@@ -105,7 +105,7 @@
 
     (dolist (file public-files)
       (setq processed (1+ processed))
-      (when (= (% processed 50) 0)
+      (when (= (% processed 10) 0)
         (message "Progress: %d/%d files (%d%%)"
                  processed (length public-files)
                  (/ (* 100 processed) (length public-files))))
