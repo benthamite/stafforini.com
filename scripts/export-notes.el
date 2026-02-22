@@ -10,12 +10,9 @@
 
 ;;; Code:
 
-;; Add all elpaca build directories to load-path
-(let ((builds-dir (expand-file-name "~/.config/emacs-profiles/7.1.29/elpaca/builds/")))
-  (when (file-directory-p builds-dir)
-    (dolist (dir (directory-files builds-dir t "^[^.]"))
-      (when (file-directory-p dir)
-        (add-to-list 'load-path dir)))))
+;; Shared setup: elpaca load-path and export--file-dataless-p
+(load (expand-file-name "export-common.el"
+                        (file-name-directory load-file-name)))
 
 (require 'ox-hugo)
 
@@ -74,14 +71,6 @@
 (defvar export-notes-total 0)
 (defvar export-notes-errors '())
 (defvar export-notes-skipped-dataless '())
-
-(defun export--file-dataless-p (file)
-  "Return non-nil if FILE has the macOS SF_DATALESS flag (Dropbox dehydrated).
-Reading such a file blocks indefinitely, so we must skip it."
-  (when (eq system-type 'darwin)
-    (let ((output (shell-command-to-string
-                   (format "ls -lO %s 2>/dev/null" (shell-quote-argument file)))))
-      (string-match-p "dataless" output))))
 
 (defun export-notes-batch ()
   "Export all blog org files from pablos-miscellany to Hugo."
