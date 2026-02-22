@@ -145,9 +145,15 @@ def strip_citation_from_content(text: str) -> str:
         # No blockquote found, return as-is
         return text
 
-    # Keep everything up to and including the last blockquote line,
-    # plus a trailing newline
+    # Keep everything up to and including the last blockquote line
     result_lines = lines[:last_blockquote_idx + 1]
+
+    # Scan remaining lines for a Topics line to preserve
+    for line in lines[last_blockquote_idx + 1:]:
+        if line.startswith("Topics:"):
+            result_lines.append("")
+            result_lines.append(line)
+            break
 
     # Ensure the file ends with a single newline
     return "\n".join(result_lines) + "\n"
