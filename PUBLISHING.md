@@ -105,10 +105,11 @@ All build commands are provided by the `stafforini` package. They run asynchrono
 | Command | What it does |
 |---|---|
 | `M-x stafforini-prepare-notes` | Add ox-hugo metadata to new org note files |
-| `M-x stafforini-export-all-notes` | Export all notes to Hugo markdown (batch mode) |
-| `M-x stafforini-export-all-quotes` | Export all quotes to Hugo markdown (batch mode) |
+| `M-x stafforini-export-all-notes` | Export notes + inject lastmod, backlinks, citing-notes |
+| `M-x stafforini-export-all-quotes` | Generate ID→slug map, export quotes + work pages, topic pages |
 | `M-x stafforini-update-works` | Generate/update work pages from BibTeX data |
 | `M-x stafforini-update-backlinks` | Regenerate backlink data from org-roam |
+| `M-x stafforini-rebuild-search-index` | Rebuild the Pagefind search index |
 | `M-x stafforini-start-server` | Start Hugo dev server (always restarts for fresh data) |
 | `M-x stafforini-stop-server` | Stop the Hugo dev server |
 | `M-x stafforini-full-rebuild` | Run the full pipeline (see below) |
@@ -135,27 +136,21 @@ bash scripts/export-quotes.sh
 Run `M-x stafforini-full-rebuild` to execute the full pipeline sequentially:
 
 1. Prepare notes (add ox-hugo metadata)
-2. Export all notes
-3. Export all quotes
-4. Generate/update work pages
-5. Regenerate backlinks
-6. Generate citing-notes data
-7. Inject lastmod dates
-8. Process PDFs
-9. Clean `public/` (remove stale files)
-10. Hugo build (`hugo --minify`)
-11. Pagefind index (`npx pagefind --site public`)
+2. Export notes (+ inject lastmod, backlinks, citing-notes)
+3. Export quotes (+ ID→slug map, work pages, topic pages)
+4. Process PDFs
+5. Clean `public/` (remove stale files)
+6. Hugo build (`hugo --minify`)
+7. Pagefind index (`npx pagefind --site public`)
+
+The export scripts handle intermediate steps automatically. Steps 2 and 3 each run several sub-scripts internally (see the shell scripts for details).
 
 Or from the shell:
 
 ```bash
 python scripts/prepare-org-notes.py          # add ox-hugo metadata to new files
-emacs --batch -l scripts/export-notes.el     # export all notes
-bash scripts/export-quotes.sh                # export all quotes
-python scripts/generate-work-pages.py        # generate/update work pages
-python scripts/generate-backlinks.py         # regenerate backlinks
-python scripts/generate-citing-notes.py      # generate citing-notes data
-python scripts/inject-lastmod.py             # inject lastmod dates
+bash scripts/export-notes.sh --full          # export notes + lastmod, backlinks, citing-notes
+bash scripts/export-quotes.sh --full         # id-slug map + export quotes + works, topics
 python scripts/process-pdfs.py               # strip annotations, generate thumbnails
 rm -rf public                                # clean stale build output
 hugo --minify                                # build the site

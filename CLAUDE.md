@@ -33,13 +33,12 @@ When telling the user to run a script, always mention the corresponding `staffor
 | `scripts/export-notes.sh` | `stafforini-export-all-notes` | `n` |
 | `scripts/export-quotes.sh` | `stafforini-export-all-quotes` | `q` |
 | `scripts/prepare-org-notes.py` | `stafforini-prepare-notes` | `p` |
-| `scripts/generate-id-slug-map.py` | `stafforini-generate-id-slug-map` | `m` |
 | `scripts/generate-work-pages.py` | `stafforini-update-works` | `w` |
-| `scripts/generate-topic-pages.py` | `stafforini-generate-topic-pages` | `t` |
 | `scripts/generate-backlinks.py` | `stafforini-update-backlinks` | `b` |
-| `scripts/generate-citing-notes.py` | `stafforini-generate-citing-notes` | `c` |
-| `scripts/inject-lastmod.py` | `stafforini-inject-lastmod` | `l` |
 | `scripts/process-pdfs.py` | `stafforini-process-pdfs` | `d` |
 | Full pipeline | `stafforini-full-rebuild` | `R` |
+| Search index | `stafforini-rebuild-search-index` | `i` |
 | `scripts/deploy.sh` | `stafforini-deploy` | `D` |
 | Hugo dev server | `stafforini-start-server` / `stafforini-stop-server` | `s` / `k` |
+
+**Note:** Several scripts are now run automatically as part of the export workflows and no longer have dedicated menu entries: `inject-lastmod.py`, `generate-citing-notes.py` (run by `export-notes.sh`), and `generate-id-slug-map.py`, `generate-topic-pages.py` (run by `export-quotes.sh`). They remain independently runnable via `M-x` for debugging.
