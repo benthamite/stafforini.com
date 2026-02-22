@@ -47,6 +47,15 @@
 (defvar export-total-files 0)
 (defvar export-total-subtrees 0)
 (defvar export-errors '())
+(defvar export-skipped-dataless '())
+
+(defun export--file-dataless-p (file)
+  "Return non-nil if FILE has the macOS SF_DATALESS flag (Dropbox dehydrated).
+Reading such a file blocks indefinitely, so we must skip it."
+  (when (eq system-type 'darwin)
+    (let ((output (shell-command-to-string
+                   (format "ls -lO %s 2>/dev/null" (shell-quote-argument file)))))
+      (string-match-p "dataless" output))))
 
 (defun export-quotes-batch ()
   "Export all :public:-tagged subheadings from bibliographic notes."
@@ -66,10 +75,15 @@
               (message "Filtering for files with :public: tag...")
               (seq-filter
                (lambda (f)
-                 (with-temp-buffer
-                   (insert-file-contents f)
-                   (goto-char (point-min))
-                   (re-search-forward ":public:" nil t)))
+                 (if (export--file-dataless-p f)
+                     (progn
+                       (push f export-skipped-dataless)
+                       (message "SKIP dataless: %s" (file-name-nondirectory f))
+                       nil)
+                   (with-temp-buffer
+                     (insert-file-contents f)
+                     (goto-char (point-min))
+                     (re-search-forward ":public:" nil t))))
                all-files))))
          (processed 0))
     (message "Found %d files with :public: subheadings" (length public-files))
@@ -80,27 +94,33 @@
         (message "Progress: %d/%d files (%d%%)"
                  processed (length public-files)
                  (/ (* 100 processed) (length public-files))))
-      (condition-case err
-          (let ((buf (find-file-noselect file)))
-            (unwind-protect
-                (with-current-buffer buf
-                  (let ((count (org-hugo-export-wim-to-md :all-subtrees)))
-                    (when count
-                      (setq export-total-subtrees (+ export-total-subtrees
-                                                    (if (numberp count) count 1)))
-                      (setq export-total-files (1+ export-total-files)))))
-              ;; Always kill buffer to free memory
-              (kill-buffer buf)))
-        (error
-         (push (cons file (error-message-string err)) export-errors)
-         (message "ERROR in %s: %s" (file-name-nondirectory file)
-                  (error-message-string err)))))
+      (if (export--file-dataless-p file)
+          (progn
+            (push file export-skipped-dataless)
+            (message "SKIP dataless: %s" (file-name-nondirectory file)))
+        (condition-case err
+            (let ((buf (find-file-noselect file)))
+              (unwind-protect
+                  (with-current-buffer buf
+                    (let ((count (org-hugo-export-wim-to-md :all-subtrees)))
+                      (when count
+                        (setq export-total-subtrees (+ export-total-subtrees
+                                                      (if (numberp count) count 1)))
+                        (setq export-total-files (1+ export-total-files)))))
+                ;; Always kill buffer to free memory
+                (kill-buffer buf)))
+          (error
+           (push (cons file (error-message-string err)) export-errors)
+           (message "ERROR in %s: %s" (file-name-nondirectory file)
+                    (error-message-string err))))))
 
     (message "\n========================================")
     (message "EXPORT COMPLETE")
     (message "========================================")
     (message "Files exported: %d" export-total-files)
     (message "Subtrees exported: %d" export-total-subtrees)
+    (when export-skipped-dataless
+      (message "Skipped (dataless): %d" (length export-skipped-dataless)))
     (when export-errors
       (message "Errors: %d" (length export-errors))
       (dolist (err export-errors)

@@ -73,6 +73,15 @@
 ;; Track stats
 (defvar export-notes-total 0)
 (defvar export-notes-errors '())
+(defvar export-notes-skipped-dataless '())
+
+(defun export--file-dataless-p (file)
+  "Return non-nil if FILE has the macOS SF_DATALESS flag (Dropbox dehydrated).
+Reading such a file blocks indefinitely, so we must skip it."
+  (when (eq system-type 'darwin)
+    (let ((output (shell-command-to-string
+                   (format "ls -lO %s 2>/dev/null" (shell-quote-argument file)))))
+      (string-match-p "dataless" output))))
 
 (defun export-notes-batch ()
   "Export all blog org files from pablos-miscellany to Hugo."
@@ -94,10 +103,15 @@
                            all-files)))
               (seq-filter
                (lambda (f)
-                 (with-temp-buffer
-                   (insert-file-contents f)
-                   (goto-char (point-min))
-                   (re-search-forward ":EXPORT_FILE_NAME:" nil t)))
+                 (if (export--file-dataless-p f)
+                     (progn
+                       (push f export-notes-skipped-dataless)
+                       (message "SKIP dataless: %s" (file-name-nondirectory f))
+                       nil)
+                   (with-temp-buffer
+                     (insert-file-contents f)
+                     (goto-char (point-min))
+                     (re-search-forward ":EXPORT_FILE_NAME:" nil t))))
                files))))
          (total (length exportable))
          (processed 0))
@@ -108,23 +122,29 @@
       (setq processed (1+ processed))
       (when (= (% processed 10) 0)
         (message "Progress: %d/%d files" processed total))
-      (condition-case err
-          (let ((buf (find-file-noselect file)))
-            (unwind-protect
-                (with-current-buffer buf
-                  (org-hugo-export-wim-to-md :all-subtrees)
-                  (setq export-notes-total (1+ export-notes-total)))
-              (kill-buffer buf)))
-        (error
-         (push (cons file (error-message-string err)) export-notes-errors)
-         (message "ERROR in %s: %s"
-                  (file-name-nondirectory file)
-                  (error-message-string err)))))
+      (if (export--file-dataless-p file)
+          (progn
+            (push file export-notes-skipped-dataless)
+            (message "SKIP dataless: %s" (file-name-nondirectory file)))
+        (condition-case err
+            (let ((buf (find-file-noselect file)))
+              (unwind-protect
+                  (with-current-buffer buf
+                    (org-hugo-export-wim-to-md :all-subtrees)
+                    (setq export-notes-total (1+ export-notes-total)))
+                (kill-buffer buf)))
+          (error
+           (push (cons file (error-message-string err)) export-notes-errors)
+           (message "ERROR in %s: %s"
+                    (file-name-nondirectory file)
+                    (error-message-string err))))))
 
     (message "\n========================================")
     (message "EXPORT COMPLETE")
     (message "========================================")
     (message "Files exported: %d" export-notes-total)
+    (when export-notes-skipped-dataless
+      (message "Skipped (dataless): %d" (length export-notes-skipped-dataless)))
     (when export-notes-errors
       (message "Errors: %d" (length export-notes-errors))
       (dolist (err export-notes-errors)
