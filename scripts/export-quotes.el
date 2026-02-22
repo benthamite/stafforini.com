@@ -50,45 +50,51 @@
 
 (defun export-quotes-batch ()
   "Export all :public:-tagged subheadings from bibliographic notes."
-  (let* ((notes-dir (expand-file-name "~/Library/CloudStorage/Dropbox/bibliographic-notes/"))
-         (all-files (directory-files notes-dir t "\\.org$"))
-         (total (length all-files))
+  (let* ((file-list-path (getenv "EXPORT_FILE_LIST"))
+         (notes-dir (expand-file-name "~/Library/CloudStorage/Dropbox/bibliographic-notes/"))
+         (public-files
+          (if file-list-path
+              ;; Incremental: only export files from the list
+              (progn
+                (message "Incremental mode: reading file list from %s" file-list-path)
+                (with-temp-buffer
+                  (insert-file-contents file-list-path)
+                  (split-string (buffer-string) "\n" t)))
+            ;; Full: scan and pre-filter
+            (let ((all-files (directory-files notes-dir t "\\.org$")))
+              (message "Found %d .org files in %s" (length all-files) notes-dir)
+              (message "Filtering for files with :public: tag...")
+              (seq-filter
+               (lambda (f)
+                 (with-temp-buffer
+                   (insert-file-contents f)
+                   (goto-char (point-min))
+                   (re-search-forward ":public:" nil t)))
+               all-files))))
          (processed 0))
-    (message "Found %d .org files in %s" total notes-dir)
+    (message "Found %d files with :public: subheadings" (length public-files))
 
-    ;; Pre-filter: only files containing :public:
-    (message "Filtering for files with :public: tag...")
-    (let ((public-files
-           (seq-filter
-            (lambda (f)
-              (with-temp-buffer
-                (insert-file-contents f)
-                (goto-char (point-min))
-                (re-search-forward ":public:" nil t)))
-            all-files)))
-      (message "Found %d files with :public: subheadings" (length public-files))
-
-      (dolist (file public-files)
-        (setq processed (1+ processed))
-        (when (= (% processed 50) 0)
-          (message "Progress: %d/%d files (%d%%)"
-                   processed (length public-files)
-                   (/ (* 100 processed) (length public-files))))
-        (condition-case err
-            (let ((buf (find-file-noselect file)))
-              (unwind-protect
-                  (with-current-buffer buf
-                    (let ((count (org-hugo-export-wim-to-md :all-subtrees)))
-                      (when count
-                        (setq export-total-subtrees (+ export-total-subtrees
-                                                      (if (numberp count) count 1)))
-                        (setq export-total-files (1+ export-total-files)))))
-                ;; Always kill buffer to free memory
-                (kill-buffer buf)))
-          (error
-           (push (cons file (error-message-string err)) export-errors)
-           (message "ERROR in %s: %s" (file-name-nondirectory file)
-                    (error-message-string err))))))
+    (dolist (file public-files)
+      (setq processed (1+ processed))
+      (when (= (% processed 50) 0)
+        (message "Progress: %d/%d files (%d%%)"
+                 processed (length public-files)
+                 (/ (* 100 processed) (length public-files))))
+      (condition-case err
+          (let ((buf (find-file-noselect file)))
+            (unwind-protect
+                (with-current-buffer buf
+                  (let ((count (org-hugo-export-wim-to-md :all-subtrees)))
+                    (when count
+                      (setq export-total-subtrees (+ export-total-subtrees
+                                                    (if (numberp count) count 1)))
+                      (setq export-total-files (1+ export-total-files)))))
+              ;; Always kill buffer to free memory
+              (kill-buffer buf)))
+        (error
+         (push (cons file (error-message-string err)) export-errors)
+         (message "ERROR in %s: %s" (file-name-nondirectory file)
+                  (error-message-string err)))))
 
     (message "\n========================================")
     (message "EXPORT COMPLETE")

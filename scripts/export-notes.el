@@ -70,39 +70,35 @@
 (unless (fboundp 'git-auto-commit-mode)
   (defun git-auto-commit-mode (&rest _) nil))
 
-;; Clean stale content before exporting — content/notes/ is entirely
-;; generated, so any file not recreated by the export is an orphan.
-(let ((notes-content-dir
-       (expand-file-name "content/notes/"
-                         "~/Library/CloudStorage/Dropbox/repos/stafforini.com/")))
-  (when (file-directory-p notes-content-dir)
-    (message "Cleaning stale files from content/notes/...")
-    (dolist (f (directory-files notes-content-dir t "\\.md$"))
-      (unless (string= (file-name-nondirectory f) "_index.md")
-        (delete-file f)))))
-
 ;; Track stats
 (defvar export-notes-total 0)
 (defvar export-notes-errors '())
 
 (defun export-notes-batch ()
   "Export all blog org files from pablos-miscellany to Hugo."
-  (let* ((notes-dir (expand-file-name
+  (let* ((file-list-path (getenv "EXPORT_FILE_LIST"))
+         (notes-dir (expand-file-name
                      "~/Library/CloudStorage/Dropbox/websites/pablos-miscellany/"))
-         (all-files (directory-files notes-dir t "\\.org$"))
-         ;; Skip the monolithic project file
-         (files (seq-remove
-                 (lambda (f) (string= (file-name-nondirectory f) "pablos-miscellany.org"))
-                 all-files))
-         ;; Only process files that have ox-hugo metadata
          (exportable
-          (seq-filter
-           (lambda (f)
-             (with-temp-buffer
-               (insert-file-contents f)
-               (goto-char (point-min))
-               (re-search-forward ":EXPORT_FILE_NAME:" nil t)))
-           files))
+          (if file-list-path
+              ;; Incremental: only export files from the list
+              (progn
+                (message "Incremental mode: reading file list from %s" file-list-path)
+                (with-temp-buffer
+                  (insert-file-contents file-list-path)
+                  (split-string (buffer-string) "\n" t)))
+            ;; Full: scan and pre-filter
+            (let* ((all-files (directory-files notes-dir t "\\.org$"))
+                   (files (seq-remove
+                           (lambda (f) (string= (file-name-nondirectory f) "pablos-miscellany.org"))
+                           all-files)))
+              (seq-filter
+               (lambda (f)
+                 (with-temp-buffer
+                   (insert-file-contents f)
+                   (goto-char (point-min))
+                   (re-search-forward ":EXPORT_FILE_NAME:" nil t)))
+               files))))
          (total (length exportable))
          (processed 0))
 
