@@ -23,6 +23,10 @@ if [ ! -d content ]; then
   exit 1
 fi
 
+# Several of these steps overlap with export-notes.sh / export-quotes.sh.
+# Running them here ensures the data is fresh even if the user exports
+# content and deploys in separate sessions.
+
 # Generate org-id → slug mapping (used by export-quotes.el for topic links;
 # also run here so the map is always fresh before topic page generation)
 echo "Generating ID→slug map..."

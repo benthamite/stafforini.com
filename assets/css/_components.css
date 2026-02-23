@@ -330,6 +330,8 @@
   height: auto;
 }
 
+/* Invert + hue-rotate makes white-background PDFs appear dark-themed;
+   0.9 instead of 1.0 avoids pure-white-on-black harshness */
 [data-theme="dark"] .pdf-preview-link img {
   filter: invert(0.9) hue-rotate(180deg);
 }

@@ -41,7 +41,11 @@ OUTPUT_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "
 
 
 def strip_elisp_quotes(value):
-    """Strip Emacs Lisp string quoting from a value (e.g. '"id"' -> 'id')."""
+    """Strip Emacs Lisp string quoting from a value (e.g. '\"id\"' -> 'id').
+
+    The org-roam SQLite database stores strings with Elisp-style double-quote
+    delimiters, so we must strip them to get the raw value.
+    """
     if isinstance(value, str):
         return value.strip('"')
     return value
@@ -66,12 +70,14 @@ def main():
     conn = sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
 
-    # Get all page-level nodes (level 0 or 1) in the notes, people, and
-    # bibliographic-notes directories.  These correspond to actual Hugo pages.
+    # Get all page-level nodes (level 0 = file-level, level 1 = first heading)
+    # in the notes, people, and bibliographic-notes directories.
+    # These correspond to actual Hugo pages (one per org file).
     page_nodes = {}
     cursor = conn.execute(
         "SELECT id, file, level, title FROM nodes"
-        " WHERE (file LIKE ? OR file LIKE ? OR file LIKE ?) AND level <= 1",
+        " WHERE (file LIKE ? OR file LIKE ? OR file LIKE ?)"
+        " AND level <= 1",  # 0 = file-level node, 1 = first heading
         (NOTES_LIKE, PEOPLE_LIKE, BIBNOTES_LIKE),
     )
     for row in cursor:

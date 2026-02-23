@@ -75,7 +75,9 @@ Safety net for cases where `org-link-set-parameters' is not honored."
 ;;;; Broken-relref fixer
 
 (defvar export--relref-slug-alist
-  '(("modifications" . "/notes/my-keyboard-setup/"))
+  '(;; modifications.org has EXPORT_FILE_NAME: my-keyboard-setup, so
+    ;; ox-hugo emits relref \"modifications\" which doesn't resolve
+    ("modifications" . "/notes/my-keyboard-setup/"))
   "Alist mapping broken relref targets to correct Hugo slugs.
 ox-hugo converts file links to .org files into relref shortcodes using
 just the filename stem, which may not match the published page slug.

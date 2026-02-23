@@ -218,6 +218,13 @@ def match_quote(quote: dict, index: dict) -> dict:
 
     best_score = scored[0][0]
 
+    # Match confidence thresholds (tuned empirically against the WP quote corpus)
+    FULL_MATCH = 1.0        # all search terms found
+    CONFIDENT_MATCH = 0.75  # enough terms for a confident single match
+    WEAK_MATCH = 0.5        # low-confidence partial match
+    TIE_TOLERANCE = 0.95    # within 5% of best score counts as a tie
+    WEAK_DISPLAY_MIN = 0.4  # minimum score to display in weak match results
+
     def fmt(candidates, min_score=0.0):
         return [
             {"cite_key": e["cite_key"], "score": round(s, 3),
@@ -225,20 +232,18 @@ def match_quote(quote: dict, index: dict) -> dict:
             for s, e in candidates if s >= min_score
         ][:5]
 
-    # A full match means all terms found
-    if best_score >= 1.0:
-        # Check for ties
-        ties = [x for x in scored if x[0] >= 1.0]
+    if best_score >= FULL_MATCH:
+        ties = [x for x in scored if x[0] >= FULL_MATCH]
         if len(ties) > 1:
             return {"status": "ambiguous", "matches": fmt(ties)}
         return {"status": "matched", "matches": fmt(scored[:1])}
-    elif best_score >= 0.75:
-        ties = [x for x in scored if x[0] >= best_score * 0.95]
+    elif best_score >= CONFIDENT_MATCH:
+        ties = [x for x in scored if x[0] >= best_score * TIE_TOLERANCE]
         if len(ties) > 1:
             return {"status": "ambiguous", "matches": fmt(ties)}
         return {"status": "matched", "matches": fmt(scored[:1])}
-    elif best_score >= 0.5:
-        return {"status": "weak", "matches": fmt(scored[:3], 0.4)}
+    elif best_score >= WEAK_MATCH:
+        return {"status": "weak", "matches": fmt(scored[:3], WEAK_DISPLAY_MIN)}
     else:
         return {"status": "no_match", "matches": fmt(scored[:3])}
 

@@ -123,7 +123,8 @@ img {
   outline-offset: 2px;
 }
 
-/* Reduced motion */
+/* Reduced motion — near-zero durations (not 0) to preserve JS animation-end
+   events while making motion imperceptible */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

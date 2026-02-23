@@ -13,18 +13,15 @@ import argparse
 import json
 import os
 import re
-import stat
 import subprocess
 import sys
 import tempfile
 from pathlib import Path
 
+from lib import is_dataless
+
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parent
-
-# macOS SF_DATALESS flag — set by FileProvider on dehydrated (cloud-only) files.
-# Reading a dataless file blocks indefinitely waiting for Dropbox to hydrate it.
-SF_DATALESS = 0x40000000
 
 SECTIONS = {
     "quotes": {
@@ -33,7 +30,7 @@ SECTIONS = {
         "output_dir": REPO_ROOT / "content/quotes",
         "elisp": SCRIPT_DIR / "export-quotes.el",
         "pre_filter": lambda content: ":public:" in content,
-        "skip_files": set(),
+        "skip_files": set(),  # no exclusions for quotes
     },
     "notes": {
         "source_dir": Path.home()
@@ -41,6 +38,7 @@ SECTIONS = {
         "output_dir": REPO_ROOT / "content/notes",
         "elisp": SCRIPT_DIR / "export-notes.el",
         "pre_filter": lambda content: ":EXPORT_FILE_NAME:" in content,
+        # pablos-miscellany.org is the org-roam top-level index file, not an exportable note
         "skip_files": {"pablos-miscellany.org"},
     },
 }
@@ -88,14 +86,6 @@ def extract_export_file_names(filepath: Path) -> list[str]:
             if m:
                 names.append(m.group(1) + ".md")
     return names
-
-
-def is_dataless(path: Path) -> bool:
-    """Check if a file has the macOS SF_DATALESS flag (Dropbox dehydrated)."""
-    try:
-        return bool(os.stat(path).st_flags & SF_DATALESS)
-    except (OSError, AttributeError):
-        return False
 
 
 def fix_dataless_files() -> None:

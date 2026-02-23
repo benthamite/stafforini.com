@@ -252,10 +252,11 @@ def build_new_org_file(cite_key: str, entry: dict) -> str:
     ]
 
     # Add tags to the heading line
-    # Calculate padding: org convention is tags right-aligned to column 72
+    # Org convention: tags are right-aligned to a fixed column
+    ORG_TAGS_COLUMN = 72
     heading_line = lines[1]
     tag_str = f":{entry_tag}:biblio:"
-    pad_needed = max(1, 72 - len(heading_line) - len(tag_str))
+    pad_needed = max(1, ORG_TAGS_COLUMN - len(heading_line) - len(tag_str))
     lines[1] = heading_line + " " * pad_needed + tag_str
 
     return "\n".join(lines) + "\n"
@@ -284,10 +285,11 @@ def build_subheading(
         custom_fm_parts.append(f':locator "{locator}"')
     custom_fm = " ".join(custom_fm_parts)
 
-    # Tag line with padding (right-aligned to ~72)
+    # Tag line with padding (right-aligned to org-tags-column)
+    ORG_TAGS_COLUMN = 72
     heading_text = f"** {title}"
     tag_str = ":public:"
-    pad_needed = max(1, 72 - len(heading_text) - len(tag_str))
+    pad_needed = max(1, ORG_TAGS_COLUMN - len(heading_text) - len(tag_str))
     heading_line = heading_text + " " * pad_needed + tag_str
 
     # Build the subheading

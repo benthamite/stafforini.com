@@ -1,4 +1,9 @@
 (function () {
+  var HOVER_DEBOUNCE_MS = 150;  // avoid fetching on brief hover-throughs
+  var POPUP_GAP = 6;            // px between link and popup edge
+  var POPUP_EDGE_MARGIN = 8;    // px margin from viewport edge on reposition
+  var PREVIEW_MAX_LENGTH = 200; // truncate preview text to roughly one paragraph
+
   var cache = new Map();
   var popup = null;
   var timer = null;
@@ -19,7 +24,7 @@
 
     activeLink = link;
 
-    timer = setTimeout(function () {
+    timer = setTimeout(function () {  // debounce hover
       if (activeLink !== link) return;
 
       if (cache.has(href)) {
@@ -35,7 +40,7 @@
             var body = doc.querySelector('.note-body');
             var p = body ? body.querySelector('p') : null;
             var text = p ? p.textContent.trim() : '';
-            if (text.length > 200) text = text.substring(0, 200) + '\u2026'; // Roughly one paragraph for the popup
+            if (text.length > PREVIEW_MAX_LENGTH) text = text.substring(0, PREVIEW_MAX_LENGTH) + '\u2026';
             cache.set(href, text);
             if (activeLink === link) {
               displayPopup(link, text);
@@ -43,7 +48,7 @@
           })
           .catch(function () { cache.set(href, ''); }); // Cache empty string on failure to prevent repeated fetch attempts
       }
-    }, 150); // Debounce: avoid fetching on brief hover-throughs
+    }, HOVER_DEBOUNCE_MS);
   }
 
   function displayPopup(link, text) {
@@ -53,18 +58,18 @@
 
     var rect = link.getBoundingClientRect();
     popup.style.left = rect.left + window.scrollX + 'px';
-    popup.style.top = (rect.bottom + window.scrollY + 6) + 'px'; // 6px visual gap between link and popup
+    popup.style.top = (rect.bottom + window.scrollY + POPUP_GAP) + 'px';
     popup.classList.add('visible');
 
     // Reposition if popup overflows viewport (horizontal)
     var popupRect = popup.getBoundingClientRect();
     if (popupRect.right > window.innerWidth) {
-      popup.style.left = Math.max(0, window.innerWidth - popupRect.width - 8 + window.scrollX) + 'px';
+      popup.style.left = Math.max(0, window.innerWidth - popupRect.width - POPUP_EDGE_MARGIN + window.scrollX) + 'px';
     }
     // Reposition if popup overflows viewport (vertical) — show above the link
     popupRect = popup.getBoundingClientRect();
     if (popupRect.bottom > window.innerHeight) {
-      popup.style.top = (rect.top + window.scrollY - popupRect.height - 6) + 'px';
+      popup.style.top = (rect.top + window.scrollY - popupRect.height - POPUP_GAP) + 'px';
     }
   }
 
@@ -76,14 +81,14 @@
 
   // Capture phase required: pointerenter/pointerleave don't bubble, so delegation only works via capture
   document.addEventListener('pointerenter', function (e) {
-    var el = e.target.nodeType === 1 ? e.target : e.target.parentElement;
+    var el = e.target.nodeType === Node.ELEMENT_NODE ? e.target : e.target.parentElement;
     if (!el) return;
     var link = el.closest('a[href^="/notes/"]');
     if (link) showPreview(link);
   }, true);
 
   document.addEventListener('pointerleave', function (e) {
-    var el = e.target.nodeType === 1 ? e.target : e.target.parentElement;
+    var el = e.target.nodeType === Node.ELEMENT_NODE ? e.target : e.target.parentElement;
     if (!el) return;
     var link = el.closest('a[href^="/notes/"]');
     if (link && (!e.relatedTarget || !link.contains(e.relatedTarget))) {

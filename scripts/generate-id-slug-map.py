@@ -9,10 +9,11 @@ the :ID: property from each, and writes a {org-id: slug} mapping to
 import json
 import os
 import re
-import stat
 import sys
 import tempfile
 from pathlib import Path
+
+from lib import is_dataless
 
 NOTES_TAGS_DIR = Path.home() / "Library/CloudStorage/Dropbox/notes/tags"
 PEOPLE_TAGS_DIR = Path.home() / "Library/CloudStorage/Dropbox/people/tags"
@@ -20,18 +21,6 @@ PEOPLE_TAGS_DIR = Path.home() / "Library/CloudStorage/Dropbox/people/tags"
 OUTPUT_PATH = Path("/tmp/id-slug-map.json")
 
 ID_RE = re.compile(r"^:ID:\s+(\S+)", re.MULTILINE)
-
-# macOS SF_DATALESS flag — set by FileProvider on dehydrated (cloud-only) files.
-# Reading a dataless file blocks indefinitely waiting for Dropbox to hydrate it.
-SF_DATALESS = 0x40000000
-
-
-def _is_dataless(path: Path) -> bool:
-    """Check if a file has the macOS SF_DATALESS flag (Dropbox dehydrated)."""
-    try:
-        return bool(os.stat(path).st_flags & SF_DATALESS)
-    except (OSError, AttributeError):
-        return False
 
 
 def scan_directory(directory: Path) -> dict[str, str]:
@@ -47,7 +36,7 @@ def scan_directory(directory: Path) -> dict[str, str]:
     for i, org_file in enumerate(org_files, 1):
         if i % 100 == 0 or i == total:
             print(f"  Scanning {directory.name}: {i}/{total}", flush=True)
-        if _is_dataless(org_file):
+        if is_dataless(org_file):
             skipped_dataless += 1
             continue
         try:

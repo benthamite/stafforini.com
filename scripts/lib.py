@@ -5,6 +5,7 @@ script imports from a single source of truth rather than maintaining
 its own copy.
 """
 
+import os
 import re
 import unicodedata
 from pathlib import Path
@@ -45,6 +46,20 @@ STOP_WORDS = {
     "being", "have", "has", "had", "do", "does", "did", "not", "but",
     "that", "this", "these", "those", "as", "if", "than", "so",
 }
+
+
+# macOS SF_DATALESS flag (from sys/stat.h, documented in stat(2) man page).
+# Set by FileProvider on dehydrated (cloud-only) Dropbox files.
+# Reading a dataless file blocks indefinitely waiting for hydration.
+SF_DATALESS = 0x40000000
+
+
+def is_dataless(path: Path) -> bool:
+    """Check if a file has the macOS SF_DATALESS flag (Dropbox dehydrated)."""
+    try:
+        return bool(os.stat(path).st_flags & SF_DATALESS)
+    except (OSError, AttributeError):
+        return False
 
 
 # === Utility functions ===
@@ -177,6 +192,7 @@ def parse_bib_entries(
     for idx, match in enumerate(entry_starts):
         entry_type = match.group(1).lower()
         cite_key = match.group(2).strip()
+        # Skip BibTeX structural types (not actual bibliographic entries)
         if entry_type in ("comment", "preamble", "string"):
             continue
 
@@ -187,6 +203,10 @@ def parse_bib_entries(
         body = text[start_pos:end_pos]
 
         fields = {}
+        # Match BibTeX field = value in three forms:
+        #   field = {value with {nested {braces}}}  (up to 3 levels)
+        #   field = "quoted value"
+        #   field = 1234  (bare integer)
         for field_match in re.finditer(
             r"(\w+)\s*=\s*(?:\{((?:[^{}]|\{(?:[^{}]|\{[^{}]*\})*\})*)\}|\"([^\"]*)\"|(\d+))",
             body,

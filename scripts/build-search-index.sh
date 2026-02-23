@@ -27,6 +27,8 @@ hugo --quiet
 echo "Building search index..."
 npx pagefind --site public
 
+# Atomic swap: copy to .new, remove old, rename — so the dev server
+# never sees a partially-written index directory
 echo "Copying search index to static/..."
 cp -R public/pagefind static/pagefind.new
 trash static/pagefind 2>/dev/null || true

@@ -19,6 +19,7 @@
 (setq org-export-with-broken-links t)
 ;; Exclude :ARCHIVE: tagged headings from export
 (setq org-export-exclude-tags '("noexport" "ARCHIVE"))
+;; Always include lastmod in front matter (0 = no suppression period)
 (setq org-hugo-suppress-lastmod-period 0)
 
 ;; Disable citation processing entirely — register a no-op export processor
@@ -48,9 +49,11 @@
 (org-link-set-parameters
  "id"
  :export (lambda (path desc _backend _info)
+           ;; Upcase to match org-roam's convention for stored IDs
            (let* ((id (upcase path))
                   (slug (gethash id export-id-slug-map)))
              (if slug
+                 ;; All topic stubs live under /notes/ regardless of their source directory
                  (format "[%s](/notes/%s/)" (or desc slug) slug)
                (or desc "")))))
 
