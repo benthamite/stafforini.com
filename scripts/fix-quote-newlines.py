@@ -120,24 +120,31 @@ def clean_blockquote_html(html_text: str) -> str:
 # === Verse classification ===
 
 
+# Verse detection thresholds — tuned to distinguish poetry/verse from prose.
+VERSE_MIN_LINES = 3        # need at least this many non-empty lines
+VERSE_MAX_LINE_LEN = 100   # lines shorter than this count as "short"
+VERSE_SHORT_RATIO = 0.8    # fraction of lines that must be short
+VERSE_MAX_AVG_LEN = 80     # average line length must be under this
+
+
 def is_verse(text: str) -> bool:
     """Determine if text should be formatted as verse.
 
     Verse criteria:
-    - ≥3 non-empty lines
-    - ≥80% of non-empty lines under 100 chars
-    - Average line length <80 chars
+    - ≥VERSE_MIN_LINES non-empty lines
+    - ≥VERSE_SHORT_RATIO of non-empty lines under VERSE_MAX_LINE_LEN chars
+    - Average line length < VERSE_MAX_AVG_LEN chars
     """
     lines = text.split('\n')
     non_empty_lines = [l for l in lines if l.strip()]
 
-    if len(non_empty_lines) < 3:
+    if len(non_empty_lines) < VERSE_MIN_LINES:
         return False
 
-    short_count = sum(1 for l in non_empty_lines if len(l) < 100)
+    short_count = sum(1 for l in non_empty_lines if len(l) < VERSE_MAX_LINE_LEN)
     avg_len = sum(len(l) for l in non_empty_lines) / len(non_empty_lines)
 
-    return (short_count / len(non_empty_lines) >= 0.8) and (avg_len < 80)
+    return (short_count / len(non_empty_lines) >= VERSE_SHORT_RATIO) and (avg_len < VERSE_MAX_AVG_LEN)
 
 
 # === WP_POST_ID index ===

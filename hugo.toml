@@ -47,6 +47,6 @@ title = "Pablo Stafforini"
 # Disable taxonomies (backlinks-as-taxonomy instead)
 [taxonomies]
 
-# Pagination
+# Pagination (controls quotes per page in the /quotes/ feed)
 [pagination]
   pagerSize = 20

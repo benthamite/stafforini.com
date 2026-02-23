@@ -124,7 +124,7 @@ def extract_article_title(attr_html: str) -> str:
 
 def extract_year(attr_text: str) -> str:
     """Extract a 4-digit year from the attribution."""
-    # Look for years in the range 1400-2099
+    # Match years 1400–2099 (covers early modern to present publications)
     years = re.findall(r"\b(1[4-9]\d{2}|20\d{2})\b", attr_text)
     if years:
         # Return the last year found (usually the publication year comes last,
@@ -172,8 +172,9 @@ def extract_author_from_attribution(attr_text: str) -> str:
     parts = attr_text.split(",", 1)
     if parts:
         candidate = parts[0].strip()
-        # Sanity check: should look like a name (not too long)
-        if len(candidate) < 80:
+        # Sanity check: reject candidates longer than a typical name
+        MAX_AUTHOR_NAME_LENGTH = 80
+        if len(candidate) < MAX_AUTHOR_NAME_LENGTH:
             return candidate
     return ""
 
@@ -193,7 +194,7 @@ def parse_item(item: ET.Element) -> dict | None:
 
     quote_text, attr_text, attr_html = extract_quote_and_attribution(content_html or "")
 
-    # Categories (author names) and tags
+    # WP categories hold author names; WP tags hold topic tags
     categories = []
     tags = []
     for cat in item.findall("category"):

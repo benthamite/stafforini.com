@@ -1,6 +1,7 @@
 /* Shared search rendering utilities */
 
 function escapeHtml(s) {
+  // Use the DOM to escape: textContent is safe, innerHTML returns the escaped form
   var d = document.createElement('div');
   d.textContent = s;
   return d.innerHTML;
@@ -24,6 +25,7 @@ function sanitizeExcerpt(html) {
 
 // Chicago/Turabian typographic convention: minor works (articles, chapters,
 // web pages) get unitalicized titles; major works (books) get italicized titles.
+// Using an object as a set (values are irrelevant; only key membership matters).
 var MINOR_WORK_TYPES = { article: 1, incollection: 1, inbook: 1, inproceedings: 1, online: 1, misc: 1, unpublished: 1 };
 
 function renderResult(r, section, currentQuery) {

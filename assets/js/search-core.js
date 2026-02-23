@@ -17,11 +17,14 @@ var searchSections = [
  * @param {string} query - The search string
  * @param {object} pagefind - The initialized Pagefind instance
  * @param {object} options
- * @param {number}   options.maxResultsPerSection - Max results per section (0 = unlimited)
+ * @param {number}   options.maxResultsPerSection - Cap per section (0 = show all results)
  * @param {string}   [options.filterSection]      - If set, restrict to this section key
  * @param {function} options.onResults             - Callback receiving (html: string)
- * @param {function} options.getGeneration         - Returns current search generation counter
- * @param {function} options.incrementGeneration   - Increments and returns new generation counter
+ * @param {function} options.getGeneration         - Returns current generation counter
+ * @param {function} options.incrementGeneration   - Increments and returns new generation;
+ *   the generation counter tracks which search invocation is current — when a
+ *   newer search starts, earlier in-flight searches detect the mismatch and
+ *   silently discard their stale results
  */
 async function runSearch(query, pagefind, options) {
   var gen = options.incrementGeneration();

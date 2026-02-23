@@ -1,6 +1,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} · {{ .Site.Title }}{{ end }}</title>
+{{/* 160 chars is the typical max Google shows in search result snippets */}}
 <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Summary | truncate 160 }}{{ end }}">
 
 {{/* Open Graph */}}
@@ -48,7 +49,8 @@
 {{ $css := slice $base $layout $components $content $sidenotes $toc $chromaLight $chromaDark $dark $search $preview | resources.Concat "css/bundle.css" | minify | fingerprint }}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
 
-{{/* Conditional KaTeX loading */}}
+{{/* Conditional KaTeX loading: only include JS/CSS on pages whose content
+     contains math delimiters ($$, \(, or \[) */}}
 {{ if findRE `\$\$|\\\(|\\\[` .Content }}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5RLHO8BIp/8hmBQ30JRIh4E0P5X/8sNlPIax6KF+dVVqzCzt8e9" crossorigin="anonymous">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>

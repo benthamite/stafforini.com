@@ -219,6 +219,7 @@ def postprocess_quotes(dry_run: bool = False) -> dict:
 def generate_work_page(entry: dict) -> str:
     """Generate YAML front matter for a work page."""
     def clean(s: str) -> str:
+        """Strip BibTeX braces, unescape special chars, convert org italic to HTML."""
         s = s.replace("{", "").replace("}", "")
         # Convert BibTeX escape sequences to plain characters
         s = s.replace("\\&", "&")

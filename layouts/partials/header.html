@@ -74,7 +74,7 @@
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(function() {
       core.runSearch(input.value.trim(), pagefind, {
-        maxResultsPerSection: 5,
+        maxResultsPerSection: 5, // preview cap; full results on /search/ page
         onResults: function(html) { resultsEl.innerHTML = html; nav.refresh(); },
         getGeneration: function() { return searchGeneration; },
         incrementGeneration: function() { return ++searchGeneration; }

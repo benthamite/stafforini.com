@@ -1,5 +1,7 @@
 {{ define "main" }}
 <article>
+  {{/* is_topic_stub: auto-generated topic pages (from generate-topic-pages.py)
+       that only have a title and backlinks — skip TOC, metadata, body, and sidenotes */}}
   {{ if not .Params.is_topic_stub }}
   {{ partial "toc-floating.html" . }}
   {{ end }}

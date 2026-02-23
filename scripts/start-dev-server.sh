@@ -14,7 +14,9 @@ cd "$REPO_ROOT"
 
 # Kill any existing Hugo server processes to ensure a fresh build
 # (Hugo's incremental rebuild doesn't track cross-page shortcode
-# dependencies, so a stale server can show outdated citations)
+# dependencies, so a stale server can show outdated citations).
+# -U scopes to current user; -f matches the full command line so we
+# only kill Hugo servers started with --config (our dev servers).
 existing=$(pgrep -U "$(id -u)" -f "hugo server.*--config" 2>/dev/null || true)
 if [ -n "$existing" ]; then
   echo "Killing existing Hugo server(s)..."

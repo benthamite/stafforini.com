@@ -24,6 +24,7 @@
 (setq org-export-with-todo-keywords nil)
 ;; Exclude entire headings that have any TODO keyword (TODO, WAITING, DONE, DELEGATED, etc.)
 (setq org-export-with-tasks nil)
+;; Always include lastmod in front matter (0 = no suppression period)
 (setq org-hugo-suppress-lastmod-period 0)
 
 ;; Register a cite export processor that emits Hugo {{< cite >}} shortcodes.
@@ -66,6 +67,8 @@
 ;; Define dummy functions not available in batch mode
 (unless (fboundp 'git-auto-commit-mode)
   (defun git-auto-commit-mode (&rest _) nil))
+;; init-tangle-conditionally is called by some org files on visit;
+;; return "no" to skip tangling in batch mode
 (unless (fboundp 'init-tangle-conditionally)
   (defun init-tangle-conditionally (&rest _) "no"))
 
@@ -90,6 +93,7 @@
             ;; Full: scan and pre-filter
             (let* ((all-files (directory-files notes-dir t "\\.org$"))
                    (files (seq-remove
+                           ;; pablos-miscellany.org is the org-roam index file, not a blog post
                            (lambda (f) (string= (file-name-nondirectory f) "pablos-miscellany.org"))
                            all-files)))
               (seq-filter

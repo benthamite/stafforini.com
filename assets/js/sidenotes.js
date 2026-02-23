@@ -91,7 +91,8 @@
   function computeLineHeight() {
     var style = getComputedStyle(sidenotes[0].el);
     var lh = parseFloat(style.lineHeight);
-    // getComputedStyle returns lineHeight in px (or "normal" which parseFloat → NaN)
+    // getComputedStyle returns lineHeight in px (or "normal" which parseFloat → NaN);
+    // 1.2 is the CSS default line-height for "normal" per the spec
     if (isNaN(lh)) {
       lh = parseFloat(style.fontSize) * 1.2;
     }

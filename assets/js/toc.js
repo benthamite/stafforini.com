@@ -61,8 +61,10 @@
   }
 
   function createHeadingObserver() {
-    // 1px "tripwire" at 1/3 viewport height
-    var triggerPoint = Math.round(window.innerHeight / 3);
+    // 1px "tripwire" at 1/3 viewport height — headings crossing this line
+    // become the active TOC entry
+    var TRIGGER_FRACTION = 1 / 3;
+    var triggerPoint = Math.round(window.innerHeight * TRIGGER_FRACTION);
     var rootMarginTop = -triggerPoint;
     var rootMarginBottom = -(window.innerHeight - triggerPoint - 1);
 
@@ -100,7 +102,7 @@
 
   // ── Smooth scrolling ─────────────────────────────────────────
   var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  var SCROLL_DURATION = 500; // ms
+  var SCROLL_DURATION = 500; // ms — duration of animated scroll to heading
 
   function easeInOutCubic(t) {
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -176,6 +178,7 @@
     window.removeEventListener('scroll', onScrollFallback);
     clearTimeout(scrollFallbackTimer);
   }
+  var SCROLL_FALLBACK_DEBOUNCE_MS = 100;
   function onScrollFallback() {
     clearTimeout(scrollFallbackTimer);
     scrollFallbackTimer = setTimeout(function () {
@@ -188,7 +191,7 @@
         if (top <= triggerY) best = id;
       });
       if (best) setActive(best);
-    }, 100);
+    }, SCROLL_FALLBACK_DEBOUNCE_MS);
   }
 
   function activate() {

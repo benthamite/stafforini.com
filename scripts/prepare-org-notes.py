@@ -64,7 +64,6 @@ def add_metadata(text, slug):
     result = []
     added_base_dir = False
     in_properties = False
-    properties_level = 0
     found_post_date = None
     added_export_props = False
 

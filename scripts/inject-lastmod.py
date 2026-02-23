@@ -27,8 +27,10 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 CONTENT_DIR = REPO_ROOT / "content" / "notes"
 ORG_DIR = Path.home() / "Library/CloudStorage/Dropbox/websites/pablos-miscellany"
 
+# IMPORTANT: Update this when running prepare-org-notes.py on new files.
 # Date when prepare-org-notes.py bulk-modified all org files.
-# Files with this mtime haven't been individually edited since.
+# Files whose mtime matches this date haven't been individually edited
+# since, so we fall back to their creation date for lastmod.
 BATCH_DATE = "2026-02-17"
 
 
