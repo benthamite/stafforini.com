@@ -63,9 +63,11 @@
 ;; Suppress local variable evaluation
 (setq enable-local-variables nil)
 
-;; Define dummy git-auto-commit-mode
+;; Define dummy functions not available in batch mode
 (unless (fboundp 'git-auto-commit-mode)
   (defun git-auto-commit-mode (&rest _) nil))
+(unless (fboundp 'init-tangle-conditionally)
+  (defun init-tangle-conditionally (&rest _) "no"))
 
 ;; Track stats
 (defvar export-notes-total 0)
