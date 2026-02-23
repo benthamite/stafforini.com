@@ -42,8 +42,8 @@ def build_wp_post_id_index(notes_dir: Path) -> dict[str, Path]:
     for org_path in org_files:
         try:
             content = org_path.read_text()
-        except Exception:
-            # Skip files that can't be read
+        except (OSError, UnicodeDecodeError) as exc:
+            print(f"  Warning: skipping {org_path.name}: {exc}")
             continue
 
         # Find all level-2 subheadings and their properties blocks

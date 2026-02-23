@@ -14,6 +14,7 @@ import json
 import os
 import re
 import sys
+import tempfile
 
 from lib import cite_key_to_slug
 
@@ -47,9 +48,9 @@ def main():
         with open(filepath, "r", encoding="utf-8") as f:
             content = f.read()
 
-        # Extract title from TOML front matter
+        # Extract title from TOML or YAML front matter
         note_title = note_slug  # fallback
-        title_match = re.search(r'^title\s*=\s*"(.+)"', content, re.MULTILINE)
+        title_match = re.search(r'^title\s*[=:]\s*"(.+)"', content, re.MULTILINE)
         if title_match:
             note_title = title_match.group(1)
 
@@ -71,8 +72,14 @@ def main():
         )
 
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
-    with open(OUTPUT_PATH, "w") as f:
-        json.dump(result, f, indent=2, ensure_ascii=False)
+    tmp_fd, tmp_path = tempfile.mkstemp(dir=os.path.dirname(OUTPUT_PATH), suffix=".tmp")
+    try:
+        with os.fdopen(tmp_fd, "w") as f:
+            json.dump(result, f, indent=2, ensure_ascii=False)
+        os.replace(tmp_path, OUTPUT_PATH)
+    except BaseException:
+        os.unlink(tmp_path)
+        raise
 
     total_citations = sum(len(v) for v in result.values())
     print(f"Generated citing-notes for {len(result)} works ({total_citations} total citations)")

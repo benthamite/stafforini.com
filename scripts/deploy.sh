@@ -7,7 +7,10 @@
 set -euo pipefail
 
 cleanup() {
-  echo "Deploy interrupted. Build state may be inconsistent." >&2
+  local exit_code=$?
+  if [ "$exit_code" -ne 0 ]; then
+    echo "Deploy interrupted (exit $exit_code). Build state may be inconsistent." >&2
+  fi
 }
 trap cleanup EXIT
 
@@ -56,5 +59,4 @@ npx pagefind --site public
 echo "Deploying to Netlify..."
 npx netlify deploy --prod --dir=public --no-build
 
-trap - EXIT
 echo "Done."

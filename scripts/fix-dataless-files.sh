@@ -17,7 +17,9 @@ NOTES_GIT=""
 
 # Detect notes git directory
 if [ -f "$NOTES_DIR/.git" ]; then
-    NOTES_GIT=$(sed 's/gitdir: //' < "$NOTES_DIR/.git")
+    local_gitdir=$(sed 's/gitdir: //' < "$NOTES_DIR/.git")
+    # Resolve relative paths against the directory containing .git
+    NOTES_GIT=$(cd "$NOTES_DIR" && realpath "$local_gitdir")
 elif [ -d "$NOTES_DIR/.git" ]; then
     NOTES_GIT="$NOTES_DIR/.git"
 fi
@@ -27,25 +29,32 @@ restore_dir() {
     local gitdir="$2"
     local label="$3"
 
-    # Count dataless .org files
-    local count
-    count=$(ls -lO "$dir" 2>/dev/null | grep "dataless" | grep -c '\.org$' || true)
+    # Find dataless .org files by iterating with a glob (safe for filenames with spaces)
+    local dataless_files=()
+    for f in "$dir"/*.org; do
+        [ -e "$f" ] || continue
+        if ls -lO "$f" 2>/dev/null | grep -q "dataless"; then
+            dataless_files+=("$f")
+        fi
+    done
+
+    local count=${#dataless_files[@]}
     [ "$count" -eq 0 ] && return 0
 
     echo "[$label] Found $count dataless .org files — restoring from git..."
 
     local restored=0
     local failed=0
-    while IFS= read -r line; do
+    for fullpath in "${dataless_files[@]}"; do
         local fname
-        fname=$(echo "$line" | awk '{print $NF}')
-        local fullpath="$dir/$fname"
-        local tmpfile="/tmp/_fix_dataless_$$_$fname"
+        fname=$(basename "$fullpath")
+        local tmpfile
+        tmpfile=$(mktemp /tmp/_fix_dataless_XXXXXX)
 
         if GIT_DIR="$gitdir" GIT_WORK_TREE="$dir" git show "HEAD:$fname" > "$tmpfile" 2>/dev/null; then
             local sz
             sz=$(wc -c < "$tmpfile" | tr -d ' ')
-            if [ "$sz" -gt 0 ] && timeout 5 rm "$fullpath" 2>/dev/null && timeout 10 mv "$tmpfile" "$fullpath" 2>/dev/null; then
+            if [ "$sz" -gt 0 ] && timeout 5 trash "$fullpath" 2>/dev/null && timeout 10 mv "$tmpfile" "$fullpath" 2>/dev/null; then
                 restored=$((restored + 1))
             else
                 echo "  WARNING: could not restore $fname"
@@ -57,7 +66,7 @@ restore_dir() {
             rm -f "$tmpfile"
             failed=$((failed + 1))
         fi
-    done < <(ls -lO "$dir" 2>/dev/null | grep "dataless" | grep '\.org$')
+    done
 
     echo "[$label] Restored $restored / $count files"
     [ "$failed" -gt 0 ] && echo "[$label] Could not restore $failed files"

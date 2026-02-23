@@ -12,6 +12,7 @@ import os
 import re
 import sqlite3
 import sys
+import tempfile
 
 DB_PATH = os.environ.get(
     "ORGROAM_DB",
@@ -164,10 +165,16 @@ def main():
             key=lambda x: x["title"].lower(),
         )
 
-    # Write output.
+    # Write output atomically.
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
-    with open(OUTPUT_PATH, "w") as f:
-        json.dump(result, f, indent=2, ensure_ascii=False)
+    tmp_fd, tmp_path = tempfile.mkstemp(dir=os.path.dirname(OUTPUT_PATH), suffix=".tmp")
+    try:
+        with os.fdopen(tmp_fd, "w") as f:
+            json.dump(result, f, indent=2, ensure_ascii=False)
+        os.replace(tmp_path, OUTPUT_PATH)
+    except BaseException:
+        os.unlink(tmp_path)
+        raise
 
     print(f"Generated backlinks for {len(result)} notes ({sum(len(v) for v in result.values())} total backlinks)")
 

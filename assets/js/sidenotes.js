@@ -313,4 +313,9 @@
 
   // ── Initial activation ─────────────────────────────────────────
   checkViewport();
+
+  // Re-position after all images and fonts have loaded (layout may shift)
+  window.addEventListener('load', function () {
+    if (isActive) positionSidenotes();
+  });
 })();

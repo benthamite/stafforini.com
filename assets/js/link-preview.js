@@ -56,10 +56,15 @@
     popup.style.top = (rect.bottom + window.scrollY + 6) + 'px'; // 6px visual gap between link and popup
     popup.classList.add('visible');
 
-    // Reposition if popup overflows viewport
+    // Reposition if popup overflows viewport (horizontal)
     var popupRect = popup.getBoundingClientRect();
     if (popupRect.right > window.innerWidth) {
       popup.style.left = Math.max(0, window.innerWidth - popupRect.width - 8 + window.scrollX) + 'px';
+    }
+    // Reposition if popup overflows viewport (vertical) — show above the link
+    popupRect = popup.getBoundingClientRect();
+    if (popupRect.bottom > window.innerHeight) {
+      popup.style.top = (rect.top + window.scrollY - popupRect.height - 6) + 'px';
     }
   }
 

@@ -122,7 +122,11 @@ def cite_key_to_slug(cite_key: str) -> str:
 
 def escape_yaml_string(s: str) -> str:
     """Escape a string for YAML double-quoted value."""
-    return s.replace("\\", "\\\\").replace('"', '\\"')
+    s = s.replace("\\", "\\\\")
+    s = s.replace('"', '\\"')
+    s = s.replace("\n", "\\n")
+    s = s.replace("\t", "\\t")
+    return s
 
 
 def parse_bib_entries(
@@ -256,10 +260,8 @@ def escape_org_text(text: str) -> str:
     lines = text.split("\n")
     escaped = []
     for line in lines:
-        if line.startswith("*"):
+        if line.startswith("*") or line.startswith("#"):
             line = "\u200B" + line  # zero-width space prefix
-        if line.startswith("#+"):
-            line = "\u200B" + line
         escaped.append(line)
     return "\n".join(escaped)
 
