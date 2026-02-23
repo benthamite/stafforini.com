@@ -65,8 +65,14 @@ def load_manifest(section: str) -> dict | None:
 
 def save_manifest(section: str, data: dict) -> None:
     path = manifest_path(section)
-    with open(path, "w") as f:
-        json.dump(data, f, indent=2)
+    tmp_fd, tmp_path = tempfile.mkstemp(dir=str(path.parent), suffix=".tmp")
+    try:
+        with os.fdopen(tmp_fd, "w") as f:
+            json.dump(data, f, indent=2)
+        os.replace(tmp_path, str(path))
+    except BaseException:
+        os.unlink(tmp_path)
+        raise
     print(f"Manifest saved: {path}")
 
 
@@ -167,7 +173,7 @@ def run_emacs(elisp: Path, file_list_path: str | None = None) -> int:
     print(f"Starting Emacs batch export...")
     print(f"Script: {elisp}\n")
 
-    result = subprocess.run(["emacs", "--batch", "-l", str(elisp)], env=env)
+    result = subprocess.run(["emacs", "--batch", "-l", str(elisp)], env=env, timeout=600)
 
     if result.returncode != 0:
         print(

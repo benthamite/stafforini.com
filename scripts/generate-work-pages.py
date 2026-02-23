@@ -258,7 +258,7 @@ def generate_work_page(entry: dict) -> str:
         f'entry_type: "{entry_type}"',
     ]
     if year:
-        lines.append(f"year: {year}")
+        lines.append(f'year: "{escape_yaml_string(year)}"')
     if location:
         lines.append(f'location: "{escape_yaml_string(location)}"')
     if booktitle:

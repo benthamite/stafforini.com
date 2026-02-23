@@ -11,13 +11,15 @@ function highlightText(escaped, query) {
   var words = query.trim().split(/\s+/).filter(function(w) { return w.length > 0; });
   if (!words.length) return escaped;
   var pattern = words.map(function(w) { return w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('|');
-  // Avoid matching inside HTML entities (&amp; &lt; etc.)
-  return escaped.replace(new RegExp('(?!&\\w+;)(' + pattern + ')(?![\\w]*;)', 'gi'), '<mark>$1</mark>');
+  // Match entities as a group (skip them) or match search terms
+  return escaped.replace(new RegExp('(&[#\\w]+;)|(' + pattern + ')', 'gi'), function(m, entity, term) {
+    return entity ? entity : '<mark>' + term + '</mark>';
+  });
 }
 
 function sanitizeExcerpt(html) {
-  // Strip all HTML tags except <mark>...</mark> (preserves Pagefind search highlighting)
-  return html.replace(/<(?!\/?mark\b)[^>]*>/gi, '');
+  // Strip all HTML tags except exact <mark> and </mark> (no attributes allowed)
+  return html.replace(/<(?!\/?mark>)[^>]*>/gi, '');
 }
 
 // Chicago/Turabian typographic convention: minor works (articles, chapters,

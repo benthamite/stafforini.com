@@ -42,7 +42,7 @@ def read_org_id(path: Path) -> str | None:
     return None
 
 
-def build_tag_index(tags_data: dict) -> dict[str, tuple[Path, str]]:
+def build_tag_index(tags_data: dict) -> tuple[dict[str, tuple[Path, str]], list]:
     """Build a mapping from tag name to (file_path, org_roam_id).
 
     Covers both linked tags (existing org files) and unlinked tags (stubs).

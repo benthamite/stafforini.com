@@ -43,7 +43,8 @@ def parse_wp_xml(xml_path: Path) -> dict[str, str]:
 
     Returns: dict mapping post_id → blockquote_html
     """
-    tree = etree.parse(open(xml_path, 'rb'), etree.XMLParser(recover=True))
+    with open(xml_path, 'rb') as f:
+        tree = etree.parse(f, etree.XMLParser(recover=True))
     ns = {
         'wp': 'http://wordpress.org/export/1.2/',
         'content': 'http://purl.org/rss/1.0/modules/content/',

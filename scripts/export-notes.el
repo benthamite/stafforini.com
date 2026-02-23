@@ -144,10 +144,4 @@
 ;; Run the export
 (export-notes-batch)
 
-;; Inject lastmod dates from org file modification times
-(let ((default-directory (expand-file-name
-                          "~/Library/CloudStorage/Dropbox/repos/stafforini.com/")))
-  (message "\nInjecting lastmod dates...")
-  (message "%s" (shell-command-to-string "python3 scripts/inject-lastmod.py")))
-
 ;;; export-notes.el ends here

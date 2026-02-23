@@ -11,6 +11,7 @@ import os
 import re
 import stat
 import sys
+import tempfile
 from pathlib import Path
 
 NOTES_TAGS_DIR = Path.home() / "Library/CloudStorage/Dropbox/notes/tags"
@@ -77,10 +78,15 @@ def main():
     combined.update(notes_map)
     combined.update(people_map)
 
-    OUTPUT_PATH.write_text(
-        json.dumps(combined, indent=2, ensure_ascii=False) + "\n",
-        encoding="utf-8",
-    )
+    tmp_fd, tmp_path = tempfile.mkstemp(dir=str(OUTPUT_PATH.parent), suffix=".tmp")
+    try:
+        with os.fdopen(tmp_fd, "w", encoding="utf-8") as f:
+            json.dump(combined, f, indent=2, ensure_ascii=False)
+            f.write("\n")
+        os.replace(tmp_path, str(OUTPUT_PATH))
+    except BaseException:
+        os.unlink(tmp_path)
+        raise
 
     print(f"ID-slug map written to {OUTPUT_PATH}")
     print(f"  notes/tags:  {len(notes_map)} IDs")

@@ -17,6 +17,8 @@ Usage:
 
 import argparse
 import json
+import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -36,7 +38,7 @@ PDFS_DIR = HUGO_ROOT / "static" / "pdfs"
 THUMBS_DIR = HUGO_ROOT / "static" / "pdf-thumbnails"
 MANIFEST_PATH = PDFS_DIR / ".manifest.json"
 
-MUTOOL = "/opt/homebrew/bin/mutool"
+MUTOOL = shutil.which("mutool") or "/opt/homebrew/bin/mutool"
 THUMB_DPI = 150
 
 DB_BIB = Path.home() / "Library/CloudStorage/Dropbox/repos/babel-refs/bib/db.bib"
@@ -53,8 +55,16 @@ def load_manifest() -> dict:
 
 
 def save_manifest(manifest: dict) -> None:
-    """Persist the manifest to disk."""
-    MANIFEST_PATH.write_text(json.dumps(manifest, indent=2) + "\n")
+    """Persist the manifest to disk atomically."""
+    tmp_fd, tmp_path = tempfile.mkstemp(dir=str(MANIFEST_PATH.parent), suffix=".tmp")
+    try:
+        with os.fdopen(tmp_fd, "w") as f:
+            json.dump(manifest, f, indent=2)
+            f.write("\n")
+        os.replace(tmp_path, str(MANIFEST_PATH))
+    except BaseException:
+        os.unlink(tmp_path)
+        raise
 
 
 def needs_processing(slug: str, src_path: Path, manifest: dict, force: bool) -> bool:
@@ -79,7 +89,7 @@ def strip_annotations(src: Path, dst: Path) -> None:
                 del page[Name.Annots]
         try:
             pdf.save(dst)
-        except Exception:
+        except pikepdf.PdfError:
             pdf.save(dst, fix_metadata_version=False)
             print(f"  NOTICE: {src.name} has malformed XMP metadata (saved without fixing)")
             return

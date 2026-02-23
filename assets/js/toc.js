@@ -167,6 +167,30 @@
   // ── Activation / deactivation ─────────────────────────────────
   var isActive = false;
 
+  // Debounced scroll fallback for fast scrolling (IntersectionObserver may miss headings)
+  var scrollFallbackTimer;
+  function startScrollFallback() {
+    window.addEventListener('scroll', onScrollFallback, { passive: true });
+  }
+  function stopScrollFallback() {
+    window.removeEventListener('scroll', onScrollFallback);
+    clearTimeout(scrollFallbackTimer);
+  }
+  function onScrollFallback() {
+    clearTimeout(scrollFallbackTimer);
+    scrollFallbackTimer = setTimeout(function () {
+      var triggerY = window.scrollY + window.innerHeight / 3;
+      var best = null;
+      headingIds.forEach(function (id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        var top = el.getBoundingClientRect().top + window.scrollY;
+        if (top <= triggerY) best = id;
+      });
+      if (best) setActive(best);
+    }, 100);
+  }
+
   function activate() {
     if (isActive) return;
     isActive = true;
@@ -181,6 +205,8 @@
     if (titleObserver && articleH1) {
       titleObserver.observe(articleH1);
     }
+
+    startScrollFallback();
   }
 
   function deactivate() {
@@ -197,6 +223,7 @@
     }
     clearActive();
     if (titleLink) titleLink.classList.remove('is-visible');
+    stopScrollFallback();
   }
 
   function checkViewport() {

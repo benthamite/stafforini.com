@@ -49,6 +49,10 @@
     try {
       pagefind = await import('/pagefind/pagefind.js');
       await pagefind.init();
+      // Re-run search if user typed while Pagefind was loading
+      if (input.value.trim()) {
+        input.dispatchEvent(new Event('input'));
+      }
     } catch (e) {
       resultsEl.innerHTML = '<p class="search-no-results">Search is unavailable. Please try again later.</p>';
     }
@@ -85,6 +89,8 @@
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && !overlay.hidden) closeSearch();
     if ((e.key === '/' || (e.key === 'k' && (e.metaKey || e.ctrlKey))) && overlay.hidden) {
+      var tag = document.activeElement && document.activeElement.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || (document.activeElement && document.activeElement.isContentEditable)) return;
       e.preventDefault();
       openSearch();
     }

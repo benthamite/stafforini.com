@@ -358,12 +358,15 @@ def deduplicate_title_in_file(content: str, title: str) -> str:
         return title
 
     counter = 2
-    while True:
+    while counter <= 1000:
         candidate = f"{title} {counter}"
         pattern = re.compile(r"^\*+ " + re.escape(candidate) + r"(?:\s|$)", re.MULTILINE)
         if not pattern.search(content):
             return candidate
         counter += 1
+    # Safety fallback: should never be reached in practice
+    import uuid
+    return f"{title} {uuid.uuid4().hex[:6]}"
 
 
 # === Main processing ===
