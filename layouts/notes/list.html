@@ -9,7 +9,7 @@
   {{ range .Pages.ByTitle }}
   <li data-title="{{ .Title }}" data-date="{{ .Lastmod.Format "2006-01-02T15:04:05" }}">
     <a href="{{ .RelPermalink }}">{{ .Title | safeHTML }}</a>
-    {{ if not .Params.is_topic_stub }}
+    {{ if and (not .Params.is_topic_stub) (not .Lastmod.IsZero) }}
     <span class="note-date">
       <time datetime="{{ .Lastmod.Format "2006-01-02" }}">{{ .Lastmod.Format "Jan 2, 2006" }}</time>
     </span>
