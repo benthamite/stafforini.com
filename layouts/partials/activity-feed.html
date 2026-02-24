@@ -8,7 +8,7 @@
     {{/* Show 10 most recently updated notes */}}
     {{ range (sort . "Lastmod" "desc" | first 10) }}
     <li>
-      <a href="{{ .RelPermalink }}">{{ .Title | safeHTML }}</a>
+      <a href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a>
       {{ if not .Lastmod.IsZero }}
       <span class="feed-date">
         <time datetime="{{ .Lastmod.Format "2006-01-02" }}">{{ .Lastmod.Format "Jan 2, 2006" }}</time>
