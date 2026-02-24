@@ -2123,10 +2123,6 @@
   ],
   "ad-hominem-argument": [
     {
-      "slug": "Bostrom2007TechnologicalRevolutionsEthics",
-      "title": "Technological revolutions: ethics and policy in the dark"
-    },
-    {
       "slug": "Wolf1999ManWithoutFace",
       "title": "Wolf, M. — Man Without a Face: The Autobiography of Communism's Greatest Spymaster"
     }
@@ -3311,10 +3307,6 @@
   ],
   "animal-experimentation": [
     {
-      "slug": "Bunge1989TreatiseBasicPhilosophy",
-      "title": "Bunge, M. — Treatise on basic philosophy: Volume 8: Ethics: The good and the right"
-    },
-    {
       "slug": "Gruen1987AnimalLiberationGraphic",
       "title": "Gruen, L. & Singer, P. — Animal liberation: a graphic guide"
     },
@@ -3801,10 +3793,6 @@
     {
       "slug": "Nagel1997LastWord",
       "title": "Nagel, T. — The last word"
-    },
-    {
-      "slug": "Bostrom2007TechnologicalRevolutionsEthics",
-      "title": "Technological revolutions: ethics and policy in the dark"
     },
     {
       "slug": "Mill1869SubjectionOfWomen",
@@ -8107,12 +8095,6 @@
       "title": "red teaming"
     }
   ],
-  "cycles": [
-    {
-      "slug": "Byron1818ChildeHaroldS",
-      "title": "Byron, G. G. B. — Childe Harold's pilgrimage"
-    }
-  ],
   "cynicism": [
     {
       "slug": "Mill1873Autobiography",
@@ -8404,6 +8386,10 @@
     }
   ],
   "david-pearce": [
+    {
+      "slug": "brighton-library",
+      "title": "Brighton library"
+    },
     {
       "slug": "fake-concessions",
       "title": "fake concessions"
@@ -11907,6 +11893,16 @@
       "title": "security factor"
     }
   ],
+  "existential-risk-from-artificial-intelligence": [
+    {
+      "slug": "ai-risk",
+      "title": "AI risk"
+    },
+    {
+      "slug": "artificiality-vs-scalability-as-sources-of-existential-risk",
+      "title": "artificiality vs scalability as sources of existential risk"
+    }
+  ],
   "existential-security": [
     {
       "slug": "existential-risk",
@@ -12233,12 +12229,6 @@
     {
       "slug": "Teran2006UtopiasCatastrofesEsperanzas",
       "title": "Terán, O. — De utopias, catástrofes y esperanzas: Un camino intelectual"
-    }
-  ],
-  "fallacy": [
-    {
-      "slug": "Bostrom2007TechnologicalRevolutionsEthics",
-      "title": "Technological revolutions: ethics and policy in the dark"
     }
   ],
   "fallibilism": [
@@ -15505,10 +15495,6 @@
   ],
   "history": [
     {
-      "slug": "Byron1818ChildeHaroldS",
-      "title": "Byron, G. G. B. — Childe Harold's pilgrimage"
-    },
-    {
       "slug": "Russell1950UnpopularEssays",
       "title": "Russell, B. — Unpopular Essays"
     },
@@ -16289,10 +16275,6 @@
       "title": "Levitt, S. D. & Dubner, S. J. — Super freakonomics: global cooling, patriotic prostitutes, and why suicide bombers should buy life insurance"
     },
     {
-      "slug": "Slonimsky2000LexiconMusicalInvective",
-      "title": "Lexicon of musical invective: critical assaults on composers since beethoven's time"
-    },
-    {
       "slug": "McDermott1976ArtificialIntelligenceMeets",
       "title": "McDermott, Drew — Artificial intelligence meets natural stupidity"
     },
@@ -16927,10 +16909,6 @@
   ],
   "individual-differences": [
     {
-      "slug": "Geher2008MatingIntelligenceSex",
-      "title": "Geher, G. & Miller, G. — Mating intelligence: Sex, relationships, and the mind's reproductive system"
-    },
-    {
       "slug": "Halpern2012SexDifferencesCognitive",
       "title": "Halpern, D. F. — Sex differences in cognitive abilities"
     },
@@ -17303,10 +17281,6 @@
     {
       "slug": "Dennett1993PrecisConsciousnessExplained",
       "title": "Dennett, D. C. — Précis of /Consciousness Explained/"
-    },
-    {
-      "slug": "Geher2008MatingIntelligenceSex",
-      "title": "Geher, G. & Miller, G. — Mating intelligence: Sex, relationships, and the mind's reproductive system"
     },
     {
       "slug": "Halpern2012SexDifferencesCognitive",
@@ -20641,12 +20615,6 @@
     {
       "slug": "Recorde1543ArithmeticGroundArts",
       "title": "Recorde, R. — Arithmetic: or, The Ground of Arts"
-    }
-  ],
-  "mating-intelligence": [
-    {
-      "slug": "Geher2008MatingIntelligenceSex",
-      "title": "Geher, G. & Miller, G. — Mating intelligence: Sex, relationships, and the mind's reproductive system"
     }
   ],
   "matt-ridley": [
@@ -27953,10 +27921,6 @@
     {
       "slug": "Singer1981ExpandingCircleEthics",
       "title": "Singer, P. — The expanding circle: Ethics and sociobiology"
-    },
-    {
-      "slug": "Wolin2004SeductionUnreasonIntellectual",
-      "title": "Wolin, R. — The seduction of unreason: the intellectual romance with fascism: from Nietzsche to postmodernism"
     }
   ],
   "reason-and-passion": [
@@ -30079,10 +30043,6 @@
     {
       "slug": "Simpson2000EvolutionHumanMating",
       "title": "Gangestad, S. W. & Simpson, J. A. — The evolution of human mating: Trade-offs and strategic pluralism"
-    },
-    {
-      "slug": "Geher2008MatingIntelligenceSex",
-      "title": "Geher, G. & Miller, G. — Mating intelligence: Sex, relationships, and the mind's reproductive system"
     },
     {
       "slug": "Harford2008LogicLifeRational",
@@ -33649,11 +33609,11 @@
       "title": "Sidgwick, H. — The Methods of Ethics"
     },
     {
-      "slug": "Goodin1991UtilityGood",
+      "slug": "Ten1991CrimePunishment",
       "title": "Singer, P. — A companion to ethics"
     },
     {
-      "slug": "Ten1991CrimePunishment",
+      "slug": "Goodin1991UtilityGood",
       "title": "Singer, P. — A companion to ethics"
     },
     {
@@ -33783,6 +33743,12 @@
     {
       "slug": "value-drift-from-capability-scaling",
       "title": "value drift from capability scaling"
+    }
+  ],
+  "value-drift-from-capability-scaling": [
+    {
+      "slug": "artificiality-vs-scalability-as-sources-of-existential-risk",
+      "title": "artificiality vs scalability as sources of existential risk"
     }
   ],
   "value-loading-problem": [
