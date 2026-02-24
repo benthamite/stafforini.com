@@ -42,4 +42,6 @@ done
 # Start the dev server
 # --renderStaticToDisk serves static files from public/ (including our
 # symlinks) while keeping rendered pages in memory for speed.
-exec hugo server --config hugo.toml,hugo.dev.toml --renderStaticToDisk --navigateToChanged
+# --disableFastRender forces full re-renders on every change; without it
+# Hugo skips pages it thinks are unaffected, causing stale templates.
+exec hugo server --config hugo.toml,hugo.dev.toml --renderStaticToDisk --navigateToChanged --disableFastRender
