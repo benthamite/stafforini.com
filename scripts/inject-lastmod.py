@@ -55,11 +55,35 @@ def get_front_matter_date(text):
     return None
 
 
+def get_org_title(slug):
+    """Read the org source and return the heading title with markup preserved.
+
+    Parses the first level-1 heading from the org file and converts org
+    inline markup (=verbatim= and ~code~) to markdown backtick syntax.
+    Returns None if the org file doesn't exist or has no heading.
+    """
+    org_file = ORG_DIR / f"{slug}.org"
+    if not org_file.exists():
+        return None
+
+    for line in org_file.read_text().splitlines():
+        m = re.match(r"^\*\s+(.+)", line)
+        if m:
+            title = m.group(1)
+            # Strip org tags like :note: at end of heading
+            title = re.sub(r"\s+:[\w:]+:\s*$", "", title)
+            # Convert org =verbatim= and ~code~ to markdown backticks
+            title = re.sub(r"=([^=]+)=", r"`\1`", title)
+            title = re.sub(r"~([^~]+)~", r"`\1`", title)
+            return title.strip()
+    return None
+
+
 def ensure_title(md_path):
     """Ensure the TOML front matter contains a title field.
 
     ox-hugo occasionally omits the title (observed with #+INCLUDE files).
-    When missing, the filename stem (slug) is used as the title.
+    When missing, the slug (filename without extension) is used as the title.
 
     Returns True if the file was modified, False otherwise.
     """
@@ -78,6 +102,44 @@ def ensure_title(md_path):
     # Derive title from filename
     title = md_path.stem
     front_matter = f'title = "{title}"\n' + front_matter
+
+    new_text = "+++\n" + front_matter.rstrip("\n") + "\n+++" + text[match.end():]
+    md_path.write_text(new_text)
+    return True
+
+
+def fix_title_markup(md_path):
+    """Re-inject inline markup into the front matter title.
+
+    ox-hugo strips org inline markup (=code=, ~code~) from the front matter
+    title. This reads the org source heading, converts the markup to markdown
+    backticks, and patches the exported title if they differ.
+
+    Returns True if the file was modified, False otherwise.
+    """
+    slug = md_path.stem
+    org_title = get_org_title(slug)
+    if org_title is None:
+        return False
+
+    text = md_path.read_text()
+    match = re.match(r"(\+\+\+\n)(.*?)(\n\+\+\+)", text, re.DOTALL)
+    if not match:
+        return False
+
+    front_matter = match.group(2)
+    title_match = re.search(r'^title = "(.+)"$', front_matter, re.MULTILINE)
+    if not title_match:
+        return False
+
+    current_title = title_match.group(1)
+    if current_title == org_title:
+        return False
+
+    front_matter = front_matter.replace(
+        f'title = "{current_title}"',
+        f'title = "{org_title}"',
+    )
 
     new_text = "+++\n" + front_matter.rstrip("\n") + "\n+++" + text[match.end():]
     md_path.write_text(new_text)
@@ -141,7 +203,7 @@ def main():
     print(f"Found {len(md_files)} markdown files in {CONTENT_DIR}")
 
     stats = {"updated": 0, "unchanged": 0, "no_org": 0, "skipped": 0,
-             "title_injected": 0}
+             "title_injected": 0, "title_markup_fixed": 0}
 
     for md_file in md_files:
         if md_file.name == "_index.md":
@@ -153,6 +215,9 @@ def main():
             if ensure_title(md_file):
                 stats["title_injected"] += 1
                 print(f"  [TITLE] {md_file.name} -> injected missing title")
+            if fix_title_markup(md_file):
+                stats["title_markup_fixed"] += 1
+                print(f"  [MARKUP] {md_file.name} -> restored title markup")
         else:
             text = md_file.read_text()
             fm_match = re.match(r"(\+\+\+\n)(.*?)(\n\+\+\+)", text, re.DOTALL)
@@ -186,6 +251,8 @@ def main():
 
     if stats["title_injected"]:
         print(f"\n  Titles injected: {stats['title_injected']}")
+    if stats["title_markup_fixed"]:
+        print(f"  Title markup fixed: {stats['title_markup_fixed']}")
     print(f"\n  Updated:     {stats['updated']}")
     print(f"  Unchanged:   {stats['unchanged']}")
     print(f"  No org file: {stats['no_org']}")
