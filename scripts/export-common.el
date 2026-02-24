@@ -92,12 +92,27 @@ This alist maps the broken stem to the correct URL.")
                     (cdr pair)
                     result t t)))))
 
+;;;; Broken-italic fixer
+
+(defun export--fix-broken-italic-close (output _backend _info)
+  "Fix closing emphasis broken by file-link export inside /italic/.
+When file: links inside org /emphasis/ are resolved, the slash
+characters in the file path can confuse the emphasis parser.  The
+opening / is converted to _ by ox-blackfriday, but the closing /
+is left as a literal character.  This filter converts the trailing
+./ to ._ on affected lines."
+  (replace-regexp-in-string
+   "^\\(_\\[.*\\)\\./$"
+   "\\1._"
+   output))
+
 ;;;; Register export hooks
 
 (with-eval-after-load 'ox-hugo
   (org-link-set-parameters "file" :export #'export--file-link-exporter)
   (add-to-list 'org-export-filter-body-functions #'export--fix-raw-dotfiles-links)
-  (add-to-list 'org-export-filter-body-functions #'export--fix-broken-relrefs))
+  (add-to-list 'org-export-filter-body-functions #'export--fix-broken-relrefs)
+  (add-to-list 'org-export-filter-body-functions #'export--fix-broken-italic-close))
 
 (provide 'export-common)
 
