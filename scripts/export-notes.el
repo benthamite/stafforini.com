@@ -72,6 +72,13 @@
 (unless (fboundp 'init-tangle-conditionally)
   (defun init-tangle-conditionally (&rest _) "no"))
 
+;; Pre-scan all org files to build the ID→file mapping so that [[id:...]]
+;; links between notes resolve correctly during export.
+(let ((notes-dir (expand-file-name
+                  "~/Library/CloudStorage/Dropbox/websites/pablos-miscellany/")))
+  (org-id-update-id-locations
+   (directory-files notes-dir t "\\.org$")))
+
 ;; Track stats
 (defvar export-notes-total 0)
 (defvar export-notes-errors '())
