@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
-"""Inject lastmod dates into exported Hugo markdown files.
+"""Post-export front matter fixups for Hugo markdown files.
 
-For each markdown file in content/notes/, finds the corresponding org
-source file and sets `lastmod` in the TOML front matter to the org
-file's filesystem modification time.
+For each markdown file in content/notes/:
 
-If the org file's mtime matches the prepare-org-notes.py batch date
-(all files were touched on the same day), falls back to the creation
-date from front matter, so notes that haven't been individually edited
-since don't get a misleading "last updated" date.
+1. Ensures a `title` field exists (ox-hugo occasionally drops it for
+   files using #+INCLUDE directives). When missing, the slug (filename
+   without extension) is used as the title.
+
+2. Sets `lastmod` in the TOML front matter to the org file's
+   filesystem modification time. If the org file's mtime matches the
+   prepare-org-notes.py batch date, falls back to the creation date.
 
 Usage:
     python scripts/inject-lastmod.py            # Full run
@@ -52,6 +53,35 @@ def get_front_matter_date(text):
     if match:
         return match.group(1).strip()
     return None
+
+
+def ensure_title(md_path):
+    """Ensure the TOML front matter contains a title field.
+
+    ox-hugo occasionally omits the title (observed with #+INCLUDE files).
+    When missing, the filename stem (slug) is used as the title.
+
+    Returns True if the file was modified, False otherwise.
+    """
+    text = md_path.read_text()
+
+    match = re.match(r"(\+\+\+\n)(.*?)(\n\+\+\+)", text, re.DOTALL)
+    if not match:
+        return False
+
+    front_matter = match.group(2)
+
+    # Already has a title — nothing to do
+    if re.search(r"^title\s*=", front_matter, re.MULTILINE):
+        return False
+
+    # Derive title from filename
+    title = md_path.stem
+    front_matter = f'title = "{title}"\n' + front_matter
+
+    new_text = "+++\n" + front_matter.rstrip("\n") + "\n+++" + text[match.end():]
+    md_path.write_text(new_text)
+    return True
 
 
 def inject_lastmod(md_path, lastmod_date):
@@ -110,12 +140,25 @@ def main():
     md_files = sorted(CONTENT_DIR.glob("*.md"))
     print(f"Found {len(md_files)} markdown files in {CONTENT_DIR}")
 
-    stats = {"updated": 0, "unchanged": 0, "no_org": 0, "skipped": 0}
+    stats = {"updated": 0, "unchanged": 0, "no_org": 0, "skipped": 0,
+             "title_injected": 0}
 
     for md_file in md_files:
         if md_file.name == "_index.md":
             stats["skipped"] += 1
             continue
+
+        # Ensure title exists (ox-hugo sometimes drops it)
+        if not args.dry_run:
+            if ensure_title(md_file):
+                stats["title_injected"] += 1
+                print(f"  [TITLE] {md_file.name} -> injected missing title")
+        else:
+            text = md_file.read_text()
+            fm_match = re.match(r"(\+\+\+\n)(.*?)(\n\+\+\+)", text, re.DOTALL)
+            if fm_match and not re.search(r"^title\s*=", fm_match.group(2), re.MULTILINE):
+                stats["title_injected"] += 1
+                print(f"  [TITLE] {md_file.name} -> would inject title = \"{md_file.stem}\"")
 
         slug = md_file.stem
         lastmod = get_org_mtime(slug)
@@ -141,6 +184,8 @@ def main():
             else:
                 stats["unchanged"] += 1
 
+    if stats["title_injected"]:
+        print(f"\n  Titles injected: {stats['title_injected']}")
     print(f"\n  Updated:     {stats['updated']}")
     print(f"  Unchanged:   {stats['unchanged']}")
     print(f"  No org file: {stats['no_org']}")

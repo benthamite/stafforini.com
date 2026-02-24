@@ -6,7 +6,7 @@
   {{ partial "toc-floating.html" . }}
   {{ end }}
 
-  <h1>{{ .Title | safeHTML }}</h1>
+  <h1>{{ .Title | default .File.ContentBaseName | safeHTML }}</h1>
 
   {{ if not .Params.is_topic_stub }}
   {{ partial "note-meta.html" . }}
