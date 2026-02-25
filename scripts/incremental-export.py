@@ -241,6 +241,8 @@ def run_incremental_export(
         elif abs(mtime - old["mtime"]) > 0.001:
             to_export.append(name)
             stale_outputs.extend(old.get("outputs", []))
+        elif any(not (output_dir / out).exists() for out in old.get("outputs", [])):
+            to_export.append(name)
 
     for name, info in old_files.items():
         if name not in current_files:
