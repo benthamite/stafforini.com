@@ -97,10 +97,10 @@ All source content is authored in org-mode files and exported to Hugo-compatible
 
 The `.bib` files are
 
-"/Users/pablostafforini/Library/CloudStorage/Dropbox/bibliography/new.bib"
-"/Users/pablostafforini/Library/CloudStorage/Dropbox/bibliography/old.bib"
-"/Users/pablostafforini/Library/CloudStorage/Dropbox/repos/babel-refs/bib/fluid.bib"
-"/Users/pablostafforini/Library/CloudStorage/Dropbox/repos/babel-refs/bib/stable.bib"
+"~/Library/CloudStorage/Dropbox/bibliography/new.bib"
+"~/Library/CloudStorage/Dropbox/bibliography/old.bib"
+"~/Library/CloudStorage/Dropbox/repos/babel-refs/bib/fluid.bib"
+"~/Library/CloudStorage/Dropbox/repos/babel-refs/bib/stable.bib"
 
 ## Design
 

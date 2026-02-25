@@ -16,3 +16,8 @@ static/ox-hugo/
 
 # Local Netlify folder
 .netlify
+
+# WordPress migration artifacts
+scripts/wp-quotes-*.json
+scripts/*-progress.json
+scripts/*-report.txt
