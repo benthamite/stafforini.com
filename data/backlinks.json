@@ -3509,6 +3509,12 @@
       "title": "self-improvement"
     }
   ],
+  "annas-archive": [
+    {
+      "slug": "my-emacs-packages",
+      "title": "My Emacs packages"
+    }
+  ],
   "annie-mulcahy": [
     {
       "slug": "quotes-about-me",
@@ -4161,6 +4167,12 @@
     {
       "slug": "sentience-1",
       "title": "sentience"
+    }
+  ],
+  "artificiality-vs-scalability-as-sources-of-existential-risk": [
+    {
+      "slug": "ai-safety",
+      "title": "AI safety"
     }
   ],
   "asceticism": [
@@ -5033,6 +5045,12 @@
     {
       "slug": "Hare1996MethodsBioethicsDefective",
       "title": "Sumner, L. W. & Boyle, J. M. — Philosophical perspectives on bioethics"
+    }
+  ],
+  "bib": [
+    {
+      "slug": "my-emacs-packages",
+      "title": "My Emacs packages"
     }
   ],
   "bicycles": [
@@ -6597,6 +6615,12 @@
     {
       "slug": "Lockspeiser1936Debussy",
       "title": "Lockspeiser, E. — Debussy"
+    }
+  ],
+  "claude-log": [
+    {
+      "slug": "my-emacs-packages",
+      "title": "My Emacs packages"
     }
   ],
   "clean-meat": [
@@ -8280,6 +8304,10 @@
     }
   ],
   "david-althaus": [
+    {
+      "slug": "artificiality-vs-scalability-as-sources-of-existential-risk",
+      "title": "artificiality vs scalability as sources of existential risk"
+    },
     {
       "slug": "eanomad",
       "title": "EA Nomad"
@@ -14707,6 +14735,12 @@
       "title": "writing"
     }
   ],
+  "gptel-plus": [
+    {
+      "slug": "my-emacs-packages",
+      "title": "My Emacs packages"
+    }
+  ],
   "grabby-aliens": [
     {
       "slug": "extraterrestrial-intelligence",
@@ -18851,6 +18885,12 @@
       "title": "Stanovich, K. E. — What intelligence tests miss: the psychology of rational thought"
     }
   ],
+  "kelly": [
+    {
+      "slug": "my-emacs-packages",
+      "title": "My Emacs packages"
+    }
+  ],
   "kelly-criterion-confusion": [
     {
       "slug": "kelly-criterion",
@@ -22129,6 +22169,12 @@
       "title": "The life of samuel johnson"
     }
   ],
+  "mullvad": [
+    {
+      "slug": "my-emacs-packages",
+      "title": "My Emacs packages"
+    }
+  ],
   "multiple-comparisons": [
     {
       "slug": "Elster2010ExplainingSocialBehavior",
@@ -22171,6 +22217,12 @@
     {
       "slug": "Williams1955MakingMusic",
       "title": "Vaughan Williams, R. — The making of music"
+    }
+  ],
+  "my-emacs-config": [
+    {
+      "slug": "my-emacs-packages",
+      "title": "My Emacs packages"
     }
   ],
   "mystery": [
@@ -23925,6 +23977,12 @@
       "title": "Stoljar, D. — Physicalism"
     }
   ],
+  "org-indent-pixel": [
+    {
+      "slug": "my-emacs-packages",
+      "title": "My Emacs packages"
+    }
+  ],
   "organ-donation": [
     {
       "slug": "alexander-berger",
@@ -24263,6 +24321,12 @@
       "title": "The life of samuel johnson"
     }
   ],
+  "pangram": [
+    {
+      "slug": "my-emacs-packages",
+      "title": "My Emacs packages"
+    }
+  ],
   "panpsychism": [
     {
       "slug": "Chalmers2018IdealismMindBody",
@@ -24557,6 +24621,12 @@
     {
       "slug": "Schrader2021CardCounter",
       "title": "Schrader, Paul — The Card Counter"
+    }
+  ],
+  "pdf-tools-pages": [
+    {
+      "slug": "my-emacs-packages",
+      "title": "My Emacs packages"
     }
   ],
   "peace-and-conflict-studies": [
@@ -33609,11 +33679,11 @@
       "title": "Sidgwick, H. — The Methods of Ethics"
     },
     {
-      "slug": "Ten1991CrimePunishment",
+      "slug": "Goodin1991UtilityGood",
       "title": "Singer, P. — A companion to ethics"
     },
     {
-      "slug": "Goodin1991UtilityGood",
+      "slug": "Ten1991CrimePunishment",
       "title": "Singer, P. — A companion to ethics"
     },
     {
