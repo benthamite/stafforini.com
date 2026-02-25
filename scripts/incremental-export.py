@@ -92,7 +92,11 @@ def fix_dataless_files() -> None:
     """Run the dataless fixer script to restore dehydrated Dropbox files from git."""
     fixer = SCRIPT_DIR / "fix-dataless-files.sh"
     if fixer.exists():
-        subprocess.run(["bash", str(fixer)], timeout=120)
+        try:
+            subprocess.run(["bash", str(fixer)], timeout=300)
+        except subprocess.TimeoutExpired:
+            print("WARNING: dataless fixer timed out after 300s; continuing export",
+                  file=sys.stderr)
 
 
 def scan_source_files(cfg: dict) -> dict[str, float]:
