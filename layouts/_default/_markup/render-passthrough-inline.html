@@ -1,0 +1,2 @@
+{{- /* Re-emit inline math with \( \) delimiters so KaTeX auto-render can find it */ -}}
+\({{ .Inner | safeHTML }}\)
