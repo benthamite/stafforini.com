@@ -21,42 +21,57 @@
   var tocLinks = floatingNav.querySelectorAll('a:not(.toc-title)');
   if (tocLinks.length === 0) return;
 
-  // Collect heading IDs from TOC links
-  var headingIds = [];
-  tocLinks.forEach(function (link) {
-    var href = link.getAttribute('href');
-    if (href && href.startsWith('#')) {
-      headingIds.push(href.slice(1));
-    }
-  });
+  // Map each TOC link to its corresponding heading element.
+  // Pages can have duplicate IDs (e.g. two headings named "misc"), so we
+  // pair by occurrence order rather than using getElementById.
+  var headings = []; // Array of { el: HTMLElement, link: HTMLAnchorElement }
+  var elToIndex = new Map();
+
+  (function buildHeadingMap() {
+    var idCount = {};
+    tocLinks.forEach(function (link) {
+      var href = link.getAttribute('href');
+      if (!href || !href.startsWith('#')) return;
+      var id = href.slice(1);
+      var n = idCount[id] || 0;
+      idCount[id] = n + 1;
+      var matches = document.querySelectorAll('[id="' + CSS.escape(id) + '"]');
+      var el = matches[n];
+      if (el) {
+        elToIndex.set(el, headings.length);
+        headings.push({ el: el, link: link });
+      }
+    });
+  })();
+
+  if (headings.length === 0) return;
 
   // ── Scroll spy ────────────────────────────────────────────────
   var headingObserver = null;
   var titleObserver = null;
-  var currentActive = null;
+  var currentActive = -1;
 
-  function setActive(id) {
-    if (currentActive === id) return;
-    currentActive = id;
+  function setActive(index) {
+    if (currentActive === index) return;
+    currentActive = index;
 
-    tocLinks.forEach(function (link) {
-      var href = link.getAttribute('href');
-      if (href === '#' + id) {
-        link.classList.add('toc-active');
+    headings.forEach(function (h, i) {
+      if (i === index) {
+        h.link.classList.add('toc-active');
         // Auto-scroll the TOC nav so the active link stays visible
         if (floatingNav.scrollHeight > floatingNav.clientHeight) {
-          link.scrollIntoView({ block: 'nearest' });
+          h.link.scrollIntoView({ block: 'nearest' });
         }
       } else {
-        link.classList.remove('toc-active');
+        h.link.classList.remove('toc-active');
       }
     });
   }
 
   function clearActive() {
-    currentActive = null;
-    tocLinks.forEach(function (link) {
-      link.classList.remove('toc-active');
+    currentActive = -1;
+    headings.forEach(function (h) {
+      h.link.classList.remove('toc-active');
     });
   }
 
@@ -72,7 +87,8 @@
       function (entries) {
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
-            setActive(entry.target.id);
+            var index = elToIndex.get(entry.target);
+            if (index !== undefined) setActive(index);
           }
         });
       },
@@ -131,6 +147,23 @@
     scrollAnimationId = requestAnimationFrame(step);
   }
 
+  // Build a map from TOC link elements to their heading elements for click handling.
+  // This covers all TOC variants (floating, inline, collapsible).
+  var linkToEl = new Map();
+  document.querySelectorAll('.toc-floating-nav, .toc-inline, .toc-collapsible-nav').forEach(function (nav) {
+    var idCount = {};
+    nav.querySelectorAll('a:not(.toc-title)').forEach(function (link) {
+      var href = link.getAttribute('href');
+      if (!href || !href.startsWith('#')) return;
+      var id = href.slice(1);
+      var n = idCount[id] || 0;
+      idCount[id] = n + 1;
+      var matches = document.querySelectorAll('[id="' + CSS.escape(id) + '"]');
+      var el = matches[n];
+      if (el) linkToEl.set(link, el);
+    });
+  });
+
   function handleTocClick(e) {
     var link = e.target.closest('a');
     if (!link) return;
@@ -149,7 +182,7 @@
       return;
     }
 
-    var target = document.getElementById(href.slice(1));
+    var target = linkToEl.get(link);
     if (!target) return;
     e.preventDefault();
 
@@ -183,14 +216,12 @@
     clearTimeout(scrollFallbackTimer);
     scrollFallbackTimer = setTimeout(function () {
       var triggerY = window.scrollY + window.innerHeight / 3;
-      var best = null;
-      headingIds.forEach(function (id) {
-        var el = document.getElementById(id);
-        if (!el) return;
-        var top = el.getBoundingClientRect().top + window.scrollY;
-        if (top <= triggerY) best = id;
+      var bestIndex = -1;
+      headings.forEach(function (h, i) {
+        var top = h.el.getBoundingClientRect().top + window.scrollY;
+        if (top <= triggerY) bestIndex = i;
       });
-      if (best) setActive(best);
+      if (bestIndex >= 0) setActive(bestIndex);
     }, SCROLL_FALLBACK_DEBOUNCE_MS);
   }
 
@@ -199,9 +230,8 @@
     isActive = true;
 
     headingObserver = createHeadingObserver();
-    headingIds.forEach(function (id) {
-      var el = document.getElementById(id);
-      if (el) headingObserver.observe(el);
+    headings.forEach(function (h) {
+      headingObserver.observe(h.el);
     });
 
     titleObserver = createTitleObserver();
