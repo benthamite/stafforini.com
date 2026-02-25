@@ -88,15 +88,35 @@ def extract_export_file_names(filepath: Path) -> list[str]:
     return names
 
 
-def fix_dataless_files() -> None:
-    """Run the dataless fixer script to restore dehydrated Dropbox files from git."""
-    fixer = SCRIPT_DIR / "fix-dataless-files.sh"
-    if fixer.exists():
+def warn_dataless_files() -> None:
+    """Warn if any source directories contain Dropbox-dehydrated files."""
+    for label, cfg in SECTIONS.items():
+        source_dir = cfg["source_dir"]
+        if not source_dir.exists():
+            continue
         try:
-            subprocess.run(["bash", str(fixer)], timeout=300)
+            result = subprocess.run(
+                ["ls", "-lO", str(source_dir)],
+                capture_output=True, text=True, timeout=30,
+            )
         except subprocess.TimeoutExpired:
-            print("WARNING: dataless fixer timed out after 300s; continuing export",
-                  file=sys.stderr)
+            continue
+        dataless = [
+            line.rsplit(None, 1)[-1]
+            for line in result.stdout.splitlines()
+            if "dataless" in line and line.endswith(".org")
+        ]
+        if dataless:
+            print(
+                f"WARNING: {len(dataless)} dataless (dehydrated) "
+                f".org files in {label} ({source_dir})\n"
+                f"  Dropbox has evicted these files despite the "
+                f"'Available Offline' setting.\n"
+                f"  In Finder, select the affected files, right-click, "
+                f"and choose 'Make Available Offline'.\n"
+                f"  First 5: {', '.join(dataless[:5])}",
+                file=sys.stderr,
+            )
 
 
 def scan_source_files(cfg: dict) -> dict[str, float]:
@@ -286,8 +306,8 @@ def run_export(section: str, full: bool = False) -> None:
 
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Restore any Dropbox-dehydrated files from git before scanning
-    fix_dataless_files()
+    # Warn about any Dropbox-dehydrated files before scanning
+    warn_dataless_files()
 
     # Load manifest
     manifest = None if full else load_manifest(section)
