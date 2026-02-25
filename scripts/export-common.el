@@ -106,6 +106,83 @@ is left as a literal character.  This filter converts the trailing
    "\\1._"
    output))
 
+;;;; Frontmatter title fixer (ox-hugo #+INCLUDE workaround)
+
+;; ox-hugo occasionally drops the title from TOML frontmatter for org
+;; files that use #+INCLUDE directives.  These functions patch the
+;; exported .md file immediately after export, so Hugo never sees a
+;; page without a title.
+
+(defun export--heading-export-pairs (org-file)
+  "Return alist of (EXPORT_FILE_NAME . heading-title) from ORG-FILE.
+For each subtree with an :EXPORT_FILE_NAME: property, pairs the
+property value with the cleaned-up heading text."
+  (let (result)
+    (with-temp-buffer
+      (insert-file-contents org-file)
+      (goto-char (point-min))
+      (while (re-search-forward "^\\*+\\s-+\\(.+\\)" nil t)
+        (let* ((heading (string-trim (match-string 1)))
+               (next-heading-pos
+                (save-excursion
+                  (if (re-search-forward "^\\*" nil t)
+                      (line-beginning-position)
+                    (point-max))))
+               (export-name
+                (save-excursion
+                  (when (re-search-forward
+                         ":EXPORT_FILE_NAME:\\s-+\\(\\S-+\\)"
+                         next-heading-pos t)
+                    (match-string 1)))))
+          (when export-name
+            ;; Strip org tags like :note: at end of heading
+            (when (string-match "\\s-+:[[:alnum:]:]+:\\s-*$" heading)
+              (setq heading (substring heading 0 (match-beginning 0))))
+            ;; Convert org =verbatim= and ~code~ to markdown backticks
+            (setq heading (replace-regexp-in-string
+                           "=\\([^=]+\\)=" "`\\1`" heading))
+            (setq heading (replace-regexp-in-string
+                           "~\\([^~]+\\)~" "`\\1`" heading))
+            ;; Escape double quotes for TOML
+            (setq heading (replace-regexp-in-string
+                           "\"" "\\\\\"" heading))
+            (push (cons export-name heading) result)))))
+    (nreverse result)))
+
+(defun export--inject-title-if-missing (md-path title)
+  "Ensure MD-PATH has TITLE in its TOML frontmatter.
+Returns non-nil if the title was injected."
+  (with-temp-buffer
+    (insert-file-contents md-path)
+    (goto-char (point-min))
+    (when (looking-at "\\+\\+\\+\n")
+      (let ((fm-start (match-end 0)))
+        (when (re-search-forward "^\\+\\+\\+$" nil t)
+          (let ((fm-end (line-beginning-position)))
+            (goto-char fm-start)
+            (unless (re-search-forward "^title = " fm-end t)
+              ;; Title missing — inject it after the opening +++
+              (goto-char fm-start)
+              (insert (format "title = \"%s\"\n" title))
+              (write-region (point-min) (point-max) md-path nil 'silent)
+              (message "  [TITLE FIX] %s -> \"%s\""
+                       (file-name-nondirectory md-path) title)
+              t)))))))
+
+(defun export--fix-missing-titles (org-file hugo-base-dir section)
+  "Fix missing titles in markdown files exported from ORG-FILE.
+HUGO-BASE-DIR is the Hugo project root, SECTION is the content section
+\(e.g. \"notes\").  Reads the org source headings and injects the title
+into any exported .md file that lacks one."
+  (dolist (pair (export--heading-export-pairs org-file))
+    (let* ((slug (car pair))
+           (title (cdr pair))
+           (md-path (expand-file-name
+                     (format "content/%s/%s.md" section slug)
+                     hugo-base-dir)))
+      (when (and title (file-exists-p md-path))
+        (export--inject-title-if-missing md-path title)))))
+
 ;;;; Register export hooks
 
 (with-eval-after-load 'ox-hugo

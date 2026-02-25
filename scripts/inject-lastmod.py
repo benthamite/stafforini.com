@@ -99,8 +99,10 @@ def ensure_title(md_path):
     if re.search(r"^title\s*=", front_matter, re.MULTILINE):
         return False
 
-    # Derive title from filename
-    title = md_path.stem
+    # Derive title from org source heading, falling back to slug
+    title = get_org_title(md_path.stem) or md_path.stem
+    # Escape double quotes for TOML
+    title = title.replace('"', '\\"')
     front_matter = f'title = "{title}"\n' + front_matter
 
     new_text = "+++\n" + front_matter.rstrip("\n") + "\n+++" + text[match.end():]
