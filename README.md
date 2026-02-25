@@ -1,5 +1,7 @@
 # stafforini.com
 
+*Note: I am in the process of launching the site. It should be online by the end of February 2026.*
+
 Source code for [stafforini.com](https://stafforini.com/), a personal digital garden built with [Hugo](https://gohugo.io/).
 
 The site has three content sections:
