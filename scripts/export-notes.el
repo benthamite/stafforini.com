@@ -133,7 +133,15 @@
               (unwind-protect
                   (with-current-buffer buf
                     (org-hugo-export-wim-to-md :all-subtrees)
-                    (setq export-notes-total (1+ export-notes-total)))
+                    (setq export-notes-total (1+ export-notes-total))
+                    ;; Fix titles dropped by ox-hugo #+INCLUDE bug.
+                    ;; Patch the .md immediately so Hugo never serves
+                    ;; a page without a title.
+                    (export--fix-missing-titles
+                     file
+                     (expand-file-name
+                      "~/Library/CloudStorage/Dropbox/repos/stafforini.com/")
+                     "notes"))
                 (kill-buffer buf)))
           (error
            (push (cons file (error-message-string err)) export-notes-errors)
