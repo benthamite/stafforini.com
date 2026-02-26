@@ -199,6 +199,13 @@ def postprocess_quotes(dry_run: bool = False) -> dict:
             stats["skipped_no_blockquote"] += 1
             continue
 
+        # Inject diary = true for ox-hugo-exported quotes that lack the field
+        if "diary" not in front_matter:
+            if content.startswith("+++"):
+                front_matter = front_matter[:-3] + "diary = true\n+++"
+            else:
+                front_matter = front_matter[:-3] + "diary: true\n---"
+
         cleaned_body = strip_citation_from_content(body.lstrip("\n"))
         new_content = front_matter + "\n" + cleaned_body
 
