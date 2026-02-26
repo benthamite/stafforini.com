@@ -21,7 +21,7 @@ from pathlib import Path
 
 SCRIPTS_DIR = Path(__file__).parent
 MATCHED_JSON = SCRIPTS_DIR / "wp-quotes-matched.json"
-NOTES_DIR = Path.home() / "Library/CloudStorage/Dropbox/bibliographic-notes"
+NOTES_DIR = Path.home() / "My Drive/bibliographic-notes"
 
 
 # === Index building ===

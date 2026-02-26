@@ -20,19 +20,19 @@ DB_PATH = os.environ.get(
 )
 NOTES_DIR = os.environ.get(
     "NOTES_DIR",
-    os.path.expanduser("~/Library/CloudStorage/Dropbox/notes/"),
+    os.path.expanduser("~/My Drive/notes/"),
 )
 PEOPLE_DIR = os.environ.get(
     "PEOPLE_DIR",
-    os.path.expanduser("~/Library/CloudStorage/Dropbox/people/"),
+    os.path.expanduser("~/My Drive/people/"),
 )
 BIBNOTES_DIR = os.environ.get(
     "BIBNOTES_DIR",
-    os.path.expanduser("~/Library/CloudStorage/Dropbox/bibliographic-notes/"),
+    os.path.expanduser("~/My Drive/bibliographic-notes/"),
 )
 MISCELLANY_DIR = os.environ.get(
     "MISCELLANY_DIR",
-    os.path.expanduser("~/Library/CloudStorage/Dropbox/websites/pablos-miscellany/"),
+    os.path.expanduser("~/My Drive/Websites/pablos-miscellany/"),
 )
 # Escape SQL LIKE wildcards in path, then wrap with % for substring match
 def _escape_like(s):

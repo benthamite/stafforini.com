@@ -2,7 +2,7 @@
 """Match WordPress quote tags to org-mode note and people files.
 
 Reads tags from wp-quotes-tags.json and attempts to match each tag to an
-org file in ~/Dropbox/notes/ or ~/Dropbox/people/ using a tiered cascade:
+org file in ~/My Drive/notes/ or ~/My Drive/people/ using a tiered cascade:
 
   1. Exact normalized match against #+title: values
   2. Exact normalized match against filename stems
@@ -31,8 +31,8 @@ TAGS_JSON = SCRIPTS_DIR / "wp-quotes-tags.json"
 OUTPUT_JSON = SCRIPTS_DIR / "wp-quotes-tags-linked.json"
 REPORT_FILE = SCRIPTS_DIR / "tags-match-report.txt"
 
-NOTES_DIR = Path.home() / "Library/CloudStorage/Dropbox/notes"
-PEOPLE_DIR = Path.home() / "Library/CloudStorage/Dropbox/people"
+NOTES_DIR = Path.home() / "My Drive/notes"
+PEOPLE_DIR = Path.home() / "My Drive/people"
 
 
 def read_org_title(path: Path) -> str:

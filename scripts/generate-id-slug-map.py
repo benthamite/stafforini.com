@@ -15,8 +15,8 @@ from pathlib import Path
 
 from lib import is_dataless
 
-NOTES_TAGS_DIR = Path.home() / "Library/CloudStorage/Dropbox/notes/tags"
-PEOPLE_TAGS_DIR = Path.home() / "Library/CloudStorage/Dropbox/people/tags"
+NOTES_TAGS_DIR = Path.home() / "My Drive/notes/tags"
+PEOPLE_TAGS_DIR = Path.home() / "My Drive/people/tags"
 
 OUTPUT_PATH = Path("/tmp/id-slug-map.json")
 
@@ -54,7 +54,7 @@ def scan_directory(directory: Path) -> dict[str, str]:
         mapping[org_id] = slug
 
     if skipped_dataless:
-        print(f"  Skipped {skipped_dataless} dataless (Dropbox dehydrated) file(s)")
+        print(f"  Skipped {skipped_dataless} dataless (cloud-evicted) file(s)")
     return mapping
 
 

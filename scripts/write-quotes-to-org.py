@@ -36,8 +36,8 @@ MATCHED_JSON = SCRIPTS_DIR / "wp-quotes-matched.json"
 PROGRESS_FILE = SCRIPTS_DIR / "write-quotes-progress.json"
 REPORT_FILE = SCRIPTS_DIR / "write-quotes-report.txt"
 
-NOTES_DIR = Path.home() / "Library/CloudStorage/Dropbox/bibliographic-notes"
-HUGO_BASE_DIR = "~/Library/CloudStorage/Dropbox/repos/stafforini.com/"
+NOTES_DIR = Path.home() / "My Drive/bibliographic-notes"
+HUGO_BASE_DIR = "~/My Drive/repos/stafforini.com/"
 NOTER_PDF_DIR = "~/My Drive/library-pdf"
 
 STOP_WORDS = _BASE_STOP_WORDS | {

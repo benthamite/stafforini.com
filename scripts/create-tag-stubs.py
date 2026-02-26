@@ -3,8 +3,8 @@
 
 Reads unlinked tags from wp-quotes-tags-linked.json and creates minimal
 org-roam files in:
-  - ~/Dropbox/notes/tags/   (topics)
-  - ~/Dropbox/people/tags/  (people)
+  - ~/My Drive/notes/tags/   (topics)
+  - ~/My Drive/people/tags/  (people)
 
 Each stub has a #+title:, a level-1 heading with :note: or :person: tag,
 and an :ID: property — just enough for org-roam to index them as link
@@ -20,8 +20,8 @@ from lib import tag_to_filename
 SCRIPTS_DIR = Path(__file__).parent
 INPUT_JSON = SCRIPTS_DIR / "wp-quotes-tags-linked.json"
 
-NOTES_TAGS_DIR = Path.home() / "Library/CloudStorage/Dropbox/notes/tags"
-PEOPLE_TAGS_DIR = Path.home() / "Library/CloudStorage/Dropbox/people/tags"
+NOTES_TAGS_DIR = Path.home() / "My Drive/notes/tags"
+PEOPLE_TAGS_DIR = Path.home() / "My Drive/people/tags"
 
 # Words that, when appearing as whole words in a multi-word tag,
 # indicate it's NOT a person name.

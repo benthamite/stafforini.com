@@ -22,10 +22,10 @@ SCRIPTS_DIR = Path(__file__).parent
 HUGO_ROOT = SCRIPTS_DIR.parent
 NOTES_DIR = HUGO_ROOT / "content" / "notes"
 
-DROPBOX = Path.home() / "Library" / "CloudStorage" / "Dropbox"
+GDRIVE = Path.home() / "My Drive"
 TAG_DIRS = [
-    DROPBOX / "notes" / "tags",
-    DROPBOX / "people" / "tags",
+    GDRIVE / "notes" / "tags",
+    GDRIVE / "people" / "tags",
 ]
 
 

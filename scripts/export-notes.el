@@ -75,7 +75,7 @@
 ;; Pre-scan all org files to build the ID→file mapping so that [[id:...]]
 ;; links between notes resolve correctly during export.
 (let ((notes-dir (expand-file-name
-                  "~/Library/CloudStorage/Dropbox/websites/pablos-miscellany/")))
+                  "~/My Drive/Websites/pablos-miscellany/")))
   (org-id-update-id-locations
    (directory-files notes-dir t "\\.org$")))
 
@@ -88,7 +88,7 @@
   "Export all blog org files from pablos-miscellany to Hugo."
   (let* ((file-list-path (getenv "EXPORT_FILE_LIST"))
          (notes-dir (expand-file-name
-                     "~/Library/CloudStorage/Dropbox/websites/pablos-miscellany/"))
+                     "~/My Drive/Websites/pablos-miscellany/"))
          (exportable
           (if file-list-path
               ;; Incremental: only export files from the list
@@ -140,7 +140,7 @@
                     (export--fix-missing-titles
                      file
                      (expand-file-name
-                      "~/Library/CloudStorage/Dropbox/repos/stafforini.com/")
+                      "~/My Drive/repos/stafforini.com/")
                      "notes"))
                 (kill-buffer buf)))
           (error

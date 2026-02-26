@@ -97,10 +97,10 @@ All source content is authored in org-mode files and exported to Hugo-compatible
 
 The `.bib` files are
 
-"~/Library/CloudStorage/Dropbox/bibliography/new.bib"
-"~/Library/CloudStorage/Dropbox/bibliography/old.bib"
-"~/Library/CloudStorage/Dropbox/repos/babel-refs/bib/fluid.bib"
-"~/Library/CloudStorage/Dropbox/repos/babel-refs/bib/stable.bib"
+"~/My Drive/bibliography/new.bib"
+"~/My Drive/bibliography/old.bib"
+"~/My Drive/repos/babel-refs/bib/fluid.bib"
+"~/My Drive/repos/babel-refs/bib/stable.bib"
 
 ## Design
 

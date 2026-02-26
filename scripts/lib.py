@@ -18,17 +18,17 @@ from pathlib import Path
 # Individual scripts select subsets as needed.
 BIB_FILES = [
     # Personal bibliography: actively maintained entries
-    Path.home() / "Library/CloudStorage/Dropbox/bibliography/new.bib",
+    Path.home() / "My Drive/bibliography/new.bib",
     # Personal bibliography: older/archival entries
-    Path.home() / "Library/CloudStorage/Dropbox/bibliography/old.bib",
+    Path.home() / "My Drive/bibliography/old.bib",
     # Shared bibliography (babel-refs): entries still being edited
-    Path.home() / "Library/CloudStorage/Dropbox/repos/babel-refs/bib/fluid.bib",
+    Path.home() / "My Drive/repos/babel-refs/bib/fluid.bib",
     # Shared bibliography (babel-refs): stable/finalized entries
-    Path.home() / "Library/CloudStorage/Dropbox/repos/babel-refs/bib/stable.bib",
+    Path.home() / "My Drive/repos/babel-refs/bib/stable.bib",
     # Shared bibliography (babel-refs): database-sourced entries
-    Path.home() / "Library/CloudStorage/Dropbox/repos/babel-refs/bib/db.bib",
+    Path.home() / "My Drive/repos/babel-refs/bib/db.bib",
     # Auto-generated entries from WordPress quote migration
-    Path.home() / "Library/CloudStorage/Dropbox/bibliography/migration.bib",
+    Path.home() / "My Drive/bibliography/migration.bib",
 ]
 
 # BIB_FILES minus auto-generated migration entries. Most scripts want
@@ -49,13 +49,13 @@ STOP_WORDS = {
 
 
 # macOS SF_DATALESS flag (from sys/stat.h, documented in stat(2) man page).
-# Set by FileProvider on dehydrated (cloud-only) Dropbox files.
+# Set by FileProvider on cloud-evicted (cloud-only) Google Drive files.
 # Reading a dataless file blocks indefinitely waiting for hydration.
 SF_DATALESS = 0x40000000
 
 
 def is_dataless(path: Path) -> bool:
-    """Check if a file has the macOS SF_DATALESS flag (Dropbox dehydrated)."""
+    """Check if a file has the macOS SF_DATALESS flag (cloud-evicted)."""
     try:
         return bool(os.stat(path).st_flags & SF_DATALESS)
     except (OSError, AttributeError):

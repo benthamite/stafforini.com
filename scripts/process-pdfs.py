@@ -41,7 +41,7 @@ MANIFEST_PATH = PDFS_DIR / ".manifest.json"
 MUTOOL = shutil.which("mutool") or "/opt/homebrew/bin/mutool"
 THUMB_DPI = 150
 
-DB_BIB = Path.home() / "Library/CloudStorage/Dropbox/repos/babel-refs/bib/db.bib"
+DB_BIB = Path.home() / "My Drive/repos/babel-refs/bib/db.bib"
 
 
 # === Helpers ===

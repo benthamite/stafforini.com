@@ -37,7 +37,7 @@
         (add-to-list 'load-path dir)))))
 
 (defun export--file-dataless-p (file)
-  "Return non-nil if FILE has the macOS SF_DATALESS flag (Dropbox dehydrated).
+  "Return non-nil if FILE has the macOS SF_DATALESS flag (cloud-evicted).
 Reading such a file blocks indefinitely, so we must skip it."
   (when (eq system-type 'darwin)
     (let ((output (shell-command-to-string
