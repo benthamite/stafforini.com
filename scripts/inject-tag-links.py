@@ -22,9 +22,9 @@ SCRIPTS_DIR = Path(__file__).parent
 MATCHED_JSON = SCRIPTS_DIR / "wp-quotes-matched.json"
 TAGS_JSON = SCRIPTS_DIR / "wp-quotes-tags-linked.json"
 
-BIB_NOTES_DIR = Path.home() / "Library/CloudStorage/Dropbox/bibliographic-notes"
-NOTES_DIR = Path.home() / "Library/CloudStorage/Dropbox/notes"
-PEOPLE_DIR = Path.home() / "Library/CloudStorage/Dropbox/people"
+BIB_NOTES_DIR = Path.home() / "My Drive/bibliographic-notes"
+NOTES_DIR = Path.home() / "My Drive/notes"
+PEOPLE_DIR = Path.home() / "My Drive/people"
 NOTES_TAGS_DIR = NOTES_DIR / "tags"
 PEOPLE_TAGS_DIR = PEOPLE_DIR / "tags"
 

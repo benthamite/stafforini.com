@@ -26,7 +26,7 @@ REPO_ROOT = SCRIPT_DIR.parent
 SECTIONS = {
     "quotes": {
         "source_dir": Path.home()
-        / "Library/CloudStorage/Dropbox/bibliographic-notes",
+        / "My Drive/bibliographic-notes",
         "output_dir": REPO_ROOT / "content/quotes",
         "elisp": SCRIPT_DIR / "export-quotes.el",
         "pre_filter": lambda content: ":public:" in content,
@@ -34,7 +34,7 @@ SECTIONS = {
     },
     "notes": {
         "source_dir": Path.home()
-        / "Library/CloudStorage/Dropbox/websites/pablos-miscellany",
+        / "My Drive/Websites/pablos-miscellany",
         "output_dir": REPO_ROOT / "content/notes",
         "elisp": SCRIPT_DIR / "export-notes.el",
         "pre_filter": lambda content: ":EXPORT_FILE_NAME:" in content,
@@ -89,7 +89,7 @@ def extract_export_file_names(filepath: Path) -> list[str]:
 
 
 def warn_dataless_files() -> None:
-    """Warn if any source directories contain Dropbox-dehydrated files."""
+    """Warn if any source directories contain cloud-evicted files."""
     for label, cfg in SECTIONS.items():
         source_dir = cfg["source_dir"]
         if not source_dir.exists():
@@ -108,9 +108,9 @@ def warn_dataless_files() -> None:
         ]
         if dataless:
             print(
-                f"WARNING: {len(dataless)} dataless (dehydrated) "
+                f"WARNING: {len(dataless)} dataless (cloud-evicted) "
                 f".org files in {label} ({source_dir})\n"
-                f"  Dropbox has evicted these files despite the "
+                f"  Google Drive has evicted these files despite the "
                 f"'Available Offline' setting.\n"
                 f"  In Finder, select the affected files, right-click, "
                 f"and choose 'Make Available Offline'.\n"
@@ -146,7 +146,7 @@ def scan_source_files(cfg: dict) -> dict[str, float]:
     if skipped_dataless:
         print(
             f"WARNING: skipped {len(skipped_dataless)} dataless file(s) "
-            f"(Dropbox dehydrated): {', '.join(skipped_dataless[:5])}"
+            f"(cloud-evicted): {', '.join(skipped_dataless[:5])}"
             + (f" ... and {len(skipped_dataless) - 5} more" if len(skipped_dataless) > 5 else ""),
             file=sys.stderr,
         )
@@ -308,7 +308,7 @@ def run_export(section: str, full: bool = False) -> None:
 
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Warn about any Dropbox-dehydrated files before scanning
+    # Warn about any cloud-evicted files before scanning
     warn_dataless_files()
 
     # Load manifest

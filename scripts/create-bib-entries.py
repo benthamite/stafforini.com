@@ -39,7 +39,7 @@ SCRIPTS_DIR = Path(__file__).parent
 MATCHED_JSON = SCRIPTS_DIR / "wp-quotes-matched.json"
 PROGRESS_FILE = SCRIPTS_DIR / "create-bib-progress.json"
 REPORT_FILE = SCRIPTS_DIR / "create-bib-report.txt"
-MIGRATION_BIB = Path.home() / "Library/CloudStorage/Dropbox/bibliography/migration.bib"
+MIGRATION_BIB = Path.home() / "My Drive/bibliography/migration.bib"
 
 ZOTRA_BASE = "http://localhost:1969"
 ZOTRA_TIMEOUT = 30

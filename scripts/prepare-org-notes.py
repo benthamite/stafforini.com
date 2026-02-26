@@ -5,7 +5,7 @@ Reads each .org file in the pablos-miscellany directory and adds the
 ox-hugo keywords needed for per-subtree export:
 
   File level:
-    #+hugo_base_dir: ~/Library/CloudStorage/Dropbox/repos/stafforini.com/
+    #+hugo_base_dir: ~/My Drive/repos/stafforini.com/
 
   Level-1 heading PROPERTIES:
     :EXPORT_FILE_NAME: <slug>
@@ -26,8 +26,8 @@ from pathlib import Path
 
 # === Constants ===
 
-ORG_DIR = Path.home() / "Library/CloudStorage/Dropbox/websites/pablos-miscellany"
-HUGO_BASE_DIR = "~/Library/CloudStorage/Dropbox/repos/stafforini.com/"
+ORG_DIR = Path.home() / "My Drive/Websites/pablos-miscellany"
+HUGO_BASE_DIR = "~/My Drive/repos/stafforini.com/"
 
 # Files to skip (not blog posts)
 SKIP_FILES = {"pablos-miscellany.org"}

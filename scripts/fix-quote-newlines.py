@@ -32,7 +32,7 @@ from lib import escape_org_text, markdown_to_org_emphasis
 SCRIPTS_DIR = Path(__file__).parent
 MATCHED_JSON = SCRIPTS_DIR / "wp-quotes-matched.json"
 WP_XML = Path.home() / "Downloads/notatudignum.WordPress.2026-02-15.xml"
-NOTES_DIR = Path.home() / "Library/CloudStorage/Dropbox/bibliographic-notes"
+NOTES_DIR = Path.home() / "My Drive/bibliographic-notes"
 
 
 # === WP XML parsing ===

@@ -18,7 +18,7 @@ From Emacs:
 - `M-x stafforini-start-server` — starts the Hugo dev server (`npm run dev`) in a dedicated `*hugo-server*` buffer. If a server is already running, it is killed first to ensure a fresh build (Hugo's incremental rebuild does not track cross-page shortcode dependencies, so reusing a running server after content changes causes stale data).
 - `M-x stafforini-stop-server` — stops the server.
 
-Alternatively, from the project root (`~/Library/CloudStorage/Dropbox/repos/stafforini.com/`):
+Alternatively, from the project root (`~/My Drive/repos/stafforini.com/`):
 
 ```bash
 npm install     # first time only, or after dependency changes
@@ -39,8 +39,8 @@ hugo server --buildDrafts --navigateToChanged
 
 | Content type | Source directory                                                                 | Hugo section      |
 |--------------|----------------------------------------------------------------------------------|-------------------|
-| Notes        | `~/Library/CloudStorage/Dropbox/websites/pablos-miscellany/*.org`                | `content/notes/`  |
-| Quotes       | `~/Library/CloudStorage/Dropbox/bibliographic-notes/*.org` (`:public:` subtrees) | `content/quotes/` |
+| Notes        | `~/My Drive/Websites/pablos-miscellany/*.org`                | `content/notes/`  |
+| Quotes       | `~/My Drive/bibliographic-notes/*.org` (`:public:` subtrees) | `content/quotes/` |
 | Works        | `.bib` files (see SPEC.md for paths)                                             | `content/works/`  |
 
 ## Pipeline overview

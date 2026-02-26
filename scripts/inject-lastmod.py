@@ -26,7 +26,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 CONTENT_DIR = REPO_ROOT / "content" / "notes"
-ORG_DIR = Path.home() / "Library/CloudStorage/Dropbox/websites/pablos-miscellany"
+ORG_DIR = Path.home() / "My Drive/Websites/pablos-miscellany"
 
 # IMPORTANT: Update this when running prepare-org-notes.py on new files.
 # Date when prepare-org-notes.py bulk-modified all org files.
