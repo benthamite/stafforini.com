@@ -157,6 +157,7 @@ Returns non-nil if the title was injected."
     (goto-char (point-min))
     (when (looking-at "\\+\\+\\+\n")
       (let ((fm-start (match-end 0)))
+        (goto-char fm-start)
         (when (re-search-forward "^\\+\\+\\+$" nil t)
           (let ((fm-end (line-beginning-position)))
             (goto-char fm-start)
