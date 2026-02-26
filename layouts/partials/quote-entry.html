@@ -12,7 +12,9 @@
     <p class="quote-attribution"><em>[Missing work: {{ . }}]</em></p>
     {{ end }}
   {{ end }}
+  {{ if ne .Params.diary false }}
   <div class="quote-date">
     <a href="{{ .RelPermalink }}"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time></a>
   </div>
+  {{ end }}
 </div>

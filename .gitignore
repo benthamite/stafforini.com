@@ -5,6 +5,7 @@ node_modules/
 static/pagefind/
 scripts/__pycache__/
 scripts/.export-*-manifest.json
+scripts/.extract-quotes-manifest.json
 
 # Generated PDFs and thumbnails
 static/pdfs/

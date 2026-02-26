@@ -1,5 +1,6 @@
 {{ define "main" }}
-{{ $paginator := .Paginate (.Pages.ByDate.Reverse) }}
+{{ $diaryQuotes := where .Pages ".Params.diary" true }}
+{{ $paginator := .Paginate ($diaryQuotes.ByDate.Reverse) }}
 {{ range $paginator.Pages }}
   {{ partial "quote-entry.html" . }}
 {{ end }}

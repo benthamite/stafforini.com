@@ -13,6 +13,9 @@ python3 "$SCRIPT_DIR/generate-id-slug-map.py"
 
 python3 "$SCRIPT_DIR/incremental-export.py" quotes "$@"
 
+echo "--- Extracting non-diary quotes ---"
+python3 "$SCRIPT_DIR/extract-non-diary-quotes.py"
+
 echo "--- Generating work pages ---"
 python3 "$SCRIPT_DIR/generate-work-pages.py"
 
