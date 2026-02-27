@@ -26,7 +26,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 CONTENT_DIR = REPO_ROOT / "content" / "notes"
-ORG_DIR = Path.home() / "My Drive/notes/pablos-miscellany"
+ORG_DIR = Path.home() / "My Drive/notes"
 
 # Date when ox-hugo metadata was bulk-added to all org files.
 # Files whose mtime matches this date haven't been individually edited

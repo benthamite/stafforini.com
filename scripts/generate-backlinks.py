@@ -2,7 +2,7 @@
 """Generate backlinks.json from the org-roam SQLite database.
 
 Reads the org-roam database, extracts id-type links between nodes in the
-notes, people, bibliographic-notes, and notes/pablos-miscellany directories, maps
+notes, people, and bibliographic-notes directories, maps
 sub-heading nodes back to their parent page-level node, builds a reverse
 index, and writes data/backlinks.json.
 """
@@ -30,10 +30,6 @@ BIBNOTES_DIR = os.environ.get(
     "BIBNOTES_DIR",
     os.path.expanduser("~/My Drive/bibliographic-notes/"),
 )
-MISCELLANY_DIR = os.environ.get(
-    "MISCELLANY_DIR",
-    os.path.expanduser("~/My Drive/notes/pablos-miscellany/"),
-)
 # Escape SQL LIKE wildcards in path, then wrap with % for substring match
 def _escape_like(s):
     return s.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
@@ -41,7 +37,6 @@ def _escape_like(s):
 NOTES_LIKE = "%" + _escape_like(NOTES_DIR) + "%"
 PEOPLE_LIKE = "%" + _escape_like(PEOPLE_DIR) + "%"
 BIBNOTES_LIKE = "%" + _escape_like(BIBNOTES_DIR) + "%"
-MISCELLANY_LIKE = "%" + _escape_like(MISCELLANY_DIR) + "%"
 OUTPUT_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "backlinks.json")
 
 
@@ -81,9 +76,9 @@ def main():
     page_nodes = {}
     cursor = conn.execute(
         "SELECT id, file, level, title FROM nodes"
-        " WHERE (file LIKE ? OR file LIKE ? OR file LIKE ? OR file LIKE ?)"
+        " WHERE (file LIKE ? OR file LIKE ? OR file LIKE ?)"
         " AND level <= 1",  # 0 = file-level node, 1 = first heading
-        (NOTES_LIKE, PEOPLE_LIKE, BIBNOTES_LIKE, MISCELLANY_LIKE),
+        (NOTES_LIKE, PEOPLE_LIKE, BIBNOTES_LIKE),
     )
     for row in cursor:
         node_id = strip_elisp_quotes(row["id"])
@@ -98,8 +93,8 @@ def main():
     subheading_to_page = {}
     cursor = conn.execute(
         "SELECT id, file FROM nodes"
-        " WHERE (file LIKE ? OR file LIKE ? OR file LIKE ? OR file LIKE ?) AND level > 1",
-        (NOTES_LIKE, PEOPLE_LIKE, BIBNOTES_LIKE, MISCELLANY_LIKE),
+        " WHERE (file LIKE ? OR file LIKE ? OR file LIKE ?) AND level > 1",
+        (NOTES_LIKE, PEOPLE_LIKE, BIBNOTES_LIKE),
     )
     for row in cursor:
         node_id = strip_elisp_quotes(row["id"])
@@ -117,9 +112,9 @@ def main():
         FROM links l
         JOIN nodes n_src ON l.source = n_src.id
         WHERE l.type = '"id"'
-        AND (n_src.file LIKE ? OR n_src.file LIKE ? OR n_src.file LIKE ? OR n_src.file LIKE ?)
+        AND (n_src.file LIKE ? OR n_src.file LIKE ? OR n_src.file LIKE ?)
         """,
-        (NOTES_LIKE, PEOPLE_LIKE, BIBNOTES_LIKE, MISCELLANY_LIKE),
+        (NOTES_LIKE, PEOPLE_LIKE, BIBNOTES_LIKE),
     )
 
     # Build the reverse index.
