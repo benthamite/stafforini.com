@@ -162,6 +162,35 @@
       }
     }
 
+    // Truncate sidenotes that would overlap with wide code blocks.
+    // On wide screens, <pre> blocks extend into the sidenote margin, so
+    // any sidenote whose bottom edge intrudes into a code block's vertical
+    // range must be collapsed — just as for sidenote-sidenote collisions.
+    var noteBody = container.querySelector('.note-body');
+    var preEls = noteBody ? noteBody.querySelectorAll('pre') : [];
+    var codeBlockTops = [];
+    Array.prototype.forEach.call(preEls, function (pre) {
+      codeBlockTops.push(pre.getBoundingClientRect().top - containerRect.top);
+    });
+
+    for (var i = 0; i < sidenotes.length; i++) {
+      var sn = sidenotes[i];
+      var snBottom = sn.top + (sn.visibleHeight !== null ? sn.visibleHeight : sn.fullHeight);
+      for (var p = 0; p < codeBlockTops.length; p++) {
+        var cbTop = codeBlockTops[p];
+        if (cbTop <= sn.top) continue; // code block above this sidenote
+        if (snBottom > cbTop) {
+          var available = cbTop - sn.top;
+          var lines = Math.floor(available / lineHeight);
+          var newVisible = lines * lineHeight;
+          if (newVisible > 0 && (sn.visibleHeight === null || newVisible < sn.visibleHeight)) {
+            sn.visibleHeight = newVisible;
+          }
+        }
+        break; // pre elements are in document order; first one below suffices
+      }
+    }
+
     // Apply positions and overlap layers
     sidenotes.forEach(function (sn) {
       sn.el.style.top = sn.top + 'px';
