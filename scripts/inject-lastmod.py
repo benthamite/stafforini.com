@@ -17,6 +17,7 @@ Usage:
 """
 
 import argparse
+import json
 import os
 import re
 from datetime import datetime
@@ -25,6 +26,7 @@ from pathlib import Path
 # === Constants ===
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+SCRIPT_DIR = REPO_ROOT / "scripts"
 CONTENT_DIR = REPO_ROOT / "content" / "notes"
 ORG_DIR = Path.home() / "My Drive/notes"
 
@@ -37,21 +39,45 @@ BATCH_DATE = "2026-02-17"
 # === Helpers ===
 
 
-def find_org_file(slug):
-    """Find the org file for a given slug, searching ORG_DIR recursively."""
-    # Check top-level first (most common for new notes)
-    direct = ORG_DIR / f"{slug}.org"
-    if direct.exists():
-        return direct
-    # Search subdirectories (e.g. pablos-miscellany/)
+def load_output_to_source_map() -> dict[str, Path]:
+    """Build {output_filename: source_path} from the export manifest.
+
+    Uses the manifest to resolve which org file produced each .md file,
+    avoiding ambiguity when multiple org files share the same basename.
+    """
+    manifest_path = SCRIPT_DIR / ".export-notes-manifest.json"
+    if not manifest_path.exists():
+        return {}
+    with open(manifest_path) as f:
+        manifest = json.load(f)
+    result = {}
+    for relpath, info in manifest.get("files", {}).items():
+        source = ORG_DIR / relpath
+        for output in info.get("outputs", []):
+            result[output] = source
+    return result
+
+
+def find_org_file(slug, output_map=None):
+    """Find the org file for a given slug.
+
+    Checks the export manifest first (via output_map) for an exact match,
+    then falls back to searching ORG_DIR recursively.
+    """
+    md_name = f"{slug}.md"
+    if output_map and md_name in output_map:
+        source = output_map[md_name]
+        if source.exists():
+            return source
+    # Fallback: search by filename
     for f in ORG_DIR.rglob(f"{slug}.org"):
         return f
     return None
 
 
-def get_org_mtime(slug):
+def get_org_mtime(slug, output_map=None):
     """Get the modification time of the org file for a given slug."""
-    org_file = find_org_file(slug)
+    org_file = find_org_file(slug, output_map)
     if org_file:
         mtime = os.path.getmtime(org_file)
         return datetime.fromtimestamp(mtime).strftime("%Y-%m-%d")
@@ -66,14 +92,14 @@ def get_front_matter_date(text):
     return None
 
 
-def get_org_title(slug):
+def get_org_title(slug, output_map=None):
     """Read the org source and return the heading title with markup preserved.
 
     Parses the first level-1 heading from the org file and converts org
     inline markup (=verbatim= and ~code~) to markdown backtick syntax.
     Returns None if the org file doesn't exist or has no heading.
     """
-    org_file = find_org_file(slug)
+    org_file = find_org_file(slug, output_map)
     if not org_file:
         return None
 
@@ -90,7 +116,7 @@ def get_org_title(slug):
     return None
 
 
-def ensure_title(md_path):
+def ensure_title(md_path, output_map=None):
     """Ensure the TOML front matter contains a title field.
 
     ox-hugo occasionally omits the title (observed with #+INCLUDE files).
@@ -111,7 +137,7 @@ def ensure_title(md_path):
         return False
 
     # Derive title from org source heading, falling back to slug
-    title = get_org_title(md_path.stem) or md_path.stem
+    title = get_org_title(md_path.stem, output_map) or md_path.stem
     # Escape double quotes for TOML
     title = title.replace('"', '\\"')
     front_matter = f'title = "{title}"\n' + front_matter
@@ -121,7 +147,7 @@ def ensure_title(md_path):
     return True
 
 
-def fix_title_markup(md_path):
+def fix_title_markup(md_path, output_map=None):
     """Re-inject inline markup into the front matter title.
 
     ox-hugo strips org inline markup (=code=, ~code~) from the front matter
@@ -131,7 +157,7 @@ def fix_title_markup(md_path):
     Returns True if the file was modified, False otherwise.
     """
     slug = md_path.stem
-    org_title = get_org_title(slug)
+    org_title = get_org_title(slug, output_map)
     if org_title is None:
         return False
 
@@ -215,6 +241,8 @@ def main():
     md_files = sorted(CONTENT_DIR.glob("*.md"))
     print(f"Found {len(md_files)} markdown files in {CONTENT_DIR}")
 
+    output_map = load_output_to_source_map()
+
     stats = {"updated": 0, "unchanged": 0, "no_org": 0, "skipped": 0,
              "title_injected": 0, "title_markup_fixed": 0}
 
@@ -225,10 +253,10 @@ def main():
 
         # Ensure title exists (ox-hugo sometimes drops it)
         if not args.dry_run:
-            if ensure_title(md_file):
+            if ensure_title(md_file, output_map):
                 stats["title_injected"] += 1
                 print(f"  [TITLE] {md_file.name} -> injected missing title")
-            if fix_title_markup(md_file):
+            if fix_title_markup(md_file, output_map):
                 stats["title_markup_fixed"] += 1
                 print(f"  [MARKUP] {md_file.name} -> restored title markup")
         else:
@@ -239,7 +267,7 @@ def main():
                 print(f"  [TITLE] {md_file.name} -> would inject title = \"{md_file.stem}\"")
 
         slug = md_file.stem
-        lastmod = get_org_mtime(slug)
+        lastmod = get_org_mtime(slug, output_map)
 
         if lastmod is None:
             stats["no_org"] += 1
