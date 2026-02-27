@@ -77,7 +77,7 @@
 (let ((notes-dir (expand-file-name
                   "~/My Drive/notes/")))
   (org-id-update-id-locations
-   (directory-files notes-dir t "\\.org$")))
+   (directory-files-recursively notes-dir "\\.org$")))
 
 ;; Track stats
 (defvar export-notes-total 0)
@@ -97,8 +97,8 @@
                 (with-temp-buffer
                   (insert-file-contents file-list-path)
                   (split-string (buffer-string) "\n" t)))
-            ;; Full: scan and pre-filter
-            (let* ((all-files (directory-files notes-dir t "\\.org$"))
+            ;; Full: scan recursively and pre-filter
+            (let* ((all-files (directory-files-recursively notes-dir "\\.org$"))
                    (files (seq-remove
                            ;; pablos-miscellany.org is the org-roam index file, not a blog post
                            (lambda (f) (string= (file-name-nondirectory f) "pablos-miscellany.org"))

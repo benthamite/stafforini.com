@@ -120,14 +120,14 @@ def warn_dataless_files() -> None:
 
 
 def scan_source_files(cfg: dict) -> dict[str, float]:
-    """Scan source directory, return {filename: mtime} for exportable files."""
+    """Scan source directory recursively, return {relpath: mtime} for exportable files."""
     source_dir = cfg["source_dir"]
     pre_filter = cfg["pre_filter"]
     skip_files = cfg["skip_files"]
 
     result = {}
     skipped_dataless = []
-    org_files = sorted(source_dir.glob("*.org"))
+    org_files = sorted(source_dir.rglob("*.org"))
     total = len(org_files)
     for i, f in enumerate(org_files, 1):
         if i % 200 == 0 or i == total:
@@ -142,7 +142,7 @@ def scan_source_files(cfg: dict) -> dict[str, float]:
         except OSError:
             continue
         if pre_filter(content):
-            result[f.name] = f.stat().st_mtime
+            result[str(f.relative_to(source_dir))] = f.stat().st_mtime
     if skipped_dataless:
         print(
             f"WARNING: skipped {len(skipped_dataless)} dataless file(s) "
