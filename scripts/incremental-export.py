@@ -34,7 +34,7 @@ SECTIONS = {
     },
     "notes": {
         "source_dir": Path.home()
-        / "My Drive/Websites/pablos-miscellany",
+        / "My Drive/notes/pablos-miscellany",
         "output_dir": REPO_ROOT / "content/notes",
         "elisp": SCRIPT_DIR / "export-notes.el",
         "pre_filter": lambda content: ":EXPORT_FILE_NAME:" in content,

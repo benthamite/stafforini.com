@@ -2,7 +2,7 @@
 """Generate backlinks.json from the org-roam SQLite database.
 
 Reads the org-roam database, extracts id-type links between nodes in the
-notes, people, bibliographic-notes, and pablos-miscellany directories, maps
+notes, people, bibliographic-notes, and notes/pablos-miscellany directories, maps
 sub-heading nodes back to their parent page-level node, builds a reverse
 index, and writes data/backlinks.json.
 """
@@ -32,7 +32,7 @@ BIBNOTES_DIR = os.environ.get(
 )
 MISCELLANY_DIR = os.environ.get(
     "MISCELLANY_DIR",
-    os.path.expanduser("~/My Drive/Websites/pablos-miscellany/"),
+    os.path.expanduser("~/My Drive/notes/pablos-miscellany/"),
 )
 # Escape SQL LIKE wildcards in path, then wrap with % for substring match
 def _escape_like(s):

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Add ox-hugo export metadata to blog org files.
 
-Reads each .org file in the pablos-miscellany directory and adds the
+Reads each .org file in the notes/pablos-miscellany directory and adds the
 ox-hugo keywords needed for per-subtree export:
 
   File level:
@@ -26,7 +26,7 @@ from pathlib import Path
 
 # === Constants ===
 
-ORG_DIR = Path.home() / "My Drive/Websites/pablos-miscellany"
+ORG_DIR = Path.home() / "My Drive/notes/pablos-miscellany"
 HUGO_BASE_DIR = "~/My Drive/repos/stafforini.com/"
 
 # Files to skip (not blog posts)
