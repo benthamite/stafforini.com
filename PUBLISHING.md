@@ -39,7 +39,7 @@ hugo server --buildDrafts --navigateToChanged
 
 | Content type | Source directory                                                                 | Hugo section      |
 |--------------|----------------------------------------------------------------------------------|-------------------|
-| Notes        | `~/My Drive/Websites/pablos-miscellany/*.org`                | `content/notes/`  |
+| Notes        | `~/My Drive/notes/pablos-miscellany/*.org`                   | `content/notes/`  |
 | Quotes       | `~/My Drive/bibliographic-notes/*.org` (`:public:` subtrees) | `content/quotes/` |
 | Works        | `.bib` files (see SPEC.md for paths)                                             | `content/works/`  |
 
@@ -72,7 +72,7 @@ The normal day-to-day workflow uses ox-hugo's interactive export from within Ema
 3. Export with `C-c C-e H H` (current subtree) or `C-c C-e H A` (all subtrees)
 4. If `hugo server` is running, the site updates automatically
 
-The `.dir-locals.el` in `pablos-miscellany/` activates the `hugo-cite` processor so citations are correctly converted to Hugo shortcodes. It also sets `org-export-with-broken-links` to handle any dead links.
+The `.dir-locals.el` in `notes/pablos-miscellany/` activates the `hugo-cite` processor so citations are correctly converted to Hugo shortcodes. It also sets `org-export-with-broken-links` to handle any dead links.
 
 ### Editing a quote
 
@@ -179,5 +179,5 @@ The `hugo-cite` and `hugo-cite-noop` processors are registered in the ox-hugo se
 
 | Directory                     | Processor        | Effect                                               |
 |-------------------------------|------------------|------------------------------------------------------|
-| `websites/pablos-miscellany/` | `hugo-cite`      | `[cite:@Key]` → `{{< cite "Key" >}}`                 |
+| `notes/pablos-miscellany/`    | `hugo-cite`      | `[cite:@Key]` → `{{< cite "Key" >}}`                 |
 | `bibliographic-notes/`        | `hugo-cite-noop` | Citations suppressed (work pages handle attribution) |
