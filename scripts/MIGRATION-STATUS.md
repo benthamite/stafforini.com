@@ -260,16 +260,17 @@ citations at build time, using the same work pages and citation formatting as qu
 
 ## Scripts
 
-### prepare-org-notes.py — Add ox-hugo metadata
+### Publishing notes — Add ox-hugo metadata
 
-Adds the ox-hugo keywords needed for per-subtree export to each org file:
+The `stafforini-publish-note` Emacs command (replacing the former
+`prepare-org-notes.py` bulk script) adds ox-hugo export metadata to
+individual org files:
 
 - **File level**: `#+hugo_base_dir: ~/My Drive/repos/stafforini.com/`
 - **Heading level** (in the level-1 PROPERTIES drawer):
   - `:EXPORT_FILE_NAME:` — slug derived from the org filename
   - `:EXPORT_HUGO_SECTION: notes` — target Hugo section
-  - `:EXPORT_DATE:` — extracted from `:POST_DATE:` (YYYY-MM-DD)
-  - `:EXPORT_HUGO_DRAFT: true` — if no date (draft posts)
+  - `:EXPORT_DATE:` — today's date (YYYY-MM-DD)
 
 Idempotent: skips files that already have `:EXPORT_FILE_NAME:`.
 
@@ -295,26 +296,24 @@ no work page exists.
 To rebuild the site from scratch (e.g. after editing org files):
 
 ```bash
-# 1. Add ox-hugo metadata (only needed once, or after adding new org files)
-python scripts/prepare-org-notes.py
-
-# 2. Export org to Hugo markdown via ox-hugo
+# 1. Export org to Hugo markdown via ox-hugo
+#    (new notes must first be published via M-x stafforini-publish-note)
 emacs --batch -l scripts/export-notes.el
 
-# 3. Generate work pages for any new cite keys in notes
+# 2. Generate work pages for any new cite keys in notes
 #    (run the inline script or extend generate-work-pages.py)
 
-# 4. Generate backlinks from org-roam database
+# 3. Generate backlinks from org-roam database
 python scripts/generate-backlinks.py
 
-# 5. Build the Hugo site
+# 4. Build the Hugo site
 hugo --minify
 
-# 6. Generate Pagefind search index
+# 5. Generate Pagefind search index
 npx pagefind --site public
 ```
 
-For local preview, replace steps 5-6 with `hugo server --buildDrafts`.
+For local preview, replace steps 4-5 with `hugo server --buildDrafts`.
 
 ## Results
 

@@ -32,7 +32,7 @@ When telling the user to run a script, always mention the corresponding `staffor
 |--------|--------------|----------|
 | `scripts/export-notes.sh` | `stafforini-export-all-notes` | `n` |
 | `scripts/export-quotes.sh` | `stafforini-export-all-quotes` | `q` |
-| `scripts/prepare-org-notes.py` | `stafforini-prepare-notes` | `p` |
+| *(per-file)* | `stafforini-publish-note` | `p` |
 | `scripts/generate-work-pages.py` | `stafforini-update-works` | `w` |
 | `scripts/generate-backlinks.py` | `stafforini-update-backlinks` | `b` |
 | `scripts/process-pdfs.py` | `stafforini-process-pdfs` | `d` |
