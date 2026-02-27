@@ -2,7 +2,7 @@
 
 ;; Run via: emacs --batch -l scripts/export-notes.el
 ;;
-;; Exports all org files in the notes/pablos-miscellany directory to Hugo
+;; Exports all org files in the notes directory to Hugo
 ;; markdown in content/notes/, using ox-hugo per-subtree export.
 ;;
 ;; Notes must have ox-hugo metadata (:EXPORT_FILE_NAME:, etc.)
@@ -75,7 +75,7 @@
 ;; Pre-scan all org files to build the ID→file mapping so that [[id:...]]
 ;; links between notes resolve correctly during export.
 (let ((notes-dir (expand-file-name
-                  "~/My Drive/notes/pablos-miscellany/")))
+                  "~/My Drive/notes/")))
   (org-id-update-id-locations
    (directory-files notes-dir t "\\.org$")))
 
@@ -85,10 +85,10 @@
 (defvar export-notes-skipped-dataless '())
 
 (defun export-notes-batch ()
-  "Export all blog org files from notes/pablos-miscellany to Hugo."
+  "Export all blog org files from notes to Hugo."
   (let* ((file-list-path (getenv "EXPORT_FILE_LIST"))
          (notes-dir (expand-file-name
-                     "~/My Drive/notes/pablos-miscellany/"))
+                     "~/My Drive/notes/"))
          (exportable
           (if file-list-path
               ;; Incremental: only export files from the list

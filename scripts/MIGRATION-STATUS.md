@@ -229,7 +229,7 @@ WP tags should eventually link to corresponding org notes (e.g., "emacs" tag →
 Migrating ~119 blog posts from individual org files (originally extracted from
 a monolithic `pablos-miscellany.org`) into Hugo notes via ox-hugo.
 
-**Source**: `~/My Drive/notes/pablos-miscellany/*.org`
+**Source**: `~/My Drive/notes/*.org`
 **Target**: `content/notes/*.md` in the Hugo site
 
 ## Architecture
