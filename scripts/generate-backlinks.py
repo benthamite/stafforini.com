@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """Generate backlinks.json from the org-roam SQLite database.
 
-Reads the org-roam database, extracts id-type links between nodes in the
-notes, people, and bibliographic-notes directories, maps
-sub-heading nodes back to their parent page-level node, builds a reverse
-index, and writes data/backlinks.json.
+Reads the org-roam database, extracts all id-type links, maps sub-heading
+nodes back to their parent page-level node, builds a reverse index, and
+filters to only include pages that have been exported to Hugo.
+
+Writes data/backlinks.json.
 """
 
 import json
 import os
-import re
 import sqlite3
 import sys
 import tempfile
@@ -18,26 +18,12 @@ DB_PATH = os.environ.get(
     "ORGROAM_DB",
     os.path.expanduser("~/.config/emacs-profiles/var/org/org-roam.db"),
 )
-NOTES_DIR = os.environ.get(
-    "NOTES_DIR",
-    os.path.expanduser("~/My Drive/notes/"),
-)
-PEOPLE_DIR = os.environ.get(
-    "PEOPLE_DIR",
-    os.path.expanduser("~/My Drive/people/"),
-)
-BIBNOTES_DIR = os.environ.get(
-    "BIBNOTES_DIR",
-    os.path.expanduser("~/My Drive/bibliographic-notes/"),
-)
-# Escape SQL LIKE wildcards in path, then wrap with % for substring match
-def _escape_like(s):
-    return s.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
-
-NOTES_LIKE = "%" + _escape_like(NOTES_DIR) + "%"
-PEOPLE_LIKE = "%" + _escape_like(PEOPLE_DIR) + "%"
-BIBNOTES_LIKE = "%" + _escape_like(BIBNOTES_DIR) + "%"
-OUTPUT_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "backlinks.json")
+REPO_ROOT = os.path.dirname(os.path.dirname(__file__))
+OUTPUT_PATH = os.path.join(REPO_ROOT, "data", "backlinks.json")
+CONTENT_DIRS = [
+    os.path.join(REPO_ROOT, "content", "notes"),
+    os.path.join(REPO_ROOT, "content", "quotes"),
+]
 
 
 def strip_elisp_quotes(value):
@@ -67,18 +53,25 @@ def main():
         print(f"Error: org-roam database not found at {DB_PATH}", file=sys.stderr)
         sys.exit(1)
 
+    # Build set of exported slugs from Hugo content directories.
+    exported_slugs = set()
+    for d in CONTENT_DIRS:
+        if os.path.isdir(d):
+            for f in os.listdir(d):
+                if f.endswith(".md") and f != "_index.md":
+                    exported_slugs.add(f[:-3])  # strip .md
+
+    if not exported_slugs:
+        print("WARNING: no exported pages found in content directories", file=sys.stderr)
+
     conn = sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
 
-    # Get all page-level nodes (level 0 = file-level, level 1 = first heading)
-    # in the notes, people, and bibliographic-notes directories.
-    # These correspond to actual Hugo pages (one per org file).
+    # Get ALL page-level nodes (level 0 = file-level, level 1 = first heading).
+    # No directory filter — we use exported_slugs to filter the output instead.
     page_nodes = {}
     cursor = conn.execute(
-        "SELECT id, file, level, title FROM nodes"
-        " WHERE (file LIKE ? OR file LIKE ? OR file LIKE ?)"
-        " AND level <= 1",  # 0 = file-level node, 1 = first heading
-        (NOTES_LIKE, PEOPLE_LIKE, BIBNOTES_LIKE),
+        "SELECT id, file, level, title FROM nodes WHERE level <= 1",
     )
     for row in cursor:
         node_id = strip_elisp_quotes(row["id"])
@@ -92,9 +85,7 @@ def main():
     # page-level node (by file).
     subheading_to_page = {}
     cursor = conn.execute(
-        "SELECT id, file FROM nodes"
-        " WHERE (file LIKE ? OR file LIKE ? OR file LIKE ?) AND level > 1",
-        (NOTES_LIKE, PEOPLE_LIKE, BIBNOTES_LIKE),
+        "SELECT id, file FROM nodes WHERE level > 1",
     )
     for row in cursor:
         node_id = strip_elisp_quotes(row["id"])
@@ -105,16 +96,9 @@ def main():
     for node_id, info in page_nodes.items():
         file_to_page[info["file"]] = node_id
 
-    # Get all id-type links where source is in any of the three directories.
+    # Get all id-type links.
     links = conn.execute(
-        """
-        SELECT l.source, l.dest
-        FROM links l
-        JOIN nodes n_src ON l.source = n_src.id
-        WHERE l.type = '"id"'
-        AND (n_src.file LIKE ? OR n_src.file LIKE ? OR n_src.file LIKE ?)
-        """,
-        (NOTES_LIKE, PEOPLE_LIKE, BIBNOTES_LIKE),
+        """SELECT source, dest FROM links WHERE type = '"id"'""",
     )
 
     # Build the reverse index.
@@ -162,6 +146,17 @@ def main():
         backlinks[dest_slug].add((src_slug, src_title))
 
     conn.close()
+
+    # Only keep backlinks where BOTH source and destination have exported pages.
+    for dest_slug in list(backlinks):
+        if dest_slug not in exported_slugs:
+            del backlinks[dest_slug]
+            continue
+        backlinks[dest_slug] = {
+            (s, t) for s, t in backlinks[dest_slug] if s in exported_slugs
+        }
+        if not backlinks[dest_slug]:
+            del backlinks[dest_slug]
 
     # Convert sets to sorted lists of dicts for JSON serialization.
     result = {}
