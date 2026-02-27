@@ -37,10 +37,22 @@ BATCH_DATE = "2026-02-17"
 # === Helpers ===
 
 
+def find_org_file(slug):
+    """Find the org file for a given slug, searching ORG_DIR recursively."""
+    # Check top-level first (most common for new notes)
+    direct = ORG_DIR / f"{slug}.org"
+    if direct.exists():
+        return direct
+    # Search subdirectories (e.g. pablos-miscellany/)
+    for f in ORG_DIR.rglob(f"{slug}.org"):
+        return f
+    return None
+
+
 def get_org_mtime(slug):
     """Get the modification time of the org file for a given slug."""
-    org_file = ORG_DIR / f"{slug}.org"
-    if org_file.exists():
+    org_file = find_org_file(slug)
+    if org_file:
         mtime = os.path.getmtime(org_file)
         return datetime.fromtimestamp(mtime).strftime("%Y-%m-%d")
     return None
@@ -61,8 +73,8 @@ def get_org_title(slug):
     inline markup (=verbatim= and ~code~) to markdown backtick syntax.
     Returns None if the org file doesn't exist or has no heading.
     """
-    org_file = ORG_DIR / f"{slug}.org"
-    if not org_file.exists():
+    org_file = find_org_file(slug)
+    if not org_file:
         return None
 
     for line in org_file.read_text().splitlines():
