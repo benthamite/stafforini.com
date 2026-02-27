@@ -16,8 +16,17 @@
 
 (require 'ox-hugo)
 
-;; Allow broken links (some old WordPress links may be dead)
+;; Allow broken links so export doesn't abort
 (setq org-export-with-broken-links t)
+
+;; Render broken links (e.g. [[id:...][Name]] pointing to private notes)
+;; as plain description text instead of silently dropping them.
+(define-advice org-hugo-link (:around (orig-fn link contents info) render-broken-as-text)
+  "Render broken links as plain description text."
+  (condition-case _err
+      (funcall orig-fn link contents info)
+    (org-link-broken
+     (or contents (org-element-property :path link)))))
 ;; Exclude :ARCHIVE: and :noexport: tagged headings from export
 (setq org-export-exclude-tags '("noexport" "ARCHIVE"))
 ;; Don't render TODO keywords in exported headings
