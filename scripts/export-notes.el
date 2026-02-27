@@ -26,6 +26,9 @@
 (setq org-export-with-tasks nil)
 ;; Always include lastmod in front matter (0 = no suppression period)
 (setq org-hugo-suppress-lastmod-period 0)
+;; Don't prompt to evaluate source blocks (some notes have :cache yes
+;; blocks that trigger interactive prompts in batch mode)
+(setq org-confirm-babel-evaluate nil)
 
 ;; Register a cite export processor that emits Hugo {{< cite >}} shortcodes.
 ;; This keeps citation rendering in Hugo (via the cite.html shortcode and
