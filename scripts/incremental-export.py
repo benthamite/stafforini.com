@@ -203,8 +203,18 @@ def run_full_export(section: str, cfg: dict, current_files: dict[str, float]) ->
 
     wipe_output_dir(output_dir)
 
-    # Call Emacs without EXPORT_FILE_LIST — it uses its own pre-filtering
-    run_emacs(cfg["elisp"])
+    # Pass the pre-filtered file list to Emacs (avoids slow recursive scan in Emacs)
+    full_paths = [str(source_dir / name) for name in sorted(current_files)]
+    with tempfile.NamedTemporaryFile(
+        mode="w", suffix=".txt", prefix="export-list-", delete=False
+    ) as tmp:
+        tmp.write("\n".join(full_paths))
+        file_list_path = tmp.name
+
+    try:
+        run_emacs(cfg["elisp"], file_list_path=file_list_path)
+    finally:
+        os.unlink(file_list_path)
 
     # Build fresh manifest from all current exportable files
     print("\nBuilding manifest...")
