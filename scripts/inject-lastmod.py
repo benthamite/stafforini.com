@@ -9,7 +9,7 @@ For each markdown file in content/notes/:
 
 2. Sets `lastmod` in the TOML front matter to the org file's
    filesystem modification time. If the org file's mtime matches the
-   prepare-org-notes.py batch date, falls back to the creation date.
+   initial bulk-metadata batch date, falls back to the creation date.
 
 Usage:
     python scripts/inject-lastmod.py            # Full run
@@ -28,8 +28,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 CONTENT_DIR = REPO_ROOT / "content" / "notes"
 ORG_DIR = Path.home() / "My Drive/notes/pablos-miscellany"
 
-# IMPORTANT: Update this when running prepare-org-notes.py on new files.
-# Date when prepare-org-notes.py bulk-modified all org files.
+# Date when ox-hugo metadata was bulk-added to all org files.
 # Files whose mtime matches this date haven't been individually edited
 # since, so we fall back to their creation date for lastmod.
 BATCH_DATE = "2026-02-17"

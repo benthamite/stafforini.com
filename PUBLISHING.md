@@ -95,7 +95,7 @@ The script reads all `.bib` files listed in `scripts/lib.py`, regenerates work p
 
 ### When you need extra steps
 
-- **New org file**: run `M-x stafforini-prepare-notes` to add ox-hugo metadata (`:EXPORT_FILE_NAME:`, `:EXPORT_HUGO_SECTION:`, etc.)
+- **New org file**: open the file and run `M-x stafforini-publish-note` to add ox-hugo metadata (`:EXPORT_FILE_NAME:`, `:EXPORT_HUGO_SECTION:`, `:EXPORT_DATE:`)
 - **Changed links**: run `M-x stafforini-update-backlinks` to regenerate backlink data from the org-roam database
 
 ## Emacs commands
@@ -104,7 +104,7 @@ All build commands are provided by the `stafforini` package. They run asynchrono
 
 | Command | What it does |
 |---|---|
-| `M-x stafforini-prepare-notes` | Add ox-hugo metadata to new org note files |
+| `M-x stafforini-publish-note` | Add ox-hugo metadata to the current org note |
 | `M-x stafforini-export-all-notes` | Export notes + inject lastmod, backlinks, citing-notes |
 | `M-x stafforini-export-all-quotes` | Generate ID→slug map, export quotes + work pages, topic pages |
 | `M-x stafforini-update-works` | Generate/update work pages from BibTeX data |
@@ -135,20 +135,18 @@ bash scripts/export-quotes.sh
 
 Run `M-x stafforini-full-rebuild` to execute the full pipeline sequentially:
 
-1. Prepare notes (add ox-hugo metadata)
-2. Export notes (+ inject lastmod, backlinks, citing-notes)
-3. Export quotes (+ ID→slug map, work pages, topic pages)
-4. Process PDFs
-5. Clean `public/` (remove stale files)
-6. Hugo build (`hugo --minify`)
-7. Pagefind index (`npx pagefind --site public`)
+1. Export notes (+ inject lastmod, backlinks, citing-notes)
+2. Export quotes (+ ID→slug map, work pages, topic pages)
+3. Process PDFs
+4. Clean `public/` (remove stale files)
+5. Hugo build (`hugo --minify`)
+6. Pagefind index (`npx pagefind --site public`)
 
 The export scripts handle intermediate steps automatically. Steps 2 and 3 each run several sub-scripts internally (see the shell scripts for details).
 
 Or from the shell:
 
 ```bash
-python scripts/prepare-org-notes.py          # add ox-hugo metadata to new files
 bash scripts/export-notes.sh --full          # export notes + lastmod, backlinks, citing-notes
 bash scripts/export-quotes.sh --full         # id-slug map + export quotes + works, topics
 python scripts/process-pdfs.py               # strip annotations, generate thumbnails

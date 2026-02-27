@@ -5,8 +5,8 @@
 ;; Exports all org files in the notes/pablos-miscellany directory to Hugo
 ;; markdown in content/notes/, using ox-hugo per-subtree export.
 ;;
-;; Prerequisites: run prepare-org-notes.py first to add ox-hugo
-;; metadata (:EXPORT_FILE_NAME:, :EXPORT_HUGO_SECTION:, etc.)
+;; Notes must have ox-hugo metadata (:EXPORT_FILE_NAME:, etc.)
+;; added via M-x stafforini-publish-note before export.
 
 ;;; Code:
 

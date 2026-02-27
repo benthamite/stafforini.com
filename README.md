@@ -120,7 +120,6 @@ Org files → ox-hugo export → content/*.md → Hugo build → Pagefind index 
 | `generate-citing-notes.py` | Scans notes for cite shortcodes, builds `data/citing-notes.json` |
 | `generate-work-pages.py` | Creates work pages from BibTeX data |
 | `process-pdfs.py` | Strips annotations, generates first-page thumbnails |
-| `prepare-org-notes.py` | Adds ox-hugo metadata to new org files |
 | `deploy.sh` | Full build + Netlify deploy |
 | `start-dev-server.sh` | Starts the Hugo dev server |
 | `build-search-index.sh` | Builds Hugo + runs Pagefind |
