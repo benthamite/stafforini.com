@@ -8,6 +8,9 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
+echo "--- Generating ID-slug map ---"
+python3 "$SCRIPT_DIR/generate-id-slug-map.py"
+
 python3 "$SCRIPT_DIR/incremental-export.py" notes "$@"
 
 echo "--- Injecting lastmod dates ---"
