@@ -226,18 +226,9 @@ def main():
             print(f"  [MODIFY] {org_path.name} (post_id={post_id})")
             print(f"           Add :quoted_author \"{quoted_author}\"")
         else:
-            # Write atomically using temp file
-            import tempfile
-            tmp_fd, tmp_path = tempfile.mkstemp(dir=org_path.parent, suffix=".tmp")
-            try:
-                import os
-                with os.fdopen(tmp_fd, "w") as f:
-                    f.write(new_content)
-                Path(tmp_path).replace(org_path)
-                stats["modified"] += 1
-            except BaseException:
-                Path(tmp_path).unlink(missing_ok=True)
-                raise
+            from lib import atomic_write_text
+            atomic_write_text(org_path, new_content)
+            stats["modified"] += 1
 
     # Print summary
     print(f"\n{'='*60}")

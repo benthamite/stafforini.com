@@ -284,18 +284,8 @@ def replace_quote_block(
             print(f"    Restoring {line_count} lines")
         return True
     else:
-        # Atomic write using temp file
-        import tempfile
-        import os
-
-        tmp_fd, tmp_path = tempfile.mkstemp(dir=org_file.parent, suffix=".tmp")
-        try:
-            with os.fdopen(tmp_fd, "w") as f:
-                f.write(new_content)
-            Path(tmp_path).replace(org_file)
-        except BaseException:
-            Path(tmp_path).unlink(missing_ok=True)
-            raise
+        from lib import atomic_write_text
+        atomic_write_text(org_file, new_content)
 
         return True
 

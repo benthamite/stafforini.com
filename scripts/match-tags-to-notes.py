@@ -365,9 +365,12 @@ def match_tags(tags: list[str], title_index: dict, filename_index: dict) -> dict
             stats["prefix"] += 1
             matched_tags.add(tag)
 
+    FUZZY_MIN_SCORE = 96
+    FUZZY_MAX_EDIT_DISTANCE = 1
+
     # Tier 6: Fuzzy match (auto-accept at high confidence)
     # Catches genuine typos like "conterfactuals" → "counterfactuals".
-    # Very strict thresholds (score >= 96, Levenshtein distance == 1) to
+    # Very strict thresholds (score >= FUZZY_MIN_SCORE, Levenshtein distance <= FUZZY_MAX_EDIT_DISTANCE) to
     # avoid false positives from similar-but-distinct concepts (e.g.
     # "immorality"/"immortality", "modal realism"/"moral realism").
     # Additional filters: no substring containment, same word count.
@@ -391,10 +394,10 @@ def match_tags(tags: list[str], title_index: dict, filename_index: dict) -> dict
                 best_score = score
                 best_match = (title, entry)
 
-        if best_match and best_score >= 96:
+        if best_match and best_score >= FUZZY_MIN_SCORE:
             title, (filename, directory) = best_match
             dist = Levenshtein.distance(tag_norm, title)
-            if dist == 1:
+            if dist <= FUZZY_MAX_EDIT_DISTANCE:
                 linked.append({
                     "tag": tag,
                     "file": filename,

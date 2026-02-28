@@ -71,15 +71,9 @@ def main():
             key=lambda x: x["title"].lower(),
         )
 
+    from lib import atomic_write_json
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
-    tmp_fd, tmp_path = tempfile.mkstemp(dir=os.path.dirname(OUTPUT_PATH), suffix=".tmp")
-    try:
-        with os.fdopen(tmp_fd, "w") as f:
-            json.dump(result, f, indent=2, ensure_ascii=False)
-        os.replace(tmp_path, OUTPUT_PATH)
-    except BaseException:
-        os.unlink(tmp_path)
-        raise
+    atomic_write_json(OUTPUT_PATH, result, ensure_ascii=False)
 
     total_citations = sum(len(v) for v in result.values())
     print(f"Generated citing-notes for {len(result)} works ({total_citations} total citations)")
