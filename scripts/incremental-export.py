@@ -18,7 +18,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from lib import is_dataless
+from lib import is_dataless, safe_remove
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parent
@@ -154,24 +154,24 @@ def scan_source_files(cfg: dict) -> dict[str, float]:
 
 
 def delete_md_files(output_dir: Path, filenames: list[str]) -> int:
-    """Delete specific .md files from the output directory. Returns count."""
+    """Move specific .md files from the output directory to Trash. Returns count."""
     count = 0
     for name in filenames:
         path = output_dir / name
         if path.exists():
-            path.unlink()
+            safe_remove(path)
             print(f"  Deleted stale: {name}")
             count += 1
     return count
 
 
 def wipe_output_dir(output_dir: Path) -> None:
-    """Delete all .md files except _index.md from the output directory."""
+    """Move all .md files except _index.md from the output directory to Trash."""
     if not output_dir.exists():
         return
     for f in output_dir.glob("*.md"):
         if f.name != "_index.md":
-            f.unlink()
+            safe_remove(f)
     print(f"Wiped all .md files from {output_dir}")
 
 
@@ -288,15 +288,16 @@ def run_incremental_export(
     finally:
         os.unlink(file_list_path)
 
-    # Update manifest
+    # Update manifest using the pre-export mtime from current_files
+    # (not re-statting after export, which could differ if Emacs modifies the file)
     print("\nUpdating manifest...")
     export_set = set(to_export)
     new_manifest = {"files": {}}
-    for name in current_files:
+    for name, mtime in current_files.items():
         if name in export_set:
             filepath = source_dir / name
             new_manifest["files"][name] = {
-                "mtime": filepath.stat().st_mtime,
+                "mtime": mtime,
                 "outputs": extract_export_file_names(filepath),
             }
         else:

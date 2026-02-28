@@ -18,7 +18,7 @@ import argparse
 import re
 from pathlib import Path
 
-from lib import BIB_FILES, cite_key_to_slug, escape_yaml_string, parse_bib_entries
+from lib import BIB_FILES, cite_key_to_slug, escape_yaml_string, parse_bib_entries, safe_remove
 
 # === Constants ===
 
@@ -175,32 +175,31 @@ def postprocess_quotes(dry_run: bool = False) -> dict:
         content = md_file.read_text()
         stats["processed"] += 1
 
-        # Split front matter from content
-        # Handle both TOML (+++) and YAML (---) front matter
-        if content.startswith("+++"):
-            parts = content.split("+++", 2)
-            if len(parts) >= 3:
-                front_matter = "+++" + parts[1] + "+++"
-                body = parts[2]
-            else:
-                continue
-        elif content.startswith("---"):
-            parts = content.split("---", 2)
-            if len(parts) >= 3:
-                front_matter = "---" + parts[1] + "---"
-                body = parts[2]
-            else:
-                continue
-        else:
+        # Split front matter from content using regex to correctly handle
+        # delimiters that may also appear in the body content.
+        fm_match = re.match(
+            r"(\+\+\+\n.*?\n\+\+\+|\-\-\-\n.*?\n\-\-\-)(.*)",
+            content, re.DOTALL,
+        )
+        if not fm_match:
             continue
+        front_matter = fm_match.group(1)
+        body = fm_match.group(2)
 
         # Check if body has a blockquote
         if ">" not in body:
             stats["skipped_no_blockquote"] += 1
             continue
 
-        # Inject diary = true for ox-hugo-exported quotes that lack the field
-        if "diary" not in front_matter:
+        # Inject diary = true for ox-hugo-exported quotes that lack the field.
+        # Use a regex to match the TOML/YAML key precisely, avoiding false
+        # positives from the word "diary" appearing in other fields (e.g. titles).
+        has_diary_key = (
+            re.search(r"^diary\s*=", front_matter, re.MULTILINE)
+            if content.startswith("+++")
+            else re.search(r"^diary\s*:", front_matter, re.MULTILINE)
+        )
+        if not has_diary_key:
             if content.startswith("+++"):
                 front_matter = front_matter[:-3] + "diary = true\n+++"
             else:
@@ -401,7 +400,7 @@ def generate_work_pages(bib_by_key: dict, dry_run: bool = False, limit: int = 0)
                     if stats["removed"] <= 5:
                         print(f"  [REMOVE] {slug}.md")
                 else:
-                    work_file.unlink()
+                    safe_remove(work_file)
 
     return stats
 

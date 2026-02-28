@@ -29,8 +29,6 @@ from lib import is_dataless
 
 BIBLIO_NOTES_DIR = Path.home() / "My Drive" / "bibliographic-notes"
 
-# macOS SF_DATALESS flag
-SF_DATALESS = 0x40000000
 
 
 # === Helpers ===
@@ -138,12 +136,9 @@ def main():
             stats["skipped_pdf_missing"] += 1
             continue
 
-        try:
-            if os.stat(pdf_path).st_flags & SF_DATALESS:
-                stats["skipped_pdf_dataless"] += 1
-                continue
-        except (OSError, AttributeError):
-            pass
+        if is_dataless(pdf_path):
+            stats["skipped_pdf_dataless"] += 1
+            continue
 
         highlight_count = count_pdf_highlights(pdf_path)
         if highlight_count < 0:

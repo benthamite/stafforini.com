@@ -28,7 +28,7 @@ import pikepdf
 from PIL import Image
 from pikepdf import Name
 
-from lib import BIB_FILES, cite_key_to_slug, extract_pdf_path, parse_bib_entries
+from lib import BIB_FILES, cite_key_to_slug, extract_pdf_path, parse_bib_entries, safe_remove
 
 # === Constants ===
 
@@ -78,7 +78,7 @@ def needs_processing(slug: str, src_path: Path, manifest: dict, force: bool) -> 
         current_mtime = src_path.stat().st_mtime
     except OSError:
         return True
-    return current_mtime != entry.get("src_mtime")
+    return abs(current_mtime - entry.get("src_mtime", 0)) > 0.001
 
 
 def strip_annotations(src: Path, dst: Path) -> None:
@@ -292,11 +292,11 @@ def process_pdfs(entries: list[dict], *, dry_run: bool, force: bool, limit: int)
         valid_slugs = {e["slug"] for e in entries}
         for pdf_file in sorted(PDFS_DIR.glob("*.pdf")):
             if pdf_file.stem not in valid_slugs:
-                pdf_file.unlink()
+                safe_remove(pdf_file)
                 stats["removed"] += 1
         for thumb_file in sorted(THUMBS_DIR.glob("*.png")):
             if thumb_file.stem not in valid_slugs:
-                thumb_file.unlink()
+                safe_remove(thumb_file)
                 stats["removed"] += 1
         # Prune manifest entries for removed slugs
         for stale_key in [k for k in manifest if k not in valid_slugs]:
