@@ -116,110 +116,67 @@ def get_org_title(slug, output_map=None):
     return None
 
 
-def ensure_title(md_path, output_map=None):
-    """Ensure the TOML front matter contains a title field.
+def apply_front_matter_fixups(md_path, output_map=None, lastmod_date=None):
+    """Apply all front matter fixups in a single read/write cycle.
 
-    ox-hugo occasionally omits the title (observed with #+INCLUDE files).
-    When missing, the slug (filename without extension) is used as the title.
+    Combines title injection, title markup fixing, and lastmod injection
+    into one pass to avoid multiple non-atomic rewrites of the same file.
 
-    Returns True if the file was modified, False otherwise.
+    Returns a dict of which fixups were applied:
+      {"title_injected": bool, "title_markup_fixed": bool, "lastmod_updated": bool}
     """
-    text = md_path.read_text()
-
-    match = re.match(r"(\+\+\+\n)(.*?)(\n\+\+\+)", text, re.DOTALL)
-    if not match:
-        return False
-
-    front_matter = match.group(2)
-
-    # Already has a title — nothing to do
-    if re.search(r"^title\s*=", front_matter, re.MULTILINE):
-        return False
-
-    # Derive title from org source heading, falling back to slug
-    title = get_org_title(md_path.stem, output_map) or md_path.stem
-    # Escape double quotes for TOML
-    title = title.replace('"', '\\"')
-    front_matter = f'title = "{title}"\n' + front_matter
-
-    new_text = "+++\n" + front_matter.rstrip("\n") + "\n+++" + text[match.end():]
-    md_path.write_text(new_text)
-    return True
-
-
-def fix_title_markup(md_path, output_map=None):
-    """Re-inject inline markup into the front matter title.
-
-    ox-hugo strips org inline markup (=code=, ~code~) from the front matter
-    title. This reads the org source heading, converts the markup to markdown
-    backticks, and patches the exported title if they differ.
-
-    Returns True if the file was modified, False otherwise.
-    """
-    slug = md_path.stem
-    org_title = get_org_title(slug, output_map)
-    if org_title is None:
-        return False
+    result = {"title_injected": False, "title_markup_fixed": False, "lastmod_updated": False}
 
     text = md_path.read_text()
     match = re.match(r"(\+\+\+\n)(.*?)(\n\+\+\+)", text, re.DOTALL)
     if not match:
-        return False
+        return result
 
     front_matter = match.group(2)
-    title_match = re.search(r'^title = "(.+)"$', front_matter, re.MULTILINE)
-    if not title_match:
-        return False
+    rest = text[match.end():]
+    changed = False
 
-    current_title = title_match.group(1)
-    if current_title == org_title:
-        return False
+    # 1. Ensure title exists (ox-hugo sometimes drops it)
+    if not re.search(r"^title\s*=", front_matter, re.MULTILINE):
+        title = get_org_title(md_path.stem, output_map) or md_path.stem
+        title = title.replace('"', '\\"')
+        front_matter = f'title = "{title}"\n' + front_matter
+        changed = True
+        result["title_injected"] = True
 
-    front_matter = front_matter.replace(
-        f'title = "{current_title}"',
-        f'title = "{org_title}"',
-    )
+    # 2. Fix title markup (restore org inline markup as markdown backticks)
+    org_title = get_org_title(md_path.stem, output_map)
+    if org_title is not None:
+        title_match = re.search(r'^title = "(.+)"$', front_matter, re.MULTILINE)
+        if title_match and title_match.group(1) != org_title:
+            front_matter = front_matter.replace(
+                f'title = "{title_match.group(1)}"',
+                f'title = "{org_title}"',
+            )
+            changed = True
+            result["title_markup_fixed"] = True
 
-    new_text = "+++\n" + front_matter.rstrip("\n") + "\n+++" + text[match.end():]
-    md_path.write_text(new_text)
-    return True
+    # 3. Inject or update lastmod
+    if lastmod_date is not None:
+        effective_date = lastmod_date
+        if lastmod_date == BATCH_DATE:
+            creation_date = get_front_matter_date(front_matter)
+            if creation_date:
+                effective_date = creation_date
 
+        if f"lastmod = {effective_date}" not in front_matter:
+            front_matter = re.sub(r"lastmod = .+\n?", "", front_matter)
+            front_matter = re.sub(
+                r"(date = .+)", rf"\1\nlastmod = {effective_date}", front_matter
+            )
+            changed = True
+            result["lastmod_updated"] = True
 
-def inject_lastmod(md_path, lastmod_date):
-    """Inject or update lastmod in TOML front matter.
+    if changed:
+        new_text = "+++\n" + front_matter.rstrip("\n") + "\n+++" + rest
+        md_path.write_text(new_text)
 
-    Returns True if the file was modified, False otherwise.
-    """
-    text = md_path.read_text()
-
-    # Match TOML front matter (between +++ delimiters)
-    match = re.match(r"(\+\+\+\n)(.*?)(\n\+\+\+)", text, re.DOTALL)
-    if not match:
-        return False
-
-    front_matter = match.group(2)
-
-    # If org mtime is the batch date, use the creation date instead
-    if lastmod_date == BATCH_DATE:
-        creation_date = get_front_matter_date(front_matter)
-        if creation_date:
-            lastmod_date = creation_date
-
-    # Check if lastmod already has the correct value
-    if f"lastmod = {lastmod_date}" in front_matter:
-        return False
-
-    # Remove existing lastmod if present
-    front_matter = re.sub(r"lastmod = .+\n?", "", front_matter)
-
-    # Add lastmod after the date line
-    front_matter = re.sub(
-        r"(date = .+)", rf"\1\nlastmod = {lastmod_date}", front_matter
-    )
-
-    new_text = "+++\n" + front_matter.rstrip("\n") + "\n+++" + text[match.end():]
-    md_path.write_text(new_text)
-    return True
+    return result
 
 
 # === Main ===
@@ -251,21 +208,6 @@ def main():
             stats["skipped"] += 1
             continue
 
-        # Ensure title exists (ox-hugo sometimes drops it)
-        if not args.dry_run:
-            if ensure_title(md_file, output_map):
-                stats["title_injected"] += 1
-                print(f"  [TITLE] {md_file.name} -> injected missing title")
-            if fix_title_markup(md_file, output_map):
-                stats["title_markup_fixed"] += 1
-                print(f"  [MARKUP] {md_file.name} -> restored title markup")
-        else:
-            text = md_file.read_text()
-            fm_match = re.match(r"(\+\+\+\n)(.*?)(\n\+\+\+)", text, re.DOTALL)
-            if fm_match and not re.search(r"^title\s*=", fm_match.group(2), re.MULTILINE):
-                stats["title_injected"] += 1
-                print(f"  [TITLE] {md_file.name} -> would inject title = \"{md_file.stem}\"")
-
         slug = md_file.stem
         lastmod = get_org_mtime(slug, output_map)
 
@@ -274,10 +216,12 @@ def main():
             continue
 
         if args.dry_run:
-            # Show what would happen
+            text = md_file.read_text()
+            fm_match = re.match(r"(\+\+\+\n)(.*?)(\n\+\+\+)", text, re.DOTALL)
+            if fm_match and not re.search(r"^title\s*=", fm_match.group(2), re.MULTILINE):
+                stats["title_injected"] += 1
+                print(f"  [TITLE] {md_file.name} -> would inject title = \"{md_file.stem}\"")
             if lastmod == BATCH_DATE:
-                text = md_file.read_text()
-                fm_match = re.match(r"(\+\+\+\n)(.*?)(\n\+\+\+)", text, re.DOTALL)
                 creation = get_front_matter_date(fm_match.group(2)) if fm_match else None
                 effective = creation or lastmod
                 print(f"  [FALLBACK] {md_file.name} -> lastmod = {effective} (org mtime was batch date)")
@@ -285,7 +229,14 @@ def main():
                 print(f"  [UPDATE] {md_file.name} -> lastmod = {lastmod}")
             stats["updated"] += 1
         else:
-            if inject_lastmod(md_file, lastmod):
+            result = apply_front_matter_fixups(md_file, output_map, lastmod)
+            if result["title_injected"]:
+                stats["title_injected"] += 1
+                print(f"  [TITLE] {md_file.name} -> injected missing title")
+            if result["title_markup_fixed"]:
+                stats["title_markup_fixed"] += 1
+                print(f"  [MARKUP] {md_file.name} -> restored title markup")
+            if result["lastmod_updated"]:
                 stats["updated"] += 1
             else:
                 stats["unchanged"] += 1

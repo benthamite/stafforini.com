@@ -18,8 +18,10 @@ Usage:
 import argparse
 import html as html_module
 import json
+import os
 import re
 import sys
+import tempfile
 import time
 import unicodedata
 from datetime import datetime, timezone
@@ -1382,8 +1384,17 @@ def load_progress():
 
 
 def save_progress(progress):
-    """Save progress to file."""
-    PROGRESS_FILE.write_text(json.dumps(progress, indent=2, ensure_ascii=False))
+    """Save progress to file atomically."""
+    tmp_fd, tmp_path = tempfile.mkstemp(
+        dir=str(PROGRESS_FILE.parent), suffix=".tmp"
+    )
+    try:
+        with os.fdopen(tmp_fd, "w") as f:
+            json.dump(progress, f, indent=2, ensure_ascii=False)
+        os.replace(tmp_path, str(PROGRESS_FILE))
+    except BaseException:
+        os.unlink(tmp_path)
+        raise
 
 
 # === Main ===
@@ -1738,12 +1749,30 @@ def main():
             f"% Entries: {len(all_entries)}\n"
         )
         content = header + "\n" + "\n\n".join(all_entries) + "\n"
-        MIGRATION_BIB.write_text(content)
+        tmp_fd, tmp_path = tempfile.mkstemp(
+            dir=str(MIGRATION_BIB.parent), suffix=".tmp"
+        )
+        try:
+            with os.fdopen(tmp_fd, "w") as f:
+                f.write(content)
+            os.replace(tmp_path, str(MIGRATION_BIB))
+        except BaseException:
+            os.unlink(tmp_path)
+            raise
         print(f"\n  Bib file written: {MIGRATION_BIB}")
         print(f"  ({len(all_entries)} total entries)")
 
-    # Update wp-quotes-matched.json
-    MATCHED_JSON.write_text(json.dumps(quotes, indent=2, ensure_ascii=False))
+    # Update wp-quotes-matched.json atomically
+    tmp_fd, tmp_path = tempfile.mkstemp(
+        dir=str(MATCHED_JSON.parent), suffix=".tmp"
+    )
+    try:
+        with os.fdopen(tmp_fd, "w") as f:
+            json.dump(quotes, f, indent=2, ensure_ascii=False)
+        os.replace(tmp_path, str(MATCHED_JSON))
+    except BaseException:
+        os.unlink(tmp_path)
+        raise
     print(f"  Updated: {MATCHED_JSON}")
 
     # Write report

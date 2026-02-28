@@ -7,6 +7,7 @@ its own copy.
 
 import os
 import re
+import subprocess
 import unicodedata
 from pathlib import Path
 
@@ -60,6 +61,18 @@ def is_dataless(path: Path) -> bool:
         return bool(os.stat(path).st_flags & SF_DATALESS)
     except (OSError, AttributeError):
         return False
+
+
+def safe_remove(path: Path) -> None:
+    """Move a file to the macOS Trash via the `trash` CLI instead of deleting it.
+
+    Falls back to Path.unlink() if the `trash` command is not available.
+    """
+    try:
+        subprocess.run(["trash", str(path)], check=True, capture_output=True)
+    except FileNotFoundError:
+        # `trash` command not installed; fall back to permanent deletion
+        path.unlink(missing_ok=True)
 
 
 # === Utility functions ===
@@ -204,11 +217,11 @@ def parse_bib_entries(
 
         fields = {}
         # Match BibTeX field = value in three forms:
-        #   field = {value with {nested {braces}}}  (up to 3 levels)
+        #   field = {value with {nested {braces}}}  (up to 4 levels)
         #   field = "quoted value"
         #   field = 1234  (bare integer)
         for field_match in re.finditer(
-            r"(\w+)\s*=\s*(?:\{((?:[^{}]|\{(?:[^{}]|\{[^{}]*\})*\})*)\}|\"([^\"]*)\"|(\d+))",
+            r"(\w+)\s*=\s*(?:\{((?:[^{}]|\{(?:[^{}]|\{(?:[^{}]|\{[^{}]*\})*\})*\})*)\}|\"([^\"]*)\"|(\d+))",
             body,
         ):
             field_name = field_match.group(1).lower()
