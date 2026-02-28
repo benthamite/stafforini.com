@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+{{/* data-theme="light" is the no-JS fallback; the inline script in head.html
+     overrides it immediately from localStorage / prefers-color-scheme. */}}
 <html lang="{{ .Site.LanguageCode }}" data-theme="light">
 <head>
   {{- partial "head.html" . -}}

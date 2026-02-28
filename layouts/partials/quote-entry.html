@@ -4,6 +4,8 @@
     {{ $work := $.Site.GetPage (printf "/works/%s" .) }}
     {{ if $work }}
     {{ $type := $work.Params.entry_type | default "book" }}
+    {{/* quoted_author: when the quote is by someone other than the work's
+         author (e.g. Person A quoted in a book by Person B). */}}
     <p class="quote-attribution">
       {{- with $.Params.quoted_author -}}{{ . }}, quoted in {{ end -}}{{- partial "citation-format.html" (dict "work" $work "type" $type "locator" $.Params.locator "link" true) -}}
     </p>
@@ -12,6 +14,9 @@
     <p class="quote-attribution"><em>[Missing work: {{ . }}]</em></p>
     {{ end }}
   {{ end }}
+  {{/* diary param: true (default) = show in /quotes/ feed + RSS; false = only
+       on the parent work page.  "ne .Params.diary false" means "show date
+       unless diary is explicitly false" (unset values are truthy in Hugo). */}}
   {{ if ne .Params.diary false }}
   <div class="quote-date">
     <a href="{{ .RelPermalink }}"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time></a>

@@ -1,4 +1,6 @@
 {{ define "main" }}
+{{/* Only show "diary" quotes in the feed (diary = true is the default).
+     Non-diary quotes (diary = false) appear only on their parent work page. */}}
 {{ $diaryQuotes := where .Pages ".Params.diary" true }}
 {{ $paginator := .Paginate ($diaryQuotes.ByDate.Reverse) }}
 {{ range $paginator.Pages }}
