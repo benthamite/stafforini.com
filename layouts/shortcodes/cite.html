@@ -5,7 +5,11 @@
     {{< cite "Parfit2017WhatMattersVolume" >}}
     {{< cite "Broad1952EthicsHistoryPhilosophy" "pp. 3–28" >}}
 
-  First arg: cite key (CamelCase, as in the bib file)
+  Short citation (title only, italicized):
+    {{< cite "-Cervantes1605DonQuixote" >}}
+
+  First arg: cite key (CamelCase, as in the bib file).
+             Prefix with "-" for a short (title-only) citation.
   Second arg (optional): locator (page/chapter reference)
 
   Converts cite key to kebab-case slug, looks up the work page,
@@ -14,6 +18,13 @@
 
 {{- $key := .Get 0 -}}
 {{- $locator := .Get 1 -}}
+
+{{/* Detect short-citation prefix */}}
+{{- $short := false -}}
+{{- if hasPrefix $key "-" -}}
+  {{- $short = true -}}
+  {{- $key = strings.TrimPrefix "-" $key -}}
+{{- end -}}
 
 {{/* Convert CamelCase cite key to kebab-case slug:
      Parfit2017WhatMattersVolume → parfit-2017-what-matters-volume */}}
@@ -25,8 +36,14 @@
 
 {{- $work := site.GetPage (printf "/works/%s" $slug) -}}
 {{- if $work -}}
-  {{- $type := $work.Params.entry_type | default "book" -}}
-  {{- partial "citation-format.html" (dict "work" $work "type" $type "locator" $locator "link" true) -}}
+  {{- if $short -}}
+    {{/* Short citation: just the italicized title, linked to work page */}}
+    <a href="{{ $work.RelPermalink }}"><em>{{ $work.Title | safeHTML }}</em></a>
+    {{- with $locator }}, {{ . }}{{ end -}}
+  {{- else -}}
+    {{- $type := $work.Params.entry_type | default "book" -}}
+    {{- partial "citation-format.html" (dict "work" $work "type" $type "locator" $locator "link" true) -}}
+  {{- end -}}
 {{- else -}}
   {{/* Fallback: render the raw key as a span for easy identification */}}
   <span class="cite-unresolved" title="No work page found for {{ $key }}">{{ $key }}</span>
