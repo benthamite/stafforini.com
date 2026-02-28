@@ -7,9 +7,12 @@
   {{ with .Plain }}<span data-pagefind-meta="work_abstract" data-pagefind-ignore class="visually-hidden">{{ . }}</span>{{ end }}
 
   <div class="work-header">
+    {{ $italic := not (or (eq $type "article") (eq $type "incollection") (eq $type "inbook") (eq $type "inproceedings") (eq $type "online")) }}
     {{ $url := .Params.external_url }}
     {{ if and (eq $type "online") $url (or (hasPrefix $url "https://") (hasPrefix $url "http://")) }}
     <h1><a href="{{ $url }}">{{ .Title | safeHTML }}</a></h1>
+    {{ else if $italic }}
+    <h1><em>{{ .Title | safeHTML }}</em></h1>
     {{ else }}
     <h1>{{ .Title | safeHTML }}</h1>
     {{ end }}
