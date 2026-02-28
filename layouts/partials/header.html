@@ -43,6 +43,7 @@
 
   var core = window._searchCore;
   var nav = window._searchUtils.createKeyboardNav(resultsEl, input);
+  var previouslyFocused = null;
 
   async function initPagefind() {
     if (pagefind) return;
@@ -59,6 +60,7 @@
   }
 
   function openSearch() {
+    previouslyFocused = document.activeElement;
     overlay.hidden = false;
     input.focus();
     initPagefind();
@@ -68,6 +70,10 @@
     overlay.hidden = true;
     input.value = '';
     resultsEl.innerHTML = '';
+    if (previouslyFocused && previouslyFocused.focus) {
+      previouslyFocused.focus();
+      previouslyFocused = null;
+    }
   }
 
   input.addEventListener('input', function() {
@@ -98,6 +104,22 @@
 
   overlay.addEventListener('click', function(e) {
     if (e.target === overlay) closeSearch();
+  });
+
+  // Focus trap: keep Tab/Shift+Tab within the overlay while it's open
+  overlay.addEventListener('keydown', function(e) {
+    if (e.key !== 'Tab') return;
+    var focusable = overlay.querySelectorAll('input, button, a, [tabindex]:not([tabindex="-1"])');
+    if (!focusable.length) return;
+    var first = focusable[0];
+    var last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
   });
 })();
 </script>
