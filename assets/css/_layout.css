@@ -12,6 +12,7 @@ main,
 main {
   padding-top: 1.5rem;
   padding-bottom: 3rem;
+  /* Keeps footer from riding up on short pages */
   min-height: 60vh;
 }
 

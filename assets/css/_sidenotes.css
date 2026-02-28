@@ -29,6 +29,7 @@
   font-size: var(--sidenote-font-size);
   line-height: var(--sidenote-line-height);
   color: var(--color-text-secondary);
+  /* Creates a stacking context so internal z-indices (0–10) don't leak out */
   isolation: isolate;
 }
 

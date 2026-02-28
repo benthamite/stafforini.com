@@ -4,6 +4,12 @@
    100  — skip-link (_base.css)
    200  — search overlay (_search.css) */
 
+/* Breakpoint scale (CSS can't use custom properties in @media queries):
+   600px  — mobile/desktop text (max-width) — _layout.css
+   1100px — sidenotes + wide code blocks (min-width) — _sidenotes.css, _content.css
+   1400px — floating TOC (min-width) — _toc.css
+   JS mirrors: BREAKPOINT=1100 in sidenotes.js, BREAKPOINT=1400 in toc.js */
+
 /* Custom properties */
 :root {
   /* Colors — light */
@@ -16,6 +22,7 @@
   --color-code-bg: #f5f5f0;
   --color-blockquote-border: #b0b0a8;
   --color-heading: #111;
+  --color-highlight: rgba(255, 220, 100, 0.4);
 
   /* Typography */
   --font-serif: 'Source Serif 4', 'Source Serif Pro', Georgia, 'Times New Roman', serif;
@@ -42,6 +49,7 @@
 }
 
 html {
+  /* Reserve scrollbar space even on short pages to prevent layout shift */
   scrollbar-gutter: stable;
 }
 
