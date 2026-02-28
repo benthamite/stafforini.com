@@ -1,4 +1,10 @@
 {
+  "bostrom-2002-anthropic-bias-observation": [
+    {
+      "slug": "evaluative-selection-effect",
+      "title": "Evaluative selection effect"
+    }
+  ],
   "bostrom-2009-moral-uncertainty-solution": [
     {
       "slug": "crucial-considerations-and-wise-philanthropy-by-nick-bostrom",
@@ -1319,6 +1325,12 @@
       "title": "Derek Parfit: a bibliography"
     }
   ],
+  "cirkovic-2010-anthropic-shadow-observation": [
+    {
+      "slug": "evaluative-selection-effect",
+      "title": "Evaluative selection effect"
+    }
+  ],
   "cowen-1992-social-discount-rate": [
     {
       "slug": "derek-parfit-a-bibliography",
@@ -1725,6 +1737,18 @@
     {
       "slug": "crucial-considerations-and-wise-philanthropy-by-nick-bostrom",
       "title": "'Crucial Considerations and Wise Philanthropy', by Nick Bostrom"
+    }
+  ],
+  "thaler-1988-anomalies-winner-curse": [
+    {
+      "slug": "evaluative-selection-effect",
+      "title": "Evaluative selection effect"
+    }
+  ],
+  "trammell-2018-which-world-gets": [
+    {
+      "slug": "evaluative-selection-effect",
+      "title": "Evaluative selection effect"
     }
   ],
   "walmsley-2022-cdbroad": [
