@@ -37,6 +37,7 @@
           })
           .then(function (html) {
             var doc = new DOMParser().parseFromString(html, 'text/html');
+            // .note-body is a class set in layouts/notes/single.html (not in CSS)
             var body = doc.querySelector('.note-body');
             var p = body ? body.querySelector('p') : null;
             var text = p ? p.textContent.trim() : '';

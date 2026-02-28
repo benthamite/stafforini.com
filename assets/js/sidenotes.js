@@ -15,7 +15,7 @@
   // ── Constants ───────────────────────────────────────────────────
   var BREAKPOINT = 1100;
   var MIN_SHOWN_LINES = 3;
-  var FADEOUT_LINES = 1.3;
+  var FADEOUT_LINES = 1.3;    // fractional: gradient starts mid-line for a smoother fade
   var RESIZE_DEBOUNCE_MS = 150;
 
   // ── DOM references ──────────────────────────────────────────────
@@ -104,6 +104,7 @@
   function positionSidenotes() {
     computeLineHeight();
 
+    // Phase 1: Compute base measurements
     var minHeight = MIN_SHOWN_LINES * lineHeight;
     var fadeoutHeight = FADEOUT_LINES * lineHeight;
 
@@ -118,7 +119,7 @@
       sn.refTop = refRect.top - containerRect.top;
     });
 
-    // Temporarily remove height constraints to measure full heights
+    // Phase 2: Reset constraints and measure full heights
     sidenotes.forEach(function (sn) {
       sn.el.style.height = '';
       sn.el.style.overflow = '';
@@ -138,7 +139,7 @@
       sn.overlaps = [];
     });
 
-    // Compute top positions: always align with the reference; only push down
+    // Phase 3: Compute top positions — align with reference; push down
     // if the previous sidenote's minimum visible area would be violated.
     for (var i = 0; i < sidenotes.length; i++) {
       var sn = sidenotes[i];
@@ -162,10 +163,11 @@
       }
     }
 
-    // Truncate sidenotes that would overlap with wide code blocks.
+    // Phase 4: Truncate sidenotes that would overlap with wide code blocks.
     // On wide screens, <pre> blocks extend into the sidenote margin, so
     // any sidenote whose bottom edge intrudes into a code block's vertical
     // range must be collapsed — just as for sidenote-sidenote collisions.
+    // .note-body is a class set in layouts/notes/single.html (not in CSS)
     var noteBody = container.querySelector('.note-body');
     var preEls = noteBody ? noteBody.querySelectorAll('pre') : [];
     var codeBlockTops = [];
@@ -191,7 +193,7 @@
       }
     }
 
-    // Apply positions and overlap layers
+    // Phase 5: Apply positions, create fadeout/cover DOM, compute overlap sets
     sidenotes.forEach(function (sn) {
       sn.el.style.top = sn.top + 'px';
 

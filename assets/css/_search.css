@@ -135,7 +135,7 @@ a.search-more.is-active {
 
 .search-excerpt mark,
 .search-section-list a mark {
-  background: rgba(255, 220, 100, 0.4);
+  background: var(--color-highlight);
   color: inherit;
   padding: 0 1px;
   border-radius: 2px;
