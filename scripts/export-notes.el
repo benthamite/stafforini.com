@@ -42,24 +42,31 @@
 ;; Register a cite export processor that emits Hugo {{< cite >}} shortcodes.
 ;; This keeps citation rendering in Hugo (via the cite.html shortcode and
 ;; work pages) rather than running slow citeproc at export time.
+;;
+;; Styles:
+;;   [cite:@Key]         → full citation
+;;   [cite/t:@Key]       → short (title-only) citation
+;;   [cite/short:@Key]   → short (title-only) citation (alias)
 (org-cite-register-processor 'hugo-cite
   :export-citation
-  (lambda (citation _style _backend _info)
+  (lambda (citation style _backend _info)
     (let* ((refs (org-cite-get-references citation))
+           (short (member (car style) '("t" "short")))
            (parts
             (mapcar
              (lambda (ref)
                (let* ((key (org-element-property :key ref))
+                      (cite-key (if short (concat "-" key) key))
                       ;; Extract suffix (locator) if present
                       (suffix (org-element-property :suffix ref))
                       (suffix-str (if suffix
                                       (string-trim (org-element-interpret-data suffix))
                                     "")))
                  (if (string-empty-p suffix-str)
-                     (format "{{< cite \"%s\" >}}" key)
+                     (format "{{< cite \"%s\" >}}" cite-key)
                    ;; Escape quotes in locator for Hugo shortcode arg
                    (format "{{< cite \"%s\" \"%s\" >}}"
-                           key
+                           cite-key
                            (replace-regexp-in-string "\"" "\\\\\"" suffix-str)))))
              refs)))
       (mapconcat #'identity parts ", ")))
