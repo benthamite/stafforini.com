@@ -247,6 +247,10 @@ def run_incremental_export(
             stale_outputs.extend(old.get("outputs", []))
         elif any(not (output_dir / out).exists() for out in old.get("outputs", [])):
             to_export.append(name)
+        elif len(old.get("outputs", [])) != len(
+            extract_export_file_names(source_dir / name)
+        ):
+            to_export.append(name)
 
     for name, info in old_files.items():
         if name not in current_files:
