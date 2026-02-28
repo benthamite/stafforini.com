@@ -231,7 +231,18 @@ def replace_quote_block(
     content = org_file.read_text()
     lines = content.split('\n')
 
-    block_info = find_quote_block(lines, wp_post_id_line)
+    # Re-locate the WP_POST_ID line in the current file content,
+    # since prior replacements in the same file may have shifted line numbers.
+    actual_line = None
+    for i, line in enumerate(lines):
+        if re.match(rf':WP_POST_ID:\s*{re.escape(wp_post_id)}\b', line):
+            actual_line = i
+            break
+    if actual_line is None:
+        print(f"  WARNING: WP_POST_ID {wp_post_id} no longer found in {org_file.name}")
+        return False
+
+    block_info = find_quote_block(lines, actual_line)
     if block_info is None:
         print(f"  WARNING: Could not find quote block for WP_POST_ID {wp_post_id} in {org_file.name}")
         return False

@@ -18,7 +18,7 @@ from lib import is_dataless
 NOTES_TAGS_DIR = Path.home() / "My Drive/notes/tags"
 PEOPLE_TAGS_DIR = Path.home() / "My Drive/people/tags"
 
-OUTPUT_PATH = Path("/tmp/id-slug-map.json")
+OUTPUT_PATH = Path(__file__).resolve().parent.parent / "data" / "id-slug-map.json"
 
 ID_RE = re.compile(r"^:ID:\s+(\S+)", re.MULTILINE)
 
@@ -49,7 +49,7 @@ def scan_directory(directory: Path) -> dict[str, str]:
         if not match:
             continue
 
-        org_id = match.group(1)  # preserve original case
+        org_id = match.group(1).upper()  # normalize to uppercase (org-roam convention)
         slug = org_file.stem      # filename without .org
         mapping[org_id] = slug
 

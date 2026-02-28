@@ -14,7 +14,7 @@ import argparse
 import re
 from pathlib import Path
 
-from lib import escape_yaml_string
+from lib import escape_yaml_string, is_dataless
 
 # === Constants ===
 
@@ -35,8 +35,10 @@ TAG_DIRS = [
 def extract_title(org_path: Path) -> str | None:
     """Extract the #+title: value from an org file.
 
-    Returns None if the file cannot be read or has no title line.
+    Returns None if the file cannot be read, is cloud-evicted, or has no title line.
     """
+    if is_dataless(org_path):
+        return None
     try:
         text = org_path.read_text()
     except (OSError, UnicodeDecodeError):

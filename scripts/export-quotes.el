@@ -31,7 +31,8 @@
 
 ;; Load org-id → slug mapping for topic links
 (defvar export-id-slug-map
-  (let ((map-file "/tmp/id-slug-map.json"))
+  (let ((map-file (expand-file-name "data/id-slug-map.json"
+                                      (locate-dominating-file load-file-name ".git"))))
     (if (file-exists-p map-file)
         (with-temp-buffer
           (insert-file-contents map-file)
