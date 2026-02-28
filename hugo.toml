@@ -2,6 +2,11 @@ baseURL = "https://stafforini.com/"
 languageCode = "en"
 title = "Pablo Stafforini"
 
+# Degrade broken relref shortcodes to warnings instead of build errors.
+# The custom ID link handler in export-notes.el resolves most ID links, but
+# this safety net prevents build failures if any relref slips through.
+refLinksErrorLevel = "WARNING"
+
 # Markup settings
 [markup]
   [markup.goldmark]

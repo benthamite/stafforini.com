@@ -76,6 +76,33 @@
 
 (setq org-cite-export-processors '((t . (hugo-cite))))
 
+;; Load org-id → slug mapping for ID link resolution.
+;; This must be set BEFORE the org-link-set-parameters call below.
+(defvar export-id-slug-map
+  (let ((map-file (expand-file-name "data/id-slug-map.json"
+                                      (locate-dominating-file load-file-name ".git"))))
+    (if (file-exists-p map-file)
+        (with-temp-buffer
+          (insert-file-contents map-file)
+          (json-parse-string (buffer-string) :object-type 'hash-table))
+      (progn
+        (message "WARNING: %s not found — id: links will render as plain text" map-file)
+        (make-hash-table :test 'equal))))
+  "Hash-table mapping org IDs to Hugo slugs for ID link resolution.")
+
+;; Resolve id: links to proper Hugo note URLs when the target is published,
+;; or plain text when it isn't.  This replaces ox-hugo's default relref
+;; generation for ID links, preventing REF_NOT_FOUND errors for links to
+;; unpublished notes.
+(org-link-set-parameters
+ "id"
+ :export (lambda (path desc _backend _info)
+           (let* ((id (upcase path))
+                  (slug (gethash id export-id-slug-map)))
+             (if slug
+                 (format "[%s](/notes/%s/)" (or desc slug) slug)
+               (or desc "")))))
+
 ;; Enable org-id tracking (required by ox-hugo for ID-based exports)
 (setq org-id-track-globally t)
 (setq org-id-locations-file (expand-file-name "/tmp/org-id-locations-export-notes"))
