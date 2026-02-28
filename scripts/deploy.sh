@@ -27,26 +27,30 @@ fi
 # Running them here ensures the data is fresh even if the user exports
 # content and deploys in separate sessions.
 
+# Helper: run a script and abort deploy on failure
+run_step() {
+  echo "$1..."
+  if ! $2; then
+    echo "Error: $1 failed. Aborting deploy." >&2
+    exit 1
+  fi
+}
+
 # Generate org-id → slug mapping (used by export-quotes.el for topic links;
 # also run here so the map is always fresh before topic page generation)
-echo "Generating ID→slug map..."
-python3 scripts/generate-id-slug-map.py
+run_step "Generating ID→slug map" "python3 scripts/generate-id-slug-map.py"
 
 # Generate topic pages from org-roam tag stubs
-echo "Generating topic pages..."
-python3 scripts/generate-topic-pages.py
+run_step "Generating topic pages" "python3 scripts/generate-topic-pages.py"
 
 # Inject lastmod dates from org file modification times
-echo "Injecting lastmod dates..."
-python3 scripts/inject-lastmod.py
+run_step "Injecting lastmod dates" "python3 scripts/inject-lastmod.py"
 
 # Process PDFs (strip annotations, generate thumbnails)
-echo "Processing PDFs..."
-python3 scripts/process-pdfs.py
+run_step "Processing PDFs" "python3 scripts/process-pdfs.py"
 
 # Generate citing-notes data (pre-computed work->note reverse index)
-echo "Generating citing-notes data..."
-python3 scripts/generate-citing-notes.py
+run_step "Generating citing-notes data" "python3 scripts/generate-citing-notes.py"
 
 # Clean stale build output (Hugo doesn't remove deleted/renamed pages)
 echo "Cleaning previous build..."
