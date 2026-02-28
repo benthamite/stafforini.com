@@ -57,7 +57,7 @@ DUCKDUCKGO_RATE_LIMIT = 2.5  # seconds between requests (be polite)
 
 from lib import CORE_BIB_FILES as BIB_FILES
 from lib import STOP_WORDS as _BASE_STOP_WORDS
-from lib import normalize, parse_bib_entries
+from lib import normalize, parse_bib_entries, strip_accents
 
 # Stop words for cite key title extraction (EN/ES/FR/DE/IT)
 STOP_WORDS = _BASE_STOP_WORDS | {
@@ -133,13 +133,6 @@ FIELD_ORDER = [
 
 
 # === Utility functions ===
-
-
-def strip_accents(text):
-    """Remove accents but preserve case."""
-    text = unicodedata.normalize("NFD", text)
-    text = "".join(c for c in text if unicodedata.category(c) != "Mn")
-    return text
 
 
 def extract_surname_for_key(author_str):

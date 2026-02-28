@@ -18,7 +18,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from lib import is_dataless, safe_remove
+from lib import MTIME_EPSILON, is_dataless, safe_remove
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parent
@@ -62,15 +62,9 @@ def load_manifest(section: str) -> dict | None:
 
 
 def save_manifest(section: str, data: dict) -> None:
+    from lib import atomic_write_json
     path = manifest_path(section)
-    tmp_fd, tmp_path = tempfile.mkstemp(dir=str(path.parent), suffix=".tmp")
-    try:
-        with os.fdopen(tmp_fd, "w") as f:
-            json.dump(data, f, indent=2)
-        os.replace(tmp_path, str(path))
-    except BaseException:
-        os.unlink(tmp_path)
-        raise
+    atomic_write_json(path, data)
     print(f"Manifest saved: {path}")
 
 
@@ -248,7 +242,7 @@ def run_incremental_export(
         old = old_files.get(name)
         if old is None:
             to_export.append(name)
-        elif abs(mtime - old["mtime"]) > 0.001:
+        elif abs(mtime - old["mtime"]) > MTIME_EPSILON:
             to_export.append(name)
             stale_outputs.extend(old.get("outputs", []))
         elif any(not (output_dir / out).exists() for out in old.get("outputs", [])):

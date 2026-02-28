@@ -30,9 +30,10 @@ SCRIPT_DIR = REPO_ROOT / "scripts"
 CONTENT_DIR = REPO_ROOT / "content" / "notes"
 ORG_DIR = Path.home() / "My Drive/notes"
 
-# Date when ox-hugo metadata was bulk-added to all org files.
-# Files whose mtime matches this date haven't been individually edited
-# since, so we fall back to their creation date for lastmod.
+# Date when stafforini-publish-note was bulk-run against all ~800 org files,
+# adding ox-hugo export metadata.  This set every file's mtime to this date.
+# Files whose mtime still matches haven't been individually edited since, so
+# we fall back to their creation date for lastmod.
 BATCH_DATE = "2026-02-17"
 
 

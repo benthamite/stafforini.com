@@ -28,7 +28,7 @@ import pikepdf
 from PIL import Image
 from pikepdf import Name
 
-from lib import BIB_FILES, cite_key_to_slug, extract_pdf_path, parse_bib_entries, safe_remove
+from lib import BIB_FILES, MTIME_EPSILON, cite_key_to_slug, extract_pdf_path, parse_bib_entries, safe_remove
 
 # === Constants ===
 
@@ -56,15 +56,8 @@ def load_manifest() -> dict:
 
 def save_manifest(manifest: dict) -> None:
     """Persist the manifest to disk atomically."""
-    tmp_fd, tmp_path = tempfile.mkstemp(dir=str(MANIFEST_PATH.parent), suffix=".tmp")
-    try:
-        with os.fdopen(tmp_fd, "w") as f:
-            json.dump(manifest, f, indent=2)
-            f.write("\n")
-        os.replace(tmp_path, str(MANIFEST_PATH))
-    except BaseException:
-        os.unlink(tmp_path)
-        raise
+    from lib import atomic_write_json
+    atomic_write_json(MANIFEST_PATH, manifest)
 
 
 def needs_processing(slug: str, src_path: Path, manifest: dict, force: bool) -> bool:
@@ -78,7 +71,7 @@ def needs_processing(slug: str, src_path: Path, manifest: dict, force: bool) -> 
         current_mtime = src_path.stat().st_mtime
     except OSError:
         return True
-    return abs(current_mtime - entry.get("src_mtime", 0)) > 0.001
+    return abs(current_mtime - entry.get("src_mtime", 0)) > MTIME_EPSILON
 
 
 def strip_annotations(src: Path, dst: Path) -> None:
@@ -197,7 +190,9 @@ def collect_entries() -> list[dict]:
         )
 
         for entry in parsed:
-            # Skip db.bib translations
+            # Skip translated works from db.bib: the translator field indicates
+            # the PDF is a translation, and we only want original-language PDFs
+            # (translations are typically duplicates under a different cite key).
             if is_db and entry.get("translator", "").strip():
                 continue
 

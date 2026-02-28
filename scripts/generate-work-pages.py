@@ -121,7 +121,12 @@ def bib_author_to_display(value: str) -> str:
 
 
 def strip_citation_from_content(text: str) -> str:
-    """Strip the citation line that appears after the blockquote in ox-hugo output.
+    """Strip the CSL citation line that ox-hugo appends after blockquotes.
+
+    ox-hugo renders org-cite references as a plain-text citation line below the
+    blockquote (e.g. "(Author, Year, p. XX)").  Hugo's cite shortcode system
+    replaces this with a richer citation, so we strip the ox-hugo version to
+    avoid duplication.
 
     The exported markdown looks like:
         > Quote text here.
@@ -192,6 +197,10 @@ def postprocess_quotes(dry_run: bool = False) -> dict:
             continue
 
         # Inject diary = true for ox-hugo-exported quotes that lack the field.
+        # "diary" quotes (the default) appear in the chronological /quotes/ feed
+        # and RSS; non-diary quotes (diary = false) are only shown on their
+        # parent work page.  Ox-hugo exports don't include this field, so we
+        # default to true (= visible in feed).
         # Use a regex to match the TOML/YAML key precisely, avoiding false
         # positives from the word "diary" appearing in other fields (e.g. titles).
         has_diary_key = (

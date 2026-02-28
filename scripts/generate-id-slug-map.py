@@ -67,15 +67,8 @@ def main():
     combined.update(notes_map)
     combined.update(people_map)
 
-    tmp_fd, tmp_path = tempfile.mkstemp(dir=str(OUTPUT_PATH.parent), suffix=".tmp")
-    try:
-        with os.fdopen(tmp_fd, "w", encoding="utf-8") as f:
-            json.dump(combined, f, indent=2, ensure_ascii=False)
-            f.write("\n")
-        os.replace(tmp_path, str(OUTPUT_PATH))
-    except BaseException:
-        os.unlink(tmp_path)
-        raise
+    from lib import atomic_write_json
+    atomic_write_json(OUTPUT_PATH, combined, ensure_ascii=False)
 
     print(f"ID-slug map written to {OUTPUT_PATH}")
     print(f"  notes/tags:  {len(notes_map)} IDs")

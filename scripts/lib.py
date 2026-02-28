@@ -72,7 +72,59 @@ def safe_remove(path: Path) -> None:
         subprocess.run(["trash", str(path)], check=True, capture_output=True)
     except FileNotFoundError:
         # `trash` command not installed; fall back to permanent deletion
+        import logging
+        logging.warning("trash CLI not found; permanently deleting %s", path)
         path.unlink(missing_ok=True)
+
+
+# Epsilon for floating-point mtime comparisons. Filesystem timestamps lose
+# precision through JSON round-trips (float64 → decimal string → float64),
+# so we treat mtimes within 1 ms as equal.
+MTIME_EPSILON = 0.001
+
+
+def atomic_write_json(path, data, **kwargs):
+    """Write *data* as JSON to *path* atomically (temp file + rename).
+
+    Extra keyword arguments are forwarded to ``json.dump`` (e.g. ``indent``,
+    ``ensure_ascii``).
+    """
+    import json
+    import tempfile
+    kwargs.setdefault("indent", 2)
+    tmp_fd, tmp_path = tempfile.mkstemp(dir=str(Path(path).parent), suffix=".tmp")
+    try:
+        with os.fdopen(tmp_fd, "w") as f:
+            json.dump(data, f, **kwargs)
+            f.write("\n")
+        os.replace(tmp_path, str(path))
+    except BaseException:
+        os.unlink(tmp_path)
+        raise
+
+
+def atomic_write_text(path, text):
+    """Write *text* to *path* atomically (temp file + rename)."""
+    import tempfile
+    tmp_fd, tmp_path = tempfile.mkstemp(dir=str(Path(path).parent), suffix=".tmp")
+    try:
+        with os.fdopen(tmp_fd, "w") as f:
+            f.write(text)
+        os.replace(tmp_path, str(path))
+    except BaseException:
+        os.unlink(tmp_path)
+        raise
+
+
+def strip_accents(text):
+    """Remove diacritics/accents but preserve case and punctuation.
+
+    This is a subset of ``normalize()`` (which also lowercases and strips
+    punctuation). Use when you need accent-insensitive comparison without
+    changing case.
+    """
+    text = unicodedata.normalize("NFD", text)
+    return "".join(c for c in text if unicodedata.category(c) != "Mn")
 
 
 # === Utility functions ===
@@ -155,6 +207,10 @@ def escape_yaml_string(s: str) -> str:
     s = s.replace("\n", "\\n")
     s = s.replace("\t", "\\t")
     return s
+
+
+# TOML and YAML use the same double-quote escaping rules for our purposes.
+escape_toml_string = escape_yaml_string
 
 
 def parse_bib_entries(

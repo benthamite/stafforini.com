@@ -92,7 +92,7 @@
    (directory-files-recursively notes-dir "\\.org$")))
 
 ;; Track stats
-(defvar export-notes-total 0)
+(defvar export-notes-exported 0)
 (defvar export-notes-errors '())
 (defvar export-notes-skipped-dataless '())
 
@@ -145,7 +145,7 @@
               (unwind-protect
                   (with-current-buffer buf
                     (org-hugo-export-wim-to-md :all-subtrees)
-                    (setq export-notes-total (1+ export-notes-total))
+                    (setq export-notes-exported (1+ export-notes-exported))
                     ;; Fix titles dropped by ox-hugo #+INCLUDE bug.
                     ;; Patch the .md immediately so Hugo never serves
                     ;; a page without a title.
@@ -164,7 +164,7 @@
     (message "\n========================================")
     (message "EXPORT COMPLETE")
     (message "========================================")
-    (message "Files exported: %d" export-notes-total)
+    (message "Files exported: %d" export-notes-exported)
     (when export-notes-skipped-dataless
       (message "Skipped (dataless): %d" (length export-notes-skipped-dataless)))
     (when export-notes-errors

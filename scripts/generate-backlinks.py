@@ -67,7 +67,10 @@ def main():
     conn = sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
 
-    # Get ALL page-level nodes (level 0 = file-level, level 1 = first heading).
+    # Get ALL page-level nodes.  In org-roam, level 0 = file-level node (most
+    # files), level 1 = first heading (used when the file node is a "tags" file
+    # or the note's ID sits on the first heading instead of the file property
+    # drawer).  Both levels represent "the page" for backlink purposes.
     # No directory filter — we use exported_slugs to filter the output instead.
     page_nodes = {}
     cursor = conn.execute(
@@ -97,6 +100,8 @@ def main():
         file_to_page[info["file"]] = node_id
 
     # Get all id-type links.
+    # The nested quoting ('"id"') is because org-roam stores the link type
+    # with Elisp string delimiters in SQLite, so the raw value is literally "id".
     links = conn.execute(
         """SELECT source, dest FROM links WHERE type = '"id"'""",
     )
@@ -167,15 +172,9 @@ def main():
         )
 
     # Write output atomically.
+    from lib import atomic_write_json
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
-    tmp_fd, tmp_path = tempfile.mkstemp(dir=os.path.dirname(OUTPUT_PATH), suffix=".tmp")
-    try:
-        with os.fdopen(tmp_fd, "w") as f:
-            json.dump(result, f, indent=2, ensure_ascii=False)
-        os.replace(tmp_path, OUTPUT_PATH)
-    except BaseException:
-        os.unlink(tmp_path)
-        raise
+    atomic_write_json(OUTPUT_PATH, result, ensure_ascii=False)
 
     print(f"Generated backlinks for {len(result)} notes ({sum(len(v) for v in result.values())} total backlinks)")
 

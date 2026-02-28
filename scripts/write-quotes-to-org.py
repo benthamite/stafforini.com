@@ -40,6 +40,9 @@ NOTES_DIR = Path.home() / "My Drive/bibliographic-notes"
 HUGO_BASE_DIR = "~/My Drive/repos/stafforini.com/"
 NOTER_PDF_DIR = "~/My Drive/library-pdf"
 
+# Right-align tags to this column, matching org-mode's default org-tags-column.
+ORG_TAGS_COLUMN = 72
+
 STOP_WORDS = _BASE_STOP_WORDS | {
     "it", "all", "any", "each", "every", "no", "nor", "only", "own", "same",
     "such", "too", "very", "can", "will", "just", "should", "now",
@@ -252,8 +255,6 @@ def build_new_org_file(cite_key: str, entry: dict) -> str:
     ]
 
     # Add tags to the heading line
-    # Org convention: tags are right-aligned to a fixed column
-    ORG_TAGS_COLUMN = 72
     heading_line = lines[1]
     tag_str = f":{entry_tag}:biblio:"
     pad_needed = max(1, ORG_TAGS_COLUMN - len(heading_line) - len(tag_str))
@@ -286,7 +287,6 @@ def build_subheading(
     custom_fm = " ".join(custom_fm_parts)
 
     # Tag line with padding (right-aligned to org-tags-column)
-    ORG_TAGS_COLUMN = 72
     heading_text = f"** {title}"
     tag_str = ":public:"
     pad_needed = max(1, ORG_TAGS_COLUMN - len(heading_text) - len(tag_str))
@@ -542,16 +542,8 @@ def main():
                         print(f"    + {line.strip()}")
                         break
         else:
-            import tempfile as _tempfile
-            tmp_fd, tmp_path = _tempfile.mkstemp(dir=org_path.parent, suffix=".tmp")
-            try:
-                import os as _os
-                with _os.fdopen(tmp_fd, "w") as f:
-                    f.write(final_content)
-                Path(tmp_path).replace(org_path)
-            except BaseException:
-                Path(tmp_path).unlink(missing_ok=True)
-                raise
+            from lib import atomic_write_text
+            atomic_write_text(org_path, final_content)
             if not file_existed:
                 stats["files_created"] += 1
             else:
