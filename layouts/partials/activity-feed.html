@@ -1,5 +1,5 @@
 {{ $notes := where .Site.RegularPages "Section" "notes" }}
-{{ $quotes := where .Site.RegularPages "Section" "quotes" }}
+{{ $quotes := where (where .Site.RegularPages "Section" "quotes") ".Params.diary" true }}
 
 {{ with $notes }}
 <section class="activity-feed">

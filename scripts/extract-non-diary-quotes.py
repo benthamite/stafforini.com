@@ -331,13 +331,16 @@ def main():
         mtime = org_path.stat().st_mtime
 
         # Check manifest for incremental skip
-        if org_key in manifest and abs(manifest[org_key].get("mtime", 0) - mtime) <= MTIME_EPSILON:
-            stats["files_skipped_cached"] += 1
-            new_manifest[org_key] = manifest[org_key]
-            # Remember slugs from cached entries
-            for s in manifest[org_key].get("slugs", []):
-                generated_slugs.add(s)
-            continue
+        cached = manifest.get(org_key)
+        if cached and abs(cached.get("mtime", 0) - mtime) <= MTIME_EPSILON:
+            cached_slugs_list = cached.get("slugs", [])
+            # Re-extract if any output files are missing
+            if all((QUOTES_DIR / f"{s}.md").exists() for s in cached_slugs_list):
+                stats["files_skipped_cached"] += 1
+                new_manifest[org_key] = cached
+                for s in cached_slugs_list:
+                    generated_slugs.add(s)
+                continue
 
         quotes = process_org_file(org_path)
         slugs_for_file = []
