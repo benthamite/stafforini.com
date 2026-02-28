@@ -37,8 +37,17 @@
 {{- $work := site.GetPage (printf "/works/%s" $slug) -}}
 {{- if $work -}}
   {{- if $short -}}
-    {{/* Short citation: just the italicized title, linked to work page */}}
-    <a href="{{ $work.RelPermalink }}"><em>{{ $work.Title | safeHTML }}</em></a>
+    {{/* Short citation: title linked to work page.
+         Italicize only standalone types (book, collection, proceedings) —
+         articles, chapters, and online posts get plain text, matching
+         citation-format.html conventions. */}}
+    {{- $type := $work.Params.entry_type | default "book" -}}
+    {{- $standalone := or (eq $type "book") (eq $type "collection") (eq $type "proceedings") (eq $type "mvbook") (eq $type "mvcollection") -}}
+    {{- if $standalone -}}
+      <a href="{{ $work.RelPermalink }}"><em>{{ $work.Title | safeHTML }}</em></a>
+    {{- else -}}
+      <a href="{{ $work.RelPermalink }}">{{ $work.Title | safeHTML }}</a>
+    {{- end -}}
     {{- with $locator }}, {{ . }}{{ end -}}
   {{- else -}}
     {{- $type := $work.Params.entry_type | default "book" -}}
