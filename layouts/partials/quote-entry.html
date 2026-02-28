@@ -10,8 +10,11 @@
       {{- with $.Params.quoted_author -}}{{ . }}, quoted in {{ end -}}{{- partial "citation-format.html" (dict "work" $work "type" $type "locator" $.Params.locator "link" true) -}}
     </p>
     {{ else }}
+    {{/* Only warn for diary quotes — non-diary quotes often reference works
+         without bib entries (blog posts, podcasts, films, etc.). */}}
+    {{ if ne $.Params.diary false }}
     {{ warnf "quote-entry: work page not found for slug %q in %s" . $.File.Path }}
-    <p class="quote-attribution"><em>[Missing work: {{ . }}]</em></p>
+    {{ end }}
     {{ end }}
   {{ end }}
   {{/* diary param: true (default) = show in /quotes/ feed + RSS; false = only
