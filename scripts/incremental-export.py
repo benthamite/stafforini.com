@@ -181,7 +181,7 @@ def run_emacs(elisp: Path, file_list_path: str | None = None) -> int:
     print(f"Starting Emacs batch export...")
     print(f"Script: {elisp}\n")
 
-    result = subprocess.run(["emacs", "--batch", "-l", str(elisp)], env=env, timeout=600)
+    result = subprocess.run(["emacs", "--batch", "-l", str(elisp)], env=env, timeout=7200)
 
     if result.returncode != 0:
         print(
