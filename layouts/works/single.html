@@ -25,8 +25,10 @@
       {{ end }}
     {{ end }}
 
-    {{/* Publication details line — entry-type branching mirrors citation-format.html;
-         keep the two in sync when adding or modifying entry types */}}
+    {{/* Publication details (journal, location, year, etc.) — the entry-type
+         branching here parallels citation-format.html but omits author/title
+         (shown separately above).  When adding a new entry type, update both
+         this block and layouts/partials/citation-format.html. */}}
     <p class="work-details">
       {{- if or (eq $type "incollection") (eq $type "inbook") (eq $type "inproceedings") -}}
         {{- with .Params.editor }}In {{ . }} {{ partial "editor-abbrev.html" . }}{{ end }} <em>{{ .Params.booktitle | default .Title | safeHTML }}</em>

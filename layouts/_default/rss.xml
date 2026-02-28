@@ -1,3 +1,6 @@
+{{/* Default RSS feed template. The quotes-specific variant (quotes/rss.xml)
+     overrides only the page selection; the feed structure below is duplicated
+     there. When changing the <item> format, update both files. */}}
 {{- $pages := slice -}}
 {{- if .IsHome -}}
   {{- $pages = .Site.RegularPages -}}

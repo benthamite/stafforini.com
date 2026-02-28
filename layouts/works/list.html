@@ -1,5 +1,6 @@
 {{ define "main" }}
 <h1>{{ .Title }}</h1>
+{{/* Reuses .notes-list styling from _components.css (same simple list layout) */}}
 <ul class="notes-list">
   {{ range .Pages.ByParam "author" }}
   <li>

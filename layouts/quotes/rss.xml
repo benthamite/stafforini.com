@@ -1,3 +1,5 @@
+{{/* Quotes RSS feed — filters to diary quotes only. The feed structure below
+     is shared with _default/rss.xml; update both when changing <item> format. */}}
 {{- $pages := where .Pages ".Params.diary" true -}}
 {{- $pages = $pages.ByDate.Reverse -}}
 {{- $limit := .Site.Config.Services.RSS.Limit -}}
