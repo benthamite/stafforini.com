@@ -16,17 +16,22 @@
 ;; and errors out in batch mode.
 
 ;; Override hugo_base_dir: org files still reference the old Dropbox path,
-;; but the repo now lives under Google Drive.
+;; but the repo now lives under Google Drive.  ox-hugo reads #+hugo_base_dir:
+;; from the buffer as an export option; there is no `org-hugo--get-basedir'
+;; function to advise.  Instead, rewrite the keyword in each buffer before export.
 (defvar export-hugo-base-dir
   (file-name-directory (directory-file-name
-                        (file-name-directory (directory-file-name
-                                              (file-name-directory load-file-name)))))
+                        (file-name-directory load-file-name)))
   "Hugo base directory, derived from this script's location (repo root).")
 
-(advice-add 'org-hugo--get-basedir :override
-            (lambda (&rest _)
-              "Always return the repo root as hugo base dir."
-              export-hugo-base-dir))
+(defun export--rewrite-hugo-base-dir ()
+  "Replace any #+hugo_base_dir: line in the current buffer with the repo root."
+  (save-excursion
+    (goto-char (point-min))
+    (when (re-search-forward
+           "^#\\+hugo_base_dir:.*$" nil t)
+      (replace-match
+       (format "#+hugo_base_dir: %s" export-hugo-base-dir)))))
 
 ;; Silence unnecessary output during batch export
 (setq org-export-with-broken-links t)
@@ -134,6 +139,7 @@
             (let ((buf (find-file-noselect file)))
               (unwind-protect
                   (with-current-buffer buf
+                    (export--rewrite-hugo-base-dir)
                     (let ((count (org-hugo-export-wim-to-md :all-subtrees)))
                       (when count
                         (setq export-total-subtrees (+ export-total-subtrees
