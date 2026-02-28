@@ -14,7 +14,9 @@ Usage:
 import argparse
 import hashlib
 import json
+import os
 import re
+import tempfile
 from pathlib import Path
 
 from lib import cite_key_to_slug, is_dataless
@@ -295,8 +297,18 @@ def load_manifest() -> dict:
 
 
 def save_manifest(manifest: dict) -> None:
-    """Save the extraction manifest."""
-    MANIFEST_PATH.write_text(json.dumps(manifest, indent=2) + "\n")
+    """Save the extraction manifest atomically."""
+    tmp_fd, tmp_path = tempfile.mkstemp(
+        dir=str(MANIFEST_PATH.parent), suffix=".tmp"
+    )
+    try:
+        with os.fdopen(tmp_fd, "w") as f:
+            json.dump(manifest, f, indent=2)
+            f.write("\n")
+        os.replace(tmp_path, str(MANIFEST_PATH))
+    except BaseException:
+        os.unlink(tmp_path)
+        raise
 
 
 def main():
@@ -337,7 +349,7 @@ def main():
         mtime = org_path.stat().st_mtime
 
         # Check manifest for incremental skip
-        if org_key in manifest and manifest[org_key].get("mtime") == mtime:
+        if org_key in manifest and abs(manifest[org_key].get("mtime", 0) - mtime) <= 0.001:
             stats["files_skipped_cached"] += 1
             new_manifest[org_key] = manifest[org_key]
             # Remember slugs from cached entries
