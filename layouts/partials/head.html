@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title | markdownify | plainify }} · {{ .Site.Title }}{{ end }}</title>
 {{/* 160 chars is the typical max Google shows in search result snippets */}}
-<meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Summary | truncate 160 }}{{ end }}">
+<meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Summary | plainify | truncate 160 }}{{ end }}">
 
 {{/* Open Graph */}}
 <meta property="og:title" content="{{ .Title | markdownify | plainify }}">

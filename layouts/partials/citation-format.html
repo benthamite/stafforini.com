@@ -54,7 +54,7 @@
     {{ $work.Title | safeHTML }}
   {{- end -}}
   {{- with $work.Params.journaltitle }}, <em>{{ . | safeHTML }}</em>{{ end -}}
-  {{- if $work.Params.pub_date -}}
+  {{- if and $work.Params.pub_date (findRE `^\d{4}-\d{2}-\d{2}` $work.Params.pub_date) -}}
     {{- $d := time $work.Params.pub_date -}}
     , {{ $d.Format "January 2, 2006" -}}
   {{- else -}}

@@ -41,7 +41,7 @@
         {{- with .Params.pages }}, pp. {{ . }}{{ end -}}
       {{- else if eq $type "online" -}}
         {{- with .Params.journaltitle }}<em>{{ . | safeHTML }}</em>{{ end -}}
-        {{- if .Params.pub_date -}}
+        {{- if and .Params.pub_date (findRE `^\d{4}-\d{2}-\d{2}` .Params.pub_date) -}}
           {{- $d := time .Params.pub_date -}}
           {{- with .Params.journaltitle }}, {{ end -}}{{ $d.Format "January 2, 2006" -}}
         {{- else -}}
