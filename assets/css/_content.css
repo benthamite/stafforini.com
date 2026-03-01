@@ -98,7 +98,7 @@ details:has(> .highlight) > summary::before {
   content: '▶';
   display: inline-block;
   margin-right: 0.5em;
-  font-size: 0.7em;
+  font-size: 0.55em;
   transition: transform 0.15s ease;
 }
 
