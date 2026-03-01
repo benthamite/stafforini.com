@@ -192,6 +192,20 @@ into any exported .md file that lacks one."
   (add-to-list 'org-export-filter-body-functions #'export--fix-broken-relrefs)
   (add-to-list 'org-export-filter-body-functions #'export--fix-broken-italic-close))
 
+;;;; Transclusion support
+
+(require 'org-transclusion)
+
+;; Match user's config: exclude structural elements from transcluded content
+(setq org-transclusion-exclude-elements '(headline drawer property-drawer))
+
+(defun export--expand-transclusions ()
+  "Expand all #+transclude: directives in the current buffer.
+Call this after opening a file and before exporting with ox-hugo,
+so that transcluded content is included in the export."
+  (with-demoted-errors "org-transclusion error: %S"
+    (org-transclusion-add-all)))
+
 (provide 'export-common)
 
 ;;; export-common.el ends here
