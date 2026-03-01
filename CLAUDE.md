@@ -46,9 +46,15 @@ When telling the user to run a script, always mention the corresponding `staffor
 | `scripts/generate-work-pages.py` | `stafforini-update-works` | `w` |
 | `scripts/generate-backlinks.py` | `stafforini-update-backlinks` | `b` |
 | `scripts/process-pdfs.py` | `stafforini-process-pdfs` | `d` |
+| `scripts/generate-id-slug-map.py` | `stafforini-generate-id-slug-map` | `m` |
+| `scripts/generate-topic-pages.py` | `stafforini-generate-topic-pages` | `t` |
+| `scripts/generate-citing-notes.py` | `stafforini-generate-citing-notes` | `c` |
+| `scripts/inject-lastmod.py` | `stafforini-inject-lastmod` | `l` |
 | Full pipeline | `stafforini-full-rebuild` | `R` |
 | Search index | `stafforini-rebuild-search-index` | `i` |
 | `scripts/deploy.sh` | `stafforini-deploy` | `D` |
 | Hugo dev server | `stafforini-start-server` / `stafforini-stop-server` | `s` / `k` |
+| *(insert)* | `stafforini-insert-image` | `I` |
+| *(insert)* | `stafforini-insert-topics` | `T` |
 
-**Note:** Several scripts are now run automatically as part of the export workflows and no longer have dedicated menu entries: `inject-lastmod.py`, `generate-citing-notes.py` (run by `export-notes.sh`), and `generate-id-slug-map.py`, `generate-topic-pages.py` (run by `export-quotes.sh`). They remain independently runnable via `M-x` for debugging.
+**Note:** The auxiliary scripts (`inject-lastmod.py`, `generate-citing-notes.py`, `generate-id-slug-map.py`, `generate-topic-pages.py`) are also run automatically as part of the export workflows, but have dedicated menu entries for independent use and debugging.
