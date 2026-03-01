@@ -139,10 +139,11 @@
 
 ;; Pre-scan all org files to build the ID→file mapping so that [[id:...]]
 ;; links between notes resolve correctly during export.
-(let ((notes-dir (expand-file-name
-                  "~/My Drive/notes/")))
+(let ((notes-dir (expand-file-name "~/My Drive/notes/"))
+      (bib-dir (expand-file-name "~/My Drive/bibliographic-notes/")))
   (org-id-update-id-locations
-   (directory-files-recursively notes-dir "\\.org$")))
+   (append (directory-files-recursively notes-dir "\\.org$")
+           (directory-files-recursively bib-dir "\\.org$"))))
 
 ;; Track stats
 (defvar export-notes-exported 0)
@@ -197,6 +198,7 @@
             (let ((buf (find-file-noselect file)))
               (unwind-protect
                   (with-current-buffer buf
+                    (export--expand-transclusions)
                     (org-hugo-export-wim-to-md :all-subtrees)
                     (setq export-notes-exported (1+ export-notes-exported))
                     ;; Fix titles dropped by ox-hugo #+INCLUDE bug.

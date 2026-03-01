@@ -81,6 +81,14 @@
 ;; Use a temp file for the ID locations database (avoid polluting real one)
 (setq org-id-locations-file (expand-file-name "/tmp/org-id-locations-export"))
 
+;; Pre-scan org files to build the ID→file mapping so that [[id:...]]
+;; links in transclusions resolve correctly during export.
+(let ((notes-dir (expand-file-name "~/My Drive/notes/"))
+      (bib-dir (expand-file-name "~/My Drive/bibliographic-notes/")))
+  (org-id-update-id-locations
+   (append (directory-files-recursively notes-dir "\\.org$")
+           (directory-files-recursively bib-dir "\\.org$"))))
+
 ;; Suppress local variable evaluation (some files use git-auto-commit-mode etc.)
 (setq enable-local-variables nil)
 
@@ -140,6 +148,7 @@
               (unwind-protect
                   (with-current-buffer buf
                     (export--rewrite-hugo-base-dir)
+                    (export--expand-transclusions)
                     (let ((count (org-hugo-export-wim-to-md :all-subtrees)))
                       (when count
                         (setq export-total-subtrees (+ export-total-subtrees
