@@ -16,6 +16,7 @@
   var BREAKPOINT = 1100;
   var MIN_SHOWN_LINES = 3;
   var FADEOUT_LINES = 1.3;    // fractional: gradient starts mid-line for a smoother fade
+  var SIDENOTE_GAP = 0.75;   // vertical gap (in line-heights) between adjacent truncated sidenotes
   var RESIZE_DEBOUNCE_MS = 150;
 
   // ── DOM references ──────────────────────────────────────────────
@@ -107,6 +108,7 @@
     // Phase 1: Compute base measurements
     var minHeight = MIN_SHOWN_LINES * lineHeight;
     var fadeoutHeight = FADEOUT_LINES * lineHeight;
+    var gapHeight = SIDENOTE_GAP * lineHeight;
 
     // The positioned container that holds the content and the sidenote column
     var container = sidenoteColumn.closest('.content-with-sidenotes');
@@ -123,6 +125,7 @@
     sidenotes.forEach(function (sn) {
       sn.el.style.height = '';
       sn.el.style.overflow = '';
+      sn.el.style.clipPath = '';
       // Remove old fadeout/cover elements
       var oldFadeout = sn.el.querySelector('.sidenote-fadeout');
       var oldCover = sn.el.querySelector('.sidenote-cover');
@@ -149,13 +152,13 @@
       } else {
         var prev = sidenotes[i - 1];
         // The earliest this sidenote can start: previous note must show
-        // at least MIN_SHOWN_LINES before being occluded.
-        var minPrevEnd = prev.top + minHeight;
+        // at least MIN_SHOWN_LINES plus a gap before being occluded.
+        var minPrevEnd = prev.top + minHeight + gapHeight;
         sn.top = Math.max(sn.refTop, minPrevEnd);
 
         // Check if previous sidenote is partially occluded by this one
         if (prev.top + prev.fullHeight > sn.top) {
-          var availableSpace = sn.top - prev.top;
+          var availableSpace = sn.top - prev.top - gapHeight;
           var linesAvailable = Math.floor(availableSpace / lineHeight);
           var visibleLines = Math.max(linesAvailable, MIN_SHOWN_LINES);
           prev.visibleHeight = visibleLines * lineHeight;
@@ -199,7 +202,9 @@
 
       if (sn.visibleHeight !== null && sn.visibleHeight < sn.fullHeight) {
         sn.el.style.height = sn.visibleHeight + 'px';
-        sn.el.style.overflow = 'hidden';
+        // Use clip-path instead of overflow:hidden so the sidenote-number
+        // (positioned outside the box) is not clipped.
+        sn.el.style.clipPath = 'inset(0 -100px 0 -100px)';
 
         // Add fade-out gradient
         var fadeout = document.createElement('div');
@@ -244,7 +249,7 @@
     // Expand to full height
     if (sn.visibleHeight !== null) {
       sn.el.style.height = sn.fullHeight + 'px';
-      sn.el.style.overflow = 'visible';
+      sn.el.style.clipPath = 'none';
     }
 
     // Hide notes this one overlaps
@@ -264,7 +269,7 @@
     // Restore constrained height
     if (sn.visibleHeight !== null) {
       sn.el.style.height = sn.visibleHeight + 'px';
-      sn.el.style.overflow = 'hidden';
+      sn.el.style.clipPath = 'inset(0 -100px 0 -100px)';
     }
 
     // Show hidden notes
@@ -313,6 +318,7 @@
       sn.el.style.top = '';
       sn.el.style.height = '';
       sn.el.style.overflow = '';
+      sn.el.style.clipPath = '';
       var oldFadeout = sn.el.querySelector('.sidenote-fadeout');
       var oldCover = sn.el.querySelector('.sidenote-cover');
       if (oldFadeout) oldFadeout.remove();
