@@ -246,10 +246,10 @@
     var sn = sidenotes[index];
     sn.el.classList.add('is-hovered');
 
-    // Expand to full height
+    // Expand to full height; CSS transition animates smoothly and
+    // clip-path: inset(0 ...) tracks the growing border box automatically.
     if (sn.visibleHeight !== null) {
       sn.el.style.height = sn.fullHeight + 'px';
-      sn.el.style.clipPath = 'none';
     }
 
     // Hide notes this one overlaps
@@ -266,10 +266,9 @@
     var sn = sidenotes[index];
     sn.el.classList.remove('is-hovered');
 
-    // Restore constrained height
+    // Restore constrained height; CSS transition animates the collapse.
     if (sn.visibleHeight !== null) {
       sn.el.style.height = sn.visibleHeight + 'px';
-      sn.el.style.clipPath = 'inset(0 -100px 0 -100px)';
     }
 
     // Show hidden notes

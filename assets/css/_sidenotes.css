@@ -78,7 +78,12 @@
 /* ── Hover behavior ──────────────────────────────────────────────── */
 
 .sidenote {
-  transition: color 0.15s ease;
+  transition: color 0.15s ease, height 0.2s ease, opacity 0.2s ease;
+}
+
+.sidenote-fadeout,
+.sidenote-cover {
+  transition: opacity 0.2s ease;
 }
 
 .sidenote.is-hovered {
@@ -88,11 +93,12 @@
 
 .sidenote.is-hovered .sidenote-fadeout,
 .sidenote.is-hovered .sidenote-cover {
-  display: none;
+  opacity: 0;
 }
 
 .sidenote.is-hidden-by-hover {
-  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* ── Highlight footnote ref when sidenote is hovered ─────────────── */
