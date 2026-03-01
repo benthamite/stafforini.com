@@ -31,8 +31,59 @@ li {
 
 hr {
   border: none;
-  border-top: 1px solid var(--color-border);
-  margin: 2rem 0;
+  margin: 2.5rem auto;
+  background: none;
+  text-align: center;
+}
+
+hr::after {
+  content: '';
+  display: inline-block;
+  background-color: var(--color-text-secondary);
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}
+
+hr.dinkus-1::after,
+hr.dinkus-2::after,
+hr.dinkus-3::after {
+  width: 140px;
+  height: 40px;
+}
+
+hr.dinkus-4::after,
+hr.dinkus-5::after {
+  width: 160px;
+  height: 50px;
+}
+
+hr.dinkus-1::after {
+  -webkit-mask-image: url('/images/dinkus-1.svg');
+  mask-image: url('/images/dinkus-1.svg');
+}
+
+hr.dinkus-2::after {
+  -webkit-mask-image: url('/images/dinkus-2.svg');
+  mask-image: url('/images/dinkus-2.svg');
+}
+
+hr.dinkus-3::after {
+  -webkit-mask-image: url('/images/dinkus-3.svg');
+  mask-image: url('/images/dinkus-3.svg');
+}
+
+hr.dinkus-4::after {
+  -webkit-mask-image: url('/images/dinkus-4.svg');
+  mask-image: url('/images/dinkus-4.svg');
+}
+
+hr.dinkus-5::after {
+  -webkit-mask-image: url('/images/dinkus-5.svg');
+  mask-image: url('/images/dinkus-5.svg');
 }
 
 /* Code */
