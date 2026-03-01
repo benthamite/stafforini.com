@@ -67,6 +67,59 @@ pre code {
   border-radius: 0;
 }
 
+/* Collapsible code blocks (via <details> wrapping <pre>) */
+details:has(> pre),
+details:has(> .highlight) {
+  margin: 1.25rem 0;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}
+
+details:has(> pre) > summary,
+details:has(> .highlight) > summary {
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  background: var(--color-code-bg);
+  border-radius: 4px;
+  list-style: none;
+}
+
+details[open]:has(> pre) > summary,
+details[open]:has(> .highlight) > summary {
+  border-radius: 4px 4px 0 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+details:has(> pre) > summary::before,
+details:has(> .highlight) > summary::before {
+  content: '▶';
+  display: inline-block;
+  margin-right: 0.5em;
+  font-size: 0.7em;
+  transition: transform 0.15s ease;
+}
+
+details[open]:has(> pre) > summary::before,
+details[open]:has(> .highlight) > summary::before {
+  transform: rotate(90deg);
+}
+
+/* Remove default marker in Safari */
+details:has(> pre) > summary::-webkit-details-marker,
+details:has(> .highlight) > summary::-webkit-details-marker {
+  display: none;
+}
+
+details:has(> pre) > pre,
+details:has(> .highlight) > .highlight pre {
+  margin: 0;
+  border-radius: 0 0 4px 4px;
+  border: none;
+}
+
 /* Footnotes */
 .footnotes > hr {
   display: none;
