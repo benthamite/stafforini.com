@@ -13,6 +13,8 @@ refLinksErrorLevel = "WARNING"
     [markup.goldmark.renderer]
       # Allow raw HTML in Markdown output (required for ox-hugo HTML blocks and citeproc output)
       unsafe = true
+    [markup.goldmark.extensions.typographer]
+      enable = true
     [markup.goldmark.extensions.passthrough]
       enable = true
       [markup.goldmark.extensions.passthrough.delimiters]
