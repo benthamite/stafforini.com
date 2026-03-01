@@ -204,7 +204,16 @@ into any exported .md file that lacks one."
 Call this after opening a file and before exporting with ox-hugo,
 so that transcluded content is included in the export."
   (with-demoted-errors "org-transclusion error: %S"
-    (org-transclusion-add-all)))
+    (org-transclusion-add-all)
+    ;; `org-transclusion-add' enables `org-transclusion-mode', which installs
+    ;; hooks that strip transcluded content on save/kill.  Deactivating the
+    ;; mode would call `org-transclusion-remove-all', undoing our work.
+    ;; Instead, surgically remove the problematic hooks so the expanded text
+    ;; survives through the ox-hugo export that follows.
+    (remove-hook 'before-save-hook #'org-transclusion-before-save-buffer t)
+    (remove-hook 'after-save-hook #'org-transclusion-after-save-buffer t)
+    (remove-hook 'kill-buffer-hook #'org-transclusion-before-kill t)
+    (remove-hook 'kill-emacs-hook #'org-transclusion-before-kill t)))
 
 (provide 'export-common)
 
