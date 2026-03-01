@@ -42,11 +42,12 @@
          articles, chapters, and online posts get plain text, matching
          citation-format.html conventions. */}}
     {{- $type := $work.Params.entry_type | default "book" -}}
+    {{- $displayTitle := $work.Params.shorttitle | default $work.Title -}}
     {{- $standalone := or (eq $type "book") (eq $type "collection") (eq $type "proceedings") (eq $type "mvbook") (eq $type "mvcollection") -}}
     {{- if $standalone -}}
-      <a href="{{ $work.RelPermalink }}"><em>{{ $work.Title | safeHTML }}</em></a>
+      <a href="{{ $work.RelPermalink }}"><em>{{ $displayTitle | safeHTML }}</em></a>
     {{- else -}}
-      <a href="{{ $work.RelPermalink }}">{{ $work.Title | safeHTML }}</a>
+      <a href="{{ $work.RelPermalink }}">{{ $displayTitle | safeHTML }}</a>
     {{- end -}}
     {{- with $locator }}, {{ . }}{{ end -}}
   {{- else -}}
