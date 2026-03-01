@@ -39,7 +39,7 @@ def _parse_bib_entries_for_works(bib_path: Path) -> list[dict]:
         extra_fields=[
             "location", "booktitle", "journaltitle",
             "volume", "number", "pages", "bookauthor", "crossref", "abstract",
-            "url", "date",
+            "url", "date", "shorttitle",
         ],
         field_fallbacks={"location": "address"},
     )
@@ -196,23 +196,29 @@ def postprocess_quotes(dry_run: bool = False) -> dict:
             stats["skipped_no_blockquote"] += 1
             continue
 
-        # Inject diary = true for ox-hugo-exported quotes that lack the field.
-        # "diary" quotes (the default) appear in the chronological /quotes/ feed
-        # and RSS; non-diary quotes (diary = false) are only shown on their
-        # parent work page.  Ox-hugo exports don't include this field, so we
-        # default to true (= visible in feed).
-        # Use a regex to match the TOML/YAML key precisely, avoiding false
-        # positives from the word "diary" appearing in other fields (e.g. titles).
+        # Inject diary field for ox-hugo-exported quotes that lack it.
+        # "diary" quotes appear in the chronological /quotes/ feed and RSS;
+        # non-diary quotes (diary = false) are only shown on their parent
+        # work page.  Real diary quotes have historical publication dates
+        # (from the WordPress era, ending 2023).  Quotes whose EXPORT_DATE
+        # is recent (2024+) were never published in the diary — they are
+        # reference quotes prepared for Hugo but not for the feed.
         has_diary_key = (
             re.search(r"^diary\s*=", front_matter, re.MULTILINE)
             if content.startswith("+++")
             else re.search(r"^diary\s*:", front_matter, re.MULTILINE)
         )
         if not has_diary_key:
+            # Detect recent dates (2024+) that indicate non-diary quotes
+            date_match = re.search(r"^date\s*=\s*(\d{4})", front_matter, re.MULTILINE)
+            is_diary = True
+            if date_match and int(date_match.group(1)) >= 2024:
+                is_diary = False
+            diary_value = "true" if is_diary else "false"
             if content.startswith("+++"):
-                front_matter = front_matter[:-3] + "diary = true\n+++"
+                front_matter = front_matter[:-3] + f"diary = {diary_value}\n+++"
             else:
-                front_matter = front_matter[:-3] + "diary: true\n---"
+                front_matter = front_matter[:-3] + f"diary: {diary_value}\n---"
 
         cleaned_body = strip_citation_from_content(body.lstrip("\n"))
         new_content = front_matter + "\n" + cleaned_body
@@ -248,6 +254,11 @@ def generate_work_page(entry: dict) -> str:
         return s
 
     title = clean(entry["title"])
+    # Compute short title: use BibTeX shorttitle if present, otherwise
+    # truncate at the first colon (the standard subtitle separator)
+    shorttitle = clean(entry.get("shorttitle", ""))
+    if not shorttitle and title and ":" in title:
+        shorttitle = title.split(":")[0].strip()
     author_raw = entry["author"] or entry["editor"]
     author = bib_author_to_display(author_raw)
     year = entry["year"]
@@ -273,6 +284,8 @@ def generate_work_page(entry: dict) -> str:
         f'author: "{escape_yaml_string(author)}"',
         f'entry_type: "{entry_type}"',
     ]
+    if shorttitle:
+        lines.append(f'shorttitle: "{escape_yaml_string(shorttitle)}"')
     if year:
         lines.append(f'year: "{escape_yaml_string(year)}"')
     if location:
