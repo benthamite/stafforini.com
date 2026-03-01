@@ -4,3 +4,5 @@
 
 {{ $darkMode := resources.Get "js/dark-mode.js" | minify | fingerprint }}
 <script src="{{ $darkMode.RelPermalink }}" integrity="{{ $darkMode.Data.Integrity }}"></script>
+{{ $dinkus := resources.Get "js/dinkus.js" | minify | fingerprint }}
+<script src="{{ $dinkus.RelPermalink }}" integrity="{{ $dinkus.Data.Integrity }}"></script>
