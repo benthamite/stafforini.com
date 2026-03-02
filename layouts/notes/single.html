@@ -14,7 +14,13 @@
   {{ partial "toc-inline.html" . }}
 
   <div class="content-with-sidenotes">
-    <div class="note-body{{ if ge .WordCount 500 }} has-dropcap{{ end }}">
+    {{- $plain := .Content | plainify | strings.TrimLeft "\n\r\t " -}}
+    {{- $first := substr $plain 0 1 -}}
+    {{- $second := substr $plain 1 1 -}}
+    {{- $isUpper := and (eq $first (upper $first)) (ne $first (lower $first)) -}}
+    {{- $hasApostrophe := or (eq $second "'") (eq $second "\u2019") (eq $second "\u2018") -}}
+    {{- $dropcap := and (ge .WordCount 500) $isUpper (not $hasApostrophe) -}}
+    <div class="note-body{{ if $dropcap }} has-dropcap{{ end }}">
       {{ .Content }}
     </div>
     <aside class="sidenote-column" aria-label="Sidenotes"></aside>
