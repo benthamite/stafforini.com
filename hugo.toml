@@ -37,10 +37,6 @@ refLinksErrorLevel = "WARNING"
 
 # Menu
 [menus]
-  [[menus.left]]
-    name = "Now"
-    pageRef = "/notes/now/"
-    weight = 1
   [[menus.main]]
     name = "Notes"
     pageRef = "/notes/"
@@ -50,9 +46,13 @@ refLinksErrorLevel = "WARNING"
     pageRef = "/quotes/"
     weight = 2
   [[menus.main]]
+    name = "Now"
+    pageRef = "/notes/now/"
+    weight = 3
+  [[menus.main]]
     name = "About"
     pageRef = "/notes/about/"
-    weight = 3
+    weight = 4
 
 # Output formats
 [outputFormats]
