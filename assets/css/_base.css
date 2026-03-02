@@ -16,6 +16,13 @@
   navigation: auto;
 }
 
+/* Snap geometry (position/size) instantly so scroll-position changes
+   between pages aren't visibly animated — only the crossfade is. */
+::view-transition-group(main-content),
+::view-transition-group(root) {
+  animation-duration: 0s;
+}
+
 /* Main content crossfades over 250ms */
 ::view-transition-old(main-content) {
   animation: vt-fade-out 250ms ease both;
@@ -26,6 +33,7 @@
 }
 
 /* Header stays fixed — no animation */
+::view-transition-group(site-header),
 ::view-transition-old(site-header),
 ::view-transition-new(site-header) {
   animation: none;
