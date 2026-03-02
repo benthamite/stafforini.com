@@ -247,7 +247,7 @@ dd {
 
 /* Drop cap — sunken initial letter, 3 lines deep */
 .has-dropcap > p:first-of-type::first-letter {
-  -webkit-initial-letter: 3;
-  initial-letter: 3;
+  -webkit-initial-letter: 4;
+  initial-letter: 4;
   padding-right: 0.08em;
 }
