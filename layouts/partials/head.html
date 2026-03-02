@@ -1,27 +1,4 @@
 <meta charset="utf-8">
-<meta name="color-scheme" content="light dark">
-{{/* Critical inline styles: set html background via prefers-color-scheme so the
-     browser never shows a white canvas, even before JS runs. */}}
-<style>
-  html { background: #fff; }
-  @media (prefers-color-scheme: dark) { html { background: #1a1a1a; } }
-</style>
-{{/* Apply theme before CSS loads */}}
-<script>
-(function() {
-  var validPrefs = ['light', 'dark', 'system'];
-  var pref = 'system';
-  try { pref = localStorage.getItem('theme') || 'system'; } catch (e) {}
-  if (validPrefs.indexOf(pref) === -1) pref = 'system';
-  var theme = pref === 'system'
-    ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-    : pref;
-  document.documentElement.setAttribute('data-theme', theme);
-  document.documentElement.setAttribute('data-theme-pref', pref);
-  document.documentElement.style.colorScheme = theme;
-  document.documentElement.style.background = theme === 'dark' ? '#1a1a1a' : '#fff';
-})();
-</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title | markdownify | plainify }} · {{ .Site.Title }}{{ end }}</title>
 {{/* 160 chars is the typical max Google shows in search result snippets */}}
@@ -38,6 +15,21 @@
 {{ range .AlternativeOutputFormats -}}
   {{ printf `<link rel="%s" type="%s" href="%s" title="%s">` .Rel .MediaType.Type .Permalink (printf "%s - %s" $.Site.Title .Name) | safeHTML }}
 {{ end -}}
+
+{{/* Dark mode: runs before render to prevent FOUC */}}
+<script>
+(function() {
+  var validPrefs = ['light', 'dark', 'system'];
+  var pref = 'system';
+  try { pref = localStorage.getItem('theme') || 'system'; } catch (e) {}
+  if (validPrefs.indexOf(pref) === -1) pref = 'system';
+  var theme = pref === 'system'
+    ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+    : pref;
+  document.documentElement.setAttribute('data-theme', theme);
+  document.documentElement.setAttribute('data-theme-pref', pref);
+})();
+</script>
 
 {{/* Font preload */}}
 <link rel="preload" href="/fonts/SourceSerif4Variable-Roman.ttf.woff2" as="font" type="font/woff2" crossorigin>

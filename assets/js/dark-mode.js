@@ -15,8 +15,6 @@
       : pref;
     document.documentElement.setAttribute('data-theme', theme);
     document.documentElement.setAttribute('data-theme-pref', pref);
-    document.documentElement.style.colorScheme = theme;
-    document.documentElement.style.background = theme === 'dark' ? '#1a1a1a' : '#fff';
     try {
       if (pref === 'system') {
         // Removing the key (rather than storing "system") signals "follow OS preference"
