@@ -1,6 +1,12 @@
 <header class="site-header" role="banner">
   <nav class="site-nav" aria-label="Main navigation">
-    <a class="site-title" href="/">{{ .Site.Title }}</a>
+    <div class="nav-left">
+      <a class="site-title" href="/">{{ .Site.Title }}</a>
+      {{ range .Site.Menus.left }}
+      {{- $isActive := $.IsMenuCurrent "left" . -}}
+      <a class="nav-link-left" href="{{ .URL }}"{{ if $isActive }} aria-current="page"{{ end }}>{{ .Name }}</a>
+      {{ end }}
+    </div>
     <ul class="nav-links">
       {{ range .Site.Menus.main }}
       {{- $isActive := $.IsMenuCurrent "main" . -}}
