@@ -1,4 +1,25 @@
 <meta charset="utf-8">
+{{/* color-scheme hint: parsed before any script, tells the browser which canvas
+     color to use during navigation transitions (prevents white flash for OS-dark users) */}}
+<meta name="color-scheme" content="light dark">
+{{/* Dark mode: must run before any CSS to prevent FOUC.  Sets data-theme,
+     color-scheme, and an inline background-color on <html> so the browser
+     never renders a frame with the wrong theme. */}}
+<script>
+(function() {
+  var validPrefs = ['light', 'dark', 'system'];
+  var pref = 'system';
+  try { pref = localStorage.getItem('theme') || 'system'; } catch (e) {}
+  if (validPrefs.indexOf(pref) === -1) pref = 'system';
+  var theme = pref === 'system'
+    ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+    : pref;
+  document.documentElement.setAttribute('data-theme', theme);
+  document.documentElement.setAttribute('data-theme-pref', pref);
+  document.documentElement.style.colorScheme = theme;
+  document.documentElement.style.backgroundColor = theme === 'dark' ? '#1a1a1a' : '#fff';
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title | markdownify | plainify }} · {{ .Site.Title }}{{ end }}</title>
 {{/* 160 chars is the typical max Google shows in search result snippets */}}
@@ -15,22 +36,6 @@
 {{ range .AlternativeOutputFormats -}}
   {{ printf `<link rel="%s" type="%s" href="%s" title="%s">` .Rel .MediaType.Type .Permalink (printf "%s - %s" $.Site.Title .Name) | safeHTML }}
 {{ end -}}
-
-{{/* Dark mode: runs before render to prevent FOUC */}}
-<script>
-(function() {
-  var validPrefs = ['light', 'dark', 'system'];
-  var pref = 'system';
-  try { pref = localStorage.getItem('theme') || 'system'; } catch (e) {}
-  if (validPrefs.indexOf(pref) === -1) pref = 'system';
-  var theme = pref === 'system'
-    ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-    : pref;
-  document.documentElement.setAttribute('data-theme', theme);
-  document.documentElement.setAttribute('data-theme-pref', pref);
-  document.documentElement.style.colorScheme = theme;
-})();
-</script>
 
 {{/* Font preload */}}
 <link rel="preload" href="/fonts/SourceSerif4Variable-Roman.ttf.woff2" as="font" type="font/woff2" crossorigin>
