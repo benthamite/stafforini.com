@@ -2,6 +2,3 @@
 <script src="{{ $darkMode.RelPermalink }}" integrity="{{ $darkMode.Data.Integrity }}"></script>
 {{ $dinkus := resources.Get "js/dinkus.js" | minify | fingerprint }}
 <script src="{{ $dinkus.RelPermalink }}" integrity="{{ $dinkus.Data.Integrity }}"></script>
-{{/* Reveal body now that theme is applied and all blocking scripts have run.
-     Matches the visibility:hidden set in head.html. */}}
-<script>document.body.style.visibility='visible';document.body.style.opacity='1';</script>
