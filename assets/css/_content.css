@@ -246,14 +246,13 @@ dd {
 }
 
 /* Drop cap — sunken initial letter, 3 lines deep.
-   Source Serif 4 cap-height ratio = 0.67 (from OS/2 table: 670/1000).
-   Visible cap = font-size × 0.67;  float box = font-size × line-height.
-   Set line-height = 0.67 so the box matches the cap-height exactly.
-   font-size = 3 body-lines / 0.67 = 3 × 1.4 / 0.67 ≈ 6.3em. */
+   Source Serif 4 cap-height ratio = 0.67 (OS/2 sCapHeight 670 / unitsPerEm 1000).
+   float box = font-size × line-height must equal 3 × body line-height (1.4) = 4.2em.
+   Set line-height = cap-height ratio (0.67) so the glyph fills the box.
+   font-size = 4.2 / 0.67 ≈ 6.25em (kept slightly under to avoid spilling to line 4). */
 .has-dropcap > p:first-of-type::first-letter {
   float: left;
-  font-size: 6.3em;
+  font-size: 6.25em;
   line-height: 0.67;
   padding-right: 0.08em;
-  margin-top: 0.05em;
 }
