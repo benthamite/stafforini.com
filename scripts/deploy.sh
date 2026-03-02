@@ -61,10 +61,10 @@ echo "Building site..."
 hugo --minify
 
 echo "Building search index..."
-npx pagefind --site public
+npx --yes pagefind --site public
 
 # Deploy
 echo "Deploying to Netlify..."
-npx netlify deploy --prod --dir=public --no-build
+npx --yes netlify deploy --prod --dir=public --no-build
 
 echo "Done."
