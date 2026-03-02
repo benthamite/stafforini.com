@@ -245,11 +245,12 @@ dd {
   text-indent: -2em;
 }
 
-/* Drop cap — sunken initial letter, 3 lines deep */
+/* Drop cap — sunken initial letter, 3 lines deep.
+   font-size × line-height must equal exactly N × body line-height (1.4)
+   so text lines stay on the baseline grid.  4.2 × 1.0 = 4.2 = 3 × 1.4. */
 .has-dropcap > p:first-of-type::first-letter {
   float: left;
-  font-size: 3.4em;
-  line-height: 0.85;
+  font-size: 4.2em;
+  line-height: 1;
   padding-right: 0.08em;
-  margin-top: 0.05em;
 }
