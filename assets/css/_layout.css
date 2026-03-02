@@ -18,7 +18,6 @@ main {
   padding-bottom: 3rem;
   /* Keeps footer from riding up on short pages */
   min-height: 60vh;
-  view-transition-name: main-content;
 }
 
 /* Responsive */

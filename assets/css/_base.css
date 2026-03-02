@@ -16,22 +16,6 @@
   navigation: auto;
 }
 
-/* Snap geometry (position/size) instantly so scroll-position changes
-   between pages aren't visibly animated — only the crossfade is. */
-::view-transition-group(main-content),
-::view-transition-group(root) {
-  animation-duration: 0s;
-}
-
-/* Main content crossfades over 250ms */
-::view-transition-old(main-content) {
-  animation: vt-fade-out 250ms ease both;
-}
-
-::view-transition-new(main-content) {
-  animation: vt-fade-in 250ms ease both;
-}
-
 /* Header stays fixed — no animation */
 ::view-transition-group(site-header),
 ::view-transition-old(site-header),
@@ -39,13 +23,14 @@
   animation: none;
 }
 
-/* Footer and other unnamed elements get a subtle crossfade */
+/* Everything else (main, footer) crossfades via the root snapshot,
+   which is a flat viewport capture unaffected by scroll position. */
 ::view-transition-old(root) {
-  animation: vt-fade-out 200ms ease both;
+  animation: vt-fade-out 250ms ease both;
 }
 
 ::view-transition-new(root) {
-  animation: vt-fade-in 200ms ease both;
+  animation: vt-fade-in 250ms ease both;
 }
 
 @keyframes vt-fade-out {
