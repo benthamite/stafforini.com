@@ -1,10 +1,11 @@
 <meta charset="utf-8">
-{{/* color-scheme hint: parsed before any script, tells the browser which canvas
-     color to use during navigation transitions (prevents white flash for OS-dark users) */}}
 <meta name="color-scheme" content="light dark">
-{{/* Dark mode: must run before any CSS to prevent FOUC.  Sets data-theme,
-     color-scheme, and an inline background-color on <html> so the browser
-     never renders a frame with the wrong theme. */}}
+{{/* Hide body until theme is applied, preventing any flash of wrong theme.
+     The matching "visible" is set by a script at the bottom of <body> (footer.html).
+     noscript fallback ensures content is visible without JS. */}}
+<style>body{visibility:hidden;opacity:0}</style>
+<noscript><style>body{visibility:visible;opacity:1}</style></noscript>
+{{/* Apply theme before CSS loads */}}
 <script>
 (function() {
   var validPrefs = ['light', 'dark', 'system'];
@@ -17,7 +18,6 @@
   document.documentElement.setAttribute('data-theme', theme);
   document.documentElement.setAttribute('data-theme-pref', pref);
   document.documentElement.style.colorScheme = theme;
-  document.documentElement.style.backgroundColor = theme === 'dark' ? '#1a1a1a' : '#fff';
 })();
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
