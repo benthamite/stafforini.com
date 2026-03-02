@@ -170,12 +170,38 @@ def render_thumbnail(pdf_path: Path, out_png: Path) -> bool:
 # === Main logic ===
 
 
+def resolve_crossref_pdfs(entries_by_key: dict) -> int:
+    """Inherit ``file`` from crossref parents for entries that lack their own.
+
+    Returns the number of entries that inherited a PDF.
+    """
+    count = 0
+    for entry in entries_by_key.values():
+        crossref_key = entry.get("crossref", "").strip()
+        if not crossref_key:
+            continue
+        if entry.get("file", "").strip():
+            continue  # already has own PDF
+        parent = entries_by_key.get(crossref_key)
+        if not parent:
+            continue
+        parent_file = parent.get("file", "").strip()
+        if parent_file:
+            entry["file"] = parent_file
+            count += 1
+    return count
+
+
 def collect_entries() -> list[dict]:
     """Parse all bib files and return entries with PDF paths.
 
+    Resolves crossref inheritance: entries without a ``file`` field inherit
+    from their crossref parent when available.
+
     Skips db.bib entries that have a non-empty ``translator`` field.
     """
-    entries = []
+    # Step 1: Parse ALL entries from ALL bib files into a single dict
+    entries_by_key = {}
     for bib_path in BIB_FILES:
         if not bib_path.exists():
             print(f"  WARNING: {bib_path} not found, skipping")
@@ -186,29 +212,36 @@ def collect_entries() -> list[dict]:
         parsed = parse_bib_entries(
             bib_path,
             strip_braces=False,
-            extra_fields=["file", "translator"],
+            extra_fields=["file", "translator", "crossref"],
         )
 
         for entry in parsed:
-            # Skip translated works from db.bib: the translator field indicates
-            # the PDF is a translation, and we only want original-language PDFs
-            # (translations are typically duplicates under a different cite key).
+            # Skip translated works from db.bib
             if is_db and entry.get("translator", "").strip():
                 continue
+            entries_by_key[entry["cite_key"]] = entry
 
-            file_field = entry.get("file", "")
-            if not file_field:
-                continue
+    # Step 2: Resolve crossrefs — inherit file from parent entries
+    inherited = resolve_crossref_pdfs(entries_by_key)
+    if inherited:
+        print(f"  Inherited PDF from crossref parent for {inherited} entries")
 
-            pdf_path = extract_pdf_path(file_field)
-            if pdf_path is None:
-                continue
+    # Step 3: Filter for entries with a file field and build output list
+    entries = []
+    for entry in entries_by_key.values():
+        file_field = entry.get("file", "")
+        if not file_field:
+            continue
 
-            entries.append({
-                "cite_key": entry["cite_key"],
-                "slug": cite_key_to_slug(entry["cite_key"]),
-                "pdf_path": pdf_path,
-            })
+        pdf_path = extract_pdf_path(file_field)
+        if pdf_path is None:
+            continue
+
+        entries.append({
+            "cite_key": entry["cite_key"],
+            "slug": cite_key_to_slug(entry["cite_key"]),
+            "pdf_path": pdf_path,
+        })
 
     return entries
 
