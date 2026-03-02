@@ -45,6 +45,10 @@ refLinksErrorLevel = "WARNING"
     name = "Quotes"
     pageRef = "/quotes/"
     weight = 2
+  [[menus.main]]
+    name = "About"
+    pageRef = "/notes/about/"
+    weight = 3
 
 # Output formats
 [outputFormats]
