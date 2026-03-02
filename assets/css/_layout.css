@@ -8,11 +8,17 @@ main {
   padding-right: var(--padding-x);
 }
 
+/* View transition names — separate header (stays fixed) from main (crossfades) */
+.site-header {
+  view-transition-name: site-header;
+}
+
 main {
   padding-top: 1.5rem;
   padding-bottom: 3rem;
   /* Keeps footer from riding up on short pages */
   min-height: 60vh;
+  view-transition-name: main-content;
 }
 
 /* Responsive */
