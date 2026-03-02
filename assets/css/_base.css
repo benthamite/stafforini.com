@@ -10,6 +10,44 @@
    1400px — floating TOC (min-width) — _toc.css
    JS mirrors: BREAKPOINT=1100 in sidenotes.js, BREAKPOINT=1400 in toc.js */
 
+/* Cross-document view transitions (progressive enhancement — unsupported
+   browsers get normal instant navigation) */
+@view-transition {
+  navigation: auto;
+}
+
+/* Main content crossfades over 250ms */
+::view-transition-old(main-content) {
+  animation: vt-fade-out 250ms ease both;
+}
+
+::view-transition-new(main-content) {
+  animation: vt-fade-in 250ms ease both;
+}
+
+/* Header stays fixed — no animation */
+::view-transition-old(site-header),
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+/* Footer and other unnamed elements get a subtle crossfade */
+::view-transition-old(root) {
+  animation: vt-fade-out 200ms ease both;
+}
+
+::view-transition-new(root) {
+  animation: vt-fade-in 200ms ease both;
+}
+
+@keyframes vt-fade-out {
+  to { opacity: 0; }
+}
+
+@keyframes vt-fade-in {
+  from { opacity: 0; }
+}
+
 /* Custom properties */
 :root {
   /* Colors — light */
@@ -141,5 +179,11 @@ img {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0.01ms !important;
   }
 }
