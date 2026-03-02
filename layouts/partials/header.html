@@ -3,7 +3,18 @@
     <a class="site-title" href="/">{{ .Site.Title }}</a>
     <ul class="nav-links">
       {{ range .Site.Menus.main }}
-      <li><a href="{{ .URL }}"{{ if or ($.IsMenuCurrent "main" .) ($.HasMenuCurrent "main" .) }} aria-current="page"{{ end }}>{{ .Name }}</a></li>
+      {{- $isActive := $.IsMenuCurrent "main" . -}}
+      {{- if not $isActive -}}
+        {{- if $.HasMenuCurrent "main" . -}}
+          {{- /* Only highlight parent section if the current page doesn't have its own menu entry */ -}}
+          {{- $pageHasOwnEntry := false -}}
+          {{- range $.Site.Menus.main -}}
+            {{- if eq .URL $.RelPermalink -}}{{ $pageHasOwnEntry = true }}{{- end -}}
+          {{- end -}}
+          {{- if not $pageHasOwnEntry -}}{{ $isActive = true }}{{- end -}}
+        {{- end -}}
+      {{- end -}}
+      <li><a href="{{ .URL }}"{{ if $isActive }} aria-current="page"{{ end }}>{{ .Name }}</a></li>
       {{ end }}
     </ul>
     <div class="nav-search">
