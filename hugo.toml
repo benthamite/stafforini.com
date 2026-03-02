@@ -47,7 +47,7 @@ refLinksErrorLevel = "WARNING"
     weight = 2
   [[menus.main]]
     name = "About"
-    pageRef = "/about/"
+    url = "/about/"
     weight = 3
 
 # Output formats
