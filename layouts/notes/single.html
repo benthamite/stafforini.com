@@ -14,7 +14,7 @@
   {{ partial "toc-inline.html" . }}
 
   <div class="content-with-sidenotes">
-    <div class="note-body">
+    <div class="note-body{{ if ge .WordCount 500 }} has-dropcap{{ end }}">
       {{ .Content }}
     </div>
     <aside class="sidenote-column" aria-label="Sidenotes"></aside>
