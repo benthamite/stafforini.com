@@ -2,8 +2,7 @@
 """Generate Hugo work pages and post-process exported quote markdown files.
 
 Creates or updates work pages under content/works/ from BibTeX data for
-all cite keys referenced by notes (via {{< cite >}} shortcodes) and
-quotes (via front matter work param). Re-running after a BibTeX change
+every entry across all bib files. Re-running after a BibTeX change
 will update any existing work pages whose data has changed.
 
 Usage:
@@ -318,65 +317,29 @@ def generate_work_page(entry: dict) -> str:
     return "\n".join(lines)
 
 
-def collect_work_slugs() -> set[str]:
-    """Scan all quote and note markdown files and collect unique work slugs."""
-    slugs = set()
-
-    # From quotes: work = "slug" or work: "slug" in front matter
-    if QUOTES_DIR.exists():
-        for md_file in QUOTES_DIR.glob("*.md"):
-            if md_file.name == "_index.md":
-                continue
-            content = md_file.read_text()
-            m = re.search(r'work\s*[=:]\s*"([^"]+)"', content)
-            if m:
-                slugs.add(m.group(1))
-
-    # From notes: {{< cite "CiteKey" >}} shortcodes in body
-    notes_dir = HUGO_ROOT / "content" / "notes"
-    if notes_dir.exists():
-        for md_file in notes_dir.glob("*.md"):
-            if md_file.name == "_index.md":
-                continue
-            content = md_file.read_text()
-            for m in re.finditer(r'cite\s+"([^"]+)"', content):
-                slugs.add(cite_key_to_slug(m.group(1)))
-
-    return slugs
-
-
 def generate_work_pages(bib_by_key: dict, dry_run: bool = False, limit: int = 0) -> dict:
-    """Generate or update work pages for all cite keys referenced by quotes and notes."""
-    stats = {"created": 0, "updated": 0, "unchanged": 0, "missing_bib": 0}
-    missing_bib_keys = []
-
-    work_slugs = collect_work_slugs()
-    print(f"  Found {len(work_slugs)} unique work slugs in content files")
+    """Generate or update work pages for every bib entry."""
+    stats = {"created": 0, "updated": 0, "unchanged": 0}
 
     if not WORKS_DIR.exists():
         WORKS_DIR.mkdir(parents=True, exist_ok=True)
 
-    # Build slug -> cite_key mapping
+    # Build slug -> cite_key mapping (all bib entries get a page)
     slug_to_key = {}
     for cite_key in bib_by_key:
         slug = cite_key_to_slug(cite_key)
         slug_to_key[slug] = cite_key
 
+    all_slugs = set(slug_to_key.keys())
+    print(f"  {len(all_slugs)} unique slugs from bib files")
+
     processed = 0
-    for slug in sorted(work_slugs):
+    for slug in sorted(all_slugs):
         if limit and processed >= limit:
             break
 
         work_path = WORKS_DIR / f"{slug}.md"
-
-        # Find bib entry for this slug
-        cite_key = slug_to_key.get(slug)
-        if not cite_key:
-            stats["missing_bib"] += 1
-            missing_bib_keys.append(slug)
-            continue
-
-        entry = bib_by_key[cite_key]
+        entry = bib_by_key[slug_to_key[slug]]
         page_content = generate_work_page(entry)
 
         if work_path.exists():
@@ -399,24 +362,17 @@ def generate_work_pages(bib_by_key: dict, dry_run: bool = False, limit: int = 0)
 
         processed += 1
 
-        if processed % 200 == 0:
+        if processed % 2000 == 0:
             print(f"  ... {processed} work pages processed")
 
-    if missing_bib_keys:
-        print(f"\n  WARNING: {len(missing_bib_keys)} work slugs have no matching bib entry:")
-        for slug in missing_bib_keys[:10]:
-            print(f"    {slug}")
-        if len(missing_bib_keys) > 10:
-            print(f"    ... and {len(missing_bib_keys) - 10} more")
-
-    # Remove stale work pages no longer referenced by any content file
+    # Remove stale work pages with no matching bib entry
     stats["removed"] = 0
     if WORKS_DIR.exists() and not limit:
         for work_file in sorted(WORKS_DIR.glob("*.md")):
             if work_file.name == "_index.md":
                 continue
             slug = work_file.stem
-            if slug not in work_slugs:
+            if slug not in all_slugs:
                 stats["removed"] += 1
                 if dry_run:
                     if stats["removed"] <= 5:
@@ -482,7 +438,6 @@ def main():
         print(f"  Work pages updated:    {wp_stats['updated']}")
         print(f"  Unchanged:             {wp_stats['unchanged']}")
         print(f"  Stale pages removed:   {wp_stats['removed']}")
-        print(f"  Missing bib entries:   {wp_stats['missing_bib']}")
         if args.dry_run:
             print("  *** DRY RUN — no files created ***")
 
