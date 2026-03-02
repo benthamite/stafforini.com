@@ -245,11 +245,15 @@ dd {
   text-indent: -2em;
 }
 
-/* Drop cap — sunken initial letter, 3 lines deep */
+/* Drop cap — sunken initial letter, 3 lines deep.
+   Source Serif 4 cap-height ratio = 0.67 (from OS/2 table: 670/1000).
+   Visible cap = font-size × 0.67;  float box = font-size × line-height.
+   Set line-height = 0.67 so the box matches the cap-height exactly.
+   font-size = 3 body-lines / 0.67 = 3 × 1.4 / 0.67 ≈ 6.3em. */
 .has-dropcap > p:first-of-type::first-letter {
   float: left;
-  font-size: 3.4em;
-  line-height: 0.85;
+  font-size: 6.3em;
+  line-height: 0.67;
   padding-right: 0.08em;
   margin-top: 0.05em;
 }
