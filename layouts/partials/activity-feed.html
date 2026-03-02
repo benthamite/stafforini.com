@@ -1,4 +1,4 @@
-{{ $notes := where (where .Site.RegularPages "Section" "notes") ".Title" "!=" "" }}
+{{ $notes := where .Site.RegularPages "Section" "notes" }}
 {{ $quotes := where (where .Site.RegularPages "Section" "quotes") ".Params.diary" true }}
 
 {{ with $notes }}

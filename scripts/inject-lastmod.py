@@ -214,7 +214,6 @@ def main():
 
         if lastmod is None:
             stats["no_org"] += 1
-            continue
 
         if args.dry_run:
             text = md_file.read_text()
@@ -222,13 +221,16 @@ def main():
             if fm_match and not re.search(r"^title\s*=", fm_match.group(2), re.MULTILINE):
                 stats["title_injected"] += 1
                 print(f"  [TITLE] {md_file.name} -> would inject title = \"{md_file.stem}\"")
-            if lastmod == BATCH_DATE:
-                creation = get_front_matter_date(fm_match.group(2)) if fm_match else None
-                effective = creation or lastmod
-                print(f"  [FALLBACK] {md_file.name} -> lastmod = {effective} (org mtime was batch date)")
+            if lastmod is not None:
+                if lastmod == BATCH_DATE:
+                    creation = get_front_matter_date(fm_match.group(2)) if fm_match else None
+                    effective = creation or lastmod
+                    print(f"  [FALLBACK] {md_file.name} -> lastmod = {effective} (org mtime was batch date)")
+                else:
+                    print(f"  [UPDATE] {md_file.name} -> lastmod = {lastmod}")
+                stats["updated"] += 1
             else:
-                print(f"  [UPDATE] {md_file.name} -> lastmod = {lastmod}")
-            stats["updated"] += 1
+                stats["unchanged"] += 1
         else:
             result = apply_front_matter_fixups(md_file, output_map, lastmod)
             if result["title_injected"]:
