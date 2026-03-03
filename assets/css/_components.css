@@ -418,7 +418,10 @@
   object-fit: cover;
 }
 
-/* Quote prev/next navigation (diary quotes only) */
+/* Quote prev/next navigation (diary quotes only)
+   Narrow screens: horizontal bar at the bottom.
+   Wide screens (≥1100px): absolutely positioned in the left/right margins,
+   aligned with the first line of the quote — same spaces as TOC and sidenotes. */
 .quote-nav {
   display: flex;
   justify-content: space-between;
@@ -474,33 +477,37 @@
 
 .quote-nav-author {
   font-size: var(--font-size-xs);
-  max-width: 10rem;
+  max-width: var(--toc-width, 13rem);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   text-align: center;
 }
 
-/* Wide screens: fixed manicules in viewport margins */
-@media (min-width: 1400px) {
+/* Wide screens: manicules in the sidebar margins, top-aligned with quote */
+@media (min-width: 1100px) {
   .quote-nav {
+    /* Dissolve the nav container; children become direct positioning targets
+       within the .content-with-sidenotes relative ancestor */
     display: contents;
   }
 
   .quote-nav-prev,
   .quote-nav-next {
-    position: fixed;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
+    position: absolute;
+    top: 0;
   }
 
+  /* Left margin — same space as the floating TOC */
   .quote-nav-prev {
-    left: 2rem;
+    right: calc(100% + var(--toc-gap, 1.5rem));
+    width: var(--toc-width, 13rem);
   }
 
+  /* Right margin — same space as the sidenote column */
   .quote-nav-next {
-    right: 2rem;
+    left: calc(100% + var(--sidenote-gap, 1.5rem));
+    width: var(--sidenote-width, 13rem);
     margin-left: 0;
   }
 
