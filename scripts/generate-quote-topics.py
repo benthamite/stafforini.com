@@ -30,6 +30,7 @@ from lib import atomic_write_json, cite_key_to_slug, is_dataless
 SCRIPTS_DIR = Path(__file__).parent
 REPO_ROOT = SCRIPTS_DIR.parent
 OUTPUT_PATH = REPO_ROOT / "data" / "quote-topics.json"
+REVERSE_OUTPUT_PATH = REPO_ROOT / "data" / "topic-quotes.json"
 ID_SLUG_MAP_PATH = REPO_ROOT / "data" / "id-slug-map.json"
 BIBLIO_NOTES_DIR = Path.home() / "My Drive" / "bibliographic-notes"
 
@@ -125,7 +126,7 @@ def find_ancestor_with_export(headings: list[dict], idx: int) -> bool:
 
 
 def process_file(org_path: Path, id_slug_map: dict) -> dict:
-    """Process a single org file and return {quote_slug: [topic_dicts]}."""
+    """Process a single org file and return {quote_slug: {topics, work_slug}}."""
     text = org_path.read_text(errors="replace")
 
     cite_key = extract_roam_refs(text)
@@ -173,7 +174,7 @@ def process_file(org_path: Path, id_slug_map: dict) -> dict:
                 topics.append({"slug": slug, "title": name})
 
         if topics:
-            result[quote_slug] = topics
+            result[quote_slug] = {"topics": topics, "work_slug": work_slug}
 
     return result
 
@@ -208,15 +209,36 @@ def main():
         if files_scanned % 500 == 0:
             print(f"  ... {files_scanned} files scanned")
 
-    # Sort by key for stable output
-    sorted_topics = dict(sorted(all_topics.items()))
+    # Build forward index (quote → topics) preserving the flat list format
+    # that the Hugo template expects, and a reverse index (topic → quotes).
+    forward = {}
+    reverse = {}  # topic_slug -> [{slug, work_slug}]
+
+    for quote_slug, info in sorted(all_topics.items()):
+        forward[quote_slug] = info["topics"]
+        for topic in info["topics"]:
+            topic_slug = topic["slug"]
+            if topic_slug not in reverse:
+                reverse[topic_slug] = []
+            reverse[topic_slug].append({
+                "slug": quote_slug,
+                "work_slug": info["work_slug"],
+            })
+
+    # Sort reverse index by key, and each value list by slug for stability
+    sorted_reverse = {}
+    for topic_slug in sorted(reverse):
+        sorted_reverse[topic_slug] = sorted(reverse[topic_slug], key=lambda x: x["slug"])
 
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
-    atomic_write_json(OUTPUT_PATH, sorted_topics, ensure_ascii=False)
+    atomic_write_json(OUTPUT_PATH, forward, ensure_ascii=False)
+    atomic_write_json(REVERSE_OUTPUT_PATH, sorted_reverse, ensure_ascii=False)
 
-    total_quotes = len(sorted_topics)
-    total_topics = sum(len(v) for v in sorted_topics.values())
+    total_quotes = len(forward)
+    total_topics = sum(len(v) for v in forward.values())
+    total_topic_pages = len(sorted_reverse)
     print(f"Generated topics for {total_quotes} quotes ({total_topics} total topic links)")
+    print(f"Generated reverse index for {total_topic_pages} topic pages")
     print(f"  Files scanned:      {files_scanned}")
     print(f"  Skipped (dataless): {files_skipped_dataless}")
 
