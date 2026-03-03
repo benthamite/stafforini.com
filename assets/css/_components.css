@@ -214,6 +214,14 @@
   align-items: center;
 }
 
+@media (min-width: 1100px) {
+  .quote-entry--work .quote-diary-icon {
+    position: absolute;
+    right: -7rem;
+    top: 0;
+  }
+}
+
 .quote-diary-icon:hover {
   color: var(--color-link);
 }

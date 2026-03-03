@@ -11,22 +11,19 @@
   {{ $pg.Content }}
 
   {{ if $inWork }}
-    {{/* Work-page mode: skip citation and date; show locator + diary bookmark in margin */}}
-    {{ $hasLocator := $pg.Params.locator }}
-    {{ $isDiary := ne $pg.Params.diary false }}
-    {{ if or $hasLocator $isDiary }}
+    {{/* Work-page mode: skip citation and date; show locator in left margin,
+         diary bookmark in right margin */}}
+    {{ with $pg.Params.locator }}
     <div class="quote-margin">
-      {{ with $pg.Params.locator }}
       <span class="quote-locator">{{ . }}</span>
-      {{ end }}
-      {{ if $isDiary }}
-      <a href="{{ $pg.RelPermalink }}" class="quote-diary-icon" title="Diary entry: {{ $pg.Date.Format "Jan 2, 2006" }}">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
-        </svg>
-      </a>
-      {{ end }}
     </div>
+    {{ end }}
+    {{ if ne $pg.Params.diary false }}
+    <a href="{{ $pg.RelPermalink }}" class="quote-diary-icon" title="Diary entry: {{ $pg.Date.Format "Jan 2, 2006" }}">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+      </svg>
+    </a>
     {{ end }}
   {{ else }}
     {{/* Default mode: full citation + date (quotes index, feed, etc.) */}}
