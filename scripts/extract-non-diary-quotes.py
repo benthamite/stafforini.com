@@ -35,6 +35,11 @@ BIBLIO_NOTES_DIR = Path.home() / "My Drive" / "bibliographic-notes"
 
 def extract_roam_refs(text: str) -> str:
     """Extract the cite key from :ROAM_REFS: property in the top-level heading."""
+    # Try [cite:@CiteKey] format first (newer org-cite style)
+    m = re.search(r":ROAM_REFS:\s+\[cite:@([^\]\s]+)\]", text)
+    if m:
+        return m.group(1)
+    # Fall back to bare @CiteKey format
     m = re.search(r":ROAM_REFS:\s+@(\S+)", text)
     return m.group(1) if m else ""
 
