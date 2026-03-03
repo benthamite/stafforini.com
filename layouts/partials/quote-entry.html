@@ -7,12 +7,26 @@
   {{ $inWork = .inWorkPage | default false }}
 {{ end }}
 
+{{/* Look up topics for this quote from the data file */}}
+{{ $topics := slice }}
+{{ $allTopics := index ($pg.Site.Data | default dict) "quote-topics" }}
+{{ with $pg.File }}
+  {{ with index ($allTopics | default dict) .ContentBaseName }}
+    {{ $topics = . }}
+  {{ end }}
+{{ end }}
+
 <div class="quote-entry{{ if $inWork }} quote-entry--work{{ end }}">
   {{ $pg.Content }}
 
   {{ if $inWork }}
     {{/* Work-page mode: skip citation and date; show locator in left margin,
          diary bookmark in right margin */}}
+    {{ if $topics }}
+    <div class="quote-topics quote-topics--work">
+      {{ range $i, $t := $topics }}{{ if $i }} · {{ end }}<a href="/notes/{{ .slug }}/">{{ .title }}</a>{{ end }}
+    </div>
+    {{ end }}
     {{ with $pg.Params.locator }}
     <div class="quote-margin">
       <span class="quote-locator">{{ . }}</span>
@@ -44,12 +58,21 @@
       {{ end }}
       {{ end }}
     {{ end }}
-    {{/* diary param: true (default) = show in /quotes/ feed + RSS; false = only
-         on the parent work page.  "ne .Params.diary false" means "show date
-         unless diary is explicitly false" (unset values are truthy in Hugo). */}}
-    {{ if ne $pg.Params.diary false }}
-    <div class="quote-date">
-      <a href="{{ $pg.RelPermalink }}"><time datetime="{{ $pg.Date.Format "2006-01-02" }}">{{ $pg.Date.Format "Jan 2, 2006" }}</time></a>
+    {{/* Topics + date row: topics left, date right.
+         Only render the container when there's something to show. */}}
+    {{ $showDate := ne $pg.Params.diary false }}
+    {{ if or $topics $showDate }}
+    <div class="quote-meta">
+      {{ if $topics }}
+      <span class="quote-topics">
+        {{ range $i, $t := $topics }}{{ if $i }} · {{ end }}<a href="/notes/{{ .slug }}/">{{ .title }}</a>{{ end }}
+      </span>
+      {{ end }}
+      {{ if $showDate }}
+      <span class="quote-date">
+        <a href="{{ $pg.RelPermalink }}"><time datetime="{{ $pg.Date.Format "2006-01-02" }}">{{ $pg.Date.Format "Jan 2, 2006" }}</time></a>
+      </span>
+      {{ end }}
     </div>
     {{ end }}
   {{ end }}
