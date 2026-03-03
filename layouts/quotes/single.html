@@ -26,6 +26,44 @@
   </div>
 </div>
 
+{{/* Prev/next navigation for diary quotes */}}
+{{ if ne .Params.diary false }}
+  {{ $diaryQuotes := (where .CurrentSection.Pages ".Params.diary" true).ByDate }}
+  {{ $prevQuote := false }}
+  {{ $nextQuote := false }}
+  {{ $thisID := .File.UniqueID }}
+  {{ range $i, $q := $diaryQuotes }}
+    {{ if eq $q.File.UniqueID $thisID }}
+      {{ if gt $i 0 }}
+        {{ $prevQuote = index $diaryQuotes (sub $i 1) }}
+      {{ end }}
+      {{ if lt (add $i 1) (len $diaryQuotes) }}
+        {{ $nextQuote = index $diaryQuotes (add $i 1) }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+  {{ if or $prevQuote $nextQuote }}
+  <nav class="quote-nav" aria-label="Diary quote navigation">
+    {{ with $prevQuote }}
+      {{ $author := .Params.quoted_author }}
+      {{ if not $author }}{{ with .Params.work }}{{ $work := $.Site.GetPage (printf "/works/%s" .) }}{{ with $work }}{{ $author = .Params.author }}{{ end }}{{ end }}{{ end }}
+      <a href="{{ .RelPermalink }}" class="quote-nav-prev" title="Previous diary quote{{ with $author }}: {{ . }}{{ end }}">
+        <span class="quote-nav-manicule quote-nav-manicule--left" aria-hidden="true"></span>
+        {{ with $author }}<span class="quote-nav-author">{{ . }}</span>{{ end }}
+      </a>
+    {{ end }}
+    {{ with $nextQuote }}
+      {{ $author := .Params.quoted_author }}
+      {{ if not $author }}{{ with .Params.work }}{{ $work := $.Site.GetPage (printf "/works/%s" .) }}{{ with $work }}{{ $author = .Params.author }}{{ end }}{{ end }}{{ end }}
+      <a href="{{ .RelPermalink }}" class="quote-nav-next" title="Next diary quote{{ with $author }}: {{ . }}{{ end }}">
+        <span class="quote-nav-manicule quote-nav-manicule--right" aria-hidden="true"></span>
+        {{ with $author }}<span class="quote-nav-author">{{ . }}</span>{{ end }}
+      </a>
+    {{ end }}
+  </nav>
+  {{ end }}
+{{ end }}
+
 {{ $sidenotesJS := resources.Get "js/sidenotes.js" | minify | fingerprint }}
 <script src="{{ $sidenotesJS.RelPermalink }}" integrity="{{ $sidenotesJS.Data.Integrity }}"></script>
 {{ end }}
