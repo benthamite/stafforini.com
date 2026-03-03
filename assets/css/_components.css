@@ -417,3 +417,99 @@
   height: 180px;
   object-fit: cover;
 }
+
+/* Quote prev/next navigation (diary quotes only) */
+.quote-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.quote-nav-prev,
+.quote-nav-next {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  text-decoration: none;
+  color: var(--color-text-secondary);
+}
+
+.quote-nav-prev:hover,
+.quote-nav-next:hover {
+  color: var(--color-link);
+}
+
+.quote-nav-next {
+  margin-left: auto;
+}
+
+.quote-nav-manicule {
+  display: inline-block;
+  width: 45px;
+  height: 27px;
+  background-color: var(--color-text-secondary);
+  -webkit-mask-image: url('/images/manicule.svg');
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-image: url('/images/manicule.svg');
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  transition: background-color 0.2s ease;
+}
+
+.quote-nav-prev:hover .quote-nav-manicule,
+.quote-nav-next:hover .quote-nav-manicule {
+  background-color: var(--color-link);
+}
+
+.quote-nav-manicule--left {
+  transform: scaleX(-1);
+}
+
+.quote-nav-author {
+  font-size: var(--font-size-xs);
+  max-width: 10rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* Wide screens: fixed manicules in viewport margins */
+@media (min-width: 1400px) {
+  .quote-nav {
+    display: contents;
+  }
+
+  .quote-nav-prev,
+  .quote-nav-next {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+  }
+
+  .quote-nav-prev {
+    left: 2rem;
+  }
+
+  .quote-nav-next {
+    right: 2rem;
+    margin-left: 0;
+  }
+
+  .quote-nav-manicule {
+    width: 55px;
+    height: 33px;
+  }
+
+  .quote-nav-manicule--left {
+    transform: scaleX(-1);
+  }
+}
