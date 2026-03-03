@@ -15,13 +15,15 @@
 
   <div class="content-with-sidenotes">
     {{- $trimmed := .Content | strings.TrimLeft "\n\r\t " -}}
-    {{- $startsWithP := hasPrefix $trimmed "<p" -}}
-    {{- $plain := .Content | plainify | strings.TrimLeft "\n\r\t " -}}
-    {{- $first := substr $plain 0 1 -}}
-    {{- $second := substr $plain 1 1 -}}
+    {{- $startsWithList := or (hasPrefix $trimmed "<ul") (hasPrefix $trimmed "<ol") -}}
+    {{/* Extract the first <p> content for character checks (skip headings etc.) */}}
+    {{- $afterP := replaceRE `(?s)^.*?<p[^>]*>` "" .Content -}}
+    {{- $firstPText := replaceRE `(?s)</p>.*$` "" $afterP | plainify | strings.TrimLeft "\n\r\t " -}}
+    {{- $first := substr $firstPText 0 1 -}}
+    {{- $second := substr $firstPText 1 1 -}}
     {{- $isUpper := and (eq $first (upper $first)) (ne $first (lower $first)) -}}
     {{- $hasApostrophe := or (eq $second "'") (eq $second "\u2019") (eq $second "\u2018") -}}
-    {{- $dropcap := and (ge .WordCount 500) $startsWithP $isUpper (not $hasApostrophe) -}}
+    {{- $dropcap := and (ge .WordCount 500) (not $startsWithList) $isUpper (not $hasApostrophe) -}}
     <div class="note-body{{ if $dropcap }} has-dropcap{{ end }}">
       {{ .Content }}
     </div>
