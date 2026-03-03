@@ -50,6 +50,7 @@ When telling the user to run a script, always mention the corresponding `staffor
 | `scripts/generate-topic-pages.py` | `stafforini-generate-topic-pages` | `t` |
 | `scripts/generate-citing-notes.py` | `stafforini-generate-citing-notes` | `c` |
 | `scripts/inject-lastmod.py` | `stafforini-inject-lastmod` | `l` |
+| `scripts/generate-quote-topics.py` | `stafforini-generate-quote-topics` | `Q` |
 | Full pipeline | `stafforini-full-rebuild` | `R` |
 | Search index | `stafforini-rebuild-search-index` | `i` |
 | `scripts/deploy.sh` | `stafforini-deploy` | `D` |
@@ -57,4 +58,4 @@ When telling the user to run a script, always mention the corresponding `staffor
 | *(insert)* | `stafforini-insert-image` | `I` |
 | *(insert)* | `stafforini-insert-topics` | `T` |
 
-**Note:** The auxiliary scripts (`inject-lastmod.py`, `generate-citing-notes.py`, `generate-id-slug-map.py`, `generate-topic-pages.py`) are also run automatically as part of the export workflows, but have dedicated menu entries for independent use and debugging.
+**Note:** The auxiliary scripts (`inject-lastmod.py`, `generate-citing-notes.py`, `generate-id-slug-map.py`, `generate-topic-pages.py`, `generate-quote-topics.py`) are also run automatically as part of the export workflows, but have dedicated menu entries for independent use and debugging.
