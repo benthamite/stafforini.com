@@ -355,4 +355,11 @@
   window.addEventListener('load', function () {
     if (isActive) positionSidenotes();
   });
+
+  // Re-position when <details> elements toggle (e.g. collapsible code blocks)
+  document.querySelectorAll('details').forEach(function (details) {
+    details.addEventListener('toggle', function () {
+      if (isActive) positionSidenotes();
+    });
+  });
 })();
