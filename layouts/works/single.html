@@ -107,7 +107,7 @@
   <section class="backlinks" aria-label="Citing quotes" data-pagefind-ignore>
     <h2>Quotes from this work</h2>
     {{ range (sort . "Date" "desc") }}
-      {{ partial "quote-entry.html" . }}
+      {{ partial "quote-entry.html" (dict "page" . "inWorkPage" true) }}
     {{ end }}
   </section>
   {{ end }}
