@@ -131,6 +131,27 @@
   margin: 0.4rem 0;
 }
 
+/* Topic quotes (reverse index: quotes tagged with this topic) */
+.topic-quotes {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.topic-quotes h2 {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+}
+
+.topic-quotes ul {
+  list-style: none;
+  padding: 0;
+}
+
+.topic-quotes li {
+  margin: 0.4rem 0;
+}
+
 /* Metadata */
 .note-meta {
   font-size: var(--font-size-sm);
@@ -176,12 +197,12 @@
 }
 
 .quote-topics a {
-  color: var(--color-text-secondary);
+  color: var(--color-link);
   text-decoration: none;
 }
 
 .quote-topics a:hover {
-  color: var(--color-link);
+  color: var(--color-link-hover);
 }
 
 .quote-topics--work {
@@ -191,12 +212,12 @@
 }
 
 .quote-topics--work a {
-  color: var(--color-text-secondary);
+  color: var(--color-link);
   text-decoration: none;
 }
 
 .quote-topics--work a:hover {
-  color: var(--color-link);
+  color: var(--color-link-hover);
 }
 
 .quote-date {
