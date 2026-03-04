@@ -143,15 +143,6 @@
   margin-bottom: 0.75rem;
 }
 
-.topic-quotes ul {
-  list-style: none;
-  padding: 0;
-}
-
-.topic-quotes li {
-  margin: 0.4rem 0;
-}
-
 /* Category notes (reverse index: notes in this category) */
 .category-notes {
   margin-top: 3rem;
