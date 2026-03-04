@@ -6,4 +6,13 @@
   <span>Last updated: <time datetime="{{ .Lastmod.Format "2006-01-02" }}">{{ .Lastmod.Format "Jan 2, 2006" }}</time></span>
   {{ end }}
   <span>{{ .WordCount }} words</span>
+  {{ $allCategories := index (.Site.Data | default dict) "note-categories" }}
+  {{ with .File }}
+    {{ $categories := index ($allCategories | default dict) .ContentBaseName }}
+    {{ with $categories }}
+    <span class="note-categories">
+      {{ range $i, $c := . }}{{ if $i }} · {{ end }}<a href="/notes/{{ .slug }}/">{{ .title }}</a>{{ end }}
+    </span>
+    {{ end }}
+  {{ end }}
 </div>
