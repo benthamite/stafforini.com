@@ -152,6 +152,37 @@
   margin: 0.4rem 0;
 }
 
+/* Category notes (reverse index: notes in this category) */
+.category-notes {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.category-notes h2 {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+}
+
+.category-notes ul {
+  list-style: none;
+  padding: 0;
+}
+
+.category-notes li {
+  margin: 0.4rem 0;
+}
+
+/* Note categories (inline in metadata) */
+.note-categories a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+.note-categories a:hover {
+  color: var(--color-link-hover);
+}
+
 /* Metadata */
 .note-meta {
   font-size: var(--font-size-sm);
