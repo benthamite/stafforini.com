@@ -112,15 +112,28 @@ def find_ancestor_with_export(headings: list[dict], idx: int) -> bool:
     return False
 
 
-def extract_blockquotes(content: str) -> list[str]:
-    """Extract all #+begin_quote...#+end_quote blocks from content."""
+def extract_blockquotes(content: str) -> list[tuple[str, str]]:
+    """Extract all #+begin_quote...#+end_quote blocks from content.
+
+    Returns a list of (quote_text, cite_locator) tuples.  The locator is
+    parsed from a ``[cite:@Key, LOCATOR]`` line that immediately follows
+    the blockquote (possibly separated by blank lines).  If no citation
+    with a locator is found, cite_locator is "".
+    """
     blocks = []
     for m in re.finditer(
         r"#\+begin_quote\s*\n(.*?)#\+end_quote",
         content,
         re.DOTALL | re.IGNORECASE,
     ):
-        blocks.append(m.group(1).strip())
+        quote_text = m.group(1).strip()
+        # Look for [cite:@Key, LOCATOR] after the end_quote
+        after = content[m.end():]
+        cite_match = re.match(
+            r"\s*\[cite:@[^\],]+,\s*(.+?)\]", after
+        )
+        locator = cite_match.group(1).strip() if cite_match else ""
+        blocks.append((quote_text, locator))
     return blocks
 
 
@@ -232,7 +245,7 @@ def process_org_file(org_path: Path) -> list[dict]:
         noter_page = h["properties"].get("NOTER_PAGE", "")
         page_num = extract_page_number(noter_page)
 
-        for bq_idx, bq_text in enumerate(blockquotes):
+        for bq_idx, (bq_text, cite_locator) in enumerate(blockquotes):
             # If multiple quotes under one heading, make slug unique per quote
             if len(blockquotes) > 1:
                 id_source = f"{heading_id}-{bq_idx}" if heading_id else bq_text
@@ -242,7 +255,8 @@ def process_org_file(org_path: Path) -> list[dict]:
             quote_md = org_to_markdown(bq_text)
             slug = make_slug(work_slug, id_source, bq_text)
             title = make_title(quote_md)
-            locator = f"p. {page_num}" if page_num else ""
+            # Prefer NOTER_PAGE, fall back to citation locator
+            locator = f"p. {page_num}" if page_num else cite_locator
 
             quotes.append({
                 "slug": slug,
