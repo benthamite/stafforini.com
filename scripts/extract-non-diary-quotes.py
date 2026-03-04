@@ -58,7 +58,7 @@ def parse_org_headings(text: str) -> list[dict]:
     headings = []
     # Match heading lines: stars, optional priority, title, optional tags
     heading_re = re.compile(
-        r"^(\*+)\s+(?:\[#\d\]\s+)?(.+?)(?:\s+(:[:\w]+:))?\s*$", re.MULTILINE
+        r"^(\*+)\s+(?:\[#\d\]\s+)?(.+?)(?:[ \t]+(:[:\w]+:))?\s*$", re.MULTILINE
     )
 
     matches = list(heading_re.finditer(text))
@@ -234,6 +234,10 @@ def process_org_file(org_path: Path) -> list[dict]:
 
         # Skip if an ancestor has EXPORT_FILE_NAME (quote is nested under a diary entry)
         if find_ancestor_with_export(headings, i):
+            continue
+
+        # Skip headings not tagged :public: (opt-in extraction)
+        if "public" not in h["tags"]:
             continue
 
         # Extract blockquotes from this heading's content

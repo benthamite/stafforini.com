@@ -71,7 +71,7 @@ def parse_headings(text: str) -> list[dict]:
     """
     headings = []
     heading_re = re.compile(
-        r"^(\*+)\s+(?:\[#\d\]\s+)?(.+?)(?:\s+(:[:\w]+:))?\s*$", re.MULTILINE
+        r"^(\*+)\s+(?:\[#\d\]\s+)?(.+?)(?:[ \t]+(:[:\w]+:))?\s*$", re.MULTILINE
     )
 
     matches = list(heading_re.finditer(text))
