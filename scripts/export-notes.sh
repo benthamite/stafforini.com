@@ -22,6 +22,9 @@ python3 "$SCRIPT_DIR/generate-backlinks.py"
 echo "--- Generating citing-notes index ---"
 python3 "$SCRIPT_DIR/generate-citing-notes.py"
 
+echo "--- Generating note categories ---"
+python3 "$SCRIPT_DIR/generate-note-categories.py"
+
 echo "--- Validating exported files ---"
 python3 -c "
 import re, sys
