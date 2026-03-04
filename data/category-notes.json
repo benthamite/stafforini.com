@@ -1,0 +1,273 @@
+{
+  "anki": [
+    {
+      "slug": "anki-deck-and-google-form-for-the-feeling-good-handbook-by-david-burns"
+    },
+    {
+      "slug": "anki-deck-of-constructing-the-world-by-david-chalmers"
+    },
+    {
+      "slug": "anki-decks-from-the-lesswrong-community"
+    },
+    {
+      "slug": "asana-chrome-and-vimium-windows-shortcuts-anki-decks"
+    },
+    {
+      "slug": "bostrom-s-superintelligence-anki-deck"
+    },
+    {
+      "slug": "ear-training-anki-deck"
+    },
+    {
+      "slug": "german-cases-and-musical-notes-anki-decks"
+    },
+    {
+      "slug": "mac-keyboard-shortcuts"
+    },
+    {
+      "slug": "sublime-text-3-google-docs-mac-shortcuts-anki-decks"
+    },
+    {
+      "slug": "wittgenstein-la-rochefoucauld-anki-decks"
+    }
+  ],
+  "announcements": [
+    {
+      "slug": "i-m-available-to-talk"
+    }
+  ],
+  "bibliographies": [
+    {
+      "slug": "bibliography-for-a-course-on-effective-altruism"
+    },
+    {
+      "slug": "c-d-broad-a-bibliography"
+    },
+    {
+      "slug": "california-proposition-2-a-bibliography"
+    },
+    {
+      "slug": "carlos-santiago-nino-a-bibliography"
+    },
+    {
+      "slug": "derek-parfit-a-bibliography"
+    },
+    {
+      "slug": "earning-to-give-an-annotated-bibliography"
+    },
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography"
+    },
+    {
+      "slug": "why-does-the-world-exist-a-bibliography"
+    },
+    {
+      "slug": "wild-animal-welfare-a-bibliography"
+    }
+  ],
+  "books": [
+    {
+      "slug": "summary-of-clear-and-simple-as-the-truth-by-francis-noe-l-thomas-and-mark-turner"
+    },
+    {
+      "slug": "summary-of-let-their-people-come-by-lant-pritchett"
+    },
+    {
+      "slug": "summary-of-style-lessons-in-clarity-and-grance"
+    },
+    {
+      "slug": "summary-of-the-first-20-hours-by-josh-kaufman"
+    },
+    {
+      "slug": "summary-of-the-little-book-of-productivity-by-scott-young"
+    },
+    {
+      "slug": "summary-of-the-little-book-of-talent-by-daniel-coyle"
+    },
+    {
+      "slug": "summary-of-the-point-of-view-of-the-universe-by-katarzyna-de-lazari-radek-and-peter-singer"
+    },
+    {
+      "slug": "summary-of-the-power-of-full-engagement-by-jim-loehr-and-tony-schwartz"
+    },
+    {
+      "slug": "summary-of-the-willpower-instinct-by-kelly-mcgonigal"
+    }
+  ],
+  "effective-altruism": [
+    {
+      "slug": "a-new-donor-movement-seeks-to-put-data-ahead-of-passion"
+    },
+    {
+      "slug": "ben-kuhn-on-the-effective-altruist-movement"
+    },
+    {
+      "slug": "bibliography-for-a-course-on-effective-altruism"
+    },
+    {
+      "slug": "courses-on-longtermism"
+    },
+    {
+      "slug": "crucial-considerations-and-wise-philanthropy-by-nick-bostrom"
+    },
+    {
+      "slug": "earning-to-give-an-annotated-bibliography"
+    },
+    {
+      "slug": "effective-altruism-blogs"
+    },
+    {
+      "slug": "effective-altruism-syllabi"
+    },
+    {
+      "slug": "favorite-non-fiction-books-from-cea-people"
+    },
+    {
+      "slug": "good-done-right"
+    },
+    {
+      "slug": "how-can-doctors-do-the-most-good-an-interview-with-dr-gregory-lewis"
+    },
+    {
+      "slug": "my-donations-2013-2017"
+    },
+    {
+      "slug": "other-reading-lists"
+    },
+    {
+      "slug": "paul-christiano-on-cause-prioritization"
+    },
+    {
+      "slug": "please-record-your-talks"
+    },
+    {
+      "slug": "the-most-important-questions-and-problems"
+    }
+  ],
+  "film": [
+    {
+      "slug": "films-i-loved"
+    },
+    {
+      "slug": "great-short-films-you-can-watch-right-now"
+    },
+    {
+      "slug": "my-favorite-films-of-2011"
+    },
+    {
+      "slug": "my-favorite-films-of-the-2000s"
+    },
+    {
+      "slug": "some-film-lists-i-created"
+    }
+  ],
+  "learning": [
+    {
+      "slug": "gamified-learning-a-list-of-good-resources"
+    }
+  ],
+  "longtermism": [
+    {
+      "slug": "courses-on-longtermism"
+    }
+  ],
+  "minimalism": [
+    {
+      "slug": "stuff-i-own"
+    }
+  ],
+  "personal": [
+    {
+      "slug": "my-beliefs"
+    },
+    {
+      "slug": "my-beliefs-updated"
+    },
+    {
+      "slug": "my-personality"
+    }
+  ],
+  "philosophy": [
+    {
+      "slug": "how-long-before-superintelligence"
+    },
+    {
+      "slug": "william-lane-craig-a-complete-list-of-debates"
+    }
+  ],
+  "productivity": [
+    {
+      "slug": "how-to-transcribe-recordings"
+    }
+  ],
+  "self-help": [
+    {
+      "slug": "anki-deck-and-google-form-for-the-feeling-good-handbook-by-david-burns"
+    },
+    {
+      "slug": "good-essays-by-luke-muehlhauser-no-longer-available-at-lukeprog-com"
+    },
+    {
+      "slug": "how-to-increase-the-chances-of-recovering-your-lost-smartphone"
+    },
+    {
+      "slug": "minimizing-jet-lag"
+    },
+    {
+      "slug": "summary-of-time-management-by-randy-pausch"
+    },
+    {
+      "slug": "the-best-resources-on-becoming-more-productive"
+    }
+  ],
+  "things-i-like": [
+    {
+      "slug": "android-apps-i-like"
+    },
+    {
+      "slug": "android-apps-i-use"
+    },
+    {
+      "slug": "blogs-i-like"
+    },
+    {
+      "slug": "chrome-extensions-i-like"
+    },
+    {
+      "slug": "favorite-non-fiction-books-from-cea-people"
+    },
+    {
+      "slug": "great-short-films-you-can-watch-right-now"
+    },
+    {
+      "slug": "my-favorite-films-of-2011"
+    },
+    {
+      "slug": "my-favorite-films-of-the-2000s"
+    },
+    {
+      "slug": "podcasts-i-like"
+    }
+  ],
+  "translations": [
+    {
+      "slug": "spanish-translation-of-graham-s-keep-your-identity-small"
+    }
+  ],
+  "writing": [
+    {
+      "slug": "resources-on-writing-well"
+    }
+  ],
+  "writings-by-others": [
+    {
+      "slug": "a-new-donor-movement-seeks-to-put-data-ahead-of-passion"
+    },
+    {
+      "slug": "crucial-considerations-and-wise-philanthropy-by-nick-bostrom"
+    },
+    {
+      "slug": "the-gift"
+    }
+  ]
+}
