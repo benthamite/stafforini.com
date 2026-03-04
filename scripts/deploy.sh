@@ -52,6 +52,9 @@ run_step "Processing PDFs" "python3 scripts/process-pdfs.py"
 # Generate citing-notes data (pre-computed work->note reverse index)
 run_step "Generating citing-notes data" "python3 scripts/generate-citing-notes.py"
 
+# Generate note categories data (note->category and category->note indices)
+run_step "Generating note categories" "python3 scripts/generate-note-categories.py"
+
 # Clean stale build output (Hugo doesn't remove deleted/renamed pages)
 echo "Cleaning previous build..."
 trash public 2>/dev/null || true
