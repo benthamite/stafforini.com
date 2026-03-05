@@ -20,6 +20,7 @@ import argparse
 import json
 import os
 import re
+from collections import Counter
 from datetime import datetime
 from pathlib import Path
 
@@ -30,14 +31,26 @@ SCRIPT_DIR = REPO_ROOT / "scripts"
 CONTENT_DIR = REPO_ROOT / "content" / "notes"
 ORG_DIR = Path.home() / "My Drive/notes"
 
-# Date when stafforini-publish-note was bulk-run against all ~800 org files,
-# adding ox-hugo export metadata.  This set every file's mtime to this date.
-# Files whose mtime still matches haven't been individually edited since, so
-# we fall back to their creation date for lastmod.
-BATCH_DATE = "2026-02-17"
+# Any date shared by this many or more org files is treated as a batch
+# operation date — the mtime reflects a bulk export, not a genuine edit.
+BATCH_THRESHOLD = 20
 
 
 # === Helpers ===
+
+
+def compute_batch_dates(output_map=None) -> set[str]:
+    """Scan all org files and identify batch operation dates.
+
+    Any date shared by BATCH_THRESHOLD or more org files is treated as
+    a batch date — the mtime reflects a bulk operation, not a genuine edit.
+    """
+    date_counts: Counter[str] = Counter()
+    for org_file in ORG_DIR.rglob("*.org"):
+        mtime = os.path.getmtime(org_file)
+        date_str = datetime.fromtimestamp(mtime).strftime("%Y-%m-%d")
+        date_counts[date_str] += 1
+    return {d for d, count in date_counts.items() if count >= BATCH_THRESHOLD}
 
 
 def load_output_to_source_map() -> dict[str, Path]:
@@ -117,7 +130,7 @@ def get_org_title(slug, output_map=None):
     return None
 
 
-def apply_front_matter_fixups(md_path, output_map=None, lastmod_date=None):
+def apply_front_matter_fixups(md_path, output_map=None, lastmod_date=None, batch_dates=None):
     """Apply all front matter fixups in a single read/write cycle.
 
     Combines title injection, title markup fixing, and lastmod injection
@@ -127,6 +140,8 @@ def apply_front_matter_fixups(md_path, output_map=None, lastmod_date=None):
       {"title_injected": bool, "title_markup_fixed": bool, "lastmod_updated": bool}
     """
     result = {"title_injected": False, "title_markup_fixed": False, "lastmod_updated": False}
+    if batch_dates is None:
+        batch_dates = set()
 
     text = md_path.read_text()
     match = re.match(r"(\+\+\+\n)(.*?)(\n\+\+\+)", text, re.DOTALL)
@@ -160,7 +175,7 @@ def apply_front_matter_fixups(md_path, output_map=None, lastmod_date=None):
     # 3. Inject or update lastmod
     if lastmod_date is not None:
         effective_date = lastmod_date
-        if lastmod_date == BATCH_DATE:
+        if lastmod_date in batch_dates:
             creation_date = get_front_matter_date(front_matter)
             if creation_date:
                 effective_date = creation_date
@@ -200,9 +215,11 @@ def main():
     print(f"Found {len(md_files)} markdown files in {CONTENT_DIR}")
 
     output_map = load_output_to_source_map()
+    batch_dates = compute_batch_dates(output_map)
+    print(f"Detected {len(batch_dates)} batch dates (threshold={BATCH_THRESHOLD}): {sorted(batch_dates)}")
 
     stats = {"updated": 0, "unchanged": 0, "no_org": 0, "skipped": 0,
-             "title_injected": 0, "title_markup_fixed": 0}
+             "title_injected": 0, "title_markup_fixed": 0, "batch_fallback": 0}
 
     for md_file in md_files:
         if md_file.name == "_index.md":
@@ -222,17 +239,18 @@ def main():
                 stats["title_injected"] += 1
                 print(f"  [TITLE] {md_file.name} -> would inject title = \"{md_file.stem}\"")
             if lastmod is not None:
-                if lastmod == BATCH_DATE:
+                if lastmod in batch_dates:
                     creation = get_front_matter_date(fm_match.group(2)) if fm_match else None
                     effective = creation or lastmod
-                    print(f"  [FALLBACK] {md_file.name} -> lastmod = {effective} (org mtime was batch date)")
+                    stats["batch_fallback"] += 1
+                    print(f"  [FALLBACK] {md_file.name} -> lastmod = {effective} (org mtime {lastmod} is batch date)")
                 else:
                     print(f"  [UPDATE] {md_file.name} -> lastmod = {lastmod}")
                 stats["updated"] += 1
             else:
                 stats["unchanged"] += 1
         else:
-            result = apply_front_matter_fixups(md_file, output_map, lastmod)
+            result = apply_front_matter_fixups(md_file, output_map, lastmod, batch_dates)
             if result["title_injected"]:
                 stats["title_injected"] += 1
                 print(f"  [TITLE] {md_file.name} -> injected missing title")
@@ -248,6 +266,8 @@ def main():
         print(f"\n  Titles injected: {stats['title_injected']}")
     if stats["title_markup_fixed"]:
         print(f"  Title markup fixed: {stats['title_markup_fixed']}")
+    if stats.get("batch_fallback"):
+        print(f"  Batch fallbacks: {stats['batch_fallback']}")
     print(f"\n  Updated:     {stats['updated']}")
     print(f"  Unchanged:   {stats['unchanged']}")
     print(f"  No org file: {stats['no_org']}")
