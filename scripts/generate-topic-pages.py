@@ -14,7 +14,7 @@ import argparse
 import re
 from pathlib import Path
 
-from lib import escape_yaml_string, is_dataless
+from lib import atomic_write_text, escape_yaml_string, is_dataless
 
 # === Constants ===
 
@@ -115,13 +115,13 @@ def main():
             if args.dry_run:
                 print(f"  [UPDATE] {slug}.md")
             else:
-                md_path.write_text(page_content)
+                atomic_write_text(md_path, page_content)
         else:
             stats["created"] += 1
             if args.dry_run:
                 print(f"  [CREATE] {slug}.md")
             else:
-                md_path.write_text(page_content)
+                atomic_write_text(md_path, page_content)
 
     print(f"\n  Topic pages created:   {stats['created']}")
     print(f"  Topic pages updated:   {stats['updated']}")

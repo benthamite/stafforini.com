@@ -19,8 +19,21 @@ function highlightText(escaped, query) {
 }
 
 function sanitizeExcerpt(html) {
-  // Strip all HTML tags except exact <mark> and </mark> (no attributes allowed)
-  return html.replace(/<(?!\/?mark>)[^>]*>/gi, '');
+  // DOM-based sanitization: only allow <mark> elements (stripped of attributes)
+  var tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  var result = '';
+  function walk(node) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      result += escapeHtml(node.textContent);
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+      if (node.tagName === 'MARK') result += '<mark>';
+      for (var i = 0; i < node.childNodes.length; i++) walk(node.childNodes[i]);
+      if (node.tagName === 'MARK') result += '</mark>';
+    }
+  }
+  walk(tmp);
+  return result;
 }
 
 // Chicago/Turabian typographic convention: minor works (articles, chapters,

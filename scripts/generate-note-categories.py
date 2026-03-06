@@ -79,7 +79,7 @@ def process_file(org_path: Path, id_slug_map: dict) -> dict | None:
     # Resolve UUIDs to note slugs
     categories = []
     for uuid, name in category_links:
-        slug = id_slug_map.get(uuid, "")
+        slug = id_slug_map.get(uuid.upper(), "")
         if slug:
             categories.append({"slug": slug, "title": name})
 

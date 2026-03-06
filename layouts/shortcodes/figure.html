@@ -1,9 +1,8 @@
 <figure{{ with .Get "class" }} class="{{ . }}"{{ end }}>
   {{- $src := .Get "src" -}}
   {{- $link := .Get "link" | default $src -}}
-  <a href="{{ $link }}" target="_blank">
-    <img src="{{ $src }}"
-      {{- with .Get "alt" }} alt="{{ . }}"{{ end -}}
+  <a href="{{ $link }}" target="_blank" rel="noopener">
+    <img src="{{ $src }}" alt="{{ with .Get "alt" }}{{ . }}{{ end }}"
       {{- with .Get "width" }} width="{{ . }}"{{ end -}}
       {{- with .Get "height" }} height="{{ . }}"{{ end -}}
     >

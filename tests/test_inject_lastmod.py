@@ -33,7 +33,7 @@ class TestGetFrontMatterDate:
 
     def test_quoted_date(self):
         text = 'date = "2024-01-15"'
-        assert get_front_matter_date(text) == '"2024-01-15"'
+        assert get_front_matter_date(text) == "2024-01-15"
 
     def test_no_date(self):
         text = 'title = "Test"\nlastmod = 2024-02-01'

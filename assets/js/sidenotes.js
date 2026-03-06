@@ -144,7 +144,7 @@
 
     // Phase 3: Compute top positions — align with reference; push down
     // if the previous sidenote's minimum visible area would be violated.
-    for (var i = 0; i < sidenotes.length; i++) {
+    for (let i = 0; i < sidenotes.length; i++) {
       var sn = sidenotes[i];
 
       if (i === 0) {
@@ -178,10 +178,10 @@
       codeBlockTops.push(pre.getBoundingClientRect().top - containerRect.top);
     });
 
-    for (var i = 0; i < sidenotes.length; i++) {
+    for (let i = 0; i < sidenotes.length; i++) {
       var sn = sidenotes[i];
       var snBottom = sn.top + (sn.visibleHeight !== null ? sn.visibleHeight : sn.fullHeight);
-      for (var p = 0; p < codeBlockTops.length; p++) {
+      for (let p = 0; p < codeBlockTops.length; p++) {
         var cbTop = codeBlockTops[p];
         if (cbTop <= sn.top) continue; // code block above this sidenote
         if (snBottom > cbTop) {
@@ -223,9 +223,9 @@
     });
 
     // Compute overlap sets (which notes overlap when one expands)
-    for (var i = 0; i < sidenotes.length; i++) {
+    for (let i = 0; i < sidenotes.length; i++) {
       sidenotes[i].overlaps = [];
-      for (var j = i + 1; j < sidenotes.length; j++) {
+      for (let j = i + 1; j < sidenotes.length; j++) {
         if (sidenotes[i].top + sidenotes[i].fullHeight > sidenotes[j].top) {
           sidenotes[i].overlaps.push(j);
         } else {

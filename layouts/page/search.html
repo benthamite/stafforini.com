@@ -18,7 +18,12 @@
   input.focus();
 
   var core = window._searchCore;
-  var nav = window._searchUtils.createKeyboardNav(resultsEl, input);
+  var utils = window._searchUtils;
+  if (!core || !utils) {
+    resultsEl.innerHTML = '<p class="search-no-results">Search is temporarily unavailable.</p>';
+    throw new Error('Search libraries failed to load');
+  }
+  var nav = utils.createKeyboardNav(resultsEl, input);
 
   var pagefind = null;
   try {

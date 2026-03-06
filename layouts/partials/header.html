@@ -59,7 +59,9 @@
   var searchGeneration = 0;
 
   var core = window._searchCore;
-  var nav = window._searchUtils.createKeyboardNav(resultsEl, input);
+  var utils = window._searchUtils;
+  if (!core || !utils) { console.warn('Search libraries failed to load'); return; }
+  var nav = utils.createKeyboardNav(resultsEl, input);
   var previouslyFocused = null;
 
   async function initPagefind() {

@@ -169,7 +169,7 @@ def process_file(org_path: Path, id_slug_map: dict) -> dict:
         # Resolve topic UUIDs to note slugs
         topics = []
         for uuid, name in topic_links:
-            slug = id_slug_map.get(uuid, "")
+            slug = id_slug_map.get(uuid.upper(), "")
             if slug:
                 topics.append({"slug": slug, "title": name})
 

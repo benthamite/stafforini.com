@@ -20,9 +20,13 @@ import argparse
 import json
 import os
 import re
+import sys
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from lib import atomic_write_text, is_dataless
 
 # === Constants ===
 
@@ -47,6 +51,8 @@ def compute_batch_dates(output_map=None) -> set[str]:
     """
     date_counts: Counter[str] = Counter()
     for org_file in ORG_DIR.rglob("*.org"):
+        if is_dataless(org_file):
+            continue
         mtime = os.path.getmtime(org_file)
         date_str = datetime.fromtimestamp(mtime).strftime("%Y-%m-%d")
         date_counts[date_str] += 1
@@ -102,7 +108,7 @@ def get_front_matter_date(text):
     """Extract the `date` value from TOML front matter."""
     match = re.search(r"^date = (.+)$", text, re.MULTILINE)
     if match:
-        return match.group(1).strip()
+        return match.group(1).strip().strip('"')
     return None
 
 
@@ -114,10 +120,10 @@ def get_org_title(slug, output_map=None):
     Returns None if the org file doesn't exist or has no heading.
     """
     org_file = find_org_file(slug, output_map)
-    if not org_file:
+    if not org_file or is_dataless(org_file):
         return None
 
-    for line in org_file.read_text().splitlines():
+    for line in org_file.read_text(errors="replace").splitlines():
         m = re.match(r"^\*\s+(.+)", line)
         if m:
             title = m.group(1)
@@ -165,9 +171,12 @@ def apply_front_matter_fixups(md_path, output_map=None, lastmod_date=None, batch
     if org_title is not None:
         title_match = re.search(r'^title = "(.+)"$', front_matter, re.MULTILINE)
         if title_match and title_match.group(1) != org_title:
-            front_matter = front_matter.replace(
-                f'title = "{title_match.group(1)}"',
+            front_matter = re.sub(
+                r'^title = "' + re.escape(title_match.group(1)) + r'"',
                 f'title = "{org_title}"',
+                front_matter,
+                count=1,
+                flags=re.MULTILINE,
             )
             changed = True
             result["title_markup_fixed"] = True
@@ -190,7 +199,7 @@ def apply_front_matter_fixups(md_path, output_map=None, lastmod_date=None, batch
 
     if changed:
         new_text = "+++\n" + front_matter.rstrip("\n") + "\n+++" + rest
-        md_path.write_text(new_text)
+        atomic_write_text(md_path, new_text)
 
     return result
 

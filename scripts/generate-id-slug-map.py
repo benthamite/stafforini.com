@@ -21,7 +21,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from lib import is_dataless
+from lib import is_dataless, strip_elisp_quotes
 
 NOTES_TAGS_DIR = Path.home() / "My Drive/notes/tags"
 PEOPLE_TAGS_DIR = Path.home() / "My Drive/people/tags"
@@ -38,13 +38,6 @@ ID_RE = re.compile(r"^:ID:\s+(\S+)", re.MULTILINE)
 # Allow leading whitespace — notes use indented property drawers under headings
 ID_INDENTED_RE = re.compile(r"^\s*:ID:\s+(\S+)", re.MULTILINE)
 EXPORT_FILE_NAME_RE = re.compile(r"^\s*:EXPORT_FILE_NAME:\s+(\S+)", re.MULTILINE)
-
-
-def strip_elisp_quotes(value):
-    """Strip Emacs Lisp string quoting (e.g. '\"id\"' -> 'id')."""
-    if isinstance(value, str):
-        return value.strip('"')
-    return value
 
 
 def scan_directory(directory: Path) -> dict[str, str]:

@@ -19,7 +19,7 @@ import re
 import tempfile
 from pathlib import Path
 
-from lib import MTIME_EPSILON, cite_key_to_slug, escape_toml_string, is_dataless
+from lib import MTIME_EPSILON, atomic_write_text, cite_key_to_slug, escape_toml_string, is_dataless, safe_remove
 
 # === Constants ===
 
@@ -299,7 +299,7 @@ def write_quote_markdown(quote: dict, output_dir: Path) -> Path:
     lines.append("\n".join(bq_lines))
     lines.append("")
 
-    path.write_text("\n".join(lines))
+    atomic_write_text(path, "\n".join(lines))
     return path
 
 
@@ -393,7 +393,7 @@ def main():
         for md_file in sorted(QUOTES_DIR.glob("*-q-*.md")):
             slug = md_file.stem
             if slug not in generated_slugs:
-                md_file.unlink()
+                safe_remove(md_file)
                 stats["stale_removed"] += 1
 
     if not args.dry_run:
