@@ -8,46 +8,47 @@
 ;;; Code:
 
 ;; Add all elpaca build directories to load-path.
-;; Finds the latest emacs-profiles directory with an elpaca/builds/ subdirectory,
-;; so the version number doesn't need to be hardcoded.
-(let* ((profiles-dir (expand-file-name "~/.config/emacs-profiles/"))
-       (candidates
-        (seq-filter
-         (lambda (d)
-           (file-directory-p
-            (expand-file-name "elpaca/builds/" d)))
-         (directory-files profiles-dir t "^[0-9]")))
-       ;; Sort by version number (strip non-numeric suffixes like "-target"
-       ;; before comparing, since version< rejects them)
-       (latest (car (last (sort candidates
-                                (lambda (a b)
-                                  (let ((va (replace-regexp-in-string
-                                             "-.*" ""
-                                             (file-name-nondirectory a)))
-                                        (vb (replace-regexp-in-string
-                                             "-.*" ""
-                                             (file-name-nondirectory b))))
-                                    (version< va vb)))))))
-       (builds-dir (when latest
-                     (expand-file-name "elpaca/builds/" latest))))
-  (when builds-dir
-    (message "Using elpaca builds from: %s" builds-dir)
-    (dolist (dir (directory-files builds-dir t "^[^.]"))
-      (when (file-directory-p dir)
-        (add-to-list 'load-path dir)))))
+;; Only needed in batch mode — interactive Emacs already has elpaca configured.
+(when noninteractive
+  (let* ((profiles-dir (expand-file-name "~/.config/emacs-profiles/"))
+         (candidates
+          (seq-filter
+           (lambda (d)
+             (file-directory-p
+              (expand-file-name "elpaca/builds/" d)))
+           (directory-files profiles-dir t "^[0-9]")))
+         ;; Sort by version number (strip non-numeric suffixes like "-target"
+         ;; before comparing, since version< rejects them)
+         (latest (car (last (sort candidates
+                                  (lambda (a b)
+                                    (let ((va (replace-regexp-in-string
+                                               "-.*" ""
+                                               (file-name-nondirectory a)))
+                                          (vb (replace-regexp-in-string
+                                               "-.*" ""
+                                               (file-name-nondirectory b))))
+                                      (version< va vb)))))))
+         (builds-dir (when latest
+                       (expand-file-name "elpaca/builds/" latest))))
+    (when builds-dir
+      (message "Using elpaca builds from: %s" builds-dir)
+      (dolist (dir (directory-files builds-dir t "^[^.]"))
+        (when (file-directory-p dir)
+          (add-to-list 'load-path dir))))))
 
-;; Shared export settings
-(setq org-export-with-broken-links t)
-(setq org-export-exclude-tags '("noexport" "ARCHIVE"))
-(setq org-hugo-suppress-lastmod-period 0)
-(setq org-id-track-globally t)
-(setq enable-local-variables nil)
+;; Shared export settings — only in batch mode to avoid clobbering interactive config
+(when noninteractive
+  (setq org-export-with-broken-links t)
+  (setq org-export-exclude-tags '("noexport" "ARCHIVE"))
+  (setq org-hugo-suppress-lastmod-period 0)
+  (setq org-id-track-globally t)
+  (setq enable-local-variables nil)
 
-;; Suppress minor-mode errors in batch mode
-(unless (fboundp 'git-auto-commit-mode)
-  (defun git-auto-commit-mode (&rest _)))
-(unless (fboundp 'init-tangle-conditionally)
-  (defun init-tangle-conditionally (&rest _)))
+  ;; Suppress minor-mode errors in batch mode
+  (unless (fboundp 'git-auto-commit-mode)
+    (defun git-auto-commit-mode (&rest _)))
+  (unless (fboundp 'init-tangle-conditionally)
+    (defun init-tangle-conditionally (&rest _))))
 
 (defun export--file-dataless-p (file)
   "Return non-nil if FILE has the macOS SF_DATALESS flag (cloud-evicted).
@@ -207,10 +208,10 @@ into any exported .md file that lacks one."
 
 ;;;; Transclusion support
 
-(require 'org-transclusion)
-
-;; Match user's config: exclude structural elements from transcluded content
-(setq org-transclusion-exclude-elements '(headline drawer property-drawer))
+;; In batch mode, load org-transclusion ourselves; interactive Emacs has it already.
+(when noninteractive
+  (require 'org-transclusion)
+  (setq org-transclusion-exclude-elements '(headline drawer property-drawer)))
 
 (defun export--expand-transclusions ()
   "Expand all #+transclude: directives in the current buffer.
@@ -233,28 +234,31 @@ so that transcluded content is included in the export."
 (defvar export-id-slug-map nil
   "Hash-table mapping org-id → Hugo slug for cross-references.")
 
-(let ((map-file (expand-file-name "data/id-slug-map.json"
+;; Load the id-slug map and build the org-id database only in batch mode.
+;; Interactive Emacs already has org-id configured and the full scan is expensive.
+(when noninteractive
+  (let ((map-file (expand-file-name "data/id-slug-map.json"
                                     (locate-dominating-file load-file-name ".git"))))
-  (if (file-exists-p map-file)
-      (setq export-id-slug-map
-            (with-temp-buffer
-              (insert-file-contents map-file)
-              (json-parse-string (buffer-string) :object-type 'hash-table)))
-    (setq export-id-slug-map (make-hash-table :test 'equal))
-    (message "WARNING: %s not found — id: links will render as plain text" map-file)))
+    (if (file-exists-p map-file)
+        (setq export-id-slug-map
+              (with-temp-buffer
+                (insert-file-contents map-file)
+                (json-parse-string (buffer-string) :object-type 'hash-table)))
+      (setq export-id-slug-map (make-hash-table :test 'equal))
+      (message "WARNING: %s not found — id: links will render as plain text" map-file)))
 
-;;;; Pre-build org-id database for cross-reference resolution
+  ;;;; Pre-build org-id database for cross-reference resolution
 
-(require 'org-id)
-;; Use a temp file for the ID locations database (avoid polluting the user's real one)
-(setq org-id-locations-file (expand-file-name "/tmp/org-id-locations-batch-export"))
+  (require 'org-id)
+  ;; Use a temp file for the ID locations database (avoid polluting the user's real one)
+  (setq org-id-locations-file (expand-file-name "/tmp/org-id-locations-batch-export"))
 
-(let ((notes-dir (expand-file-name "~/My Drive/notes/"))
-      (bib-dir   (expand-file-name "~/My Drive/bibliographic-notes/")))
-  (org-id-update-id-locations
-   (append
-    (directory-files-recursively notes-dir "\\.org$")
-    (directory-files-recursively bib-dir "\\.org$"))))
+  (let ((notes-dir (expand-file-name "~/My Drive/notes/"))
+        (bib-dir   (expand-file-name "~/My Drive/bibliographic-notes/")))
+    (org-id-update-id-locations
+     (append
+      (directory-files-recursively notes-dir "\\.org$")
+      (directory-files-recursively bib-dir "\\.org$")))))
 
 (provide 'export-common)
 
