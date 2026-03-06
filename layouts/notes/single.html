@@ -18,11 +18,11 @@
     {{- $startsWithList := or (hasPrefix $trimmed "<ul") (hasPrefix $trimmed "<ol") -}}
     {{/* Extract the first <p> content for character checks (skip headings etc.) */}}
     {{- $afterP := replaceRE `(?s)^.*?<p[^>]*>` "" .Content -}}
-    {{- $firstPText := replaceRE `(?s)</p>.*$` "" $afterP | plainify | strings.TrimLeft "\n\r\t " -}}
+    {{- $firstPText := replaceRE `(?s)</p>.*$` "" $afterP | plainify | replaceRE `&rsquo;|&lsquo;` "'" | strings.TrimLeft "\n\r\t " -}}
     {{- $first := substr $firstPText 0 1 -}}
     {{- $second := substr $firstPText 1 1 -}}
     {{- $isUpper := and (eq $first (upper $first)) (ne $first (lower $first)) -}}
-    {{- $hasApostrophe := or (eq $second "'") (eq $second "\u2019") (eq $second "\u2018") -}}
+    {{- $hasApostrophe := eq $second "'" -}}
     {{- $dropcap := and (ge .WordCount 500) (not $startsWithList) $isUpper (not $hasApostrophe) -}}
     <div class="note-body{{ if $dropcap }} has-dropcap{{ end }}">
       {{ .Content }}
