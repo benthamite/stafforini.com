@@ -166,8 +166,7 @@
 
 @media print {
   .toc-floating,
-  .toc-inline,
-  .toc-collapsible {
-    display: none;
+  .toc-inline-wrapper {
+    display: none !important;
   }
 }
