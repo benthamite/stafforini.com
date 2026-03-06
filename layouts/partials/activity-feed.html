@@ -22,7 +22,7 @@
 
 {{ with $quotes }}
 <section class="activity-feed">
-  <h2>Recent quotes</h2>
+  <h2>Recently published quotes</h2>
   <ul>
     {{/* Show 5 most recently added quotes (fewer than notes since quotes are shorter) */}}
     {{ range (sort . "Date" "desc" | first 5) }}
