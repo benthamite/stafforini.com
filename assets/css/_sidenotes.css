@@ -123,3 +123,15 @@
 body.has-sidenotes .footnotes {
   display: none;
 }
+
+/* ── Print: hide sidenotes, restore footnotes ────────────────────── */
+
+@media print {
+  .sidenote-column {
+    display: none;
+  }
+
+  body.has-sidenotes .footnotes {
+    display: block;
+  }
+}
