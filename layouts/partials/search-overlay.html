@@ -1,0 +1,89 @@
+<div class="search-overlay" hidden role="dialog" aria-modal="true" aria-label="Search">
+  <div class="search-container">
+    <div class="search-box">
+      <label for="search-input" class="visually-hidden">Search</label>
+      <input type="text" id="search-input" class="search-input" placeholder="Search..." autocomplete="off" />
+    </div>
+    <div id="search-results" class="search-results"></div>
+  </div>
+</div>
+{{ partial "load-js.html" "search-utils.js" }}
+{{ partial "load-js.html" "search-core.js" }}
+{{ partial "load-js.html" "search-init.js" }}
+<script>
+(function() {
+  var toggle = document.querySelector('.search-toggle');
+  var overlay = document.querySelector('.search-overlay');
+  var input = document.getElementById('search-input');
+  var resultsEl = document.getElementById('search-results');
+
+  var instance = window.createSearchInstance(input, resultsEl, {
+    maxResultsPerSection: 5 // preview cap; full results on /search/ page
+  });
+  if (!instance) { console.warn('Search libraries failed to load'); return; }
+
+  var previouslyFocused = null;
+
+  function openSearch() {
+    previouslyFocused = document.activeElement;
+    overlay.hidden = false;
+    input.focus();
+    instance.initPagefind().then(function() {
+      // Re-run search if user typed while Pagefind was loading
+      if (input.value.trim()) {
+        instance.handleInput(input.value.trim());
+      }
+    }).catch(function() {
+      resultsEl.innerHTML = '<p class="search-no-results">Search is unavailable. Please try again later.</p>';
+    });
+  }
+
+  function closeSearch() {
+    overlay.hidden = true;
+    input.value = '';
+    resultsEl.innerHTML = '';
+    if (previouslyFocused && previouslyFocused.focus) {
+      previouslyFocused.focus();
+      previouslyFocused = null;
+    }
+  }
+
+  input.addEventListener('input', function() {
+    instance.handleInput(input.value.trim());
+  });
+
+  toggle.addEventListener('click', function() {
+    if (overlay.hidden) openSearch(); else closeSearch();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && !overlay.hidden) closeSearch();
+    if ((e.key === '/' || (e.key === 'k' && (e.metaKey || e.ctrlKey))) && overlay.hidden) {
+      var tag = document.activeElement && document.activeElement.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || (document.activeElement && document.activeElement.isContentEditable)) return;
+      e.preventDefault();
+      openSearch();
+    }
+  });
+
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closeSearch();
+  });
+
+  // Focus trap: keep Tab/Shift+Tab within the overlay while it's open
+  overlay.addEventListener('keydown', function(e) {
+    if (e.key !== 'Tab') return;
+    var focusable = overlay.querySelectorAll('input, button, a, [tabindex]:not([tabindex="-1"])');
+    if (!focusable.length) return;
+    var first = focusable[0];
+    var last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
+})();
+</script>

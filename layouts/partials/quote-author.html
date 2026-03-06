@@ -1,0 +1,10 @@
+{{- $page := . -}}
+{{- $author := $page.Params.quoted_author -}}
+{{- if not $author -}}
+  {{- with $page.Params.work -}}
+    {{- with site.GetPage (printf "/works/%s" .) -}}
+      {{- $author = .Params.author -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $author -}}

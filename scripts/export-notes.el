@@ -16,23 +16,6 @@
 
 (require 'ox-hugo)
 
-;; Allow broken links so export doesn't abort
-(setq org-export-with-broken-links t)
-
-;; Load org-id → slug mapping for ID link resolution.
-;; Must be loaded before the org-hugo-link advice below uses it.
-(defvar export-id-slug-map
-  (let ((map-file (expand-file-name "data/id-slug-map.json"
-                                      (locate-dominating-file load-file-name ".git"))))
-    (if (file-exists-p map-file)
-        (with-temp-buffer
-          (insert-file-contents map-file)
-          (json-parse-string (buffer-string) :object-type 'hash-table))
-      (progn
-        (message "WARNING: %s not found — id: links will render as plain text" map-file)
-        (make-hash-table :test 'equal))))
-  "Hash-table mapping org IDs to Hugo slugs for ID link resolution.")
-
 ;; Build a set of known published slugs from the map values, used to
 ;; validate file: links (which reference filenames, not IDs).
 (defvar export-published-slugs
@@ -73,14 +56,10 @@
           (funcall orig-fn link contents info)
         (org-link-broken
          (or contents (org-element-property :path link))))))))
-;; Exclude :ARCHIVE: and :noexport: tagged headings from export
-(setq org-export-exclude-tags '("noexport" "ARCHIVE"))
 ;; Don't render TODO keywords in exported headings
 (setq org-export-with-todo-keywords nil)
 ;; Exclude entire headings that have any TODO keyword (TODO, WAITING, DONE, DELEGATED, etc.)
 (setq org-export-with-tasks nil)
-;; Always include lastmod in front matter (0 = no suppression period)
-(setq org-hugo-suppress-lastmod-period 0)
 ;; Never evaluate source blocks during export (some notes have :cache yes
 ;; Python blocks that fail in batch mode — we only need the markup, not results)
 (setq org-export-use-babel nil)
@@ -122,28 +101,8 @@
 
 (setq org-cite-export-processors '((t . (hugo-cite))))
 
-;; Enable org-id tracking (required by ox-hugo for ID-based exports)
-(setq org-id-track-globally t)
+;; Use a notes-specific temp file for the ID locations database
 (setq org-id-locations-file (expand-file-name "/tmp/org-id-locations-export-notes"))
-
-;; Suppress local variable evaluation
-(setq enable-local-variables nil)
-
-;; Define dummy functions not available in batch mode
-(unless (fboundp 'git-auto-commit-mode)
-  (defun git-auto-commit-mode (&rest _) nil))
-;; init-tangle-conditionally is called by some org files on visit;
-;; return "no" to skip tangling in batch mode
-(unless (fboundp 'init-tangle-conditionally)
-  (defun init-tangle-conditionally (&rest _) "no"))
-
-;; Pre-scan all org files to build the ID→file mapping so that [[id:...]]
-;; links between notes resolve correctly during export.
-(let ((notes-dir (expand-file-name "~/My Drive/notes/"))
-      (bib-dir (expand-file-name "~/My Drive/bibliographic-notes/")))
-  (org-id-update-id-locations
-   (append (directory-files-recursively notes-dir "\\.org$")
-           (directory-files-recursively bib-dir "\\.org$"))))
 
 ;; Track stats
 (defvar export-notes-exported 0)
@@ -157,12 +116,19 @@
                      "~/My Drive/notes/"))
          (exportable
           (if file-list-path
-              ;; Incremental: only export files from the list
+              ;; Incremental: only export files from the list, filtering dataless
               (progn
                 (message "Incremental mode: reading file list from %s" file-list-path)
-                (with-temp-buffer
-                  (insert-file-contents file-list-path)
-                  (split-string (buffer-string) "\n" t)))
+                (let ((files (with-temp-buffer
+                               (insert-file-contents file-list-path)
+                               (split-string (buffer-string) "\n" t))))
+                  (seq-remove
+                   (lambda (f)
+                     (when (export--file-dataless-p f)
+                       (push f export-notes-skipped-dataless)
+                       (message "SKIP dataless: %s" (file-name-nondirectory f))
+                       t))
+                   files)))
             ;; Full: scan recursively and pre-filter
             (let* ((all-files (directory-files-recursively notes-dir "\\.org$"))
                    (files (seq-remove
@@ -190,31 +156,27 @@
       (setq processed (1+ processed))
       (when (= (% processed 10) 0)
         (message "Progress: %d/%d files" processed total))
-      (if (export--file-dataless-p file)
-          (progn
-            (push file export-notes-skipped-dataless)
-            (message "SKIP dataless: %s" (file-name-nondirectory file)))
-        (condition-case err
-            (let ((buf (find-file-noselect file)))
-              (unwind-protect
-                  (with-current-buffer buf
-                    (export--expand-transclusions)
-                    (org-hugo-export-wim-to-md :all-subtrees)
-                    (setq export-notes-exported (1+ export-notes-exported))
-                    ;; Fix titles dropped by ox-hugo #+INCLUDE bug.
-                    ;; Patch the .md immediately so Hugo never serves
-                    ;; a page without a title.
-                    (export--fix-missing-titles
-                     file
-                     (expand-file-name
-                      "~/My Drive/repos/stafforini.com/")
-                     "notes"))
-                (kill-buffer buf)))
-          (error
-           (push (cons file (error-message-string err)) export-notes-errors)
-           (message "ERROR in %s: %s"
-                    (file-name-nondirectory file)
-                    (error-message-string err))))))
+      (condition-case err
+          (let ((buf (find-file-noselect file)))
+            (unwind-protect
+                (with-current-buffer buf
+                  (export--expand-transclusions)
+                  (org-hugo-export-wim-to-md :all-subtrees)
+                  (setq export-notes-exported (1+ export-notes-exported))
+                  ;; Fix titles dropped by ox-hugo #+INCLUDE bug.
+                  ;; Patch the .md immediately so Hugo never serves
+                  ;; a page without a title.
+                  (export--fix-missing-titles
+                   file
+                   (expand-file-name
+                    "~/My Drive/repos/stafforini.com/")
+                   "notes"))
+              (kill-buffer buf)))
+        (error
+         (push (cons file (error-message-string err)) export-notes-errors)
+         (message "ERROR in %s: %s"
+                  (file-name-nondirectory file)
+                  (error-message-string err)))))
 
     (message "\n========================================")
     (message "EXPORT COMPLETE")

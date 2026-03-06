@@ -43,7 +43,7 @@
          citation-format.html conventions. */}}
     {{- $type := $work.Params.entry_type | default "book" -}}
     {{- $displayTitle := $work.Params.shorttitle | default $work.Title -}}
-    {{- $standalone := or (eq $type "book") (eq $type "collection") (eq $type "proceedings") (eq $type "mvbook") (eq $type "mvcollection") -}}
+    {{- $standalone := partial "standalone-type.html" $type -}}
     {{- if $standalone -}}
       <a href="{{ $work.RelPermalink }}"><em>{{ $displayTitle | safeHTML }}</em></a>
     {{- else -}}

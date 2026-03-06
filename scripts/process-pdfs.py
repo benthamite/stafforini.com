@@ -28,14 +28,22 @@ import pikepdf
 from PIL import Image
 from pikepdf import Name
 
-from lib import BIB_FILES, MTIME_EPSILON, cite_key_to_slug, extract_pdf_path, parse_bib_entries, safe_remove
+from lib import (
+    BIB_FILES,
+    MTIME_EPSILON,
+    REPO_ROOT,
+    cite_key_to_slug,
+    extract_pdf_path,
+    load_json_manifest,
+    parse_bib_entries,
+    safe_remove,
+    save_json_manifest,
+)
 
 # === Constants ===
 
-SCRIPTS_DIR = Path(__file__).parent
-HUGO_ROOT = SCRIPTS_DIR.parent
-PDFS_DIR = HUGO_ROOT / "static" / "pdfs"
-THUMBS_DIR = HUGO_ROOT / "static" / "pdf-thumbnails"
+PDFS_DIR = REPO_ROOT / "static" / "pdfs"
+THUMBS_DIR = REPO_ROOT / "static" / "pdf-thumbnails"
 MANIFEST_PATH = PDFS_DIR / ".manifest.json"
 
 MUTOOL = shutil.which("mutool") or "/opt/homebrew/bin/mutool"
@@ -71,15 +79,12 @@ def _is_excluded_book(entry: dict) -> bool:
 
 def load_manifest() -> dict:
     """Load the incremental processing manifest."""
-    if MANIFEST_PATH.exists():
-        return json.loads(MANIFEST_PATH.read_text())
-    return {}
+    return load_json_manifest(MANIFEST_PATH)
 
 
 def save_manifest(manifest: dict) -> None:
     """Persist the manifest to disk atomically."""
-    from lib import atomic_write_json
-    atomic_write_json(MANIFEST_PATH, manifest)
+    save_json_manifest(MANIFEST_PATH, manifest)
 
 
 def needs_processing(slug: str, src_path: Path, manifest: dict, force: bool) -> bool:

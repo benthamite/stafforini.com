@@ -9,7 +9,6 @@
 
   // ── Constants ───────────────────────────────────────────────────
   var BREAKPOINT = 1400;
-  var RESIZE_DEBOUNCE_MS = 150;
 
   // ── DOM references ──────────────────────────────────────────────
   var floatingNav = document.querySelector('.toc-floating-nav');
@@ -21,15 +20,13 @@
   var tocLinks = floatingNav.querySelectorAll('a:not(.toc-title)');
   if (tocLinks.length === 0) return;
 
-  // Map each TOC link to its corresponding heading element.
+  // ── Shared heading-map builder ────────────────────────────────
   // Pages can have duplicate IDs (e.g. two headings named "misc"), so we
   // pair by occurrence order rather than using getElementById.
-  var headings = []; // Array of { el: HTMLElement, link: HTMLAnchorElement }
-  var elToIndex = new Map();
-
-  (function buildHeadingMap() {
+  function resolveLinksToHeadings(linkElements) {
+    var pairs = [];
     var idCount = {};
-    tocLinks.forEach(function (link) {
+    linkElements.forEach(function (link) {
       var href = link.getAttribute('href');
       if (!href || !href.startsWith('#')) return;
       var id = href.slice(1);
@@ -38,13 +35,21 @@
       var matches = document.querySelectorAll('[id="' + CSS.escape(id) + '"]');
       var el = matches[n];
       if (el) {
-        elToIndex.set(el, headings.length);
-        headings.push({ el: el, link: link });
+        pairs.push({ link: link, el: el });
       }
     });
-  })();
+    return pairs;
+  }
 
-  if (headings.length === 0) return;
+  // Map each TOC link to its corresponding heading element.
+  var headingPairs = resolveLinksToHeadings(tocLinks);
+  if (headingPairs.length === 0) return;
+
+  var headings = headingPairs; // Array of { el: HTMLElement, link: HTMLAnchorElement }
+  var elToIndex = new Map();
+  headings.forEach(function (h, i) {
+    elToIndex.set(h.el, i);
+  });
 
   // ── Scroll spy ────────────────────────────────────────────────
   var headingObserver = null;
@@ -151,16 +156,9 @@
   // This covers all TOC variants (floating, inline, collapsible).
   var linkToEl = new Map();
   document.querySelectorAll('.toc-floating-nav, .toc-inline, .toc-collapsible-nav').forEach(function (nav) {
-    var idCount = {};
-    nav.querySelectorAll('a:not(.toc-title)').forEach(function (link) {
-      var href = link.getAttribute('href');
-      if (!href || !href.startsWith('#')) return;
-      var id = href.slice(1);
-      var n = idCount[id] || 0;
-      idCount[id] = n + 1;
-      var matches = document.querySelectorAll('[id="' + CSS.escape(id) + '"]');
-      var el = matches[n];
-      if (el) linkToEl.set(link, el);
+    var pairs = resolveLinksToHeadings(nav.querySelectorAll('a:not(.toc-title)'));
+    pairs.forEach(function (pair) {
+      linkToEl.set(pair.link, pair.el);
     });
   });
 
@@ -200,7 +198,6 @@
   });
 
   // ── Activation / deactivation ─────────────────────────────────
-  var isActive = false;
 
   // Debounced scroll fallback for fast scrolling (IntersectionObserver may miss headings)
   var scrollFallbackTimer;
@@ -226,9 +223,6 @@
   }
 
   function activate() {
-    if (isActive) return;
-    isActive = true;
-
     headingObserver = createHeadingObserver();
     headings.forEach(function (h) {
       headingObserver.observe(h.el);
@@ -243,9 +237,6 @@
   }
 
   function deactivate() {
-    if (!isActive) return;
-    isActive = false;
-
     if (headingObserver) {
       headingObserver.disconnect();
       headingObserver = null;
@@ -259,25 +250,6 @@
     stopScrollFallback();
   }
 
-  function checkViewport() {
-    if (window.innerWidth >= BREAKPOINT) {
-      activate();
-    } else {
-      deactivate();
-    }
-  }
-
-  // ── Resize handling ─────────────────────────────────────────────
-  var resizeTimer;
-  window.addEventListener('resize', function () {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(function () {
-      // Always recreate observers — rootMargin depends on viewport height
-      deactivate();
-      checkViewport();
-    }, RESIZE_DEBOUNCE_MS);
-  });
-
-  // ── Initial activation ─────────────────────────────────────────
-  checkViewport();
+  // ── Breakpoint toggle ────────────────────────────────────────
+  window.createBreakpointToggle(BREAKPOINT, activate, deactivate);
 })();

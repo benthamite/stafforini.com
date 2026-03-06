@@ -2,13 +2,13 @@
 {{/* Extract work metadata for Pagefind: quote pages lack author/title in their own front matter,
      so we resolve the linked work and inject its metadata as hidden spans for search indexing.
      data-pagefind-meta="title" overrides Pagefind's default title extraction. */}}
-{{ $workAuthor := "" }}{{ $workTitle := "" }}{{ $workType := "book" }}
+{{ $workPage := false }}
+{{ $workAuthor := "" }}{{ $workTitle := "" }}
 {{ with .Params.work }}
-  {{ $work := $.Site.GetPage (printf "/works/%s" .) }}
-  {{ with $work }}
+  {{ $workPage = $.Site.GetPage (printf "/works/%s" .) }}
+  {{ with $workPage }}
     {{ $workAuthor = .Params.author }}
     {{ $workTitle = .Title }}
-    {{ $workType = .Params.entry_type | default "book" }}
   {{ end }}
 {{ end }}
 
@@ -30,12 +30,10 @@
   {{ end }}
 {{ end }}
 
-<div>
+<article>
   {{ with $workAuthor }}
   <span data-pagefind-meta="title" data-pagefind-ignore class="visually-hidden">{{ $workAuthor }} – {{ $workTitle }}</span>
-  <span data-pagefind-meta="work_author" data-pagefind-ignore class="visually-hidden">{{ $workAuthor }}</span>
-  <span data-pagefind-meta="work_title" data-pagefind-ignore class="visually-hidden">{{ $workTitle }}</span>
-  <span data-pagefind-meta="work_type" data-pagefind-ignore class="visually-hidden">{{ $workType }}</span>
+  {{ partial "pagefind-work-meta.html" $workPage }}
   {{ end }}
   <div class="content-with-sidenotes">
     <div class="quote-body">
@@ -47,16 +45,14 @@
     {{ if or $prevQuote $nextQuote }}
     <nav class="quote-nav" aria-label="Diary quote navigation">
       {{ with $prevQuote }}
-        {{ $author := .Params.quoted_author }}
-        {{ if not $author }}{{ with .Params.work }}{{ $work := $.Site.GetPage (printf "/works/%s" .) }}{{ with $work }}{{ $author = .Params.author }}{{ end }}{{ end }}{{ end }}
+        {{ $author := partial "quote-author.html" . }}
         <a href="{{ .RelPermalink }}" class="quote-nav-prev" title="Previous diary quote{{ with $author }}: {{ . }}{{ end }}">
           <span class="quote-nav-manicule quote-nav-manicule--left" aria-hidden="true"></span>
           {{ with $author }}<span class="quote-nav-author">{{ . }}</span>{{ end }}
         </a>
       {{ end }}
       {{ with $nextQuote }}
-        {{ $author := .Params.quoted_author }}
-        {{ if not $author }}{{ with .Params.work }}{{ $work := $.Site.GetPage (printf "/works/%s" .) }}{{ with $work }}{{ $author = .Params.author }}{{ end }}{{ end }}{{ end }}
+        {{ $author := partial "quote-author.html" . }}
         <a href="{{ .RelPermalink }}" class="quote-nav-next" title="Next diary quote{{ with $author }}: {{ . }}{{ end }}">
           <span class="quote-nav-manicule quote-nav-manicule--right" aria-hidden="true"></span>
           {{ with $author }}<span class="quote-nav-author">{{ . }}</span>{{ end }}
@@ -65,8 +61,8 @@
     </nav>
     {{ end }}
   </div>
-</div>
+</article>
 
-{{ $sidenotesJS := resources.Get "js/sidenotes.js" | minify | fingerprint }}
-<script src="{{ $sidenotesJS.RelPermalink }}" integrity="{{ $sidenotesJS.Data.Integrity }}"></script>
+{{ partial "load-js.html" "breakpoint-toggle.js" }}
+{{ partial "load-js.html" "sidenotes.js" }}
 {{ end }}

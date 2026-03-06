@@ -1,5 +1,5 @@
 {{ with .TableOfContents }}
-{{ $tocInner := . | replaceRE `<nav id="TableOfContents">` "" | replaceRE `</nav>` "" }}
+{{ $tocInner := partial "toc-raw.html" . }}
 <div class="toc-inline-wrapper">
   <nav class="toc-inline" aria-label="Table of contents">
     {{ $tocInner | safeHTML }}

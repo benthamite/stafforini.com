@@ -7,10 +7,7 @@
 #
 # Search is not built by default (it's slow). Run `npm run reindex`
 # separately if you need search.
-set -euo pipefail
-
-REPO_ROOT="$(git rev-parse --show-toplevel)"
-cd "$REPO_ROOT"
+source "$(dirname "$0")/common.sh"
 
 # Kill any existing Hugo server processes to ensure a fresh build
 # (Hugo's incremental rebuild doesn't track cross-page shortcode
@@ -26,7 +23,7 @@ fi
 
 # Regenerate pre-computed data
 if [ -d content/notes ]; then
-  python3 scripts/generate-citing-notes.py
+  python3 "$SCRIPT_DIR/generate-citing-notes.py"
 fi
 
 # Symlink heavy static directories into public/ so Hugo can serve them

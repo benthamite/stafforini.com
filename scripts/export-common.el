@@ -36,6 +36,19 @@
       (when (file-directory-p dir)
         (add-to-list 'load-path dir)))))
 
+;; Shared export settings
+(setq org-export-with-broken-links t)
+(setq org-export-exclude-tags '("noexport" "ARCHIVE"))
+(setq org-hugo-suppress-lastmod-period 0)
+(setq org-id-track-globally t)
+(setq enable-local-variables nil)
+
+;; Suppress minor-mode errors in batch mode
+(unless (fboundp 'git-auto-commit-mode)
+  (defun git-auto-commit-mode (&rest _)))
+(unless (fboundp 'init-tangle-conditionally)
+  (defun init-tangle-conditionally (&rest _)))
+
 (defun export--file-dataless-p (file)
   "Return non-nil if FILE has the macOS SF_DATALESS flag (cloud-evicted).
 Reading such a file blocks indefinitely, so we must skip it."
@@ -214,6 +227,34 @@ so that transcluded content is included in the export."
     (remove-hook 'after-save-hook #'org-transclusion-after-save-buffer t)
     (remove-hook 'kill-buffer-hook #'org-transclusion-before-kill t)
     (remove-hook 'kill-emacs-hook #'org-transclusion-before-kill t)))
+
+;;;; ID-slug map for cross-reference resolution
+
+(defvar export-id-slug-map nil
+  "Hash-table mapping org-id → Hugo slug for cross-references.")
+
+(let ((map-file (expand-file-name "data/id-slug-map.json"
+                                    (locate-dominating-file load-file-name ".git"))))
+  (if (file-exists-p map-file)
+      (setq export-id-slug-map
+            (with-temp-buffer
+              (insert-file-contents map-file)
+              (json-parse-string (buffer-string) :object-type 'hash-table)))
+    (setq export-id-slug-map (make-hash-table :test 'equal))
+    (message "WARNING: %s not found — id: links will render as plain text" map-file)))
+
+;;;; Pre-build org-id database for cross-reference resolution
+
+(require 'org-id)
+;; Use a temp file for the ID locations database (avoid polluting the user's real one)
+(setq org-id-locations-file (expand-file-name "/tmp/org-id-locations-batch-export"))
+
+(let ((notes-dir (expand-file-name "~/My Drive/notes/"))
+      (bib-dir   (expand-file-name "~/My Drive/bibliographic-notes/")))
+  (org-id-update-id-locations
+   (append
+    (directory-files-recursively notes-dir "\\.org$")
+    (directory-files-recursively bib-dir "\\.org$"))))
 
 (provide 'export-common)
 

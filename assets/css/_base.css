@@ -67,6 +67,16 @@
   --max-width: 42rem;
   --padding-x: 1.5rem;
 
+  /* Section separators */
+  --section-gap: 3rem;
+  --section-pad: 1.5rem;
+  --font-size-section-heading: 1.1rem;
+
+  /* TOC */
+  --toc-width: 13rem;
+  --toc-gap: 1.5rem;
+  --toc-top-offset: 5rem;
+
   /* Sidenotes */
   --sidenote-width: 13rem;
   --sidenote-gap: 1.5rem;

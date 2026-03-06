@@ -1,0 +1,2 @@
+{{- $type := . -}}
+{{- return (or (eq $type "book") (eq $type "collection") (eq $type "proceedings") (eq $type "mvbook") (eq $type "mvcollection")) -}}

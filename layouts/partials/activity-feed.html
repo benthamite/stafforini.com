@@ -11,7 +11,7 @@
       <a href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a>
       {{ if not .Lastmod.IsZero }}
       <span class="feed-date">
-        <time datetime="{{ .Lastmod.Format "2006-01-02" }}">{{ .Lastmod.Format "Jan 2, 2006" }}</time>
+        {{ partial "format-date.html" (dict "date" .Lastmod) }}
       </span>
       {{ end }}
     </li>
@@ -36,7 +36,7 @@
         <a href="{{ .RelPermalink }}">{{ .Title }}</a>
       {{ end }}
       <span class="feed-date">
-        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
+        {{ partial "format-date.html" (dict "date" .Date) }}
       </span>
     </li>
     {{ end }}

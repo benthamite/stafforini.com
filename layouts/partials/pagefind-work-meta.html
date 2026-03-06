@@ -1,0 +1,5 @@
+{{- with . -}}
+<span data-pagefind-meta="work_author" data-pagefind-ignore class="visually-hidden">{{ .Params.author }}</span>
+<span data-pagefind-meta="work_title" data-pagefind-ignore class="visually-hidden">{{ .Title }}</span>
+<span data-pagefind-meta="work_type" data-pagefind-ignore class="visually-hidden">{{ .Params.entry_type | default "book" }}</span>
+{{- end -}}

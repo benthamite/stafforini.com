@@ -8,25 +8,23 @@ filters to only include pages that have been exported to Hugo.
 Writes data/backlinks.json.
 """
 
-import json
-import os
 import sqlite3
 import sys
-import tempfile
+from pathlib import Path
 
-DB_PATH = os.environ.get(
-    "ORGROAM_DB",
-    os.path.expanduser("~/.config/emacs-profiles/var/org/org-roam.db"),
+from lib import (
+    ORGROAM_DB_PATH,
+    REPO_ROOT,
+    atomic_write_json,
+    slug_title_sets_to_sorted_json,
+    strip_elisp_quotes,
 )
-REPO_ROOT = os.path.dirname(os.path.dirname(__file__))
-OUTPUT_PATH = os.path.join(REPO_ROOT, "data", "backlinks.json")
+
+OUTPUT_PATH = REPO_ROOT / "data" / "backlinks.json"
 CONTENT_DIRS = [
-    os.path.join(REPO_ROOT, "content", "notes"),
-    os.path.join(REPO_ROOT, "content", "quotes"),
+    REPO_ROOT / "content" / "notes",
+    REPO_ROOT / "content" / "quotes",
 ]
-
-
-from lib import strip_elisp_quotes
 
 
 def file_to_slug(filepath):
@@ -36,27 +34,26 @@ def file_to_slug(filepath):
     Handles Elisp-quoted paths.
     """
     filepath = strip_elisp_quotes(filepath)
-    basename = os.path.splitext(os.path.basename(filepath))[0]
-    return basename
+    return Path(filepath).stem
 
 
 def main():
-    if not os.path.exists(DB_PATH):
-        print(f"Error: org-roam database not found at {DB_PATH}", file=sys.stderr)
+    if not ORGROAM_DB_PATH.exists():
+        print(f"Error: org-roam database not found at {ORGROAM_DB_PATH}", file=sys.stderr)
         sys.exit(1)
 
     # Build set of exported slugs from Hugo content directories.
     exported_slugs = set()
     for d in CONTENT_DIRS:
-        if os.path.isdir(d):
-            for f in os.listdir(d):
-                if f.endswith(".md") and f != "_index.md":
-                    exported_slugs.add(f[:-3])  # strip .md
+        if d.is_dir():
+            for f in d.iterdir():
+                if f.suffix == ".md" and f.name != "_index.md":
+                    exported_slugs.add(f.stem)
 
     if not exported_slugs:
         print("WARNING: no exported pages found in content directories", file=sys.stderr)
 
-    conn = sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True)
+    conn = sqlite3.connect(f"file:{ORGROAM_DB_PATH}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
 
     # Get ALL page-level nodes.  In org-roam, level 0 = file-level node (most
@@ -156,16 +153,10 @@ def main():
             del backlinks[dest_slug]
 
     # Convert sets to sorted lists of dicts for JSON serialization.
-    result = {}
-    for slug, sources in sorted(backlinks.items()):
-        result[slug] = sorted(
-            [{"slug": s, "title": t} for s, t in sources],
-            key=lambda x: (x["title"] or "").lower(),
-        )
+    result = slug_title_sets_to_sorted_json(backlinks)
 
     # Write output atomically.
-    from lib import atomic_write_json
-    os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
+    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     atomic_write_json(OUTPUT_PATH, result, ensure_ascii=False)
 
     print(f"Generated backlinks for {len(result)} notes ({sum(len(v) for v in result.values())} total backlinks)")
