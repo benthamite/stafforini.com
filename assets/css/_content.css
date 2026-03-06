@@ -86,16 +86,10 @@ hr.dinkus-5::after {
   mask-image: url('/images/dinkus-5.svg');
 }
 
-/* Display math: ox-hugo wraps \[...\] in <p> with a trailing space + <br/>.
-   The space text node prevents the katex-display bottom margin from collapsing
-   with the <p> margin, creating asymmetric spacing. Zero the inner margin and
-   hide the <br> so the <p> alone controls vertical rhythm. */
+/* Display math: KaTeX's .katex-display has margin:1em 0 which doubles up
+   with the wrapping <p> margins. Zero it so <p> alone controls spacing. */
 p > .katex-display {
   margin: 0;
-}
-
-.katex-display + br {
-  display: none;
 }
 
 /* Code */
