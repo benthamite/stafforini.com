@@ -161,3 +161,13 @@
     scrollbar-color: var(--color-border) transparent;
   }
 }
+
+/* ── Print: hide all TOC variants ────────────────────────────────── */
+
+@media print {
+  .toc-floating,
+  .toc-inline,
+  .toc-collapsible {
+    display: none;
+  }
+}
