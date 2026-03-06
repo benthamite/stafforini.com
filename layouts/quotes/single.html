@@ -15,11 +15,11 @@
 {{/* Compute prev/next diary quotes before rendering */}}
 {{ $prevQuote := false }}
 {{ $nextQuote := false }}
-{{ if ne .Params.diary false }}
+{{ if and (ne .Params.diary false) .File }}
   {{ $diaryQuotes := (where .CurrentSection.Pages ".Params.diary" true).ByDate }}
-  {{ $thisID := .File.UniqueID }}
+  {{ $thisPath := .File.Path }}
   {{ range $i, $q := $diaryQuotes }}
-    {{ if eq $q.File.UniqueID $thisID }}
+    {{ if eq $q.File.Path $thisPath }}
       {{ if gt $i 0 }}
         {{ $prevQuote = index $diaryQuotes (sub $i 1) }}
       {{ end }}

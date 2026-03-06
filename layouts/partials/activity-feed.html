@@ -33,7 +33,7 @@
         {{ $work := $.Site.GetPage (printf "/works/%s" .) }}
         <a href="{{ $quote.RelPermalink }}">{{ with $work }}{{ .Params.author }}{{ else }}{{ $quote.Title }}{{ end }}</a>
       {{ else }}
-        <a href="{{ .RelPermalink }}">{{ .Title | safeHTML }}</a>
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
       {{ end }}
       <span class="feed-date">
         <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>

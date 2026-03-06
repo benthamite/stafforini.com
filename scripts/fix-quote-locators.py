@@ -14,7 +14,10 @@ import re
 import sys
 from pathlib import Path
 
-NOTES_DIR = Path("/Users/pablostafforini/My Drive/bibliographic-notes")
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from lib import atomic_write_text
+
+NOTES_DIR = Path.home() / "My Drive/bibliographic-notes"
 
 # Match a locator suffix at the end of an org heading.
 # Captures the locator text (e.g. "p. 245", "pp. 36-37", "sec. 3").
@@ -140,8 +143,7 @@ def process_file(filepath: Path, dry_run: bool = False) -> list[dict]:
         i += 1
 
     if changes and not dry_run:
-        with open(filepath, 'w', encoding='utf-8') as f:
-            f.writelines(new_lines)
+        atomic_write_text(filepath, ''.join(new_lines))
 
     return changes
 

@@ -75,6 +75,11 @@ def safe_remove(path: Path) -> None:
         import logging
         logging.warning("trash CLI not found; permanently deleting %s", path)
         path.unlink(missing_ok=True)
+    except subprocess.CalledProcessError:
+        # `trash` failed (file already gone, cross-volume, etc.)
+        import logging
+        logging.warning("trash failed for %s; permanently deleting", path)
+        path.unlink(missing_ok=True)
 
 
 # Epsilon for floating-point mtime comparisons. Filesystem timestamps lose
@@ -99,7 +104,10 @@ def atomic_write_json(path, data, **kwargs):
             f.write("\n")
         os.replace(tmp_path, str(path))
     except BaseException:
-        os.unlink(tmp_path)
+        try:
+            os.unlink(tmp_path)
+        except OSError:
+            pass
         raise
 
 
@@ -112,8 +120,22 @@ def atomic_write_text(path, text):
             f.write(text)
         os.replace(tmp_path, str(path))
     except BaseException:
-        os.unlink(tmp_path)
+        try:
+            os.unlink(tmp_path)
+        except OSError:
+            pass
         raise
+
+
+def strip_elisp_quotes(value):
+    """Strip Emacs Lisp string quoting from a value (e.g. '\"id\"' -> 'id').
+
+    The org-roam SQLite database stores strings with Elisp-style double-quote
+    delimiters, so we must strip them to get the raw value.
+    """
+    if isinstance(value, str):
+        return value.strip('"')
+    return value
 
 
 def strip_accents(text):

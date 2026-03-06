@@ -30,7 +30,7 @@ fi
 # Helper: run a script and abort deploy on failure
 run_step() {
   echo "$1..."
-  if ! $2; then
+  if ! eval "$2"; then
     echo "Error: $1 failed. Aborting deploy." >&2
     exit 1
   fi

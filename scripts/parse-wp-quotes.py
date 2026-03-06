@@ -12,7 +12,7 @@ import xml.etree.ElementTree as ET
 from html import unescape
 from pathlib import Path
 
-WXR_FILE = Path(__file__).parent.parent.parent.parent / "Downloads" / "notatudignum.WordPress.2026-02-15.xml"
+WXR_FILE = Path.home() / "Downloads" / "notatudignum.WordPress.2026-02-15.xml"
 OUTPUT_FILE = Path(__file__).parent / "wp-quotes-parsed.json"
 
 NS = {

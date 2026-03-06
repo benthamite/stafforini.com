@@ -26,15 +26,7 @@ CONTENT_DIRS = [
 ]
 
 
-def strip_elisp_quotes(value):
-    """Strip Emacs Lisp string quoting from a value (e.g. '\"id\"' -> 'id').
-
-    The org-roam SQLite database stores strings with Elisp-style double-quote
-    delimiters, so we must strip them to get the raw value.
-    """
-    if isinstance(value, str):
-        return value.strip('"')
-    return value
+from lib import strip_elisp_quotes
 
 
 def file_to_slug(filepath):
@@ -168,7 +160,7 @@ def main():
     for slug, sources in sorted(backlinks.items()):
         result[slug] = sorted(
             [{"slug": s, "title": t} for s, t in sources],
-            key=lambda x: x["title"].lower(),
+            key=lambda x: (x["title"] or "").lower(),
         )
 
     # Write output atomically.

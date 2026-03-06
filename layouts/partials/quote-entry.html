@@ -2,7 +2,7 @@
      .page and .inWorkPage; otherwise we receive the page directly. */}}
 {{ $pg := . }}
 {{ $inWork := false }}
-{{ if not .IsPage }}
+{{ if reflect.IsMap . }}
   {{ $pg = .page }}
   {{ $inWork = .inWorkPage | default false }}
 {{ end }}

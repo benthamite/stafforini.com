@@ -30,9 +30,9 @@ def main():
     if not os.path.isdir(NOTES_DIR):
         print("Warning: content/notes/ not found — skipping citing-notes generation.", file=sys.stderr)
         # Write empty file so the template doesn't break
+        from lib import atomic_write_json
         os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
-        with open(OUTPUT_PATH, "w") as f:
-            json.dump({}, f)
+        atomic_write_json(OUTPUT_PATH, {})
         return
 
     # work_slug -> set of (note_slug, note_title)

@@ -132,11 +132,12 @@ def scan_source_files(cfg: dict) -> dict[str, float]:
             skipped_dataless.append(f.name)
             continue
         try:
+            mtime = f.stat().st_mtime
             content = f.read_text(errors="replace")
         except OSError:
             continue
         if pre_filter(content):
-            result[str(f.relative_to(source_dir))] = f.stat().st_mtime
+            result[str(f.relative_to(source_dir))] = mtime
     if skipped_dataless:
         print(
             f"WARNING: skipped {len(skipped_dataless)} dataless file(s) "

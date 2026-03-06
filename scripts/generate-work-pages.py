@@ -17,7 +17,7 @@ import argparse
 import re
 from pathlib import Path
 
-from lib import BIB_FILES, cite_key_to_slug, escape_yaml_string, parse_bib_entries, safe_remove
+from lib import BIB_FILES, atomic_write_text, cite_key_to_slug, escape_yaml_string, parse_bib_entries, safe_remove
 
 # === Constants ===
 
@@ -228,7 +228,7 @@ def postprocess_quotes(dry_run: bool = False) -> dict:
 
         stats["modified"] += 1
         if not dry_run:
-            md_file.write_text(new_content)
+            atomic_write_text(md_file, new_content)
 
     return stats
 
@@ -351,14 +351,14 @@ def generate_work_pages(bib_by_key: dict, dry_run: bool = False, limit: int = 0)
                 if processed < 5:
                     print(f"  [UPDATE] {slug}.md")
             else:
-                work_path.write_text(page_content)
+                atomic_write_text(work_path, page_content)
         else:
             stats["created"] += 1
             if dry_run:
                 if processed < 5:
                     print(f"  [CREATE] {slug}.md")
             else:
-                work_path.write_text(page_content)
+                atomic_write_text(work_path, page_content)
 
         processed += 1
 
