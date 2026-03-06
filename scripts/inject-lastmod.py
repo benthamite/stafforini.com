@@ -173,7 +173,8 @@ def apply_front_matter_fixups(md_path, output_map=None, lastmod_date=None):
     Returns a dict of which fixups were applied:
       {"title_injected": bool, "title_markup_fixed": bool, "lastmod_updated": bool}
     """
-    result = {"title_injected": False, "title_markup_fixed": False, "lastmod_updated": False}
+    result = {"title_injected": False, "title_markup_fixed": False,
+              "lastmod_updated": False, "br_stripped": False}
 
     text = md_path.read_text()
     match = re.match(r"(\+\+\+\n)(.*?)(\n\+\+\+)", text, re.DOTALL)
@@ -207,7 +208,14 @@ def apply_front_matter_fixups(md_path, output_map=None, lastmod_date=None):
             changed = True
             result["title_markup_fixed"] = True
 
-    # 3. Inject or update lastmod
+    # 3. Strip trailing <br/> from body (ox-hugo artifact at paragraph ends)
+    cleaned_rest = re.sub(r" <br/>$", "", rest, flags=re.MULTILINE)
+    if cleaned_rest != rest:
+        rest = cleaned_rest
+        changed = True
+        result["br_stripped"] = True
+
+    # 4. Inject or update lastmod
     if lastmod_date is not None:
         if f"lastmod = {lastmod_date}" not in front_matter:
             front_matter = re.sub(r"lastmod = .+\n?", "", front_matter)
@@ -248,7 +256,7 @@ def main():
     print(f"Loaded git history for {len(git_dates)} org files")
 
     stats = {"updated": 0, "unchanged": 0, "no_org": 0, "skipped": 0,
-             "title_injected": 0, "title_markup_fixed": 0}
+             "title_injected": 0, "title_markup_fixed": 0, "br_stripped": 0}
 
     for md_file in md_files:
         if md_file.name == "_index.md":
@@ -280,6 +288,8 @@ def main():
             if result["title_markup_fixed"]:
                 stats["title_markup_fixed"] += 1
                 print(f"  [MARKUP] {md_file.name} -> restored title markup")
+            if result["br_stripped"]:
+                stats["br_stripped"] += 1
             if result["lastmod_updated"]:
                 stats["updated"] += 1
             else:
@@ -289,6 +299,8 @@ def main():
         print(f"\n  Titles injected: {stats['title_injected']}")
     if stats["title_markup_fixed"]:
         print(f"  Title markup fixed: {stats['title_markup_fixed']}")
+    if stats["br_stripped"]:
+        print(f"  Trailing <br/> stripped: {stats['br_stripped']}")
     print(f"\n  Updated:     {stats['updated']}")
     print(f"  Unchanged:   {stats['unchanged']}")
     print(f"  No org file: {stats['no_org']}")
