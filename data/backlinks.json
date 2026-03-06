@@ -1,4 +1,10 @@
 {
+  "anki": [
+    {
+      "slug": "evaluative-selection-effect",
+      "title": "Footnotes"
+    }
+  ],
   "annas-archive": [
     {
       "slug": "my-emacs-packages",
@@ -17,7 +23,25 @@
       "title": "My Emacs packages"
     }
   ],
+  "contact": [
+    {
+      "slug": "about",
+      "title": "About"
+    }
+  ],
+  "effective-altruism": [
+    {
+      "slug": "evaluative-selection-effect",
+      "title": "Footnotes"
+    }
+  ],
   "gptel-plus": [
+    {
+      "slug": "my-emacs-packages",
+      "title": "My Emacs packages"
+    }
+  ],
+  "johnson": [
     {
       "slug": "my-emacs-packages",
       "title": "My Emacs packages"
@@ -37,8 +61,12 @@
   ],
   "my-emacs-config": [
     {
-      "slug": "about-this-site",
-      "title": "About this site"
+      "slug": "about",
+      "title": "About"
+    },
+    {
+      "slug": "contact",
+      "title": "Contact"
     },
     {
       "slug": "my-emacs-packages",
@@ -47,8 +75,8 @@
   ],
   "my-emacs-packages": [
     {
-      "slug": "about-this-site",
-      "title": "About this site"
+      "slug": "about",
+      "title": "About"
     }
   ],
   "org-indent-pixel": [
@@ -67,6 +95,12 @@
     {
       "slug": "my-emacs-packages",
       "title": "My Emacs packages"
+    }
+  ],
+  "stafforini": [
+    {
+      "slug": "about",
+      "title": "About"
     }
   ],
   "wikipedia": [
