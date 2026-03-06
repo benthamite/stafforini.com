@@ -2,7 +2,7 @@
   "bostrom-2002-anthropic-bias-observation": [
     {
       "slug": "evaluative-selection-effect",
-      "title": "Evaluative selection effect"
+      "title": "evaluative selection effect"
     }
   ],
   "bostrom-2009-moral-uncertainty-solution": [
@@ -1319,6 +1319,22 @@
       "title": "C. D. Broad: a bibliography"
     }
   ],
+  "burton-1638-anatomy-melancholy": [
+    {
+      "slug": "contact",
+      "title": "Contact"
+    },
+    {
+      "slug": "contact (1)",
+      "title": "contact (1)"
+    }
+  ],
+  "chade-2006-matching-with-noise": [
+    {
+      "slug": "evaluative-selection-effect",
+      "title": "evaluative selection effect"
+    }
+  ],
   "cheetham-1964-eton-microcosm": [
     {
       "slug": "derek-parfit-a-bibliography",
@@ -1328,7 +1344,7 @@
   "cirkovic-2010-anthropic-shadow-observation": [
     {
       "slug": "evaluative-selection-effect",
-      "title": "Evaluative selection effect"
+      "title": "evaluative selection effect"
     }
   ],
   "cowen-1992-social-discount-rate": [
@@ -1353,6 +1369,12 @@
     {
       "slug": "c-d-broad-a-bibliography",
       "title": "C. D. Broad: a bibliography"
+    }
+  ],
+  "mac-askill-2015-doing-good-better": [
+    {
+      "slug": "about",
+      "title": "About"
     }
   ],
   "mctaggart-1930-some-dogmas-of": [
@@ -1742,13 +1764,13 @@
   "thaler-1988-anomalies-winner-curse": [
     {
       "slug": "evaluative-selection-effect",
-      "title": "Evaluative selection effect"
+      "title": "evaluative selection effect"
     }
   ],
   "trammell-2018-which-world-gets": [
     {
       "slug": "evaluative-selection-effect",
-      "title": "Evaluative selection effect"
+      "title": "evaluative selection effect"
     }
   ],
   "walmsley-2022-cdbroad": [
