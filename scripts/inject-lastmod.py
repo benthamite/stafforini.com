@@ -7,9 +7,9 @@ For each markdown file in content/notes/:
    files using #+INCLUDE directives). When missing, the slug (filename
    without extension) is used as the title.
 
-2. Sets `lastmod` in the TOML front matter to the org file's
-   filesystem modification time. If the org file's mtime matches the
-   initial bulk-metadata batch date, falls back to the creation date.
+2. Sets `lastmod` in the TOML front matter to the org file's last git
+   commit date. Falls back to filesystem mtime when git history is
+   unavailable.
 
 Usage:
     python scripts/inject-lastmod.py            # Full run
@@ -20,7 +20,7 @@ import argparse
 import json
 import os
 import re
-from collections import Counter
+import subprocess
 from datetime import datetime
 from pathlib import Path
 
@@ -32,28 +32,50 @@ SCRIPT_DIR = REPO_ROOT / "scripts"
 CONTENT_DIR = REPO_ROOT / "content" / "notes"
 ORG_DIR = NOTES_DIR
 
-# Any date shared by this many or more org files is treated as a batch
-# operation date — the mtime reflects a bulk export, not a genuine edit.
-BATCH_THRESHOLD = 20
-
 
 # === Helpers ===
 
 
-def compute_batch_dates(output_map=None) -> set[str]:
-    """Scan all org files and identify batch operation dates.
+def _build_git_dates() -> dict[Path, str]:
+    """Build a map of {org_file: last_commit_date} from git history.
 
-    Any date shared by BATCH_THRESHOLD or more org files is treated as
-    a batch date — the mtime reflects a bulk operation, not a genuine edit.
+    Uses a single `git log` call over the entire repo for efficiency.
     """
-    date_counts: Counter[str] = Counter()
-    for org_file in ORG_DIR.rglob("*.org"):
-        if is_dataless(org_file):
+    result = {}
+    try:
+        out = subprocess.run(
+            ["git", "log", "--format=%ad", "--date=short", "--name-only",
+             "--diff-filter=ACMR", "--", "*.org"],
+            capture_output=True, text=True, cwd=str(ORG_DIR), check=True,
+        ).stdout
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return result
+
+    current_date = None
+    for line in out.splitlines():
+        line = line.strip()
+        if not line:
             continue
-        mtime = os.path.getmtime(org_file)
-        date_str = datetime.fromtimestamp(mtime).strftime("%Y-%m-%d")
-        date_counts[date_str] += 1
-    return {d for d, count in date_counts.items() if count >= BATCH_THRESHOLD}
+        # Date lines are YYYY-MM-DD
+        if re.match(r"\d{4}-\d{2}-\d{2}$", line):
+            current_date = line
+        elif current_date and line.endswith(".org"):
+            path = ORG_DIR / line
+            # First occurrence = most recent commit for this file
+            if path not in result:
+                result[path] = current_date
+    return result
+
+
+# Module-level cache, populated on first use
+_GIT_DATES: dict[Path, str] | None = None
+
+
+def _get_git_dates() -> dict[Path, str]:
+    global _GIT_DATES
+    if _GIT_DATES is None:
+        _GIT_DATES = _build_git_dates()
+    return _GIT_DATES
 
 
 def load_output_to_source_map() -> dict[str, Path]:
@@ -93,12 +115,21 @@ def find_org_file(slug, output_map=None):
 
 
 def get_org_mtime(slug, output_map=None):
-    """Get the modification time of the org file for a given slug."""
+    """Get the last modification date of the org file for a given slug.
+
+    Prefers git commit date (more reliable) over filesystem mtime
+    (which gets clobbered by bulk operations and cloud sync).
+    """
     org_file = find_org_file(slug, output_map)
-    if org_file:
-        mtime = os.path.getmtime(org_file)
-        return datetime.fromtimestamp(mtime).strftime("%Y-%m-%d")
-    return None
+    if not org_file:
+        return None
+    # Prefer git commit date
+    git_dates = _get_git_dates()
+    if org_file in git_dates:
+        return git_dates[org_file]
+    # Fallback to filesystem mtime
+    mtime = os.path.getmtime(org_file)
+    return datetime.fromtimestamp(mtime).strftime("%Y-%m-%d")
 
 
 def get_front_matter_date(text):
@@ -133,7 +164,7 @@ def get_org_title(slug, output_map=None):
     return None
 
 
-def apply_front_matter_fixups(md_path, output_map=None, lastmod_date=None, batch_dates=None):
+def apply_front_matter_fixups(md_path, output_map=None, lastmod_date=None):
     """Apply all front matter fixups in a single read/write cycle.
 
     Combines title injection, title markup fixing, and lastmod injection
@@ -143,8 +174,6 @@ def apply_front_matter_fixups(md_path, output_map=None, lastmod_date=None, batch
       {"title_injected": bool, "title_markup_fixed": bool, "lastmod_updated": bool}
     """
     result = {"title_injected": False, "title_markup_fixed": False, "lastmod_updated": False}
-    if batch_dates is None:
-        batch_dates = set()
 
     text = md_path.read_text()
     match = re.match(r"(\+\+\+\n)(.*?)(\n\+\+\+)", text, re.DOTALL)
@@ -180,16 +209,10 @@ def apply_front_matter_fixups(md_path, output_map=None, lastmod_date=None, batch
 
     # 3. Inject or update lastmod
     if lastmod_date is not None:
-        effective_date = lastmod_date
-        if lastmod_date in batch_dates:
-            creation_date = get_front_matter_date(front_matter)
-            if creation_date:
-                effective_date = creation_date
-
-        if f"lastmod = {effective_date}" not in front_matter:
+        if f"lastmod = {lastmod_date}" not in front_matter:
             front_matter = re.sub(r"lastmod = .+\n?", "", front_matter)
             front_matter = re.sub(
-                r"(date = .+)", rf"\1\nlastmod = {effective_date}", front_matter
+                r"(date = .+)", rf"\1\nlastmod = {lastmod_date}", front_matter
             )
             changed = True
             result["lastmod_updated"] = True
@@ -221,11 +244,11 @@ def main():
     print(f"Found {len(md_files)} markdown files in {CONTENT_DIR}")
 
     output_map = load_output_to_source_map()
-    batch_dates = compute_batch_dates(output_map)
-    print(f"Detected {len(batch_dates)} batch dates (threshold={BATCH_THRESHOLD}): {sorted(batch_dates)}")
+    git_dates = _get_git_dates()
+    print(f"Loaded git history for {len(git_dates)} org files")
 
     stats = {"updated": 0, "unchanged": 0, "no_org": 0, "skipped": 0,
-             "title_injected": 0, "title_markup_fixed": 0, "batch_fallback": 0}
+             "title_injected": 0, "title_markup_fixed": 0}
 
     for md_file in md_files:
         if md_file.name == "_index.md":
@@ -245,18 +268,12 @@ def main():
                 stats["title_injected"] += 1
                 print(f"  [TITLE] {md_file.name} -> would inject title = \"{md_file.stem}\"")
             if lastmod is not None:
-                if lastmod in batch_dates:
-                    creation = get_front_matter_date(fm_match.group(2)) if fm_match else None
-                    effective = creation or lastmod
-                    stats["batch_fallback"] += 1
-                    print(f"  [FALLBACK] {md_file.name} -> lastmod = {effective} (org mtime {lastmod} is batch date)")
-                else:
-                    print(f"  [UPDATE] {md_file.name} -> lastmod = {lastmod}")
+                print(f"  [UPDATE] {md_file.name} -> lastmod = {lastmod}")
                 stats["updated"] += 1
             else:
                 stats["unchanged"] += 1
         else:
-            result = apply_front_matter_fixups(md_file, output_map, lastmod, batch_dates)
+            result = apply_front_matter_fixups(md_file, output_map, lastmod)
             if result["title_injected"]:
                 stats["title_injected"] += 1
                 print(f"  [TITLE] {md_file.name} -> injected missing title")
@@ -272,8 +289,6 @@ def main():
         print(f"\n  Titles injected: {stats['title_injected']}")
     if stats["title_markup_fixed"]:
         print(f"  Title markup fixed: {stats['title_markup_fixed']}")
-    if stats.get("batch_fallback"):
-        print(f"  Batch fallbacks: {stats['batch_fallback']}")
     print(f"\n  Updated:     {stats['updated']}")
     print(f"  Unchanged:   {stats['unchanged']}")
     print(f"  No org file: {stats['no_org']}")
