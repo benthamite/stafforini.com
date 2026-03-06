@@ -1,1 +1,1 @@
-{{- . | replaceRE `<nav id="TableOfContents">` "" | replaceRE `</nav>` "" -}}
+{{- return (. | replaceRE `<nav id="TableOfContents">` "" | replaceRE `</nav>` "") -}}
