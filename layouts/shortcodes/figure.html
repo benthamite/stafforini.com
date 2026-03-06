@@ -1,0 +1,14 @@
+<figure{{ with .Get "class" }} class="{{ . }}"{{ end }}>
+  {{- $src := .Get "src" -}}
+  {{- $link := .Get "link" | default $src -}}
+  <a href="{{ $link }}" target="_blank">
+    <img src="{{ $src }}"
+      {{- with .Get "alt" }} alt="{{ . }}"{{ end -}}
+      {{- with .Get "width" }} width="{{ . }}"{{ end -}}
+      {{- with .Get "height" }} height="{{ . }}"{{ end -}}
+    >
+  </a>
+  {{- with .Get "caption" }}
+  <figcaption>{{ . | markdownify }}</figcaption>
+  {{- end }}
+</figure>
