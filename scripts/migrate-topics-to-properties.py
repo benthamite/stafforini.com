@@ -13,19 +13,13 @@ Usage:
 """
 
 import argparse
-import os
 import re
 from pathlib import Path
 
-from lib import is_dataless
-
-BIBLIO_NOTES_DIR = Path.home() / "My Drive" / "bibliographic-notes"
+from lib import BIBLIO_NOTES_DIR, ID_LINK_RE, atomic_write_text, is_dataless
 
 # Match a Topics line: "Topics: [[id:UUID][name]] · [[id:UUID][name]]"
 TOPICS_LINE_RE = re.compile(r"^Topics:\s+(.+)$", re.MULTILINE)
-
-# Match individual [[id:UUID][name]] links
-ID_LINK_RE = re.compile(r"\[\[id:([^\]]+)\]\[([^\]]*)\]\]")
 
 # Match a property drawer
 DRAWER_RE = re.compile(r"(:PROPERTIES:\s*\n)(.*?)(:END:)", re.DOTALL)
@@ -116,7 +110,7 @@ def process_file(org_path: Path, dry_run: bool) -> dict:
 
     if stats["headings_migrated"] > 0 and not dry_run:
         new_text = "\n".join(result_lines)
-        org_path.write_text(new_text)
+        atomic_write_text(org_path, new_text)
 
     return stats
 

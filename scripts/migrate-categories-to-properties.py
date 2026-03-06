@@ -17,17 +17,10 @@ Usage:
 import argparse
 import json
 import re
-from pathlib import Path
 
-from lib import is_dataless
+from lib import NOTES_DIR, REPO_ROOT, atomic_write_text, find_org_files, is_dataless
 
-NOTES_DIR = Path.home() / "My Drive" / "notes"
-SCRIPTS_DIR = Path(__file__).parent
-REPO_ROOT = SCRIPTS_DIR.parent
 ID_SLUG_MAP_PATH = REPO_ROOT / "data" / "id-slug-map.json"
-
-# Subdirectories to skip
-SKIP_DIRS = {"tags", "people", "claude-logs"}
 
 # Non-substantive category values to filter out
 NON_SUBSTANTIVE = {"Uncategorized", "uncategorized", "Misc", "misc", ""}
@@ -64,22 +57,6 @@ def build_slug_to_uuid(id_slug_map: dict) -> dict:
         if slug not in slug_to_uuid:
             slug_to_uuid[slug] = uuid
     return slug_to_uuid
-
-
-def find_org_files(notes_dir: Path) -> list[Path]:
-    """Find all org files in notes_dir, skipping certain subdirectories."""
-    org_files = []
-    for path in sorted(notes_dir.rglob("*.org")):
-        # Skip backup files
-        if path.name.endswith("~") or path.name.startswith("."):
-            continue
-        # Skip excluded subdirectories
-        rel = path.relative_to(notes_dir)
-        parts = rel.parts
-        if parts and parts[0] in SKIP_DIRS:
-            continue
-        org_files.append(path)
-    return org_files
 
 
 def process_file(org_path: Path, slug_to_uuid: dict, dry_run: bool) -> dict:
@@ -173,7 +150,7 @@ def process_file(org_path: Path, slug_to_uuid: dict, dry_run: bool) -> dict:
 
     if modified and not dry_run:
         new_text = "\n".join(result_lines)
-        org_path.write_text(new_text)
+        atomic_write_text(org_path, new_text)
 
     return stats
 

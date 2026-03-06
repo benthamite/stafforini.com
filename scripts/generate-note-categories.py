@@ -13,38 +13,24 @@ Usage:
 """
 
 import json
-import os
 import re
 import sys
 from pathlib import Path
 
-from lib import ID_LINK_RE, REPO_ROOT, atomic_write_json, is_dataless
+from lib import (
+    ID_LINK_RE,
+    NOTES_DIR,
+    REPO_ROOT,
+    atomic_write_json,
+    find_org_files,
+    is_dataless,
+)
 
 # === Constants ===
 
 OUTPUT_PATH = REPO_ROOT / "data" / "note-categories.json"
 REVERSE_OUTPUT_PATH = REPO_ROOT / "data" / "category-notes.json"
 ID_SLUG_MAP_PATH = REPO_ROOT / "data" / "id-slug-map.json"
-NOTES_DIR = Path.home() / "My Drive" / "notes"
-
-# Subdirectories to skip
-SKIP_DIRS = {"tags", "people", "claude-logs"}
-
-
-def find_org_files(notes_dir: Path) -> list[Path]:
-    """Find all org files in notes_dir, skipping certain subdirectories."""
-    org_files = []
-    for path in sorted(notes_dir.rglob("*.org")):
-        # Skip backup files
-        if path.name.endswith("~") or path.name.startswith("."):
-            continue
-        # Skip excluded subdirectories
-        rel = path.relative_to(notes_dir)
-        parts = rel.parts
-        if parts and parts[0] in SKIP_DIRS:
-            continue
-        org_files.append(path)
-    return org_files
 
 
 def process_file(org_path: Path, id_slug_map: dict) -> dict | None:
@@ -133,7 +119,7 @@ def main():
     for cat_slug in sorted(reverse):
         sorted_reverse[cat_slug] = sorted(reverse[cat_slug], key=lambda x: x["slug"])
 
-    os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
+    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     atomic_write_json(OUTPUT_PATH, forward, ensure_ascii=False)
     atomic_write_json(REVERSE_OUTPUT_PATH, sorted_reverse, ensure_ascii=False)
 

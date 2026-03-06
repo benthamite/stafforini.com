@@ -14,17 +14,20 @@ import argparse
 import re
 from pathlib import Path
 
-from lib import REPO_ROOT, atomic_write_text, escape_yaml_string, is_dataless
+from lib import (
+    NOTES_TAGS_DIR,
+    PEOPLE_TAGS_DIR,
+    REPO_ROOT,
+    atomic_write_text,
+    escape_yaml_string,
+    is_dataless,
+)
 
 # === Constants ===
 
-NOTES_DIR = REPO_ROOT / "content" / "notes"
+CONTENT_NOTES_DIR = REPO_ROOT / "content" / "notes"
 
-GDRIVE = Path.home() / "My Drive"
-TAG_DIRS = [
-    GDRIVE / "notes" / "tags",
-    GDRIVE / "people" / "tags",
-]
+TAG_DIRS = [NOTES_TAGS_DIR, PEOPLE_TAGS_DIR]
 
 
 # === Helpers ===
@@ -74,7 +77,7 @@ def main():
 
     stats = {"created": 0, "updated": 0, "unchanged": 0, "skipped": 0, "unreadable": 0}
 
-    NOTES_DIR.mkdir(parents=True, exist_ok=True)
+    CONTENT_NOTES_DIR.mkdir(parents=True, exist_ok=True)
 
     # Collect all (slug, title) pairs from tag directories
     stubs: dict[str, str] = {}  # slug -> title
@@ -96,7 +99,7 @@ def main():
 
     for slug in sorted(stubs):
         title = stubs[slug]
-        md_path = NOTES_DIR / f"{slug}.md"
+        md_path = CONTENT_NOTES_DIR / f"{slug}.md"
         page_content = generate_stub_page(title)
 
         if md_path.exists():

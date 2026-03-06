@@ -14,10 +14,7 @@ import re
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from lib import atomic_write_text
-
-NOTES_DIR = Path.home() / "My Drive/bibliographic-notes"
+from lib import BIBLIO_NOTES_DIR, atomic_write_text
 
 # Match a locator suffix at the end of an org heading.
 # Captures the locator text (e.g. "p. 245", "pp. 36-37", "sec. 3").
@@ -151,14 +148,14 @@ def process_file(filepath: Path, dry_run: bool = False) -> list[dict]:
 def main():
     dry_run = '--dry-run' in sys.argv
 
-    if not NOTES_DIR.is_dir():
-        print(f"Error: {NOTES_DIR} is not a directory", file=sys.stderr)
+    if not BIBLIO_NOTES_DIR.is_dir():
+        print(f"Error: {BIBLIO_NOTES_DIR} is not a directory", file=sys.stderr)
         sys.exit(1)
 
     total = 0
     files_changed = 0
 
-    for filepath in sorted(NOTES_DIR.glob('*.org')):
+    for filepath in sorted(BIBLIO_NOTES_DIR.glob('*.org')):
         changes = process_file(filepath, dry_run=dry_run)
         if not changes:
             continue

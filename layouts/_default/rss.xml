@@ -1,6 +1,6 @@
-{{/* Default RSS feed template. The quotes-specific variant (quotes/rss.xml)
-     overrides only the page selection; the feed structure below is duplicated
-     there. When changing the <item> format, update both files. */}}
+{{/* Default RSS feed template. Page selection differs from quotes/rss.xml
+     but the channel and item structure are shared. The <item> format lives
+     in partials/rss-item.html — edit it there. */}}
 {{- $pages := slice -}}
 {{- if .IsHome -}}
   {{- $pages = .Site.RegularPages -}}
@@ -27,13 +27,7 @@
     {{ printf "<atom:link href=%q rel=\"self\" type=%q />" .Permalink .MediaType | safeHTML }}
     {{- end }}
     {{- range $pages }}
-    <item>
-      <title>{{ .Title | plainify }}</title>
-      <link>{{ .Permalink }}</link>
-      <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
-      <guid>{{ .Permalink }}</guid>
-      <description><![CDATA[{{ .Content | safeHTML | replaceRE "]]>" "]]]]><![CDATA[>" }}]]></description>
-    </item>
+    {{- partial "rss-item.html" . }}
     {{- end }}
   </channel>
 </rss>
