@@ -16,18 +16,13 @@ Usage:
 """
 
 import argparse
-import os
 import re
 from pathlib import Path
 
 import pikepdf
 from pikepdf import Name
 
-from lib import is_dataless
-
-# === Constants ===
-
-BIBLIO_NOTES_DIR = Path.home() / "My Drive" / "bibliographic-notes"
+from lib import BIBLIO_NOTES_DIR, is_dataless
 
 
 

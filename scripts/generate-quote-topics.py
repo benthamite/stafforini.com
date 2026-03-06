@@ -17,7 +17,6 @@ Usage:
 """
 
 import json
-import os
 import sys
 from pathlib import Path
 
@@ -146,7 +145,7 @@ def main():
     for topic_slug in sorted(reverse):
         sorted_reverse[topic_slug] = sorted(reverse[topic_slug], key=lambda x: x["slug"])
 
-    os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
+    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     atomic_write_json(OUTPUT_PATH, forward, ensure_ascii=False)
     atomic_write_json(REVERSE_OUTPUT_PATH, sorted_reverse, ensure_ascii=False)
 

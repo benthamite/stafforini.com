@@ -19,6 +19,9 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
 BIBLIO_NOTES_DIR = Path.home() / "My Drive" / "bibliographic-notes"
+NOTES_DIR = Path.home() / "My Drive" / "notes"
+NOTES_TAGS_DIR = NOTES_DIR / "tags"
+PEOPLE_TAGS_DIR = Path.home() / "My Drive" / "people" / "tags"
 
 ORGROAM_DB_PATH = Path(os.environ.get(
     "ORGROAM_DB",
@@ -403,6 +406,31 @@ def tag_to_filename(tag: str) -> str:
     slug = re.sub(r"[^a-z0-9\u00e0-\u00ff-]+", "-", slug)
     slug = re.sub(r"-+", "-", slug).strip("-")
     return slug + ".org"
+
+
+# === Org file discovery ===
+
+# Subdirectories typically skipped when scanning ~/My Drive/notes/ for content.
+NOTES_SKIP_DIRS = frozenset({"tags", "people", "claude-logs"})
+
+
+def find_org_files(directory: Path, skip_dirs=NOTES_SKIP_DIRS) -> list[Path]:
+    """Find all org files in *directory*, skipping certain subdirectories.
+
+    Filters out backup files (ending with ``~``) and hidden files (starting
+    with ``.``).  Any relative path whose first component is in *skip_dirs*
+    is excluded.
+    """
+    org_files = []
+    for path in sorted(directory.rglob("*.org")):
+        if path.name.endswith("~") or path.name.startswith("."):
+            continue
+        rel = path.relative_to(directory)
+        parts = rel.parts
+        if parts and parts[0] in skip_dirs:
+            continue
+        org_files.append(path)
+    return org_files
 
 
 # === Org parsing helpers ===

@@ -20,19 +20,17 @@ import argparse
 import json
 import os
 import re
-import sys
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from lib import REPO_ROOT, atomic_write_text, is_dataless
+from lib import NOTES_DIR, REPO_ROOT, atomic_write_text, is_dataless
 
 # === Constants ===
 
 SCRIPT_DIR = REPO_ROOT / "scripts"
 CONTENT_DIR = REPO_ROOT / "content" / "notes"
-ORG_DIR = Path.home() / "My Drive/notes"
+ORG_DIR = NOTES_DIR
 
 # Any date shared by this many or more org files is treated as a batch
 # operation date — the mtime reflects a bulk export, not a genuine edit.

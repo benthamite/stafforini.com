@@ -19,11 +19,16 @@ import sqlite3
 import sys
 from pathlib import Path
 
-from lib import ORGROAM_DB_PATH, REPO_ROOT, atomic_write_json, is_dataless, strip_elisp_quotes
-
-NOTES_TAGS_DIR = Path.home() / "My Drive/notes/tags"
-PEOPLE_TAGS_DIR = Path.home() / "My Drive/people/tags"
-NOTES_DIR = Path.home() / "My Drive/notes"
+from lib import (
+    NOTES_DIR,
+    NOTES_TAGS_DIR,
+    ORGROAM_DB_PATH,
+    PEOPLE_TAGS_DIR,
+    REPO_ROOT,
+    atomic_write_json,
+    is_dataless,
+    strip_elisp_quotes,
+)
 
 OUTPUT_PATH = REPO_ROOT / "data" / "id-slug-map.json"
 
