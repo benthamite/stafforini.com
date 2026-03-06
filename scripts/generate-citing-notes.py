@@ -10,43 +10,40 @@ This replaces the expensive O(N*M) content scan that was previously done
 inside the works/single.html Hugo template.
 """
 
-import json
-import os
 import re
 import sys
-import tempfile
 
-from lib import cite_key_to_slug
+from lib import (
+    REPO_ROOT,
+    atomic_write_json,
+    cite_key_to_slug,
+    slug_title_sets_to_sorted_json,
+)
 
-REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-NOTES_DIR = os.path.join(REPO_ROOT, "content", "notes")
-OUTPUT_PATH = os.path.join(REPO_ROOT, "data", "citing-notes.json")
+NOTES_DIR = REPO_ROOT / "content" / "notes"
+OUTPUT_PATH = REPO_ROOT / "data" / "citing-notes.json"
 
 # Matches {{< cite "SomeKey" >}} or {{< cite "SomeKey" "pp. 1-2" >}}
 CITE_RE = re.compile(r'\{\{<\s*cite\s+"([^"]+)"')
 
 
 def main():
-    if not os.path.isdir(NOTES_DIR):
+    if not NOTES_DIR.is_dir():
         print("Warning: content/notes/ not found — skipping citing-notes generation.", file=sys.stderr)
         # Write empty file so the template doesn't break
-        from lib import atomic_write_json
-        os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
+        OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
         atomic_write_json(OUTPUT_PATH, {})
         return
 
     # work_slug -> set of (note_slug, note_title)
     citing = {}
 
-    for filename in os.listdir(NOTES_DIR):
-        if not filename.endswith(".md") or filename.startswith("_"):
+    for filepath in NOTES_DIR.iterdir():
+        if filepath.suffix != ".md" or filepath.name.startswith("_"):
             continue
 
-        note_slug = filename[:-3]  # strip .md
-        filepath = os.path.join(NOTES_DIR, filename)
-
-        with open(filepath, "r", encoding="utf-8") as f:
-            content = f.read()
+        note_slug = filepath.stem
+        content = filepath.read_text(encoding="utf-8")
 
         # Extract title from TOML or YAML front matter
         note_title = note_slug  # fallback
@@ -64,15 +61,9 @@ def main():
             citing[work_slug].add((note_slug, note_title))
 
     # Convert sets to sorted lists of dicts
-    result = {}
-    for work_slug, notes in sorted(citing.items()):
-        result[work_slug] = sorted(
-            [{"slug": s, "title": t} for s, t in notes],
-            key=lambda x: x["title"].lower(),
-        )
+    result = slug_title_sets_to_sorted_json(citing)
 
-    from lib import atomic_write_json
-    os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
+    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     atomic_write_json(OUTPUT_PATH, result, ensure_ascii=False)
 
     total_citations = sum(len(v) for v in result.values())

@@ -70,7 +70,7 @@
       {{ end }}
       {{ if $showDate }}
       <span class="quote-date">
-        <a href="{{ $pg.RelPermalink }}"><time datetime="{{ $pg.Date.Format "2006-01-02" }}">{{ $pg.Date.Format "Jan 2, 2006" }}</time></a>
+        <a href="{{ $pg.RelPermalink }}">{{ partial "format-date.html" (dict "date" $pg.Date) }}</a>
       </span>
       {{ end }}
     </div>

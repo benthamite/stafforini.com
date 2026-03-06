@@ -12,45 +12,28 @@
 <script type="module">
   var input = document.getElementById('search-page-input');
   var resultsEl = document.getElementById('search-page-results');
-  var debounceTimer = null;
-  var searchGeneration = 0;
 
   input.focus();
 
-  var core = window._searchCore;
-  var utils = window._searchUtils;
-  if (!core || !utils) {
+  var instance = window.createSearchInstance(input, resultsEl, {
+    maxResultsPerSection: 0
+  });
+  if (!instance) {
     resultsEl.innerHTML = '<p class="search-no-results">Search is temporarily unavailable.</p>';
     throw new Error('Search libraries failed to load');
   }
-  var nav = utils.createKeyboardNav(resultsEl, input);
 
-  var pagefind = null;
   try {
-    pagefind = await import('/pagefind/pagefind.js');
-    await pagefind.init();
+    await instance.initPagefind();
   } catch (e) {
     resultsEl.innerHTML = '<p class="search-no-results">Search is unavailable. Please try again later.</p>';
   }
 
-  function doSearch(query, filterSection) {
-    core.runSearch(query, pagefind, {
-      maxResultsPerSection: 0,
-      filterSection: filterSection || undefined,
-      onResults: function(html) { resultsEl.innerHTML = html; nav.refresh(); },
-      getGeneration: function() { return searchGeneration; },
-      incrementGeneration: function() { return ++searchGeneration; }
-    });
-  }
-
   input.addEventListener('input', function() {
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(function() {
-      var params = new URLSearchParams(window.location.search);
-      params.set('q', input.value.trim());
-      history.replaceState(null, '', '?' + params.toString());
-      doSearch(input.value.trim(), params.get('section'));
-    }, core.SEARCH_DEBOUNCE_MS);
+    var params = new URLSearchParams(window.location.search);
+    params.set('q', input.value.trim());
+    history.replaceState(null, '', '?' + params.toString());
+    instance.handleInput(input.value.trim(), params.get('section'));
   });
 
   // Read query params on load
@@ -59,7 +42,7 @@
   var sec = params.get('section');
   if (q) {
     input.value = q;
-    doSearch(q, sec);
+    instance.handleInput(q, sec);
   }
 </script>
 {{ end }}

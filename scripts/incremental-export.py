@@ -10,7 +10,6 @@ Usage:
 """
 
 import argparse
-import json
 import os
 import re
 import subprocess
@@ -18,15 +17,13 @@ import sys
 import tempfile
 from pathlib import Path
 
-from lib import MTIME_EPSILON, is_dataless, safe_remove
+from lib import BIBLIO_NOTES_DIR, MTIME_EPSILON, REPO_ROOT, atomic_write_json, is_dataless, load_json_manifest, safe_remove, save_json_manifest
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-REPO_ROOT = SCRIPT_DIR.parent
+SCRIPT_DIR = REPO_ROOT / "scripts"
 
 SECTIONS = {
     "quotes": {
-        "source_dir": Path.home()
-        / "My Drive/bibliographic-notes",
+        "source_dir": BIBLIO_NOTES_DIR,
         "output_dir": REPO_ROOT / "content/quotes",
         "elisp": SCRIPT_DIR / "export-quotes.el",
         "pre_filter": lambda content: ":public:" in content,
@@ -57,14 +54,12 @@ def load_manifest(section: str) -> dict | None:
     path = manifest_path(section)
     if not path.exists():
         return None
-    with open(path) as f:
-        return json.load(f)
+    return load_json_manifest(path)
 
 
 def save_manifest(section: str, data: dict) -> None:
-    from lib import atomic_write_json
     path = manifest_path(section)
-    atomic_write_json(path, data)
+    save_json_manifest(path, data)
     print(f"Manifest saved: {path}")
 
 

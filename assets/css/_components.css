@@ -31,7 +31,8 @@
   color: var(--color-link);
 }
 
-.nav-link-left {
+.nav-link-left,
+.nav-links a {
   text-decoration: none;
   color: var(--color-text-secondary);
   border: 1px solid transparent;
@@ -40,16 +41,19 @@
   font-size: var(--font-size-base);
 }
 
-.nav-link-left:hover {
+.nav-link-left:hover,
+.nav-links a:hover {
   color: var(--color-link);
 }
 
-.nav-link-left[aria-current="page"] {
+.nav-link-left[aria-current="page"],
+.nav-links a[aria-current="page"] {
   color: var(--color-text);
   border-color: var(--color-text-secondary);
 }
 
-.nav-link-left[aria-current="page"]:hover {
+.nav-link-left[aria-current="page"]:hover,
+.nav-links a[aria-current="page"]:hover {
   color: var(--color-link);
 }
 
@@ -59,28 +63,6 @@
   margin: 0;
   padding: 0;
   gap: 1.25rem;
-  font-size: var(--font-size-base);
-}
-
-.nav-links a {
-  text-decoration: none;
-  color: var(--color-text-secondary);
-  border: 1px solid transparent;
-  border-radius: 4px;
-  padding: 0.15rem 0.5rem;
-}
-
-.nav-links a:hover {
-  color: var(--color-link);
-}
-
-.nav-links a[aria-current="page"] {
-  color: var(--color-text);
-  border-color: var(--color-text-secondary);
-}
-
-.nav-links a[aria-current="page"]:hover {
-  color: var(--color-link);
 }
 
 /* Dark mode toggle */
@@ -110,68 +92,37 @@
 [data-theme-pref="dark"] .icon-moon { display: inline; }
 [data-theme-pref="system"] .icon-system { display: inline; }
 
-/* Backlinks */
-.backlinks {
-  margin-top: 3rem;
-  padding-top: 1.5rem;
+/* Section separators — shared border/spacing pattern */
+.backlinks,
+.topic-quotes,
+.category-notes,
+.work-body,
+.pdf-preview,
+.quote-nav {
+  margin-top: var(--section-gap);
+  padding-top: var(--section-pad);
   border-top: 1px solid var(--color-border);
 }
 
-.backlinks h2 {
-  font-size: 1.1rem;
+.backlinks h2,
+.topic-quotes h2,
+.category-notes h2,
+.work-body h2,
+.pdf-preview h2 {
+  font-size: var(--font-size-section-heading);
   margin-bottom: 0.75rem;
 }
 
-.backlinks ul {
-  list-style: none;
-  padding: 0;
-}
-
-.backlinks li {
-  margin: 0.4rem 0;
-}
-
-/* Topic quotes (reverse index: quotes tagged with this topic) */
-.topic-quotes {
-  margin-top: 3rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--color-border);
-}
-
-.topic-quotes h2 {
-  font-size: 1.1rem;
-  margin-bottom: 0.75rem;
-}
-
-/* Category notes (reverse index: notes in this category) */
-.category-notes {
-  margin-top: 3rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--color-border);
-}
-
-.category-notes h2 {
-  font-size: 1.1rem;
-  margin-bottom: 0.75rem;
-}
-
+/* Backlinks / Category notes — shared list reset */
+.backlinks ul,
 .category-notes ul {
   list-style: none;
   padding: 0;
 }
 
+.backlinks li,
 .category-notes li {
   margin: 0.4rem 0;
-}
-
-/* Note categories (inline in metadata) */
-.note-categories a {
-  color: var(--color-link);
-  text-decoration: none;
-}
-
-.note-categories a:hover {
-  color: var(--color-link-hover);
 }
 
 /* Metadata */
@@ -218,38 +169,16 @@
   margin-top: 0.35rem;
 }
 
-.quote-topics a {
-  color: var(--color-link);
-  text-decoration: none;
-}
-
-.quote-topics a:hover {
-  color: var(--color-link-hover);
-}
-
 .quote-topics--work {
   font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
   margin-top: 0.35rem;
 }
 
-.quote-topics--work a {
-  color: var(--color-link);
-  text-decoration: none;
-}
-
-.quote-topics--work a:hover {
-  color: var(--color-link-hover);
-}
-
 .quote-date {
   font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
   white-space: nowrap;
-}
-
-.quote-permalink {
-  font-size: var(--font-size-xs);
 }
 
 /* Work-page quote variant */
@@ -294,7 +223,7 @@
 @media (min-width: 1100px) {
   .quote-entry--work .quote-diary-icon {
     position: absolute;
-    right: calc(100% + var(--toc-gap, 1.5rem));
+    right: calc(100% + var(--toc-gap));
     top: 0;
   }
 }
@@ -418,28 +347,10 @@
 }
 
 .work-body {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--color-border);
-}
-
-.work-body h2 {
-  font-size: 1.1rem;
-  margin-bottom: 0.75rem;
+  margin-top: 2rem; /* tighter than default --section-gap for work pages */
 }
 
 /* PDF preview */
-.pdf-preview {
-  margin-top: 3rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--color-border);
-}
-
-.pdf-preview h2 {
-  font-size: 1.1rem;
-  margin-bottom: 0.75rem;
-}
-
 .pdf-preview-link {
   display: inline-block;
   border: 1px solid var(--color-border);
@@ -453,19 +364,9 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
-[data-theme="dark"] .pdf-preview-link:hover {
-  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.08);
-}
-
 .pdf-preview-link img {
   max-width: 100%;
   height: auto;
-}
-
-/* Invert + hue-rotate makes white-background PDFs appear dark-themed;
-   0.9 instead of 1.0 avoids pure-white-on-black harshness */
-[data-theme="dark"] .pdf-preview-link img {
-  filter: invert(0.9) hue-rotate(180deg);
 }
 
 /* Gallery */
@@ -502,9 +403,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 2.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--color-border);
+  margin-top: 2.5rem; /* tighter than default --section-gap */
 }
 
 .quote-nav-prev,
@@ -553,7 +452,7 @@
 
 .quote-nav-author {
   font-size: var(--font-size-xs);
-  max-width: var(--toc-width, 13rem);
+  max-width: var(--toc-width);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -576,23 +475,19 @@
 
   /* Left margin — same space as the floating TOC */
   .quote-nav-prev {
-    right: calc(100% + var(--toc-gap, 1.5rem));
-    width: var(--toc-width, 13rem);
+    right: calc(100% + var(--toc-gap));
+    width: var(--toc-width);
   }
 
   /* Right margin — same space as the sidenote column */
   .quote-nav-next {
-    left: calc(100% + var(--sidenote-gap, 1.5rem));
-    width: var(--sidenote-width, 13rem);
+    left: calc(100% + var(--sidenote-gap));
+    width: var(--sidenote-width);
     margin-left: 0;
   }
 
   .quote-nav-manicule {
     width: 55px;
     height: 33px;
-  }
-
-  .quote-nav-manicule--left {
-    transform: scaleX(-1);
   }
 }

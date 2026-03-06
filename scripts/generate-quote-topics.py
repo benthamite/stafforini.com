@@ -16,113 +16,29 @@ Usage:
     python generate-quote-topics.py
 """
 
-import hashlib
 import json
 import os
-import re
 import sys
 from pathlib import Path
 
-from lib import atomic_write_json, cite_key_to_slug, is_dataless
+from lib import (
+    BIBLIO_NOTES_DIR,
+    ID_LINK_RE,
+    REPO_ROOT,
+    atomic_write_json,
+    cite_key_to_slug,
+    extract_roam_refs,
+    find_ancestor_with_export,
+    is_dataless,
+    make_non_diary_slug,
+    parse_org_headings,
+)
 
 # === Constants ===
 
-SCRIPTS_DIR = Path(__file__).parent
-REPO_ROOT = SCRIPTS_DIR.parent
 OUTPUT_PATH = REPO_ROOT / "data" / "quote-topics.json"
 REVERSE_OUTPUT_PATH = REPO_ROOT / "data" / "topic-quotes.json"
 ID_SLUG_MAP_PATH = REPO_ROOT / "data" / "id-slug-map.json"
-BIBLIO_NOTES_DIR = Path.home() / "My Drive" / "bibliographic-notes"
-
-# Match individual [[id:UUID][name]] links in :TOPICS: value
-ID_LINK_RE = re.compile(r"\[\[id:([^\]]+)\]\[([^\]]*)\]\]")
-
-
-# === Org parsing (reused from extract-non-diary-quotes.py) ===
-
-
-def extract_roam_refs(text: str) -> str:
-    """Extract the cite key from :ROAM_REFS: property in the top-level heading.
-
-    Handles both formats:
-      :ROAM_REFS: @CiteKey
-      :ROAM_REFS: [cite:@CiteKey]
-    """
-    # Try [cite:@CiteKey] format first (more common)
-    m = re.search(r":ROAM_REFS:\s+\[cite:@([^\]\s]+)\]", text)
-    if m:
-        return m.group(1)
-    # Fall back to bare @CiteKey format
-    m = re.search(r":ROAM_REFS:\s+@(\S+)", text)
-    if m:
-        return m.group(1).rstrip("]")
-    return ""
-
-
-def parse_headings(text: str) -> list[dict]:
-    """Parse org headings into a list of dicts with properties and content.
-
-    Returns a flat list. Each dict has:
-    - level: heading level (number of *)
-    - title: heading text
-    - tags: set of tags from the heading line
-    - properties: dict of :PROP: values from the property drawer
-    - content: text between end of properties and next heading
-    """
-    headings = []
-    heading_re = re.compile(
-        r"^(\*+)\s+(?:\[#\d\]\s+)?(.+?)(?:[ \t]+(:[:\w]+:))?\s*$", re.MULTILINE
-    )
-
-    matches = list(heading_re.finditer(text))
-    for i, m in enumerate(matches):
-        level = len(m.group(1))
-        title = m.group(2).strip()
-        tag_str = m.group(3) or ""
-        tags = set(tag_str.strip(":").split(":")) if tag_str else set()
-
-        start = m.end()
-        end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
-        region = text[start:end]
-
-        props = {}
-        prop_re = re.compile(r":(\w+):\s+(.*)")
-        drawer_match = re.search(
-            r":PROPERTIES:\s*\n(.*?):END:", region, re.DOTALL
-        )
-        if drawer_match:
-            for pm in prop_re.finditer(drawer_match.group(1)):
-                props[pm.group(1)] = pm.group(2).strip()
-
-        content_start = drawer_match.end() if drawer_match else 0
-        content = region[content_start:]
-
-        headings.append({
-            "level": level,
-            "title": title,
-            "tags": tags,
-            "properties": props,
-            "content": content,
-        })
-
-    return headings
-
-
-def make_non_diary_slug(work_slug: str, heading_id: str) -> str:
-    """Generate slug for a non-diary quote (same logic as extract-non-diary-quotes.py)."""
-    h = hashlib.sha256(heading_id.encode()).hexdigest()[:8]
-    return f"{work_slug}-q-{h}"
-
-
-def find_ancestor_with_export(headings: list[dict], idx: int) -> bool:
-    """Check if any ancestor heading has EXPORT_FILE_NAME."""
-    target_level = headings[idx]["level"]
-    for j in range(idx - 1, -1, -1):
-        if headings[j]["level"] < target_level:
-            if "EXPORT_FILE_NAME" in headings[j]["properties"]:
-                return True
-            target_level = headings[j]["level"]
-    return False
 
 
 def process_file(org_path: Path, id_slug_map: dict) -> dict:
@@ -134,7 +50,7 @@ def process_file(org_path: Path, id_slug_map: dict) -> dict:
         return {}
 
     work_slug = cite_key_to_slug(cite_key)
-    headings = parse_headings(text)
+    headings = parse_org_headings(text)
     result = {}
 
     for i, h in enumerate(headings):

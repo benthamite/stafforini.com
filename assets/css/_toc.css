@@ -4,13 +4,6 @@
      1100–1399px — inline above article, always visible
      <1100px — collapsible <details> */
 
-/* ── Variables ───────────────────────────────────────────────────── */
-:root {
-  --toc-width: 13rem;
-  --toc-gap: 1.5rem;
-  --toc-top-offset: 5rem;
-}
-
 /* ── Shared TOC styles ───────────────────────────────────────────── */
 .toc-floating-nav,
 .toc-inline,

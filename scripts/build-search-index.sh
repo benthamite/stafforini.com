@@ -5,27 +5,20 @@
 # static/ so the dev server serves it.  Safe to run while the dev
 # server is running — Hugo server watches static/ and will pick up
 # the new index automatically.
-set -euo pipefail
-
-REPO_ROOT="$(git rev-parse --show-toplevel)"
-cd "$REPO_ROOT"
+source "$(dirname "$0")/common.sh"
 
 if [ ! -d content ]; then
   echo "Warning: content/ not found — skipping search index build." >&2
   exit 0
 fi
 
-echo "Generating citing-notes data..."
-python3 scripts/generate-citing-notes.py
+run_step "Generating citing-notes data" python3 "$SCRIPT_DIR/generate-citing-notes.py"
 
 # Clean stale build output (Hugo doesn't remove deleted/renamed pages)
 trash public 2>/dev/null || true
 
-echo "Building site for search indexing..."
-hugo --quiet
-
-echo "Building search index..."
-npx pagefind --site public
+run_step "Building site for search indexing" hugo --quiet
+run_step "Building search index" npx --yes pagefind --site public
 
 # Atomic swap: copy to .new, remove old, rename — so the dev server
 # never sees a partially-written index directory

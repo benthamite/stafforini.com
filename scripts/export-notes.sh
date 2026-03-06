@@ -3,33 +3,20 @@
 # Uses incremental export by default (only changed files).
 # Pass --full to force a complete re-export.
 # Usage: bash scripts/export-notes.sh [--full]
+source "$(dirname "$0")/common.sh"
 
-set -euo pipefail
-
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-
-echo "--- Generating ID-slug map ---"
-python3 "$SCRIPT_DIR/generate-id-slug-map.py"
+# Pre-export: ensure the ID-slug map is fresh (the export itself needs it)
+run_step "Generating ID-slug map" python3 "$SCRIPT_DIR/generate-id-slug-map.py"
 
 python3 "$SCRIPT_DIR/incremental-export.py" notes "$@"
 
-echo "--- Injecting lastmod dates ---"
-python3 "$SCRIPT_DIR/inject-lastmod.py"
-
-echo "--- Generating backlinks ---"
-python3 "$SCRIPT_DIR/generate-backlinks.py"
-
-echo "--- Generating citing-notes index ---"
-python3 "$SCRIPT_DIR/generate-citing-notes.py"
-
-echo "--- Generating note categories ---"
-python3 "$SCRIPT_DIR/generate-note-categories.py"
+bash "$SCRIPT_DIR/regenerate-data.sh" --notes
 
 echo "--- Validating exported files ---"
 python3 -c "
 import re, sys
 from pathlib import Path
-content_dir = Path('$SCRIPT_DIR').parent / 'content' / 'notes'
+content_dir = Path('$REPO_ROOT') / 'content' / 'notes'
 if not content_dir.exists():
     sys.exit(0)
 missing = []

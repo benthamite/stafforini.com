@@ -12,13 +12,12 @@
     <a href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a>
     {{ if and (not .Params.is_topic_stub) (not .Lastmod.IsZero) }}
     <span class="note-date">
-      <time datetime="{{ .Lastmod.Format "2006-01-02" }}">{{ .Lastmod.Format "Jan 2, 2006" }}</time>
+      {{ partial "format-date.html" (dict "date" .Lastmod) }}
     </span>
     {{ end }}
   </li>
   {{ end }}
 </ul>
 
-{{ $sortToggle := resources.Get "js/sort-toggle.js" | minify | fingerprint }}
-<script src="{{ $sortToggle.RelPermalink }}" integrity="{{ $sortToggle.Data.Integrity }}"></script>
+{{ partial "load-js.html" "sort-toggle.js" }}
 {{ end }}

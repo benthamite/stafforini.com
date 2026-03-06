@@ -1,13 +1,11 @@
 {{ define "main" }}
 <article>
   {{ $type := .Params.entry_type | default "book" }}
-  <span data-pagefind-meta="work_author" data-pagefind-ignore class="visually-hidden">{{ .Params.author }}</span>
-  <span data-pagefind-meta="work_title" data-pagefind-ignore class="visually-hidden">{{ .Title }}</span>
-  <span data-pagefind-meta="work_type" data-pagefind-ignore class="visually-hidden">{{ $type }}</span>
+  {{ partial "pagefind-work-meta.html" . }}
   {{ with .Plain }}<span data-pagefind-meta="work_abstract" data-pagefind-ignore class="visually-hidden">{{ . }}</span>{{ end }}
 
   <div class="work-header">
-    {{ $italic := not (or (eq $type "article") (eq $type "incollection") (eq $type "inbook") (eq $type "inproceedings") (eq $type "online")) }}
+    {{ $italic := partial "standalone-type.html" $type }}
     {{ $url := .Params.external_url }}
     {{ if and (eq $type "online") $url (or (hasPrefix $url "https://") (hasPrefix $url "http://")) }}
     <h1><a href="{{ $url }}">{{ .Title | safeHTML }}</a></h1>

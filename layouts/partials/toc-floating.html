@@ -1,5 +1,5 @@
 {{ with .TableOfContents }}
-{{ $tocInner := . | replaceRE `<nav id="TableOfContents">` "" | replaceRE `</nav>` "" }}
+{{ $tocInner := partial "toc-raw.html" . }}
 <aside class="toc-floating" aria-label="Table of contents">
   <nav class="toc-floating-nav">
     <a href="#" class="toc-title" aria-label="Scroll to top">{{ $.Title | markdownify }}</a>

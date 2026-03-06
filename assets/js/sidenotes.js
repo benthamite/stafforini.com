@@ -1,7 +1,7 @@
 /**
  * Sidenotes — transforms standard Goldmark footnotes into margin notes.
  *
- * On wide screens (≥ BREAKPOINT), footnote content is extracted from the
+ * On wide screens (>= BREAKPOINT), footnote content is extracted from the
  * bottom-of-page footnotes section and positioned in a right-margin column
  * alongside the corresponding reference in the text.
  *
@@ -17,7 +17,6 @@
   var MIN_SHOWN_LINES = 3;
   var FADEOUT_LINES = 1.3;    // fractional: gradient starts mid-line for a smoother fade
   var SIDENOTE_GAP = 0.75;   // vertical gap (in line-heights) between adjacent truncated sidenotes
-  var RESIZE_DEBOUNCE_MS = 150;
 
   // ── DOM references ──────────────────────────────────────────────
   var footnotesSection = document.querySelector('.footnotes');
@@ -100,20 +99,21 @@
     lineHeight = lh;
   }
 
-  // ── Positioning algorithm ───────────────────────────────────────
+  // ── Sidenote overlay cleanup helper ─────────────────────────────
+  function cleanupSidenoteOverlays(sn) {
+    var oldFadeout = sn.el.querySelector('.sidenote-fadeout');
+    var oldCover = sn.el.querySelector('.sidenote-cover');
+    if (oldFadeout) oldFadeout.remove();
+    if (oldCover) oldCover.remove();
+  }
 
-  function positionSidenotes() {
-    computeLineHeight();
+  // ── Positioning algorithm — helper phases ───────────────────────
 
-    // Phase 1: Compute base measurements
-    var minHeight = MIN_SHOWN_LINES * lineHeight;
-    var fadeoutHeight = FADEOUT_LINES * lineHeight;
-    var gapHeight = SIDENOTE_GAP * lineHeight;
-
-    // The positioned container that holds the content and the sidenote column
-    var container = sidenoteColumn.closest('.content-with-sidenotes');
-    if (!container) return;
-
+  /**
+   * Phase 1+2: Reset inline constraints and measure full heights.
+   * Returns the positioned container element.
+   */
+  function resetAndMeasure(container) {
     // Use getBoundingClientRect for accurate positioning of inline elements
     var containerRect = container.getBoundingClientRect();
     sidenotes.forEach(function (sn) {
@@ -121,16 +121,12 @@
       sn.refTop = refRect.top - containerRect.top;
     });
 
-    // Phase 2: Reset constraints and measure full heights
+    // Reset constraints and remove old overlay elements
     sidenotes.forEach(function (sn) {
       sn.el.style.height = '';
       sn.el.style.overflow = '';
       sn.el.style.clipPath = '';
-      // Remove old fadeout/cover elements
-      var oldFadeout = sn.el.querySelector('.sidenote-fadeout');
-      var oldCover = sn.el.querySelector('.sidenote-cover');
-      if (oldFadeout) oldFadeout.remove();
-      if (oldCover) oldCover.remove();
+      cleanupSidenoteOverlays(sn);
     });
 
     // Force layout so measurements are correct
@@ -141,10 +137,14 @@
       sn.visibleHeight = null;
       sn.overlaps = [];
     });
+  }
 
-    // Phase 3: Compute top positions — align with reference; push down
-    // if the previous sidenote's minimum visible area would be violated.
-    for (let i = 0; i < sidenotes.length; i++) {
+  /**
+   * Phase 3: Compute top positions — align with reference; push down
+   * if the previous sidenote's minimum visible area would be violated.
+   */
+  function computePositions(minHeight, gapHeight) {
+    for (var i = 0; i < sidenotes.length; i++) {
       var sn = sidenotes[i];
 
       if (i === 0) {
@@ -165,23 +165,28 @@
         }
       }
     }
+  }
 
-    // Phase 4: Truncate sidenotes that would overlap with wide code blocks.
-    // On wide screens, <pre> blocks extend into the sidenote margin, so
-    // any sidenote whose bottom edge intrudes into a code block's vertical
-    // range must be collapsed — just as for sidenote-sidenote collisions.
+  /**
+   * Phase 4: Truncate sidenotes that would overlap with wide code blocks.
+   * On wide screens, <pre> blocks extend into the sidenote margin, so
+   * any sidenote whose bottom edge intrudes into a code block's vertical
+   * range must be collapsed — just as for sidenote-sidenote collisions.
+   */
+  function truncateForCodeBlocks(container) {
     // .note-body is a class set in layouts/notes/single.html (not in CSS)
     var noteBody = container.querySelector('.note-body');
     var preEls = noteBody ? noteBody.querySelectorAll('pre') : [];
+    var containerRect = container.getBoundingClientRect();
     var codeBlockTops = [];
     Array.prototype.forEach.call(preEls, function (pre) {
       codeBlockTops.push(pre.getBoundingClientRect().top - containerRect.top);
     });
 
-    for (let i = 0; i < sidenotes.length; i++) {
+    for (var i = 0; i < sidenotes.length; i++) {
       var sn = sidenotes[i];
       var snBottom = sn.top + (sn.visibleHeight !== null ? sn.visibleHeight : sn.fullHeight);
-      for (let p = 0; p < codeBlockTops.length; p++) {
+      for (var p = 0; p < codeBlockTops.length; p++) {
         var cbTop = codeBlockTops[p];
         if (cbTop <= sn.top) continue; // code block above this sidenote
         if (snBottom > cbTop) {
@@ -195,8 +200,12 @@
         break; // pre elements are in document order; first one below suffices
       }
     }
+  }
 
-    // Phase 5: Apply positions, create fadeout/cover DOM, compute overlap sets
+  /**
+   * Phase 5: Apply positions, create fadeout/cover DOM, compute overlap sets.
+   */
+  function applyPositions(fadeoutHeight) {
     sidenotes.forEach(function (sn) {
       sn.el.style.top = sn.top + 'px';
 
@@ -223,9 +232,9 @@
     });
 
     // Compute overlap sets (which notes overlap when one expands)
-    for (let i = 0; i < sidenotes.length; i++) {
+    for (var i = 0; i < sidenotes.length; i++) {
       sidenotes[i].overlaps = [];
-      for (let j = i + 1; j < sidenotes.length; j++) {
+      for (var j = i + 1; j < sidenotes.length; j++) {
         if (sidenotes[i].top + sidenotes[i].fullHeight > sidenotes[j].top) {
           sidenotes[i].overlaps.push(j);
         } else {
@@ -233,6 +242,25 @@
         }
       }
     }
+  }
+
+  // ── Positioning algorithm — orchestrator ──────────────────────
+
+  function positionSidenotes() {
+    computeLineHeight();
+
+    var minHeight = MIN_SHOWN_LINES * lineHeight;
+    var fadeoutHeight = FADEOUT_LINES * lineHeight;
+    var gapHeight = SIDENOTE_GAP * lineHeight;
+
+    // The positioned container that holds the content and the sidenote column
+    var container = sidenoteColumn.closest('.content-with-sidenotes');
+    if (!container) return;
+
+    resetAndMeasure(container);
+    computePositions(minHeight, gapHeight);
+    truncateForCodeBlocks(container);
+    applyPositions(fadeoutHeight);
   }
 
   // ── Hover behavior ─────────────────────────────────────────────
@@ -298,18 +326,12 @@
 
   // ── Activation / deactivation based on viewport width ──────────
 
-  var isActive = false;
-
   function activate() {
-    if (isActive) return;
-    isActive = true;
     document.body.classList.add('has-sidenotes');
     positionSidenotes();
   }
 
   function deactivate() {
-    if (!isActive) return;
-    isActive = false;
     document.body.classList.remove('has-sidenotes');
 
     // Reset inline styles
@@ -318,48 +340,22 @@
       sn.el.style.height = '';
       sn.el.style.overflow = '';
       sn.el.style.clipPath = '';
-      var oldFadeout = sn.el.querySelector('.sidenote-fadeout');
-      var oldCover = sn.el.querySelector('.sidenote-cover');
-      if (oldFadeout) oldFadeout.remove();
-      if (oldCover) oldCover.remove();
+      cleanupSidenoteOverlays(sn);
     });
   }
 
-  function checkViewport() {
-    if (window.innerWidth >= BREAKPOINT) {
-      activate();
-    } else {
-      deactivate();
-    }
-  }
-
-  // ── Resize handling ─────────────────────────────────────────────
-
-  var resizeTimer;
-  window.addEventListener('resize', function () {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(function () {
-      var wasActive = isActive;
-      checkViewport();
-      if (isActive && wasActive) {
-        // Reposition — text may have reflowed
-        positionSidenotes();
-      }
-    }, RESIZE_DEBOUNCE_MS);
-  });
-
-  // ── Initial activation ─────────────────────────────────────────
-  checkViewport();
+  // ── Breakpoint toggle ────────────────────────────────────────
+  var toggle = window.createBreakpointToggle(BREAKPOINT, activate, deactivate);
 
   // Re-position after all images and fonts have loaded (layout may shift)
   window.addEventListener('load', function () {
-    if (isActive) positionSidenotes();
+    if (toggle.isActive()) positionSidenotes();
   });
 
   // Re-position when <details> elements toggle (e.g. collapsible code blocks)
   document.querySelectorAll('details').forEach(function (details) {
     details.addEventListener('toggle', function () {
-      if (isActive) positionSidenotes();
+      if (toggle.isActive()) positionSidenotes();
     });
   });
 })();

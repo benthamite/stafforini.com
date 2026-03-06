@@ -12,104 +12,31 @@ Usage:
 """
 
 import argparse
-import hashlib
-import json
 import os
 import re
-import tempfile
 from pathlib import Path
 
-from lib import MTIME_EPSILON, atomic_write_text, cite_key_to_slug, escape_toml_string, is_dataless, safe_remove
+from lib import (
+    BIBLIO_NOTES_DIR,
+    MTIME_EPSILON,
+    REPO_ROOT,
+    atomic_write_text,
+    cite_key_to_slug,
+    escape_toml_string,
+    extract_roam_refs,
+    find_ancestor_with_export,
+    is_dataless,
+    load_json_manifest,
+    make_non_diary_slug,
+    parse_org_headings,
+    safe_remove,
+    save_json_manifest,
+)
 
 # === Constants ===
 
-SCRIPTS_DIR = Path(__file__).parent
-HUGO_ROOT = SCRIPTS_DIR.parent
-QUOTES_DIR = HUGO_ROOT / "content" / "quotes"
-MANIFEST_PATH = SCRIPTS_DIR / ".extract-quotes-manifest.json"
-BIBLIO_NOTES_DIR = Path.home() / "My Drive" / "bibliographic-notes"
-
-
-# === Org parsing helpers ===
-
-
-def extract_roam_refs(text: str) -> str:
-    """Extract the cite key from :ROAM_REFS: property in the top-level heading."""
-    # Try [cite:@CiteKey] format first (newer org-cite style)
-    m = re.search(r":ROAM_REFS:\s+\[cite:@([^\]\s]+)\]", text)
-    if m:
-        return m.group(1)
-    # Fall back to bare @CiteKey format
-    m = re.search(r":ROAM_REFS:\s+@(\S+)", text)
-    return m.group(1) if m else ""
-
-
-def parse_org_headings(text: str) -> list[dict]:
-    """Parse org headings into a list of dicts with properties and content.
-
-    Returns a flat list of headings. Each dict has:
-    - level: heading level (number of *)
-    - title: heading text
-    - tags: set of tags from the heading line
-    - properties: dict of :PROP: values from the property drawer
-    - content: text between end of properties and next heading
-    - parent_props: properties of the nearest ancestor heading (for nesting)
-    """
-    headings = []
-    # Match heading lines: stars, optional priority, title, optional tags
-    heading_re = re.compile(
-        r"^(\*+)\s+(?:\[#\d\]\s+)?(.+?)(?:[ \t]+(:[:\w]+:))?\s*$", re.MULTILINE
-    )
-
-    matches = list(heading_re.finditer(text))
-    for i, m in enumerate(matches):
-        level = len(m.group(1))
-        title = m.group(2).strip()
-        tag_str = m.group(3) or ""
-        tags = set(tag_str.strip(":").split(":")) if tag_str else set()
-
-        # Extract region between this heading and the next
-        start = m.end()
-        end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
-        region = text[start:end]
-
-        # Parse property drawer
-        props = {}
-        prop_re = re.compile(r":(\w+):\s+(.*)")
-        drawer_match = re.search(
-            r":PROPERTIES:\s*\n(.*?):END:", region, re.DOTALL
-        )
-        if drawer_match:
-            for pm in prop_re.finditer(drawer_match.group(1)):
-                props[pm.group(1)] = pm.group(2).strip()
-            content_start = drawer_match.end()
-        else:
-            content_start = 0
-
-        content = region[content_start:]
-
-        headings.append({
-            "level": level,
-            "title": title,
-            "tags": tags,
-            "properties": props,
-            "content": content,
-        })
-
-    return headings
-
-
-def find_ancestor_with_export(headings: list[dict], idx: int) -> bool:
-    """Check if any ancestor heading of headings[idx] has EXPORT_FILE_NAME."""
-    target_level = headings[idx]["level"]
-    # Walk backwards to find ancestors (headings with lower level)
-    for j in range(idx - 1, -1, -1):
-        if headings[j]["level"] < target_level:
-            if "EXPORT_FILE_NAME" in headings[j]["properties"]:
-                return True
-            # Continue checking higher ancestors
-            target_level = headings[j]["level"]
-    return False
+QUOTES_DIR = REPO_ROOT / "content" / "quotes"
+MANIFEST_PATH = REPO_ROOT / "scripts" / ".extract-quotes-manifest.json"
 
 
 def extract_blockquotes(content: str) -> list[tuple[str, str]]:
@@ -201,8 +128,7 @@ def make_slug(work_slug: str, heading_id: str, quote_text: str) -> str:
     content hash if no ID is available.
     """
     source = heading_id if heading_id else quote_text
-    h = hashlib.sha256(source.encode()).hexdigest()[:8]
-    return f"{work_slug}-q-{h}"
+    return make_non_diary_slug(work_slug, source)
 
 
 # === Main extraction logic ===
@@ -305,15 +231,12 @@ def write_quote_markdown(quote: dict, output_dir: Path) -> Path:
 
 def load_manifest() -> dict:
     """Load the extraction manifest (org file -> mtime mapping)."""
-    if MANIFEST_PATH.exists():
-        return json.loads(MANIFEST_PATH.read_text())
-    return {}
+    return load_json_manifest(MANIFEST_PATH)
 
 
 def save_manifest(manifest: dict) -> None:
     """Save the extraction manifest atomically."""
-    from lib import atomic_write_json
-    atomic_write_json(MANIFEST_PATH, manifest)
+    save_json_manifest(MANIFEST_PATH, manifest)
 
 
 def main():

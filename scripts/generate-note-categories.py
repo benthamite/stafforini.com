@@ -18,12 +18,10 @@ import re
 import sys
 from pathlib import Path
 
-from lib import atomic_write_json, is_dataless
+from lib import ID_LINK_RE, REPO_ROOT, atomic_write_json, is_dataless
 
 # === Constants ===
 
-SCRIPTS_DIR = Path(__file__).parent
-REPO_ROOT = SCRIPTS_DIR.parent
 OUTPUT_PATH = REPO_ROOT / "data" / "note-categories.json"
 REVERSE_OUTPUT_PATH = REPO_ROOT / "data" / "category-notes.json"
 ID_SLUG_MAP_PATH = REPO_ROOT / "data" / "id-slug-map.json"
@@ -31,9 +29,6 @@ NOTES_DIR = Path.home() / "My Drive" / "notes"
 
 # Subdirectories to skip
 SKIP_DIRS = {"tags", "people", "claude-logs"}
-
-# Match individual [[id:UUID][name]] links in :CATEGORY: value
-ID_LINK_RE = re.compile(r"\[\[id:([^\]]+)\]\[([^\]]*)\]\]")
 
 
 def find_org_files(notes_dir: Path) -> list[Path]:

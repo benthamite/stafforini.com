@@ -5,6 +5,8 @@ script imports from a single source of truth rather than maintaining
 its own copy.
 """
 
+import hashlib
+import json
 import os
 import re
 import subprocess
@@ -14,6 +16,17 @@ from pathlib import Path
 
 # === Constants ===
 
+REPO_ROOT = Path(__file__).resolve().parent.parent
+
+BIBLIO_NOTES_DIR = Path.home() / "My Drive" / "bibliographic-notes"
+
+ORGROAM_DB_PATH = Path(os.environ.get(
+    "ORGROAM_DB",
+    str(Path.home() / ".config/emacs-profiles/var/org/org-roam.db"),
+))
+
+# Match individual [[id:UUID][name]] links (used in :TOPICS:, :CATEGORY:, etc.)
+ID_LINK_RE = re.compile(r"\[\[id:([^\]]+)\]\[([^\]]*)\]\]")
 
 # Canonical list of all bib files used across scripts.
 # Individual scripts select subsets as needed.
@@ -390,3 +403,130 @@ def tag_to_filename(tag: str) -> str:
     slug = re.sub(r"[^a-z0-9\u00e0-\u00ff-]+", "-", slug)
     slug = re.sub(r"-+", "-", slug).strip("-")
     return slug + ".org"
+
+
+# === Org parsing helpers ===
+
+
+def parse_org_headings(text: str) -> list[dict]:
+    """Parse org headings into a list of dicts with properties and content.
+
+    Returns a flat list of headings. Each dict has:
+    - level: heading level (number of *)
+    - title: heading text
+    - tags: set of tags from the heading line
+    - properties: dict of :PROP: values from the property drawer
+    - content: text between end of properties and next heading
+    """
+    headings = []
+    # Match heading lines: stars, optional priority, title, optional tags
+    heading_re = re.compile(
+        r"^(\*+)\s+(?:\[#\d\]\s+)?(.+?)(?:[ \t]+(:[:\w]+:))?\s*$", re.MULTILINE
+    )
+
+    matches = list(heading_re.finditer(text))
+    for i, m in enumerate(matches):
+        level = len(m.group(1))
+        title = m.group(2).strip()
+        tag_str = m.group(3) or ""
+        tags = set(tag_str.strip(":").split(":")) if tag_str else set()
+
+        # Extract region between this heading and the next
+        start = m.end()
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+        region = text[start:end]
+
+        # Parse property drawer
+        props = {}
+        prop_re = re.compile(r":(\w+):\s+(.*)")
+        drawer_match = re.search(
+            r":PROPERTIES:\s*\n(.*?):END:", region, re.DOTALL
+        )
+        if drawer_match:
+            for pm in prop_re.finditer(drawer_match.group(1)):
+                props[pm.group(1)] = pm.group(2).strip()
+            content_start = drawer_match.end()
+        else:
+            content_start = 0
+
+        content = region[content_start:]
+
+        headings.append({
+            "level": level,
+            "title": title,
+            "tags": tags,
+            "properties": props,
+            "content": content,
+        })
+
+    return headings
+
+
+def extract_roam_refs(text: str) -> str:
+    """Extract the cite key from :ROAM_REFS: property in the top-level heading.
+
+    Handles both formats:
+      :ROAM_REFS: @CiteKey
+      :ROAM_REFS: [cite:@CiteKey]
+    """
+    # Try [cite:@CiteKey] format first (more common)
+    m = re.search(r":ROAM_REFS:\s+\[cite:@([^\]\s]+)\]", text)
+    if m:
+        return m.group(1)
+    # Fall back to bare @CiteKey format
+    m = re.search(r":ROAM_REFS:\s+@(\S+)", text)
+    if m:
+        return m.group(1).rstrip("]")
+    return ""
+
+
+def find_ancestor_with_export(headings: list[dict], idx: int) -> bool:
+    """Check if any ancestor heading of headings[idx] has EXPORT_FILE_NAME."""
+    target_level = headings[idx]["level"]
+    # Walk backwards to find ancestors (headings with lower level)
+    for j in range(idx - 1, -1, -1):
+        if headings[j]["level"] < target_level:
+            if "EXPORT_FILE_NAME" in headings[j]["properties"]:
+                return True
+            # Continue checking higher ancestors
+            target_level = headings[j]["level"]
+    return False
+
+
+def make_non_diary_slug(work_slug: str, heading_id: str) -> str:
+    """Generate slug for a non-diary quote.
+
+    Format: {work-slug}-q-{8-char-hash}
+    Hash is derived from the heading :ID: for stability.
+    """
+    return f"{work_slug}-q-{hashlib.sha256(heading_id.encode()).hexdigest()[:8]}"
+
+
+# === Manifest helpers ===
+
+
+def load_json_manifest(path):
+    """Load a JSON manifest file, returning {} if missing."""
+    path = Path(path)
+    if path.exists():
+        return json.loads(path.read_text())
+    return {}
+
+
+def save_json_manifest(path, data):
+    """Save a JSON manifest file atomically."""
+    atomic_write_json(path, data)
+
+
+# === Serialization helpers ===
+
+
+def slug_title_sets_to_sorted_json(data):
+    """Convert {slug: {(slug, title), ...}} to sorted JSON-ready dict."""
+    result = {}
+    for slug, sources in sorted(data.items()):
+        result[slug] = sorted(
+            [{"slug": s, "title": t} for s, t in sources],
+            key=lambda x: (x["title"] or "").lower(),
+        )
+    return result

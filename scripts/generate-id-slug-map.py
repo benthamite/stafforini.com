@@ -13,26 +13,19 @@ Covers three sources of published notes:
 Writes data/id-slug-map.json.
 """
 
-import json
 import os
 import re
 import sqlite3
 import sys
-import tempfile
 from pathlib import Path
 
-from lib import is_dataless, strip_elisp_quotes
+from lib import ORGROAM_DB_PATH, REPO_ROOT, atomic_write_json, is_dataless, strip_elisp_quotes
 
 NOTES_TAGS_DIR = Path.home() / "My Drive/notes/tags"
 PEOPLE_TAGS_DIR = Path.home() / "My Drive/people/tags"
 NOTES_DIR = Path.home() / "My Drive/notes"
 
-DB_PATH = os.environ.get(
-    "ORGROAM_DB",
-    os.path.expanduser("~/.config/emacs-profiles/var/org/org-roam.db"),
-)
-
-OUTPUT_PATH = Path(__file__).resolve().parent.parent / "data" / "id-slug-map.json"
+OUTPUT_PATH = REPO_ROOT / "data" / "id-slug-map.json"
 
 ID_RE = re.compile(r"^:ID:\s+(\S+)", re.MULTILINE)
 # Allow leading whitespace — notes use indented property drawers under headings
@@ -82,13 +75,13 @@ def scan_published_notes() -> dict[str, str]:
     The slug comes from that property value (not the filename).
     Sub-heading nodes inherit their parent file's slug.
     """
-    if not os.path.exists(DB_PATH):
-        print(f"  Warning: org-roam DB not found at {DB_PATH}", file=sys.stderr)
+    if not ORGROAM_DB_PATH.exists():
+        print(f"  Warning: org-roam DB not found at {ORGROAM_DB_PATH}", file=sys.stderr)
         return {}
 
     notes_prefix = str(NOTES_DIR) + "/"
 
-    conn = sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True)
+    conn = sqlite3.connect(f"file:{ORGROAM_DB_PATH}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
 
     # Collect all nodes from the DB, grouped by file
@@ -222,7 +215,6 @@ def main():
     combined.update(notes_map)
     combined.update(people_map)
 
-    from lib import atomic_write_json
     atomic_write_json(OUTPUT_PATH, combined, ensure_ascii=False)
 
     print(f"\nID-slug map written to {OUTPUT_PATH}")

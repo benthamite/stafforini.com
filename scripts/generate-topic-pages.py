@@ -14,13 +14,11 @@ import argparse
 import re
 from pathlib import Path
 
-from lib import atomic_write_text, escape_yaml_string, is_dataless
+from lib import REPO_ROOT, atomic_write_text, escape_yaml_string, is_dataless
 
 # === Constants ===
 
-SCRIPTS_DIR = Path(__file__).parent
-HUGO_ROOT = SCRIPTS_DIR.parent
-NOTES_DIR = HUGO_ROOT / "content" / "notes"
+NOTES_DIR = REPO_ROOT / "content" / "notes"
 
 GDRIVE = Path.home() / "My Drive"
 TAG_DIRS = [

@@ -26,11 +26,10 @@ from datetime import datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from lib import atomic_write_text, is_dataless
+from lib import REPO_ROOT, atomic_write_text, is_dataless
 
 # === Constants ===
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
 SCRIPT_DIR = REPO_ROOT / "scripts"
 CONTENT_DIR = REPO_ROOT / "content" / "notes"
 ORG_DIR = Path.home() / "My Drive/notes"
