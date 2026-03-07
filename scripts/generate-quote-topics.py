@@ -16,7 +16,6 @@ Usage:
     python generate-quote-topics.py
 """
 
-import json
 import sys
 from pathlib import Path
 
@@ -25,10 +24,12 @@ from lib import (
     ID_LINK_RE,
     REPO_ROOT,
     atomic_write_json,
+    build_reverse_index,
     cite_key_to_slug,
     extract_roam_refs,
     find_ancestor_with_export,
     is_dataless,
+    load_id_slug_map,
     make_non_diary_slug,
     parse_org_headings,
 )
@@ -37,7 +38,6 @@ from lib import (
 
 OUTPUT_PATH = REPO_ROOT / "data" / "quote-topics.json"
 REVERSE_OUTPUT_PATH = REPO_ROOT / "data" / "topic-quotes.json"
-ID_SLUG_MAP_PATH = REPO_ROOT / "data" / "id-slug-map.json"
 
 
 def process_file(org_path: Path, id_slug_map: dict) -> dict:
@@ -99,12 +99,7 @@ def main():
         print(f"ERROR: {BIBLIO_NOTES_DIR} does not exist", file=sys.stderr)
         sys.exit(1)
 
-    if not ID_SLUG_MAP_PATH.exists():
-        print(f"ERROR: {ID_SLUG_MAP_PATH} does not exist — run generate-id-slug-map.py first",
-              file=sys.stderr)
-        sys.exit(1)
-
-    id_slug_map = json.loads(ID_SLUG_MAP_PATH.read_text())
+    id_slug_map = load_id_slug_map(REPO_ROOT)
 
     org_files = sorted(BIBLIO_NOTES_DIR.glob("*.org"))
     all_topics = {}
@@ -127,23 +122,19 @@ def main():
     # Build forward index (quote → topics) preserving the flat list format
     # that the Hugo template expects, and a reverse index (topic → quotes).
     forward = {}
-    reverse = {}  # topic_slug -> [{slug, work_slug}]
+    work_slugs = {}  # quote_slug -> work_slug (for reverse index)
 
     for quote_slug, info in sorted(all_topics.items()):
         forward[quote_slug] = info["topics"]
-        for topic in info["topics"]:
-            topic_slug = topic["slug"]
-            if topic_slug not in reverse:
-                reverse[topic_slug] = []
-            reverse[topic_slug].append({
-                "slug": quote_slug,
-                "work_slug": info["work_slug"],
-            })
+        work_slugs[quote_slug] = info["work_slug"]
 
-    # Sort reverse index by key, and each value list by slug for stability
-    sorted_reverse = {}
-    for topic_slug in sorted(reverse):
-        sorted_reverse[topic_slug] = sorted(reverse[topic_slug], key=lambda x: x["slug"])
+    sorted_reverse = build_reverse_index(
+        forward,
+        lambda quote_slug, topic: (
+            topic["slug"],
+            {"slug": quote_slug, "work_slug": work_slugs[quote_slug]},
+        ),
+    )
 
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     atomic_write_json(OUTPUT_PATH, forward, ensure_ascii=False)

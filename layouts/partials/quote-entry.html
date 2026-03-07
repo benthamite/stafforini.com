@@ -45,8 +45,6 @@
       {{ $work := $pg.Site.GetPage (printf "/works/%s" .) }}
       {{ if $work }}
       {{ $type := $work.Params.entry_type | default "book" }}
-      {{/* quoted_author: when the quote is by someone other than the work's
-           author (e.g. Person A quoted in a book by Person B). */}}
       <p class="quote-attribution">
         {{- with $pg.Params.quoted_author -}}{{ . }}, quoted in {{ end -}}{{- partial "citation-format.html" (dict "work" $work "type" $type "locator" $pg.Params.locator "link" true) -}}
       </p>

@@ -155,12 +155,7 @@ def strip_elisp_quotes(value):
 
 
 def strip_accents(text):
-    """Remove diacritics/accents but preserve case and punctuation.
-
-    This is a subset of ``normalize()`` (which also lowercases and strips
-    punctuation). Use when you need accent-insensitive comparison without
-    changing case.
-    """
+    """Remove diacritics/accents but preserve case and punctuation."""
     text = unicodedata.normalize("NFD", text)
     return "".join(c for c in text if unicodedata.category(c) != "Mn")
 
@@ -252,6 +247,43 @@ def escape_yaml_string(s: str) -> str:
 
 # TOML and YAML use the same double-quote escaping rules for our purposes.
 escape_toml_string = escape_yaml_string
+
+
+def markdown_to_org_emphasis(text: str) -> str:
+    """Convert markdown emphasis to org-mode emphasis.
+
+    **text** → *text* (bold)
+    *text*  → /text/ (italic)
+    """
+    text = re.sub(r"\*\*(.+?)\*\*", r"*\1*", text)
+    text = re.sub(r"(?<!\*)\*([^*]+?)\*(?!\*)", r"/\1/", text)
+    return text
+
+
+def escape_org_text(text: str) -> str:
+    """Escape text for safe inclusion in an org-mode quote block.
+
+    Prefixes lines starting with ``*`` or ``#+`` with a zero-width space
+    so org-mode does not interpret them as headings or keywords.
+    """
+    lines = text.split("\n")
+    escaped = []
+    for line in lines:
+        if line.startswith("*") or line.startswith("#"):
+            line = "\u200B" + line
+        escaped.append(line)
+    return "\n".join(escaped)
+
+
+def tag_to_filename(tag: str) -> str:
+    """Convert a tag to a kebab-case .org filename.
+
+    "artificial intelligence" -> "artificial-intelligence.org"
+    """
+    slug = tag.lower().rstrip(".")
+    slug = re.sub(r"[^a-z0-9\u00e0-\u00ff-]+", "-", slug)
+    slug = re.sub(r"-+", "-", slug).strip("-")
+    return slug + ".org"
 
 
 def parse_bib_entries(
@@ -364,48 +396,6 @@ def parse_bib_entries(
 
     return entries
 
-
-def markdown_to_org_emphasis(text: str) -> str:
-    """Convert markdown emphasis to org-mode emphasis.
-
-    **text** → *text* (bold)
-    *text*  → /text/ (italic)
-
-    Bold must be converted before italic so that ** markers
-    are consumed first and don't get partially matched as *.
-    """
-    # Bold: **text** → *text*
-    text = re.sub(r"\*\*(.+?)\*\*", r"*\1*", text)
-    # Italic: *text* → /text/
-    text = re.sub(r"(?<!\*)\*([^*]+?)\*(?!\*)", r"/\1/", text)
-    return text
-
-
-def escape_org_text(text: str) -> str:
-    """Escape text for safe inclusion in an org-mode quote block.
-
-    Prefixes lines starting with ``*`` or ``#+`` with a zero-width space
-    so org-mode does not interpret them as headings or keywords.
-    """
-    lines = text.split("\n")
-    escaped = []
-    for line in lines:
-        if line.startswith("*") or line.startswith("#"):
-            line = "\u200B" + line  # zero-width space prefix
-        escaped.append(line)
-    return "\n".join(escaped)
-
-
-def tag_to_filename(tag: str) -> str:
-    """Convert a tag to a kebab-case .org filename.
-
-    "artificial intelligence" -> "artificial-intelligence.org"
-    "Arnold Schwarzenegger." -> "arnold-schwarzenegger.org"
-    """
-    slug = tag.lower().rstrip(".")
-    slug = re.sub(r"[^a-z0-9\u00e0-\u00ff-]+", "-", slug)
-    slug = re.sub(r"-+", "-", slug).strip("-")
-    return slug + ".org"
 
 
 # === Org file discovery ===
@@ -558,3 +548,50 @@ def slug_title_sets_to_sorted_json(data):
             key=lambda x: (x["title"] or "").lower(),
         )
     return result
+
+
+# === Reverse-index helpers ===
+
+
+def build_reverse_index(forward, value_extractor, *, sort_key="slug"):
+    """Build a sorted reverse index from a forward mapping.
+
+    Args:
+        forward: Dict mapping source keys to lists of target dicts.
+            Each target dict must contain a key matching *sort_key*.
+        value_extractor: Callable(source_key, target_dict) -> (reverse_key, reverse_entry).
+            Called for each (source_key, target_item) pair.  Should return
+            the key for the reverse index and the dict to append there.
+        sort_key: Key used to sort each reverse-index bucket for stability.
+
+    Returns:
+        Sorted dict {reverse_key: [reverse_entry, ...]} where both the
+        outer keys and inner lists are sorted.
+    """
+    reverse = {}
+    for source_key, items in forward.items():
+        for item in items:
+            rkey, entry = value_extractor(source_key, item)
+            reverse.setdefault(rkey, []).append(entry)
+    return {
+        k: sorted(v, key=lambda x: x.get(sort_key, ""))
+        for k, v in sorted(reverse.items())
+    }
+
+
+def load_id_slug_map(repo_root):
+    """Load data/id-slug-map.json, exiting with an error if missing.
+
+    Args:
+        repo_root: Path to the repository root.
+
+    Returns:
+        Dict mapping org-roam UUIDs to note slugs.
+    """
+    import sys
+    path = Path(repo_root) / "data" / "id-slug-map.json"
+    if not path.exists():
+        print(f"ERROR: {path} does not exist — run generate-id-slug-map.py first",
+              file=sys.stderr)
+        sys.exit(1)
+    return json.loads(path.read_text())

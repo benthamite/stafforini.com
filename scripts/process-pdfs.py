@@ -77,16 +77,6 @@ def _is_excluded_book(entry: dict) -> bool:
 # === Helpers ===
 
 
-def load_manifest() -> dict:
-    """Load the incremental processing manifest."""
-    return load_json_manifest(MANIFEST_PATH)
-
-
-def save_manifest(manifest: dict) -> None:
-    """Persist the manifest to disk atomically."""
-    save_json_manifest(MANIFEST_PATH, manifest)
-
-
 def needs_processing(slug: str, src_path: Path, manifest: dict, force: bool) -> bool:
     """Check whether a PDF needs (re)processing."""
     if force:
@@ -297,7 +287,7 @@ def process_pdfs(entries: list[dict], *, dry_run: bool, force: bool, limit: int)
         "removed": 0,
     }
 
-    manifest = load_manifest() if not dry_run else {}
+    manifest = load_json_manifest(MANIFEST_PATH) if not dry_run else {}
 
     for entry in entries:
         if limit and stats["processed"] >= limit:
@@ -345,7 +335,7 @@ def process_pdfs(entries: list[dict], *, dry_run: bool, force: bool, limit: int)
             if stats["processed"] % 200 == 0:
                 print(f"  ... {stats['processed']} PDFs processed")
                 # Checkpoint manifest periodically
-                save_manifest(manifest)
+                save_json_manifest(MANIFEST_PATH, manifest)
 
         except pikepdf.PasswordError:
             print(f"  WARNING: password-protected, skipping: {slug}")
@@ -370,7 +360,7 @@ def process_pdfs(entries: list[dict], *, dry_run: bool, force: bool, limit: int)
         # Prune manifest entries for removed slugs
         for stale_key in [k for k in manifest if k not in valid_slugs]:
             del manifest[stale_key]
-        save_manifest(manifest)
+        save_json_manifest(MANIFEST_PATH, manifest)
 
     return stats
 

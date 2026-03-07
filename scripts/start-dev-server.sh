@@ -14,7 +14,7 @@ source "$(dirname "$0")/common.sh"
 # dependencies, so a stale server can show outdated citations).
 # -U scopes to current user; -f matches the full command line so we
 # only kill Hugo servers started with --config (our dev servers).
-existing=$(pgrep -U "$(id -u)" -f "hugo server.*--config" 2>/dev/null || true)
+existing=$(find_hugo_servers)
 if [ -n "$existing" ]; then
   echo "Killing existing Hugo server(s)..."
   echo "$existing" | xargs kill 2>/dev/null || true
@@ -30,11 +30,7 @@ fi
 # without processing 30K+ files during startup.  hugo.dev.toml excludes
 # pdfs, pdf-thumbnails, and pagefind from its static mounts; the symlinks
 # make them available at their normal URLs anyway.
-mkdir -p public
-for dir in pdfs pdf-thumbnails; do
-  [ -d "static/$dir" ] && [ ! -e "public/$dir" ] && \
-    ln -s "$REPO_ROOT/static/$dir" "public/$dir"
-done
+ensure_static_symlinks
 
 # Start the dev server
 # --renderStaticToDisk serves static files from public/ (including our
