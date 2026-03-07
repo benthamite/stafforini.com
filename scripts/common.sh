@@ -16,3 +16,19 @@ run_step() {
     exit 1
   fi
 }
+
+# Return PIDs of running Hugo dev servers owned by the current user,
+# or empty string if none.
+find_hugo_servers() {
+  pgrep -U "$(id -u)" -f "hugo server.*--config" 2>/dev/null || true
+}
+
+# Create symlinks for heavy static directories (pdfs, pdf-thumbnails)
+# in public/ so the dev server can serve them without copying.
+ensure_static_symlinks() {
+  mkdir -p public
+  for dir in pdfs pdf-thumbnails; do
+    [ -d "static/$dir" ] && [ ! -e "public/$dir" ] && \
+      ln -s "$REPO_ROOT/static/$dir" "public/$dir"
+  done
+}

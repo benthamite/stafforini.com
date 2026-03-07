@@ -229,16 +229,6 @@ def write_quote_markdown(quote: dict, output_dir: Path) -> Path:
     return path
 
 
-def load_manifest() -> dict:
-    """Load the extraction manifest (org file -> mtime mapping)."""
-    return load_json_manifest(MANIFEST_PATH)
-
-
-def save_manifest(manifest: dict) -> None:
-    """Save the extraction manifest atomically."""
-    save_json_manifest(MANIFEST_PATH, manifest)
-
-
 def main():
     parser = argparse.ArgumentParser(
         description="Extract non-diary blockquotes from org files"
@@ -254,7 +244,7 @@ def main():
     if not args.dry_run:
         QUOTES_DIR.mkdir(parents=True, exist_ok=True)
 
-    manifest = {} if args.full else load_manifest()
+    manifest = {} if args.full else load_json_manifest(MANIFEST_PATH)
     new_manifest = {}
 
     org_files = sorted(BIBLIO_NOTES_DIR.glob("*.org"))
@@ -320,7 +310,7 @@ def main():
                 stats["stale_removed"] += 1
 
     if not args.dry_run:
-        save_manifest(new_manifest)
+        save_json_manifest(MANIFEST_PATH, new_manifest)
 
     print(f"  Files scanned:       {stats['files_scanned']}")
     print(f"  Skipped (dataless):  {stats['files_skipped_dataless']}")

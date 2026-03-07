@@ -306,7 +306,7 @@ def main():
     print(f"  No org file: {stats['no_org']}")
     print(f"  Skipped:     {stats['skipped']}")
     if args.dry_run:
-        print("  *** DRY RUN -- no files written ***")
+        print("  *** DRY RUN — no files written ***")
 
     print("\nDone.")
 

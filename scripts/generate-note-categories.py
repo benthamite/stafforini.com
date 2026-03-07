@@ -12,7 +12,6 @@ Usage:
     python generate-note-categories.py
 """
 
-import json
 import re
 import sys
 from pathlib import Path
@@ -22,15 +21,16 @@ from lib import (
     NOTES_DIR,
     REPO_ROOT,
     atomic_write_json,
+    build_reverse_index,
     find_org_files,
     is_dataless,
+    load_id_slug_map,
 )
 
 # === Constants ===
 
 OUTPUT_PATH = REPO_ROOT / "data" / "note-categories.json"
 REVERSE_OUTPUT_PATH = REPO_ROOT / "data" / "category-notes.json"
-ID_SLUG_MAP_PATH = REPO_ROOT / "data" / "id-slug-map.json"
 
 
 def process_file(org_path: Path, id_slug_map: dict) -> dict | None:
@@ -74,12 +74,7 @@ def main():
         print(f"ERROR: {NOTES_DIR} does not exist", file=sys.stderr)
         sys.exit(1)
 
-    if not ID_SLUG_MAP_PATH.exists():
-        print(f"ERROR: {ID_SLUG_MAP_PATH} does not exist — run generate-id-slug-map.py first",
-              file=sys.stderr)
-        sys.exit(1)
-
-    id_slug_map = json.loads(ID_SLUG_MAP_PATH.read_text())
+    id_slug_map = load_id_slug_map(REPO_ROOT)
 
     org_files = find_org_files(NOTES_DIR)
     all_categories = {}
@@ -101,23 +96,13 @@ def main():
             print(f"  ... {files_scanned} files scanned")
 
     # Build forward index (note → categories)
-    forward = {}
-    for note_slug in sorted(all_categories):
-        forward[note_slug] = all_categories[note_slug]
+    forward = {slug: all_categories[slug] for slug in sorted(all_categories)}
 
     # Build reverse index (category → notes)
-    reverse = {}
-    for note_slug, categories in all_categories.items():
-        for cat in categories:
-            cat_slug = cat["slug"]
-            if cat_slug not in reverse:
-                reverse[cat_slug] = []
-            reverse[cat_slug].append({"slug": note_slug})
-
-    # Sort reverse index by key, and each value list by slug for stability
-    sorted_reverse = {}
-    for cat_slug in sorted(reverse):
-        sorted_reverse[cat_slug] = sorted(reverse[cat_slug], key=lambda x: x["slug"])
+    sorted_reverse = build_reverse_index(
+        forward,
+        lambda note_slug, cat: (cat["slug"], {"slug": note_slug}),
+    )
 
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     atomic_write_json(OUTPUT_PATH, forward, ensure_ascii=False)

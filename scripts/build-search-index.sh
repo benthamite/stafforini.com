@@ -28,11 +28,8 @@ trash static/pagefind 2>/dev/null || true
 mv static/pagefind.new static/pagefind
 
 # Restore dev-server symlinks if the server is running (trash public removed them)
-if pgrep -U "$(id -u)" -f "hugo server.*--config" >/dev/null 2>&1; then
-  for dir in pdfs pdf-thumbnails; do
-    [ -d "static/$dir" ] && [ ! -e "public/$dir" ] && \
-      ln -s "$REPO_ROOT/static/$dir" "public/$dir"
-  done
+if [ -n "$(find_hugo_servers)" ]; then
+  ensure_static_symlinks
 fi
 
 echo "Search index ready."
