@@ -36,12 +36,15 @@ ORG_DIR = NOTES_DIR
 # === Helpers ===
 
 
-def _build_git_dates() -> dict[Path, str]:
-    """Build a map of {org_file: last_commit_date} from git history.
+def _build_git_dates() -> tuple[dict[Path, str], dict[Path, str]]:
+    """Build maps of {org_file: date} for newest and oldest commits.
 
     Uses a single `git log` call over the entire repo for efficiency.
+    Returns (newest_dates, oldest_dates) where newest = last modified,
+    oldest = first committed (creation date).
     """
-    result = {}
+    newest = {}
+    oldest = {}
     try:
         out = subprocess.run(
             ["git", "log", "--format=%ad", "--date=short", "--name-only",
@@ -49,7 +52,7 @@ def _build_git_dates() -> dict[Path, str]:
             capture_output=True, text=True, cwd=str(ORG_DIR), check=True,
         ).stdout
     except (subprocess.CalledProcessError, FileNotFoundError):
-        return result
+        return newest, oldest
 
     current_date = None
     for line in out.splitlines():
@@ -62,20 +65,34 @@ def _build_git_dates() -> dict[Path, str]:
         elif current_date and line.endswith(".org"):
             path = ORG_DIR / line
             # First occurrence = most recent commit for this file
-            if path not in result:
-                result[path] = current_date
-    return result
+            if path not in newest:
+                newest[path] = current_date
+            # Always overwrite — last occurrence = oldest commit
+            oldest[path] = current_date
+    return newest, oldest
 
 
-# Module-level cache, populated on first use
-_GIT_DATES: dict[Path, str] | None = None
+# Module-level caches, populated on first use
+_GIT_NEWEST: dict[Path, str] | None = None
+_GIT_OLDEST: dict[Path, str] | None = None
+
+
+def _ensure_git_dates():
+    global _GIT_NEWEST, _GIT_OLDEST
+    if _GIT_NEWEST is None:
+        _GIT_NEWEST, _GIT_OLDEST = _build_git_dates()
 
 
 def _get_git_dates() -> dict[Path, str]:
-    global _GIT_DATES
-    if _GIT_DATES is None:
-        _GIT_DATES = _build_git_dates()
-    return _GIT_DATES
+    """Return map of {org_file: most_recent_commit_date}."""
+    _ensure_git_dates()
+    return _GIT_NEWEST
+
+
+def _get_git_first_dates() -> dict[Path, str]:
+    """Return map of {org_file: first_commit_date}."""
+    _ensure_git_dates()
+    return _GIT_OLDEST
 
 
 def load_output_to_source_map() -> dict[str, Path]:
@@ -132,6 +149,22 @@ def get_org_mtime(slug, output_map=None):
     return datetime.fromtimestamp(mtime).strftime("%Y-%m-%d")
 
 
+def get_org_creation_date(slug, output_map=None):
+    """Get the first commit date of the org file for a given slug.
+
+    Used to populate the `date` field when ox-hugo didn't set it.
+    Falls back to lastmod date if first-commit history is unavailable.
+    """
+    org_file = find_org_file(slug, output_map)
+    if not org_file:
+        return None
+    git_first = _get_git_first_dates()
+    if org_file in git_first:
+        return git_first[org_file]
+    # Fallback to lastmod (better than nothing)
+    return get_org_mtime(slug, output_map)
+
+
 def get_front_matter_date(text):
     """Extract the `date` value from TOML front matter."""
     match = re.search(r"^date = (.+)$", text, re.MULTILINE)
@@ -164,17 +197,20 @@ def get_org_title(slug, output_map=None):
     return None
 
 
-def apply_front_matter_fixups(md_path, output_map=None, lastmod_date=None):
+def apply_front_matter_fixups(md_path, output_map=None, lastmod_date=None,
+                              creation_date=None):
     """Apply all front matter fixups in a single read/write cycle.
 
-    Combines title injection, title markup fixing, and lastmod injection
-    into one pass to avoid multiple non-atomic rewrites of the same file.
+    Combines title injection, date injection, title markup fixing, and
+    lastmod injection into one pass to avoid multiple non-atomic rewrites.
 
     Returns a dict of which fixups were applied:
-      {"title_injected": bool, "title_markup_fixed": bool, "lastmod_updated": bool}
+      {"title_injected": bool, "title_markup_fixed": bool,
+       "lastmod_updated": bool, "date_injected": bool}
     """
     result = {"title_injected": False, "title_markup_fixed": False,
-              "lastmod_updated": False, "br_stripped": False}
+              "lastmod_updated": False, "br_stripped": False,
+              "date_injected": False}
 
     text = md_path.read_text()
     match = re.match(r"(\+\+\+\n)(.*?)(\n\+\+\+)", text, re.DOTALL)
@@ -208,20 +244,45 @@ def apply_front_matter_fixups(md_path, output_map=None, lastmod_date=None):
             changed = True
             result["title_markup_fixed"] = True
 
-    # 3. Strip trailing <br/> from body (ox-hugo artifact at paragraph ends)
+    # 3. Inject date when missing (from first git commit of org source)
+    has_date = re.search(r"^date\s*=", front_matter, re.MULTILINE)
+    if not has_date and creation_date is not None:
+        # Insert after author line, or at end of front matter
+        if re.search(r"^author\s*=", front_matter, re.MULTILINE):
+            front_matter = re.sub(
+                r"(^author\s*=\s*.+)$",
+                rf"\1\ndate = {creation_date}",
+                front_matter,
+                count=1,
+                flags=re.MULTILINE,
+            )
+        else:
+            front_matter += f"\ndate = {creation_date}"
+        changed = True
+        result["date_injected"] = True
+
+    # 4. Strip trailing <br/> from body (ox-hugo artifact at paragraph ends)
     cleaned_rest = re.sub(r" <br/>$", "", rest, flags=re.MULTILINE)
     if cleaned_rest != rest:
         rest = cleaned_rest
         changed = True
         result["br_stripped"] = True
 
-    # 4. Inject or update lastmod
+    # 5. Inject or update lastmod
     if lastmod_date is not None:
         if f"lastmod = {lastmod_date}" not in front_matter:
             front_matter = re.sub(r"lastmod = .+\n?", "", front_matter)
-            front_matter = re.sub(
-                r"(date = .+)", rf"\1\nlastmod = {lastmod_date}", front_matter
-            )
+            if re.search(r"^date\s*=", front_matter, re.MULTILINE):
+                front_matter = re.sub(
+                    r"(^date\s*=\s*.+)$",
+                    rf"\1\nlastmod = {lastmod_date}",
+                    front_matter,
+                    count=1,
+                    flags=re.MULTILINE,
+                )
+            else:
+                # No date line — append lastmod at end of front matter
+                front_matter += f"\nlastmod = {lastmod_date}"
             changed = True
             result["lastmod_updated"] = True
 
@@ -256,7 +317,8 @@ def main():
     print(f"Loaded git history for {len(git_dates)} org files")
 
     stats = {"updated": 0, "unchanged": 0, "no_org": 0, "skipped": 0,
-             "title_injected": 0, "title_markup_fixed": 0, "br_stripped": 0}
+             "title_injected": 0, "title_markup_fixed": 0, "br_stripped": 0,
+             "date_injected": 0}
 
     for md_file in md_files:
         if md_file.name == "_index.md":
@@ -265,6 +327,7 @@ def main():
 
         slug = md_file.stem
         lastmod = get_org_mtime(slug, output_map)
+        creation = get_org_creation_date(slug, output_map)
 
         if lastmod is None:
             stats["no_org"] += 1
@@ -272,19 +335,28 @@ def main():
         if args.dry_run:
             text = md_file.read_text()
             fm_match = re.match(r"(\+\+\+\n)(.*?)(\n\+\+\+)", text, re.DOTALL)
-            if fm_match and not re.search(r"^title\s*=", fm_match.group(2), re.MULTILINE):
-                stats["title_injected"] += 1
-                print(f"  [TITLE] {md_file.name} -> would inject title = \"{md_file.stem}\"")
+            if fm_match:
+                fm_text = fm_match.group(2)
+                if not re.search(r"^title\s*=", fm_text, re.MULTILINE):
+                    stats["title_injected"] += 1
+                    print(f"  [TITLE] {md_file.name} -> would inject title = \"{md_file.stem}\"")
+                if not re.search(r"^date\s*=", fm_text, re.MULTILINE) and creation:
+                    stats["date_injected"] += 1
+                    print(f"  [DATE] {md_file.name} -> would inject date = {creation}")
             if lastmod is not None:
                 print(f"  [UPDATE] {md_file.name} -> lastmod = {lastmod}")
                 stats["updated"] += 1
             else:
                 stats["unchanged"] += 1
         else:
-            result = apply_front_matter_fixups(md_file, output_map, lastmod)
+            result = apply_front_matter_fixups(md_file, output_map, lastmod,
+                                               creation)
             if result["title_injected"]:
                 stats["title_injected"] += 1
                 print(f"  [TITLE] {md_file.name} -> injected missing title")
+            if result["date_injected"]:
+                stats["date_injected"] += 1
+                print(f"  [DATE] {md_file.name} -> injected missing date")
             if result["title_markup_fixed"]:
                 stats["title_markup_fixed"] += 1
                 print(f"  [MARKUP] {md_file.name} -> restored title markup")
@@ -297,6 +369,8 @@ def main():
 
     if stats["title_injected"]:
         print(f"\n  Titles injected: {stats['title_injected']}")
+    if stats["date_injected"]:
+        print(f"  Dates injected:  {stats['date_injected']}")
     if stats["title_markup_fixed"]:
         print(f"  Title markup fixed: {stats['title_markup_fixed']}")
     if stats["br_stripped"]:
