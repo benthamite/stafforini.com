@@ -28,7 +28,8 @@ find_hugo_servers() {
 ensure_static_symlinks() {
   mkdir -p public
   for dir in pdfs pdf-thumbnails; do
-    [ -d "static/$dir" ] && [ ! -e "public/$dir" ] && \
+    if [ -d "static/$dir" ] && [ ! -e "public/$dir" ]; then
       ln -s "$REPO_ROOT/static/$dir" "public/$dir"
+    fi
   done
 }
