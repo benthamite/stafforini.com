@@ -9,6 +9,19 @@
 #
 # Used by scripts/start-dev-server.sh via --config flag.
 
+# Skip rendering individual work pages in dev mode — 24K pages take
+# 4+ minutes even on SSD, and are rarely the focus during development.
+# Work pages are still queryable (e.g. cite shortcodes resolve), they
+# just don't get their own HTML output.  The /works/ list page still
+# renders normally.
+[[cascade]]
+  [cascade.build]
+    render = "never"
+    list = "always"
+  [cascade._target]
+    path = "/works/**"
+    kind = "page"
+
 [module]
   # Override static mounts to include only lightweight directories.
   # Hugo's default mount maps the entire static/ directory; specifying
