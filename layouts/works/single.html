@@ -8,11 +8,11 @@
     {{ $italic := partial "standalone-type.html" $type }}
     {{ $url := .Params.external_url }}
     {{ if and (eq $type "online") $url (or (hasPrefix $url "https://") (hasPrefix $url "http://")) }}
-    <h1><a href="{{ $url }}">{{ .Title | safeHTML }}</a></h1>
+    <h1 data-pagefind-weight="10"><a href="{{ $url }}">{{ .Title | safeHTML }}</a></h1>
     {{ else if $italic }}
-    <h1><em>{{ .Title | safeHTML }}</em></h1>
+    <h1 data-pagefind-weight="10"><em>{{ .Title | safeHTML }}</em></h1>
     {{ else }}
-    <h1>{{ .Title | safeHTML }}</h1>
+    <h1 data-pagefind-weight="10">{{ .Title | safeHTML }}</h1>
     {{ end }}
 
     {{/* Author / editor line */}}
