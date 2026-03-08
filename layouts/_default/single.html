@@ -1,6 +1,6 @@
 {{ define "main" }}
 <article>
-  <h1>{{ .Title | markdownify }}</h1>
+  <h1 data-pagefind-weight="10">{{ .Title | markdownify }}</h1>
   <div class="note-body">
     {{ .Content }}
   </div>
