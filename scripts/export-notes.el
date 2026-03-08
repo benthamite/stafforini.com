@@ -60,9 +60,14 @@
 (setq org-export-with-todo-keywords nil)
 ;; Exclude entire headings that have any TODO keyword (TODO, WAITING, DONE, DELEGATED, etc.)
 (setq org-export-with-tasks nil)
-;; Never evaluate source blocks during export (some notes have :cache yes
-;; Python blocks that fail in batch mode — we only need the markup, not results)
-(setq org-export-use-babel nil)
+;; Allow Babel processing during export (needed for noweb expansion) but
+;; never actually evaluate code blocks (Python etc. aren't available in
+;; batch mode).  org-confirm-babel-evaluate nil suppresses interactive
+;; prompts; :eval never-export prevents execution while preserving noweb.
+(setq org-confirm-babel-evaluate nil)
+(setq org-babel-default-header-args
+      (cons '(:eval . "never-export")
+            (assq-delete-all :eval org-babel-default-header-args)))
 
 ;; Register a cite export processor that emits Hugo {{< cite >}} shortcodes.
 ;; This keeps citation rendering in Hugo (via the cite.html shortcode and
