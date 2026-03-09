@@ -5,7 +5,13 @@
   {{ if and (not .Lastmod.IsZero) (ne (.Lastmod.Format "2006-01-02") (.Date.Format "2006-01-02")) }}
   <span>Last updated: {{ partial "format-date.html" (dict "date" .Lastmod) }}</span>
   {{ end }}
+  {{ $codeLines := len (findRE `<span class="line">` .Content) }}
+  {{ if gt $codeLines 0 }}
+  {{ $proseContent := replaceRE `(?s)<div class="highlight">.*?</pre></div>` "" .Content }}
+  <span>{{ countwords $proseContent }} words · {{ $codeLines }} lines of code</span>
+  {{ else }}
   <span>{{ .WordCount }} words</span>
+  {{ end }}
   {{ $allCategories := index (.Site.Data | default dict) "note-categories" }}
   {{ with .File }}
     {{ $categories := index ($allCategories | default dict) .ContentBaseName }}
