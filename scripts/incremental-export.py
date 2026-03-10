@@ -17,21 +17,23 @@ import sys
 import tempfile
 from pathlib import Path
 
-from lib import BIBLIO_NOTES_DIR, MTIME_EPSILON, REPO_ROOT, atomic_write_json, is_dataless, load_json_manifest, safe_remove, save_json_manifest
+from lib import BIBLIO_NOTES_DIR, MTIME_EPSILON, PEOPLE_TAGS_DIR, REPO_ROOT, atomic_write_json, is_dataless, load_json_manifest, safe_remove, save_json_manifest
 
 SCRIPT_DIR = REPO_ROOT / "scripts"
 
 SECTIONS = {
     "quotes": {
-        "source_dir": BIBLIO_NOTES_DIR,
+        "source_dirs": [BIBLIO_NOTES_DIR],
         "output_dir": REPO_ROOT / "content/quotes",
         "elisp": SCRIPT_DIR / "export-quotes.el",
         "pre_filter": lambda content: ":public:" in content,
         "skip_files": set(),  # no exclusions for quotes
     },
     "notes": {
-        "source_dir": Path.home()
-        / "My Drive/notes",
+        "source_dirs": [
+            Path.home() / "My Drive/notes",
+            PEOPLE_TAGS_DIR,
+        ],
         "output_dir": REPO_ROOT / "content/notes",
         "elisp": SCRIPT_DIR / "export-notes.el",
         "pre_filter": lambda content: ":EXPORT_FILE_NAME:" in content,
@@ -80,43 +82,66 @@ def extract_export_file_names(filepath: Path) -> list[str]:
 def warn_dataless_files() -> None:
     """Warn if any source directories contain cloud-evicted files."""
     for label, cfg in SECTIONS.items():
-        source_dir = cfg["source_dir"]
-        if not source_dir.exists():
-            continue
+        for source_dir in cfg["source_dirs"]:
+            if not source_dir.exists():
+                continue
+            try:
+                result = subprocess.run(
+                    ["ls", "-lO", str(source_dir)],
+                    capture_output=True, text=True, timeout=30,
+                )
+            except subprocess.TimeoutExpired:
+                continue
+            dataless = [
+                line.rsplit(None, 1)[-1]
+                for line in result.stdout.splitlines()
+                if "dataless" in line and line.endswith(".org")
+            ]
+            if dataless:
+                print(
+                    f"WARNING: {len(dataless)} dataless (cloud-evicted) "
+                    f".org files in {label} ({source_dir})\n"
+                    f"  Google Drive has evicted these files despite the "
+                    f"'Available Offline' setting.\n"
+                    f"  In Finder, select the affected files, right-click, "
+                    f"and choose 'Make Available Offline'.\n"
+                    f"  First 5: {', '.join(dataless[:5])}",
+                    file=sys.stderr,
+                )
+
+
+def relpath_for(filepath: Path, source_dirs: list[Path]) -> str:
+    """Return the relative path of *filepath* under the first matching source dir."""
+    for d in source_dirs:
         try:
-            result = subprocess.run(
-                ["ls", "-lO", str(source_dir)],
-                capture_output=True, text=True, timeout=30,
-            )
-        except subprocess.TimeoutExpired:
+            return str(filepath.relative_to(d))
+        except ValueError:
             continue
-        dataless = [
-            line.rsplit(None, 1)[-1]
-            for line in result.stdout.splitlines()
-            if "dataless" in line and line.endswith(".org")
-        ]
-        if dataless:
-            print(
-                f"WARNING: {len(dataless)} dataless (cloud-evicted) "
-                f".org files in {label} ({source_dir})\n"
-                f"  Google Drive has evicted these files despite the "
-                f"'Available Offline' setting.\n"
-                f"  In Finder, select the affected files, right-click, "
-                f"and choose 'Make Available Offline'.\n"
-                f"  First 5: {', '.join(dataless[:5])}",
-                file=sys.stderr,
-            )
+    # Fallback: use relative to first dir (shouldn't happen)
+    return str(filepath.relative_to(source_dirs[0]))
+
+
+def resolve_relpath(relpath: str, source_dirs: list[Path]) -> Path:
+    """Resolve a relative path back to an absolute path under the correct source dir."""
+    for d in source_dirs:
+        candidate = d / relpath
+        if candidate.exists():
+            return candidate
+    # Fallback: use first dir
+    return source_dirs[0] / relpath
 
 
 def scan_source_files(cfg: dict) -> dict[str, float]:
-    """Scan source directory recursively, return {relpath: mtime} for exportable files."""
-    source_dir = cfg["source_dir"]
+    """Scan source directories recursively, return {relpath: mtime} for exportable files."""
+    source_dirs = cfg["source_dirs"]
     pre_filter = cfg["pre_filter"]
     skip_files = cfg["skip_files"]
 
     result = {}
     skipped_dataless = []
-    org_files = sorted(source_dir.rglob("*.org"))
+    org_files = []
+    for source_dir in source_dirs:
+        org_files.extend(sorted(source_dir.rglob("*.org")))
     total = len(org_files)
     for i, f in enumerate(org_files, 1):
         if i % 200 == 0 or i == total:
@@ -132,7 +157,7 @@ def scan_source_files(cfg: dict) -> dict[str, float]:
         except OSError:
             continue
         if pre_filter(content):
-            result[str(f.relative_to(source_dir))] = mtime
+            result[relpath_for(f, source_dirs)] = mtime
     if skipped_dataless:
         print(
             f"WARNING: skipped {len(skipped_dataless)} dataless file(s) "
@@ -188,13 +213,13 @@ def run_emacs(elisp: Path, file_list_path: str | None = None) -> int:
 
 def run_full_export(section: str, cfg: dict, current_files: dict[str, float]) -> None:
     """Full export: wipe outputs, export everything, build fresh manifest."""
-    source_dir = cfg["source_dir"]
+    source_dirs = cfg["source_dirs"]
     output_dir = cfg["output_dir"]
 
     wipe_output_dir(output_dir)
 
     # Pass the pre-filtered file list to Emacs (avoids slow recursive scan in Emacs)
-    full_paths = [str(source_dir / name) for name in sorted(current_files)]
+    full_paths = [str(resolve_relpath(name, source_dirs)) for name in sorted(current_files)]
     with tempfile.NamedTemporaryFile(
         mode="w", suffix=".txt", prefix="export-list-", delete=False
     ) as tmp:
@@ -210,7 +235,7 @@ def run_full_export(section: str, cfg: dict, current_files: dict[str, float]) ->
     print("\nBuilding manifest...")
     new_manifest = {"files": {}}
     for name in current_files:
-        filepath = source_dir / name
+        filepath = resolve_relpath(name, source_dirs)
         if filepath.exists():
             new_manifest["files"][name] = {
                 "mtime": filepath.stat().st_mtime,
@@ -226,7 +251,7 @@ def run_incremental_export(
     current_files: dict[str, float],
 ) -> None:
     """Incremental export: only re-export changed/new files."""
-    source_dir = cfg["source_dir"]
+    source_dirs = cfg["source_dirs"]
     output_dir = cfg["output_dir"]
     old_files = manifest["files"]
 
@@ -244,7 +269,7 @@ def run_incremental_export(
         elif any(not (output_dir / out).exists() for out in old.get("outputs", [])):
             to_export.append(name)
         elif len(old.get("outputs", [])) != len(
-            extract_export_file_names(source_dir / name)
+            extract_export_file_names(resolve_relpath(name, source_dirs))
         ):
             to_export.append(name)
 
@@ -270,7 +295,7 @@ def run_incremental_export(
         print(f"  ... and {len(to_export) - 20} more")
 
     # Write file list to temp file and call Emacs
-    full_paths = [str(source_dir / name) for name in to_export]
+    full_paths = [str(resolve_relpath(name, source_dirs)) for name in to_export]
     with tempfile.NamedTemporaryFile(
         mode="w", suffix=".txt", prefix="export-list-", delete=False
     ) as tmp:
@@ -289,7 +314,7 @@ def run_incremental_export(
     new_manifest = {"files": {}}
     for name, mtime in current_files.items():
         if name in export_set:
-            filepath = source_dir / name
+            filepath = resolve_relpath(name, source_dirs)
             new_manifest["files"][name] = {
                 "mtime": mtime,
                 "outputs": extract_export_file_names(filepath),
@@ -304,12 +329,13 @@ def run_incremental_export(
 
 def run_export(section: str, full: bool = False) -> None:
     cfg = SECTIONS[section]
-    source_dir = cfg["source_dir"]
+    source_dirs = cfg["source_dirs"]
     output_dir = cfg["output_dir"]
 
-    if not source_dir.exists():
-        print(f"ERROR: Source directory not found: {source_dir}", file=sys.stderr)
-        sys.exit(1)
+    for source_dir in source_dirs:
+        if not source_dir.exists():
+            print(f"ERROR: Source directory not found: {source_dir}", file=sys.stderr)
+            sys.exit(1)
 
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -324,7 +350,7 @@ def run_export(section: str, full: bool = False) -> None:
         print("No manifest found — falling back to full export.")
 
     print(f"{'Full' if is_full else 'Incremental'} export for {section}")
-    print(f"Scanning {source_dir} ...")
+    print(f"Scanning {', '.join(str(d) for d in source_dirs)} ...")
     current_files = scan_source_files(cfg)
     print(f"Found {len(current_files)} exportable files.")
 

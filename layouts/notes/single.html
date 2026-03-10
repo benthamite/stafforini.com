@@ -1,14 +1,13 @@
 {{ define "main" }}
 <article>
-  {{/* is_topic_stub: auto-generated topic pages (from generate-topic-pages.py)
-       that only have a title and backlinks — skip TOC, metadata, body, and sidenotes */}}
-  {{ if not .Params.is_topic_stub }}
+  {{/* is_tag: tag notes that serve as taxonomy nodes — skip TOC, metadata, body, and sidenotes */}}
+  {{ if not .Params.is_tag }}
   {{ partial "toc-floating.html" . }}
   {{ end }}
 
   <h1 data-pagefind-weight="10">{{ .Title | markdownify }}</h1>
 
-  {{ if not .Params.is_topic_stub }}
+  {{ if not .Params.is_tag }}
   {{ partial "note-meta.html" . }}
 
   {{ partial "toc-inline.html" . }}
@@ -27,7 +26,7 @@
   {{ partial "category-notes.html" . }}
 </article>
 
-{{ if not .Params.is_topic_stub }}
+{{ if not .Params.is_tag }}
 {{ partial "load-js.html" "breakpoint-toggle.js" }}
 {{ partial "load-js.html" "sidenotes.js" }}
 {{ partial "load-js.html" "toc.js" }}
