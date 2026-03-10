@@ -17,6 +17,7 @@ Usage:
 import argparse
 import json
 import re
+from pathlib import Path
 
 from lib import NOTES_DIR, REPO_ROOT, atomic_write_text, find_org_files, is_dataless
 

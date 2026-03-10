@@ -11,6 +11,7 @@ cleanup() {
   if [ "$exit_code" -ne 0 ]; then
     echo "Deploy interrupted (exit $exit_code). Build state may be inconsistent." >&2
   fi
+  exit "$exit_code"
 }
 trap cleanup EXIT
 

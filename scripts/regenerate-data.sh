@@ -11,6 +11,13 @@ source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 do_notes=false
 do_quotes=false
 
+for arg in "$@"; do
+  case "$arg" in
+    --all|--notes|--quotes) ;;
+    *) echo "Error: unknown flag '$arg'" >&2; exit 1 ;;
+  esac
+done
+
 if [ $# -eq 0 ] || [[ " $* " == *" --all "* ]]; then
   do_notes=true
   do_quotes=true

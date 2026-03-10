@@ -224,7 +224,7 @@ def apply_front_matter_fixups(md_path, output_map=None, lastmod_date=None,
     # 1. Ensure title exists (ox-hugo sometimes drops it)
     if not re.search(r"^title\s*=", front_matter, re.MULTILINE):
         title = get_org_title(md_path.stem, output_map) or md_path.stem
-        title = title.replace('"', '\\"')
+        title = title.replace('\\', '\\\\').replace('"', '\\"')
         front_matter = f'title = "{title}"\n' + front_matter
         changed = True
         result["title_injected"] = True
@@ -234,9 +234,10 @@ def apply_front_matter_fixups(md_path, output_map=None, lastmod_date=None,
     if org_title is not None:
         title_match = re.search(r'^title = "(.+)"$', front_matter, re.MULTILINE)
         if title_match and title_match.group(1) != org_title:
+            escaped_org_title = f'title = "{org_title}"'
             front_matter = re.sub(
                 r'^title = "' + re.escape(title_match.group(1)) + r'"',
-                f'title = "{org_title}"',
+                lambda m: escaped_org_title,
                 front_matter,
                 count=1,
                 flags=re.MULTILINE,

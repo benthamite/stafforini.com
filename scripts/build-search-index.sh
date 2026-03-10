@@ -24,8 +24,11 @@ run_step "Building search index" npx --yes pagefind --site public
 # never sees a partially-written index directory
 echo "Copying search index to static/..."
 cp -R public/pagefind static/pagefind.new
-trash static/pagefind 2>/dev/null || true
+if [ -d static/pagefind ]; then
+  mv static/pagefind static/pagefind.old
+fi
 mv static/pagefind.new static/pagefind
+trash static/pagefind.old 2>/dev/null || true
 
 # Restore dev-server symlinks if the server is running (trash public removed them)
 if [ -n "$(find_hugo_servers)" ]; then

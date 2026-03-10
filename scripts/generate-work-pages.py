@@ -209,7 +209,8 @@ def postprocess_quotes(dry_run: bool = False) -> dict:
         )
         if not has_diary_key:
             # Detect recent dates (2024+) that indicate non-diary quotes
-            date_match = re.search(r"^date\s*=\s*(\d{4})", front_matter, re.MULTILINE)
+            date_pat = r"^date\s*=\s*(\d{4})" if content.startswith("+++") else r"^date\s*:\s*(\d{4})"
+            date_match = re.search(date_pat, front_matter, re.MULTILINE)
             is_diary = True
             if date_match and int(date_match.group(1)) >= 2024:
                 is_diary = False

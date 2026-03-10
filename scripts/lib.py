@@ -255,8 +255,10 @@ def markdown_to_org_emphasis(text: str) -> str:
     **text** → *text* (bold)
     *text*  → /text/ (italic)
     """
-    text = re.sub(r"\*\*(.+?)\*\*", r"*\1*", text)
+    # Use a sentinel to prevent bold → italic double-conversion
+    text = re.sub(r"\*\*(.+?)\*\*", r"\x00\1\x00", text)
     text = re.sub(r"(?<!\*)\*([^*]+?)\*(?!\*)", r"/\1/", text)
+    text = text.replace("\x00", "*")
     return text
 
 

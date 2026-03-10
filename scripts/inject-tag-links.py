@@ -16,7 +16,7 @@ import json
 import re
 from pathlib import Path
 
-from lib import tag_to_filename
+from lib import is_dataless, tag_to_filename
 
 SCRIPTS_DIR = Path(__file__).parent
 MATCHED_JSON = SCRIPTS_DIR / "wp-quotes-matched.json"
@@ -117,6 +117,9 @@ def inject_topics_into_file(
     Returns stats dict with counts of injected/skipped/missing.
     """
     stats = {"injected": 0, "skipped_existing": 0, "skipped_no_cite": 0}
+
+    if is_dataless(file_path):
+        return stats
 
     content = file_path.read_text(encoding="utf-8")
     lines = content.split("\n")
