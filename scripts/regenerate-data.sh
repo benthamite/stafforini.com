@@ -33,5 +33,6 @@ if $do_quotes; then
   run_step "Extracting non-diary quotes" python3 "$SCRIPT_DIR/extract-non-diary-quotes.py"
   run_step "Generating quote topics" python3 "$SCRIPT_DIR/generate-quote-topics.py"
   run_step "Generating work pages" python3 "$SCRIPT_DIR/generate-work-pages.py"
-  run_step "Generating topic pages" python3 "$SCRIPT_DIR/generate-topic-pages.py"
+  # Topic pages are now exported as regular notes with is_tag front matter;
+  # generate-topic-pages.py is no longer needed.
 fi

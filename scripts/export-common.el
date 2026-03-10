@@ -254,10 +254,12 @@ so that transcluded content is included in the export."
   (setq org-id-locations-file (expand-file-name "/tmp/org-id-locations-batch-export"))
 
   (let ((notes-dir (expand-file-name "~/My Drive/notes/"))
+        (people-tags-dir (expand-file-name "~/My Drive/people/tags/"))
         (bib-dir   (expand-file-name "~/My Drive/bibliographic-notes/")))
     (org-id-update-id-locations
      (append
       (directory-files-recursively notes-dir "\\.org$")
+      (directory-files-recursively people-tags-dir "\\.org$")
       (directory-files-recursively bib-dir "\\.org$")))))
 
 (provide 'export-common)
