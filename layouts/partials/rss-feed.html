@@ -1,0 +1,31 @@
+{{/*
+  Shared RSS feed structure. Both _default/rss.xml and quotes/rss.xml
+  compute their page selection, then call this partial to render the
+  full RSS document (channel metadata + items).
+
+  Parameters (passed as a dict):
+    .context - the Hugo page context (for title, permalink, description, etc.)
+    .pages   - the pre-filtered, pre-sorted, pre-limited slice of pages
+*/}}
+{{- $ctx := .context -}}
+{{- $pages := .pages -}}
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{{ if eq $ctx.Title $ctx.Site.Title }}{{ $ctx.Site.Title }}{{ else }}{{ with $ctx.Title }}{{ . }} · {{ end }}{{ $ctx.Site.Title }}{{ end }}</title>
+    <link>{{ $ctx.Permalink }}</link>
+    <description>{{ with $ctx.Description }}{{ . }}{{ else }}{{ with $ctx.Site.Params.description }}{{ . }}{{ end }}{{ end }}</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>{{ $ctx.Site.LanguageCode }}</language>{{ with $ctx.Site.Params.author }}{{ with .email }}
+    <managingEditor>{{ . }}{{ with $ctx.Site.Params.author.name }} ({{ . }}){{ end }}</managingEditor>{{ end }}{{ with .email }}
+    <webMaster>{{ . }}{{ with $ctx.Site.Params.author.name }} ({{ . }}){{ end }}</webMaster>{{ end }}{{ end }}{{ with $ctx.Site.Copyright }}
+    <copyright>{{ . }}</copyright>{{ end }}{{ if not $ctx.Date.IsZero }}
+    <lastBuildDate>{{ $ctx.Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</lastBuildDate>{{ end }}
+    {{- with $ctx.OutputFormats.Get "RSS" }}
+    {{ printf "<atom:link href=%q rel=\"self\" type=%q />" .Permalink .MediaType | safeHTML }}
+    {{- end }}
+    {{- range $pages }}
+    {{- partial "rss-item.html" . }}
+    {{- end }}
+  </channel>
+</rss>

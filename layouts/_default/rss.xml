@@ -1,33 +1,13 @@
-{{/* Default RSS feed template. Page selection differs from quotes/rss.xml
-     but the channel and item structure are shared. The <item> format lives
-     in partials/rss-item.html — edit it there. */}}
+{{/* Default RSS feed. Page selection differs per section;
+     the channel structure lives in partials/rss-feed.html. */}}
 {{- $pages := slice -}}
 {{- if .IsHome -}}
-  {{- $pages = .Site.RegularPages -}}
+  {{- $pages = .Site.RegularPages.ByLastmod.Reverse -}}
 {{- else -}}
-  {{- $pages = .Pages -}}
+  {{- $pages = .Pages.ByLastmod.Reverse -}}
 {{- end -}}
 {{- $limit := .Site.Config.Services.RSS.Limit -}}
 {{- if ge $limit 1 -}}
   {{- $pages = $pages | first $limit -}}
 {{- end -}}
-{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>{{ if eq .Title .Site.Title }}{{ .Site.Title }}{{ else }}{{ with .Title }}{{ . }} · {{ end }}{{ .Site.Title }}{{ end }}</title>
-    <link>{{ .Permalink }}</link>
-    <description>{{ with .Description }}{{ . }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>{{ .Site.LanguageCode }}</language>{{ with .Site.Params.author }}{{ with .email }}
-    <managingEditor>{{ . }}{{ with $.Site.Params.author.name }} ({{ . }}){{ end }}</managingEditor>{{ end }}{{ with .email }}
-    <webMaster>{{ . }}{{ with $.Site.Params.author.name }} ({{ . }}){{ end }}</webMaster>{{ end }}{{ end }}{{ with .Site.Copyright }}
-    <copyright>{{ . }}</copyright>{{ end }}{{ if not .Date.IsZero }}
-    <lastBuildDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</lastBuildDate>{{ end }}
-    {{- with .OutputFormats.Get "RSS" }}
-    {{ printf "<atom:link href=%q rel=\"self\" type=%q />" .Permalink .MediaType | safeHTML }}
-    {{- end }}
-    {{- range $pages }}
-    {{- partial "rss-item.html" . }}
-    {{- end }}
-  </channel>
-</rss>
+{{- partial "rss-feed.html" (dict "context" . "pages" $pages) -}}
