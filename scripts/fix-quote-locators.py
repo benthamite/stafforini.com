@@ -14,14 +14,14 @@ import re
 import sys
 from pathlib import Path
 
-from lib import BIBLIO_NOTES_DIR, atomic_write_text
+from lib import BIBLIO_NOTES_DIR, atomic_write_text, is_dataless
 
 # Match a locator suffix at the end of an org heading.
 # Captures the locator text (e.g. "p. 245", "pp. 36-37", "sec. 3").
 LOCATOR_RE = re.compile(
     r',\s+'
     r'((?:pp?|ch|sec|vol|bk|pt|para|no|fn|loc|ll?|fig|tab|tbl|app)\.\s*.+?)'
-    r'\s*$',
+    r'\s*(?=\s+:[:\w]+:\s*$|$)',
     re.IGNORECASE
 )
 
@@ -156,6 +156,8 @@ def main():
     files_changed = 0
 
     for filepath in sorted(BIBLIO_NOTES_DIR.glob('*.org')):
+        if is_dataless(filepath):
+            continue
         changes = process_file(filepath, dry_run=dry_run)
         if not changes:
             continue

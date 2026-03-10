@@ -40,6 +40,8 @@ def build_wp_post_id_index(notes_dir: Path) -> dict[str, Path]:
     org_files = list(notes_dir.glob("*.org"))
 
     for org_path in org_files:
+        if is_dataless(org_path):
+            continue
         try:
             content = org_path.read_text()
         except (OSError, UnicodeDecodeError) as exc:

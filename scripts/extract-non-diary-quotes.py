@@ -79,7 +79,8 @@ def org_to_markdown(text: str) -> str:
     # Italic: /text/ -> _text_ (avoid matching URL paths by requiring word boundaries)
     text = re.sub(r"(?<!\w)/([^/\n]{2,}?)/(?!\w)", r"_\1_", text)
     # Code: =text= or ~text~
-    text = re.sub(r"[=~]([^=~\n]+?)[=~]", r"`\1`", text)
+    text = re.sub(r"=([^=\n]+?)=", r"`\1`", text)
+    text = re.sub(r"~([^~\n]+?)~", r"`\1`", text)
     return text
 
 
@@ -209,10 +210,10 @@ def write_quote_markdown(quote: dict, output_dir: Path) -> Path:
         'author = ["Pablo Stafforini"]',
         "diary = false",
         "draft = false",
-        f'work = "{quote["work_slug"]}"',
+        f'work = "{escape_toml_string(quote["work_slug"])}"',
     ]
     if quote["locator"]:
-        lines.append(f'locator = "{quote["locator"]}"')
+        lines.append(f'locator = "{escape_toml_string(quote["locator"])}"')
     lines.append("+++")
 
     # Format blockquote: prefix each line with >
