@@ -10,6 +10,10 @@ main {
 
 /* View transition names — separate header (stays fixed) from main (crossfades) */
 .site-header {
+  padding-top: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 0;
   view-transition-name: site-header;
 }
 

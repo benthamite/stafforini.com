@@ -39,6 +39,8 @@ function sanitizeExcerpt(html) {
 // Chicago/Turabian typographic convention: minor works (articles, chapters,
 // web pages) get unitalicized titles; major works (books) get italicized titles.
 // Using an object as a set (values are irrelevant; only key membership matters).
+// Keep in sync with layouts/partials/standalone-type.html (which lists the
+// complementary set of *major* work types: book, collection, proceedings, etc.).
 var MINOR_WORK_TYPES = { article: 1, incollection: 1, inbook: 1, inproceedings: 1, online: 1, misc: 1, unpublished: 1 };
 
 function renderResult(r, section, currentQuery) {
