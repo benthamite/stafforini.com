@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generate minimal Hugo content pages for org-roam topic stubs.
 
-Scans tag org files (notes/tags and people/tags) and creates placeholder
+Scans tag org files (notes/tags and people) and creates placeholder
 markdown pages under content/notes/ so that Hugo can resolve internal links
 to topics that have no full note yet.
 
@@ -16,7 +16,7 @@ from pathlib import Path
 
 from lib import (
     NOTES_TAGS_DIR,
-    PEOPLE_TAGS_DIR,
+    PEOPLE_DIR,
     REPO_ROOT,
     atomic_write_text,
     escape_yaml_string,
@@ -27,7 +27,7 @@ from lib import (
 
 CONTENT_NOTES_DIR = REPO_ROOT / "content" / "notes"
 
-TAG_DIRS = [NOTES_TAGS_DIR, PEOPLE_TAGS_DIR]
+TAG_DIRS = [NOTES_TAGS_DIR, PEOPLE_DIR]
 
 
 # === Helpers ===

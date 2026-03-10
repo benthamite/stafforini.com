@@ -21,7 +21,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 BIBLIO_NOTES_DIR = Path.home() / "My Drive" / "bibliographic-notes"
 NOTES_DIR = Path.home() / "My Drive" / "notes"
 NOTES_TAGS_DIR = NOTES_DIR / "tags"
-PEOPLE_TAGS_DIR = Path.home() / "My Drive" / "people" / "tags"
+PEOPLE_DIR = Path.home() / "My Drive" / "people"
 
 ORGROAM_DB_PATH = Path(os.environ.get(
     "ORGROAM_DB",

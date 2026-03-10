@@ -119,8 +119,8 @@
   (let* ((file-list-path (getenv "EXPORT_FILE_LIST"))
          (notes-dir (expand-file-name
                      "~/My Drive/notes/"))
-         (people-tags-dir (expand-file-name
-                           "~/My Drive/people/tags/"))
+         (people-dir (expand-file-name
+                     "~/My Drive/people/"))
          (exportable
           (if file-list-path
               ;; Incremental: only export files from the list, filtering dataless
@@ -139,7 +139,7 @@
             ;; Full: scan recursively and pre-filter
             (let* ((all-files (append
                                (directory-files-recursively notes-dir "\\.org$")
-                               (directory-files-recursively people-tags-dir "\\.org$")))
+                               (directory-files-recursively people-dir "\\.org$")))
                    (files (seq-remove
                            ;; pablos-miscellany.org is the org-roam index file, not a blog post
                            (lambda (f) (string= (file-name-nondirectory f) "pablos-miscellany.org"))

@@ -26,7 +26,6 @@ BIB_NOTES_DIR = Path.home() / "My Drive/bibliographic-notes"
 NOTES_DIR = Path.home() / "My Drive/notes"
 PEOPLE_DIR = Path.home() / "My Drive/people"
 NOTES_TAGS_DIR = NOTES_DIR / "tags"
-PEOPLE_TAGS_DIR = PEOPLE_DIR / "tags"
 
 
 def read_org_id(path: Path) -> str | None:
@@ -74,7 +73,7 @@ def build_tag_index(tags_data: dict) -> tuple[dict[str, tuple[Path, str]], list]
 
         # Try both directories
         path = None
-        for d in [NOTES_TAGS_DIR, PEOPLE_TAGS_DIR]:
+        for d in [NOTES_TAGS_DIR, PEOPLE_DIR]:
             candidate = d / filename
             if candidate.exists():
                 path = candidate

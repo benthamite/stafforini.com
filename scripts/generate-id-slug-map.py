@@ -3,7 +3,7 @@
 
 Covers three sources of published notes:
 
-1. Tag stubs in notes/tags/ and people/tags/ — slug = filename stem.
+1. Tag/person stubs in notes/tags/ and people/ — slug = filename stem.
 2. Published notes under ~/My Drive/notes/ — slug = EXPORT_FILE_NAME value.
    Discovered by querying the org-roam SQLite database for all nodes whose
    files live under the notes directory, then reading each unique file to
@@ -23,7 +23,7 @@ from lib import (
     NOTES_DIR,
     NOTES_TAGS_DIR,
     ORGROAM_DB_PATH,
-    PEOPLE_TAGS_DIR,
+    PEOPLE_DIR,
     REPO_ROOT,
     atomic_write_json,
     is_dataless,
@@ -161,7 +161,7 @@ def scan_notes_filesystem() -> dict[str, str]:
         print(f"  Warning: directory not found: {NOTES_DIR}", file=sys.stderr)
         return mapping
 
-    skip_dirs = {NOTES_TAGS_DIR, PEOPLE_TAGS_DIR}
+    skip_dirs = {NOTES_TAGS_DIR}
     org_files = sorted(NOTES_DIR.rglob("*.org"))
     total = len(org_files)
     skipped_dataless = 0
@@ -204,7 +204,7 @@ def scan_notes_filesystem() -> dict[str, str]:
 def main():
     print("--- Scanning tag stubs ---")
     notes_map = scan_directory(NOTES_TAGS_DIR)
-    people_map = scan_directory(PEOPLE_TAGS_DIR)
+    people_map = scan_directory(PEOPLE_DIR)
 
     print("--- Scanning published notes via org-roam DB ---")
     published_map = scan_published_notes()
@@ -224,7 +224,7 @@ def main():
 
     print(f"\nID-slug map written to {OUTPUT_PATH}")
     print(f"  notes/tags:        {len(notes_map)} IDs")
-    print(f"  people/tags:       {len(people_map)} IDs")
+    print(f"  people:            {len(people_map)} IDs")
     print(f"  published (DB):    {len(published_map)} IDs")
     print(f"  published (files): {len(filesystem_map)} IDs")
     print(f"  total (merged):    {len(combined)} IDs")

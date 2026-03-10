@@ -41,8 +41,8 @@
 (setq org-cite-export-processors '((t . (noop))))
 
 ;; Resolve id: links to proper Hugo note URLs when possible.
-;; Topic notes (~/notes/tags/, ~/people/tags/) are org-roam stubs without
-;; EXPORT_FILE_NAME, so ox-hugo silently drops the entire link element.
+;; Some topic/person notes may lack EXPORT_FILE_NAME, so ox-hugo silently
+;; drops the entire link element.
 ;; We look up the org ID in export-id-slug-map and emit a markdown link
 ;; when found; otherwise fall back to plain text description.
 (org-link-set-parameters

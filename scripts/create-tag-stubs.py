@@ -4,7 +4,7 @@
 Reads unlinked tags from wp-quotes-tags-linked.json and creates minimal
 org-roam files in:
   - ~/My Drive/notes/tags/   (topics)
-  - ~/My Drive/people/tags/  (people)
+  - ~/My Drive/people/       (people)
 
 Each stub has a #+title:, a level-1 heading with :note: or :person: tag,
 and an :ID: property — just enough for org-roam to index them as link
@@ -21,7 +21,7 @@ SCRIPTS_DIR = Path(__file__).parent
 INPUT_JSON = SCRIPTS_DIR / "wp-quotes-tags-linked.json"
 
 NOTES_TAGS_DIR = Path.home() / "My Drive/notes/tags"
-PEOPLE_TAGS_DIR = Path.home() / "My Drive/people/tags"
+PEOPLE_DIR = Path.home() / "My Drive/people"
 
 # Words that, when appearing as whole words in a multi-word tag,
 # indicate it's NOT a person name.
@@ -89,10 +89,10 @@ def main():
 
     # Create directories
     NOTES_TAGS_DIR.mkdir(parents=True, exist_ok=True)
-    PEOPLE_TAGS_DIR.mkdir(parents=True, exist_ok=True)
+    PEOPLE_DIR.mkdir(parents=True, exist_ok=True)
     print(f"\nDirectories:")
     print(f"  {NOTES_TAGS_DIR}")
-    print(f"  {PEOPLE_TAGS_DIR}")
+    print(f"  {PEOPLE_DIR}")
 
     # Create topic stubs
     created_topics = 0
@@ -112,7 +112,7 @@ def main():
     skipped_people = 0
     for tag in sorted(people):
         filename = tag_to_filename(tag)
-        path = PEOPLE_TAGS_DIR / filename
+        path = PEOPLE_DIR / filename
         if path.exists():
             skipped_people += 1
             continue
@@ -122,7 +122,7 @@ def main():
 
     print(f"\nCreated:")
     print(f"  {created_topics} topic stubs in {NOTES_TAGS_DIR.name}/")
-    print(f"  {created_people} people stubs in {PEOPLE_TAGS_DIR.name}/")
+    print(f"  {created_people} people stubs in {PEOPLE_DIR.name}/")
     if skipped_topics or skipped_people:
         print(f"Skipped (already exist):")
         print(f"  {skipped_topics} topics, {skipped_people} people")
