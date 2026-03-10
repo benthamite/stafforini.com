@@ -46,7 +46,10 @@ PDFS_DIR = REPO_ROOT / "static" / "pdfs"
 THUMBS_DIR = REPO_ROOT / "static" / "pdf-thumbnails"
 MANIFEST_PATH = PDFS_DIR / ".manifest.json"
 
+# mutool renders PDF pages to PNG for thumbnail generation.
+# Falls back to Homebrew's default location on macOS.
 MUTOOL = shutil.which("mutool") or "/opt/homebrew/bin/mutool"
+# 150 DPI balances visual quality against file size for thumbnail images.
 THUMB_DPI = 150
 
 DB_BIB = Path.home() / "My Drive/repos/babel-refs/bib/db.bib"
@@ -58,6 +61,7 @@ BOOK_LIKE_TYPES = frozenset({
     "book", "collection", "reference",
     "mvbook", "mvcollection", "mvreference",
 })
+# Books published from 2000 onward are assumed to be under active copyright.
 BOOK_YEAR_CUTOFF = 2000
 
 
@@ -125,8 +129,12 @@ def _render_page(pdf_path: Path, out_png: Path, page_num: int) -> bool:
 
 # A page is considered blank when the fraction of near-white pixels exceeds
 # this threshold.  Near-white = every RGB channel >= BLANK_CHANNEL_MIN.
+# 0.99 tolerates minor artifacts (headers, page numbers) on otherwise blank pages.
 BLANK_THRESHOLD = 0.99
+# 250/255 allows slight off-white (scanned or compressed PDFs aren't pure 255).
 BLANK_CHANNEL_MIN = 250
+# Only check the first few pages for a usable thumbnail; most PDFs have
+# meaningful content on page 1 and blank pages are rare beyond the first few.
 MAX_PAGES_TO_CHECK = 5
 
 

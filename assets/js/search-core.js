@@ -66,6 +66,8 @@ async function runSearch(query, pagefind, options) {
     if (gen !== options.getGeneration()) return;
 
     html += '<div class="search-section">';
+    // In the header overlay (maxResults > 0), omit the count to keep the UI compact.
+    // On the full search page (maxResults = 0), show the total for each section.
     if (maxResults > 0) {
       html += '<h3 class="search-section-heading">' + sec.label + '</h3>';
     } else {

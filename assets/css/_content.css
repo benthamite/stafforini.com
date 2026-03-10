@@ -48,6 +48,8 @@ hr::after {
   mask-position: center;
 }
 
+/* Dinkuses 1–3 use smaller SVGs (simpler ornaments); 4–5 are larger, more
+   ornate designs that need a bigger bounding box to look balanced. */
 hr.dinkus-1::after,
 hr.dinkus-2::after,
 hr.dinkus-3::after {

@@ -5,7 +5,8 @@
 <section class="activity-feed">
   <h2>Recently updated notes</h2>
   <ul>
-    {{/* Show 10 most recently updated notes */}}
+    {{/* Show 10 most recently updated notes — enough to fill the feed
+         without overwhelming the home page. */}}
     {{ range (sort . "Lastmod" "desc" | first 10) }}
     <li>
       <a href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a>
@@ -24,7 +25,8 @@
 <section class="activity-feed">
   <h2>Recently published quotes</h2>
   <ul>
-    {{/* Show 5 most recently added quotes (fewer than notes since quotes are shorter) */}}
+    {{/* Show 5 most recently added quotes — fewer than notes because each
+         quote entry is shorter, so 5 provides comparable visual weight. */}}
     {{ range (sort . "Date" "desc" | first 5) }}
     <li>
       {{ $quote := . }}

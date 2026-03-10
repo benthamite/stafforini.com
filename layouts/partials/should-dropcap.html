@@ -1,3 +1,8 @@
+{{/* Decide whether to apply a drop cap to a note.
+     Criteria: ≥500 words (short notes look odd with a giant letter),
+     doesn't start with a list, first character is uppercase, and
+     the second character isn't an apostrophe (avoids wrapping the
+     first letter of contractions like "'Twas"). */}}
 {{- $trimmed := .Content | strings.TrimLeft "\n\r\t " -}}
 {{- $startsWithList := or (hasPrefix $trimmed "<ul") (hasPrefix $trimmed "<ol") -}}
 {{/* Extract the first <p> content for character checks (skip headings etc.) */}}

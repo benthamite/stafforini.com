@@ -36,7 +36,8 @@
     });
   });
 
-  // Apply saved preference on load
+  // Apply saved preference on load.
+  // 'alpha' is the default sort (rendered server-side), so only activate for other modes.
   var saved = null;
   try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) {}
   if (saved && saved !== 'alpha') {

@@ -11,8 +11,10 @@ function highlightText(escaped, query) {
   if (!query) return escaped;
   var words = query.trim().split(/\s+/).filter(function(w) { return w.length > 0; });
   if (!words.length) return escaped;
+  // Escape regex-special chars in each search term, then build an alternation pattern.
   var pattern = words.map(function(w) { return w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('|');
-  // Match entities as a group (skip them) or match search terms
+  // Match either HTML entities (captured as `entity` → passed through unchanged)
+  // or search terms (captured as `term` → wrapped in <mark>).
   return escaped.replace(new RegExp('(&[#\\w]+;)|(' + pattern + ')', 'gi'), function(m, entity, term) {
     return entity ? entity : '<mark>' + term + '</mark>';
   });

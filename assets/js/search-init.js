@@ -20,6 +20,7 @@ window.createSearchInstance = function (inputEl, resultsEl, options) {
 
   var nav = utils.createKeyboardNav(resultsEl, inputEl);
   var pagefind = null;
+  // Use != null (not !==) to allow 0 as a valid value (meaning "show all results").
   var maxResults = (options && options.maxResultsPerSection != null) ? options.maxResultsPerSection : 0;
   var initPromise = null;
 
@@ -30,6 +31,9 @@ window.createSearchInstance = function (inputEl, resultsEl, options) {
       return pagefind.init().then(function () {
         return pagefind;
       });
+    }).catch(function (err) {
+      initPromise = null; // allow retry on transient failures
+      throw err;
     });
     return initPromise;
   }
@@ -54,11 +58,8 @@ window.createSearchInstance = function (inputEl, resultsEl, options) {
   function handleInput(query, filterSection) {
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(function () {
-      if (initPromise) {
-        initPromise.then(function () { runQuery(query, filterSection); });
-      } else {
-        runQuery(query, filterSection);
-      }
+      var ready = initPromise || initPagefind();
+      ready.then(function () { runQuery(query, filterSection); });
     }, core.SEARCH_DEBOUNCE_MS);
   }
 

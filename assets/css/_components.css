@@ -188,6 +188,9 @@
   margin-top: 0.35rem;
 }
 
+/* On wide viewports, position the locator/bookmark in the right margin.
+   right: -7rem sits just outside the content column; width: 6rem leaves
+   a 1rem gap between the margin element and the sidenote column. */
 @media (min-width: 1100px) {
   .quote-margin {
     position: absolute;
@@ -362,7 +365,8 @@
   height: auto;
 }
 
-/* Gallery */
+/* Gallery — 180px minimum produces roughly square thumbnails that
+   tile well across common viewport widths (3–4 columns on desktop). */
 .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));

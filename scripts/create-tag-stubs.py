@@ -33,10 +33,12 @@ NON_PERSON_WORDS = {
 
 
 def is_person(tag: str) -> bool:
-    """Classify a tag as person vs. topic.
+    """Classify a tag as person vs. topic using a name-shape heuristic.
 
     A tag is likely a person if it has 2+ words, most are capitalized,
-    and none are common non-person words.
+    and none are common non-person words (see NON_PERSON_WORDS above).
+    This heuristic works well for Western names; it intentionally errs on
+    the side of classifying ambiguous tags as topics (fewer false positives).
     """
     words = tag.split()
     if len(words) < 2:
