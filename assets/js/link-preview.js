@@ -47,7 +47,7 @@
               displayPopup(link, text);
             }
           })
-          .catch(function () { cache.set(href, ''); }); // Cache empty string on failure to prevent repeated fetch attempts
+          .catch(function () { /* Don't cache on failure — allow retry on next hover */ });
       }
     }, HOVER_DEBOUNCE_MS);
   }
