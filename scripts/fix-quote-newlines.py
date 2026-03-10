@@ -24,7 +24,7 @@ from pathlib import Path
 
 from lxml import etree
 
-from lib import escape_org_text, markdown_to_org_emphasis
+from lib import escape_org_text, is_dataless, markdown_to_org_emphasis
 
 
 # === Constants ===
@@ -120,7 +120,10 @@ def clean_blockquote_html(html_text: str) -> str:
 # === Verse classification ===
 
 
-# Verse detection thresholds — tuned to distinguish poetry/verse from prose.
+# Verse detection thresholds — tuned empirically against the quote corpus to
+# distinguish poetry/verse (short, ragged lines) from prose (long, uniform lines).
+# Prose paragraphs typically average 60–80+ chars with few short lines; verse
+# averages well under 80 and has mostly short lines.
 VERSE_MIN_LINES = 3        # need at least this many non-empty lines
 VERSE_MAX_LINE_LEN = 100   # lines shorter than this count as "short"
 VERSE_SHORT_RATIO = 0.8    # fraction of lines that must be short

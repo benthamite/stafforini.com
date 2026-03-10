@@ -28,6 +28,9 @@ function createBreakpointToggle(breakpoint, activateFn, deactivateFn, options) {
   window.addEventListener('resize', function () {
     clearTimeout(timer);
     timer = setTimeout(function () {
+      // Force deactivate before re-checking: some features (e.g. sidenotes)
+      // need a full teardown/rebuild when the viewport crosses the breakpoint,
+      // not just a no-op guard from the isActive flag.
       deactivate();
       check();
     }, debounceMs);

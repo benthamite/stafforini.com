@@ -18,7 +18,7 @@ existing=$(find_hugo_servers)
 if [ -n "$existing" ]; then
   echo "Killing existing Hugo server(s)..."
   echo "$existing" | xargs kill 2>/dev/null || true
-  sleep 1
+  sleep 1  # give Hugo time to release the port before restarting
 fi
 
 # Regenerate pre-computed data

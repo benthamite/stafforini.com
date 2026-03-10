@@ -25,6 +25,7 @@ from lib import STOP_WORDS as _BASE_STOP_WORDS
 from lib import (
     cite_key_to_slug,
     escape_org_text,
+    escape_toml_string,
     markdown_to_org_emphasis,
     parse_bib_entries,
 )
@@ -178,7 +179,7 @@ def get_entry_type_tag(entry_type: str) -> str:
 
 
 def slugify(text: str) -> str:
-    """Convert text to a URL-friendly slug."""
+    """Convert text to a URL-friendly kebab-case slug (for org heading IDs)."""
     text = unicodedata.normalize("NFD", text)
     text = "".join(c for c in text if unicodedata.category(c) != "Mn")
     text = text.lower()
@@ -281,9 +282,9 @@ def build_subheading(
     locator = quote.get("locator", "")
 
     # Build EXPORT_HUGO_CUSTOM_FRONT_MATTER
-    custom_fm_parts = [f':work "{work_slug}"']
+    custom_fm_parts = [f':work "{escape_toml_string(work_slug)}"']
     if locator:
-        custom_fm_parts.append(f':locator "{locator}"')
+        custom_fm_parts.append(f':locator "{escape_toml_string(locator)}"')
     custom_fm = " ".join(custom_fm_parts)
 
     # Tag line with padding (right-aligned to org-tags-column)

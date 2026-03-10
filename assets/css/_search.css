@@ -29,6 +29,8 @@
   z-index: 200; /* see z-index scale in _base.css */
   display: flex;
   justify-content: center;
+  /* Place the search box ~10% from the top — high enough to feel prominent,
+     low enough to leave room for results below. */
   padding-top: 10vh;
 }
 

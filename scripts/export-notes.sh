@@ -16,14 +16,18 @@ echo "--- Validating exported files ---"
 python3 -c "
 import re, sys
 from pathlib import Path
-content_dir = Path('$REPO_ROOT') / 'content' / 'notes'
+import os
+content_dir = Path(os.environ.get('REPO_ROOT', '$REPO_ROOT')) / 'content' / 'notes'
 if not content_dir.exists():
+    print('Warning: content/notes/ not found — skipping validation.', file=sys.stderr)
     sys.exit(0)
 missing = []
 for md in sorted(content_dir.glob('*.md')):
     if md.name == '_index.md':
         continue
     text = md.read_text()
+    # ox-hugo wraps frontmatter in +++ delimiters (TOML format).
+    # Check that the title key exists inside the frontmatter block.
     match = re.match(r'(\+\+\+\n)(.*?)(\n\+\+\+)', text, re.DOTALL)
     if match and not re.search(r'^title\s*=', match.group(2), re.MULTILINE):
         missing.append(md.name)
