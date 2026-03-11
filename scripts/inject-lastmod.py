@@ -131,6 +131,40 @@ def find_org_file(slug, output_map=None):
     return None
 
 
+def _get_single_file_git_date(org_file):
+    """Get the latest git commit date for a single org file.
+
+    Used by --file mode to avoid scanning the entire repo history.
+    """
+    try:
+        result = subprocess.run(
+            ["git", "log", "-1", "--format=%ad", "--date=short", "--",
+             str(org_file.name)],
+            capture_output=True, text=True,
+            cwd=str(org_file.parent), check=True,
+        )
+        date = result.stdout.strip()
+        return date if date else None
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return None
+
+
+def _get_single_file_first_date(org_file):
+    """Get the earliest git commit date for a single org file."""
+    try:
+        result = subprocess.run(
+            ["git", "log", "--format=%ad", "--date=short", "--diff-filter=A",
+             "--", str(org_file.name)],
+            capture_output=True, text=True,
+            cwd=str(org_file.parent), check=True,
+        )
+        # Last line = earliest commit
+        lines = [l.strip() for l in result.stdout.strip().splitlines() if l.strip()]
+        return lines[-1] if lines else None
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return None
+
+
 def get_org_mtime(slug, output_map=None):
     """Get the last modification date of the org file for a given slug.
 
@@ -297,6 +331,42 @@ def apply_front_matter_fixups(md_path, output_map=None, lastmod_date=None,
 # === Main ===
 
 
+def process_single_file(md_path):
+    """Process a single markdown file (used by --file mode).
+
+    Uses targeted git queries instead of scanning the full repo,
+    making this fast enough to call after each interactive export.
+    """
+    md_path = Path(md_path)
+    if not md_path.exists():
+        print(f"Error: {md_path} not found.")
+        return
+
+    slug = md_path.stem
+    org_file = find_org_file(slug)
+    if not org_file:
+        print(f"Warning: no org source found for {slug}")
+        return
+
+    lastmod = _get_single_file_git_date(org_file)
+    if not lastmod:
+        # Fallback to filesystem mtime
+        mtime = os.path.getmtime(org_file)
+        lastmod = datetime.fromtimestamp(mtime).strftime("%Y-%m-%d")
+
+    creation = _get_single_file_first_date(org_file)
+
+    result = apply_front_matter_fixups(md_path, None, lastmod, creation)
+    if result["lastmod_updated"]:
+        print(f"  [LASTMOD] {md_path.name} -> lastmod = {lastmod}")
+    if result["title_injected"]:
+        print(f"  [TITLE] {md_path.name} -> injected missing title")
+    if result["date_injected"]:
+        print(f"  [DATE] {md_path.name} -> injected missing date")
+    if result["title_markup_fixed"]:
+        print(f"  [MARKUP] {md_path.name} -> restored title markup")
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Inject lastmod dates from org file modification times"
@@ -304,7 +374,15 @@ def main():
     parser.add_argument(
         "--dry-run", action="store_true", help="Preview without writing"
     )
+    parser.add_argument(
+        "--file", metavar="MD_PATH",
+        help="Process a single markdown file (fast mode for interactive exports)"
+    )
     args = parser.parse_args()
+
+    if args.file:
+        process_single_file(args.file)
+        return
 
     if not CONTENT_DIR.exists():
         print(f"Error: {CONTENT_DIR} not found. Export from org-mode first.")
