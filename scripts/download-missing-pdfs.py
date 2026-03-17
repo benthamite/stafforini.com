@@ -122,36 +122,15 @@ def books_missing_pdf(
 
 
 def build_search_query(book: dict) -> str:
-    """Build the best search query for a book.
+    """Build the search query for a book using its ISBN.
 
-    Prefer ISBN (most precise). Fall back to title + first author surname.
+    Returns the first ISBN (hyphens stripped), or empty string if none.
     """
     isbn = book["isbn"]
-    if isbn:
-        # Take the first ISBN if multiple are present
-        first_isbn = re.split(r"[\s;,]+", isbn)[0]
-        # Strip hyphens for search
-        return re.sub(r"-", "", first_isbn)
-
-    parts = []
-    title = book["title"]
-    if title:
-        # Remove subtitle for cleaner search
-        title = re.split(r"[:.!?]", title)[0].strip()
-        # Limit to first 8 words
-        words = title.split()[:8]
-        parts.append(" ".join(words))
-
-    author = book["author"]
-    if author:
-        # Get first author's surname
-        first_author = re.split(r"\s+and\s+", author)[0].strip()
-        surname = first_author.split(",")[0].strip() if "," in first_author else first_author.split()[-1]
-        # Strip braces (BibTeX formatting)
-        surname = surname.replace("{", "").replace("}", "")
-        parts.append(surname)
-
-    return " ".join(parts)
+    if not isbn:
+        return ""
+    first_isbn = re.split(r"[\s;,]+", isbn)[0]
+    return re.sub(r"-", "", first_isbn)
 
 
 def search_annas_archive(
@@ -756,7 +735,7 @@ def main() -> None:
         # Build and execute search
         query = build_search_query(book)
         if not query:
-            print("  No searchable data (no ISBN, title, or author). Skipping.")
+            print("  No ISBN. Skipping.")
             progress["skipped"].append(key)
             skipped_count += 1
             continue
@@ -766,17 +745,6 @@ def main() -> None:
         results = search_annas_archive(query, args.base_url, verbose=args.verbose)
         pdf_count = sum(1 for r in results if r.get("format") == "pdf")
         print(f"  Results: {len(results)} total, {pdf_count} PDFs")
-
-        if not results:
-            # Try again with title + author if ISBN search found nothing
-            if book["isbn"] and book["title"]:
-                alt_query = build_search_query({**book, "isbn": ""})
-                print(f"  Retrying with title+author: {alt_query}")
-                results = search_annas_archive(
-                    alt_query, args.base_url, verbose=args.verbose
-                )
-                pdf_count = sum(1 for r in results if r.get("format") == "pdf")
-                print(f"  Results: {len(results)} total, {pdf_count} PDFs")
 
         best = select_best_result(results, target_book=book)
 
