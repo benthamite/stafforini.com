@@ -461,24 +461,44 @@ class RateLimitError(Exception):
     """Raised when the API returns HTTP 429."""
 
 
+class QuotaExhaustedError(Exception):
+    """Raised when repeated 429s indicate daily quota is exhausted."""
+
+
+# Track consecutive 429 failures across books to detect quota exhaustion
+_consecutive_429s = 0
+_QUOTA_EXHAUSTION_THRESHOLD = 3  # 3 consecutive books failing = daily limit hit
+
+
 def download_via_fast_api(
     md5: str, secret_key: str, base_url: str, dest_path: Path,
-    *, verbose: bool = False, max_retries: int = 5
+    *, verbose: bool = False, max_retries: int = 3
 ) -> bool:
     """Download a file using Anna's Archive fast download API.
 
     Retries with exponential backoff on HTTP 429.  Returns True on
-    success, False on non-retryable failure.
+    success, False on non-retryable failure.  Raises QuotaExhaustedError
+    when repeated failures suggest the daily limit has been hit.
     """
+    global _consecutive_429s
+
     for attempt in range(max_retries + 1):
         try:
-            return _download_once(md5, secret_key, base_url, dest_path,
-                                  verbose=verbose)
+            result = _download_once(md5, secret_key, base_url, dest_path,
+                                    verbose=verbose)
+            _consecutive_429s = 0  # reset on success
+            return result
         except RateLimitError:
             if attempt == max_retries:
-                print("    Rate-limited: max retries exhausted", file=sys.stderr)
+                _consecutive_429s += 1
+                if _consecutive_429s >= _QUOTA_EXHAUSTION_THRESHOLD:
+                    raise QuotaExhaustedError(
+                        f"Daily download quota appears exhausted "
+                        f"({_consecutive_429s} consecutive 429 failures)")
+                print("    Rate-limited: retries exhausted for this book",
+                      file=sys.stderr)
                 return False
-            wait = 30 * (2 ** attempt)  # 30s, 60s, 120s, 240s, 480s
+            wait = 30 * (2 ** attempt)  # 30s, 60s, 120s
             print(f"    Rate-limited (429). Waiting {wait}s before retry "
                   f"{attempt + 2}/{max_retries + 1}...", file=sys.stderr)
             time.sleep(wait)
@@ -816,10 +836,18 @@ def main() -> None:
 
         # Download
         print(f"  Downloading to {dest.name}...")
-        ok = download_via_fast_api(
-            best["md5"], secret_key, args.base_url, dest,
-            verbose=args.verbose
-        )
+        try:
+            ok = download_via_fast_api(
+                best["md5"], secret_key, args.base_url, dest,
+                verbose=args.verbose
+            )
+        except QuotaExhaustedError as e:
+            print(f"\n  {e}")
+            print("  Stopping. Re-run with --retry-errors --resume tomorrow.")
+            if key not in progress["errors"]:
+                progress["errors"].append(key)
+            save_progress(PROGRESS_FILE, progress)
+            break
 
         if ok:
             file_size = dest.stat().st_size
