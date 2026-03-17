@@ -36,6 +36,7 @@ import os
 import re
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -456,14 +457,39 @@ def select_best_result(
 # ---------------------------------------------------------------------------
 
 
+class RateLimitError(Exception):
+    """Raised when the API returns HTTP 429."""
+
+
 def download_via_fast_api(
     md5: str, secret_key: str, base_url: str, dest_path: Path,
-    *, verbose: bool = False
+    *, verbose: bool = False, max_retries: int = 5
 ) -> bool:
     """Download a file using Anna's Archive fast download API.
 
-    Returns True on success, False on failure.
+    Retries with exponential backoff on HTTP 429.  Returns True on
+    success, False on non-retryable failure.
     """
+    for attempt in range(max_retries + 1):
+        try:
+            return _download_once(md5, secret_key, base_url, dest_path,
+                                  verbose=verbose)
+        except RateLimitError:
+            if attempt == max_retries:
+                print("    Rate-limited: max retries exhausted", file=sys.stderr)
+                return False
+            wait = 30 * (2 ** attempt)  # 30s, 60s, 120s, 240s, 480s
+            print(f"    Rate-limited (429). Waiting {wait}s before retry "
+                  f"{attempt + 2}/{max_retries + 1}...", file=sys.stderr)
+            time.sleep(wait)
+    return False
+
+
+def _download_once(
+    md5: str, secret_key: str, base_url: str, dest_path: Path,
+    *, verbose: bool = False
+) -> bool:
+    """Single download attempt.  Raises RateLimitError on 429."""
     api_url = (
         f"{base_url}dyn/api/fast_download.json"
         f"?md5={urllib.parse.quote(md5)}"
@@ -481,6 +507,11 @@ def download_via_fast_api(
         )
         with urllib.request.urlopen(req, timeout=30) as resp:
             data = json.loads(resp.read())
+    except urllib.error.HTTPError as e:
+        if e.code == 429:
+            raise RateLimitError()
+        print(f"    Fast download API failed: {e}", file=sys.stderr)
+        return False
     except Exception as e:
         print(f"    Fast download API failed: {e}", file=sys.stderr)
         return False
@@ -627,8 +658,8 @@ def main() -> None:
                         help="Anna's Archive secret key")
     parser.add_argument("--base-url", default="https://annas-archive.gl/",
                         help="Anna's Archive base URL")
-    parser.add_argument("--delay", type=float, default=3.0,
-                        help="Seconds between searches")
+    parser.add_argument("--delay", type=float, default=5.0,
+                        help="Seconds between searches (default: 5)")
     parser.add_argument("--include-broken", action="store_true",
                         help="Also process books with broken file refs")
     parser.add_argument("--only", default="",
@@ -637,6 +668,8 @@ def main() -> None:
                         help="Add file fields to old.bib for downloaded PDFs")
     parser.add_argument("--retry-not-found", action="store_true",
                         help="Retry books previously marked as not found")
+    parser.add_argument("--retry-errors", action="store_true",
+                        help="Retry books that failed due to download errors")
     parser.add_argument("--verbose", action="store_true",
                         help="Extra debug output")
     args = parser.parse_args()
@@ -662,13 +695,18 @@ def main() -> None:
               "or configure in ~/.claude.json", file=sys.stderr)
         sys.exit(1)
 
-    # Handle --retry-not-found: clear not_found list so they get retried
-    if args.retry_not_found:
+    # Handle --retry-not-found / --retry-errors: clear lists so they get retried
+    if args.retry_not_found or args.retry_errors:
         progress = load_progress(PROGRESS_FILE)
-        cleared = len(progress.get("not_found", []))
-        progress["not_found"] = []
+        if args.retry_not_found:
+            cleared = len(progress.get("not_found", []))
+            progress["not_found"] = []
+            print(f"Cleared {cleared} not-found entries.")
+        if args.retry_errors:
+            cleared = len(progress.get("errors", []))
+            progress["errors"] = []
+            print(f"Cleared {cleared} error entries.")
         save_progress(PROGRESS_FILE, progress)
-        print(f"Cleared {cleared} not-found entries. They will be retried.")
         if not args.resume:
             args.resume = True
 
