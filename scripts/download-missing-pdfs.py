@@ -622,8 +622,11 @@ def update_bib_entry(bib_path: Path, key: str) -> bool:
     if re.search(r"^\s*file\s*=", entry_text, re.MULTILINE):
         return False
 
+    # Ensure the last field before the closing brace has a trailing comma
+    entry_text_end = content[: m.start(2)]
+    entry_text_end = re.sub(r"([^\s,])([ \t]*\n)$", r"\1,\2", entry_text_end)
     file_line = f"\tfile = {{{expected_path}}}\n"
-    content = content[: m.start(2)] + file_line + content[m.start(2) :]
+    content = entry_text_end + file_line + content[m.start(2) :]
     bib_path.write_text(content, encoding="utf-8")
     return True
 
