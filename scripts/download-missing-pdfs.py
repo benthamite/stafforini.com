@@ -605,40 +605,38 @@ def save_progress(path: Path, progress: dict) -> None:
 # ---------------------------------------------------------------------------
 
 
+def update_bib_entry(bib_path: Path, key: str) -> bool:
+    """Add a file field to a single @book entry.  Returns True if updated."""
+    content = bib_path.read_text(encoding="utf-8")
+    expected_path = f"~/My Drive/library-pdf/{key}.pdf"
+
+    pattern = re.compile(
+        rf"(@book\{{{re.escape(key)},.*?)(^\}})",
+        re.DOTALL | re.MULTILINE,
+    )
+    m = pattern.search(content)
+    if not m:
+        return False
+
+    entry_text = m.group(1)
+    if re.search(r"^\s*file\s*=", entry_text, re.MULTILINE):
+        return False
+
+    file_line = f"\tfile = {{{expected_path}}}\n"
+    content = content[: m.start(2)] + file_line + content[m.start(2) :]
+    bib_path.write_text(content, encoding="utf-8")
+    return True
+
+
 def update_bib_file(bib_path: Path, progress: dict) -> int:
     """Add file fields to bib entries for downloaded PDFs.
 
     Returns the number of entries updated.
     """
-    content = bib_path.read_text(encoding="utf-8")
     updated = 0
-
     for key in progress.get("downloaded", {}):
-        expected_path = f"~/My Drive/library-pdf/{key}.pdf"
-
-        # Find the entry — match @book{KEY, through the closing }
-        # We insert the file field before the closing }
-        pattern = re.compile(
-            rf"(@book\{{{re.escape(key)},.*?)(^\}})",
-            re.DOTALL | re.MULTILINE,
-        )
-        m = pattern.search(content)
-        if not m:
-            continue
-
-        entry_text = m.group(1)
-        # Skip if file field already exists
-        if re.search(r"^\s*file\s*=", entry_text, re.MULTILINE):
-            continue
-
-        # Insert file field before closing brace, matching indentation
-        file_line = f"\tfile = {{{expected_path}}}\n"
-        content = content[: m.start(2)] + file_line + content[m.start(2) :]
-        updated += 1
-
-    if updated:
-        bib_path.write_text(content, encoding="utf-8")
-
+        if update_bib_entry(bib_path, key):
+            updated += 1
     return updated
 
 
@@ -858,6 +856,9 @@ def main() -> None:
                 "query": query,
             }
             downloaded_count += 1
+            # Update bib entry inline
+            if update_bib_entry(BIB_FILE, key):
+                print(f"  Updated bib entry")
         else:
             print("  FAILED")
             if key not in progress["errors"]:
