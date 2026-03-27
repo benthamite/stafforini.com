@@ -777,6 +777,9 @@ def main() -> None:
             if key in progress["errors"]:
                 skipped_count += 1
                 continue
+            if key in progress["skipped"]:
+                skipped_count += 1
+                continue
 
         # Check if file already exists on disk
         dest = LIBRARY_DIR / f"{key}.pdf"
