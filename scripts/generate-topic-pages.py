@@ -10,6 +10,8 @@ Usage:
     python generate-topic-pages.py --dry-run    # Preview without writing
 """
 
+from __future__ import annotations
+
 import argparse
 import re
 from pathlib import Path

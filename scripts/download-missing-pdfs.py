@@ -30,6 +30,8 @@ Options:
     --verbose           Print extra debugging info
 """
 
+from __future__ import annotations
+
 import argparse
 import json
 import os
@@ -40,6 +42,8 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
+
+from lib import parse_bib_entries
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -58,36 +62,28 @@ def parse_bib_books(bib_path: Path) -> list[dict]:
     """Return a list of @book entries from a .bib file.
 
     Each entry is a dict with keys: key, title, author, isbn, date,
-    crossref, file, raw.
+    crossref, file.
     """
-    content = bib_path.read_text(encoding="utf-8")
-    entries_raw = re.split(r"\n(?=@)", content)
     books = []
-    for raw in entries_raw:
-        raw = raw.strip()
-        if not raw.startswith("@book{"):
-            continue
-        m = re.match(r"@book\{([^,]+),", raw)
-        if not m:
-            continue
-        key = m.group(1)
+    entries = parse_bib_entries(
+        bib_path,
+        strip_braces=False,
+        extra_fields=["isbn", "date", "crossref", "file"],
+        field_fallbacks={"author": "editor"},
+    )
 
-        def field(name: str) -> str:
-            fm = re.search(
-                rf"^\s*{name}\s*=\s*\{{(.+?)\}}", raw, re.MULTILINE
-            )
-            return fm.group(1).strip() if fm else ""
-
+    for entry in entries:
+        if entry["entry_type"] != "book":
+            continue
         books.append(
             {
-                "key": key,
-                "title": field("title"),
-                "author": field("author") or field("editor"),
-                "isbn": field("isbn"),
-                "date": field("date") or field("year"),
-                "crossref": field("crossref"),
-                "file": field("file"),
-                "raw": raw,
+                "key": entry["cite_key"],
+                "title": entry["title"],
+                "author": entry["author"] or entry["editor"],
+                "isbn": entry.get("isbn", ""),
+                "date": entry.get("date", "") or entry["year"],
+                "crossref": entry.get("crossref", ""),
+                "file": entry.get("file", ""),
             }
         )
     return books
@@ -412,12 +408,16 @@ def score_result(result: dict, target_book: dict | None = None) -> tuple:
 
     # Relevance check — require title AND/OR author evidence
     if target_book:
-        sim = title_similarity(target_book.get("title", ""), result.get("title", ""))
+        target_title = target_book.get("title", "").strip()
+        sim = title_similarity(target_title, result.get("title", ""))
         auth_ok = author_matches(target_book.get("author", ""), result.get("authors", ""))
         has_author = bool(target_book.get("author", "").strip())
+        has_title = bool(target_title)
 
+        if not has_title and has_author and auth_ok:
+            pass  # fallback when bibliography metadata lacks a parseable title
         # High title similarity — accept on title alone
-        if sim >= 0.5 and (has_author and auth_ok or sim >= 0.7):
+        elif sim >= 0.5 and (has_author and auth_ok or sim >= 0.7):
             pass  # good match
         # Moderate title similarity + author confirmation — accept
         elif sim >= 0.25 and auth_ok and has_author:

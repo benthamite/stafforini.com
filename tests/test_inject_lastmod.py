@@ -115,3 +115,15 @@ class TestApplyFrontMatterFixups:
 
         content = md.read_text()
         assert "Body with **markup**." in content
+
+    def test_title_markup_fix_escapes_quotes(self, tmp_path):
+        md = tmp_path / "test.md"
+        md.write_text('+++\ntitle = "Old"\n+++\n\nBody.\n')
+
+        with patch.object(_mod, "get_org_title", return_value='The "Good" Life'):
+            result = apply_front_matter_fixups(md)
+
+        assert result["title_markup_fixed"] is True
+        content = md.read_text()
+        assert 'title = "The \\"Good\\" Life"' in content
+        assert 'title = "The "Good" Life"' not in content

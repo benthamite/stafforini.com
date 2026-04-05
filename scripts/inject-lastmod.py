@@ -16,6 +16,8 @@ Usage:
     python scripts/inject-lastmod.py --dry-run  # Preview without writing
 """
 
+from __future__ import annotations
+
 import argparse
 import json
 import os
@@ -24,7 +26,7 @@ import subprocess
 from datetime import datetime
 from pathlib import Path
 
-from lib import NOTES_DIR, REPO_ROOT, atomic_write_text, is_dataless
+from lib import NOTES_DIR, REPO_ROOT, atomic_write_text, escape_toml_string, is_dataless
 
 # === Constants ===
 
@@ -258,7 +260,7 @@ def apply_front_matter_fixups(md_path, output_map=None, lastmod_date=None,
     # 1. Ensure title exists (ox-hugo sometimes drops it)
     if not re.search(r"^title\s*=", front_matter, re.MULTILINE):
         title = get_org_title(md_path.stem, output_map) or md_path.stem
-        title = title.replace('\\', '\\\\').replace('"', '\\"')
+        title = escape_toml_string(title)
         front_matter = f'title = "{title}"\n' + front_matter
         changed = True
         result["title_injected"] = True
@@ -267,8 +269,9 @@ def apply_front_matter_fixups(md_path, output_map=None, lastmod_date=None,
     org_title = get_org_title(md_path.stem, output_map)
     if org_title is not None:
         title_match = re.search(r'^title = "(.+)"$', front_matter, re.MULTILINE)
-        if title_match and title_match.group(1) != org_title:
-            escaped_org_title = f'title = "{org_title}"'
+        escaped_org_title = escape_toml_string(org_title)
+        if title_match and title_match.group(1) != escaped_org_title:
+            escaped_org_title = f'title = "{escaped_org_title}"'
             front_matter = re.sub(
                 r'^title = "' + re.escape(title_match.group(1)) + r'"',
                 lambda m: escaped_org_title,

@@ -9,6 +9,8 @@ Usage:
     python3 scripts/incremental-export.py notes [--full]
 """
 
+from __future__ import annotations
+
 import argparse
 import os
 import re
@@ -190,6 +192,23 @@ def wipe_output_dir(output_dir: Path) -> None:
     print(f"Wiped all .md files from {output_dir}")
 
 
+def _remove_stale_outputs(output_dir: Path, stale_outputs) -> int:
+    """Delete stale outputs after a successful export."""
+    unique = sorted(set(stale_outputs))
+    if not unique:
+        return 0
+    print(f"Cleaning {len(unique)} stale output(s)...")
+    return delete_md_files(output_dir, unique)
+
+
+def _manifest_output_names(manifest: dict) -> set[str]:
+    """Return the set of output filenames referenced by a manifest."""
+    names = set()
+    for info in manifest.get("files", {}).values():
+        names.update(info.get("outputs", []))
+    return names
+
+
 # === Export logic ===
 
 
@@ -211,12 +230,10 @@ def run_emacs(elisp: Path, file_list_path: str | None = None) -> int:
     return result.returncode
 
 
-def run_full_export(section: str, cfg: dict, current_files: dict[str, float]) -> None:
-    """Full export: wipe outputs, export everything, build fresh manifest."""
+def run_full_export(section: str, cfg: dict, current_files: dict[str, float]) -> bool:
+    """Full export: export everything, then prune stale outputs on success."""
     source_dirs = cfg["source_dirs"]
     output_dir = cfg["output_dir"]
-
-    wipe_output_dir(output_dir)
 
     # Pass the pre-filtered file list to Emacs (avoids slow recursive scan in Emacs)
     full_paths = [str(resolve_relpath(name, source_dirs)) for name in sorted(current_files)]
@@ -227,9 +244,13 @@ def run_full_export(section: str, cfg: dict, current_files: dict[str, float]) ->
         file_list_path = tmp.name
 
     try:
-        run_emacs(cfg["elisp"], file_list_path=file_list_path)
+        returncode = run_emacs(cfg["elisp"], file_list_path=file_list_path)
     finally:
         os.unlink(file_list_path)
+
+    if returncode != 0:
+        print("Full export failed; leaving outputs and manifest unchanged.", file=sys.stderr)
+        return False
 
     # Build fresh manifest from all current exportable files
     print("\nBuilding manifest...")
@@ -241,7 +262,15 @@ def run_full_export(section: str, cfg: dict, current_files: dict[str, float]) ->
                 "mtime": filepath.stat().st_mtime,
                 "outputs": extract_export_file_names(filepath),
             }
+
+    valid_outputs = _manifest_output_names(new_manifest)
+    stale_outputs = [
+        f.name for f in output_dir.glob("*.md")
+        if f.name != "_index.md" and f.name not in valid_outputs
+    ]
+    _remove_stale_outputs(output_dir, stale_outputs)
     save_manifest(section, new_manifest)
+    return True
 
 
 def run_incremental_export(
@@ -249,7 +278,7 @@ def run_incremental_export(
     cfg: dict,
     manifest: dict,
     current_files: dict[str, float],
-) -> None:
+) -> bool:
     """Incremental export: only re-export changed/new files."""
     source_dirs = cfg["source_dirs"]
     output_dir = cfg["output_dir"]
@@ -278,15 +307,19 @@ def run_incremental_export(
             stale_outputs.extend(info.get("outputs", []))
             print(f"  Source deleted: {name}")
 
-    # Delete stale outputs
-    if stale_outputs:
-        print(f"Cleaning {len(stale_outputs)} stale output(s)...")
-        delete_md_files(output_dir, stale_outputs)
-
     # Nothing to export?
     if not to_export:
-        print("Nothing to export — all files up to date.")
-        return
+        if stale_outputs:
+            _remove_stale_outputs(output_dir, stale_outputs)
+            print("\nUpdating manifest...")
+            new_manifest = {"files": {}}
+            for name in current_files:
+                new_manifest["files"][name] = old_files[name]
+            save_manifest(section, new_manifest)
+            print("Nothing to export — removed stale outputs only.")
+        else:
+            print("Nothing to export — all files up to date.")
+        return True
 
     print(f"\n{len(to_export)} file(s) to export:")
     for name in to_export[:20]:
@@ -303,9 +336,15 @@ def run_incremental_export(
         file_list_path = tmp.name
 
     try:
-        run_emacs(cfg["elisp"], file_list_path=file_list_path)
+        returncode = run_emacs(cfg["elisp"], file_list_path=file_list_path)
     finally:
         os.unlink(file_list_path)
+
+    if returncode != 0:
+        print("Incremental export failed; leaving outputs and manifest unchanged.", file=sys.stderr)
+        return False
+
+    _remove_stale_outputs(output_dir, stale_outputs)
 
     # Update manifest using the pre-export mtime from current_files
     # (not re-statting after export, which could differ if Emacs modifies the file)
@@ -322,6 +361,7 @@ def run_incremental_export(
         else:
             new_manifest["files"][name] = old_files[name]
     save_manifest(section, new_manifest)
+    return True
 
 
 # === Entry point ===
@@ -355,9 +395,12 @@ def run_export(section: str, full: bool = False) -> None:
     print(f"Found {len(current_files)} exportable files.")
 
     if is_full:
-        run_full_export(section, cfg, current_files)
+        ok = run_full_export(section, cfg, current_files)
     else:
-        run_incremental_export(section, cfg, manifest, current_files)
+        ok = run_incremental_export(section, cfg, manifest, current_files)
+
+    if not ok:
+        sys.exit(1)
 
     print("\nDone.")
 

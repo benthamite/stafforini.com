@@ -13,6 +13,8 @@ Covers three sources of published notes:
 Writes data/id-slug-map.json.
 """
 
+from __future__ import annotations
+
 import os
 import re
 import sqlite3

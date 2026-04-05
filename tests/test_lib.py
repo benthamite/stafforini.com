@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 
 import lib
+import pytest
 
 
 # ---------------------------------------------------------------------------
@@ -48,6 +49,23 @@ class TestCiteKeyToSlug:
     def test_multiple_hyphen_prefixes(self):
         # lstrip("-") removes all leading hyphens
         assert lib.cite_key_to_slug("--Smith2020") == "smith-2020"
+
+
+# ---------------------------------------------------------------------------
+# build_unique_slug_map
+# ---------------------------------------------------------------------------
+
+class TestBuildUniqueSlugMap:
+    def test_unique_cite_keys(self):
+        result = lib.build_unique_slug_map(["Singer1972FamineAffluence", "Parfit1984"])
+        assert result == {
+            "singer-1972-famine-affluence": "Singer1972FamineAffluence",
+            "parfit-1984": "Parfit1984",
+        }
+
+    def test_collision_raises(self):
+        with pytest.raises(ValueError, match="foo-2020-bar"):
+            lib.build_unique_slug_map(["Foo2020Bar", "foo2020Bar"])
 
 
 # ---------------------------------------------------------------------------
@@ -210,19 +228,16 @@ class TestTagToFilename:
 
 class TestMarkdownToOrgEmphasis:
     def test_bold_conversion(self):
-        # **bold** → *bold* (step 1), then *bold* → /bold/ (step 2)
-        # The two-step conversion means standalone bold becomes italic markup
-        # This is the actual behavior — bold-only text ends up as /bold/
-        assert lib.markdown_to_org_emphasis("**bold**") == "/bold/"
+        # Bold markdown becomes org bold, not italic.
+        assert lib.markdown_to_org_emphasis("**bold**") == "*bold*"
 
     def test_italic_conversion(self):
         assert lib.markdown_to_org_emphasis("*italic*") == "/italic/"
 
     def test_bold_and_italic_together(self):
-        # Both get converted to org italic (/) because bold first becomes *
-        # then the italic regex catches it
+        # Bold stays bold, italic becomes org italic.
         result = lib.markdown_to_org_emphasis("**bold** and *italic*")
-        assert result == "/bold/ and /italic/"
+        assert result == "*bold* and /italic/"
 
     def test_no_emphasis(self):
         assert lib.markdown_to_org_emphasis("plain text") == "plain text"
@@ -230,7 +245,7 @@ class TestMarkdownToOrgEmphasis:
     def test_adjacent_bold_markers_not_split(self):
         # Verify ** is consumed as a unit, not as two separate *
         result = lib.markdown_to_org_emphasis("**bold** then *italic*")
-        assert "/bold/" in result
+        assert "*bold*" in result
         assert "/italic/" in result
 
     def test_empty(self):

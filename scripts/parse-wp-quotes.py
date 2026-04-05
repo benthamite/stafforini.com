@@ -5,6 +5,8 @@ Extracts quote text, attribution, author, work title, year, locator,
 categories, and tags from each published post.
 """
 
+from __future__ import annotations
+
 import json
 import re
 import sys

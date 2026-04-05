@@ -16,6 +16,8 @@ Usage:
     python fix-quote-newlines.py --limit 10       # Process first 10
 """
 
+from __future__ import annotations
+
 import argparse
 import html
 import json
