@@ -11,6 +11,8 @@ Usage:
     python inject-tag-links.py --limit 10       # Process first 10 cite keys
 """
 
+from __future__ import annotations
+
 import argparse
 import json
 import re

@@ -5,6 +5,8 @@ script imports from a single source of truth rather than maintaining
 its own copy.
 """
 
+from __future__ import annotations
+
 import hashlib
 import json
 import os
@@ -236,6 +238,38 @@ def cite_key_to_slug(cite_key: str) -> str:
     return s.lower()
 
 
+def build_unique_slug_map(cite_keys) -> dict[str, str]:
+    """Return {slug: cite_key}, raising on collisions.
+
+    Multiple distinct cite keys mapping to the same slug are ambiguous for
+    generated paths. Fail fast instead of silently letting different pipelines
+    pick different winners.
+    """
+    slug_to_key = {}
+    collisions = {}
+
+    for cite_key in cite_keys:
+        slug = cite_key_to_slug(cite_key)
+        existing = slug_to_key.get(slug)
+        if existing is None:
+            slug_to_key[slug] = cite_key
+            continue
+        if existing == cite_key:
+            continue
+        collisions.setdefault(slug, [existing])
+        if cite_key not in collisions[slug]:
+            collisions[slug].append(cite_key)
+
+    if collisions:
+        details = "; ".join(
+            f"{slug}: {', '.join(keys)}"
+            for slug, keys in sorted(collisions.items())
+        )
+        raise ValueError(f"Slug collisions detected: {details}")
+
+    return slug_to_key
+
+
 def escape_yaml_string(s: str) -> str:
     """Escape a string for YAML double-quoted value."""
     s = s.replace("\\", "\\\\")
@@ -255,10 +289,11 @@ def markdown_to_org_emphasis(text: str) -> str:
     **text** → *text* (bold)
     *text*  → /text/ (italic)
     """
+    sentinel = "\x00"
     # Use a sentinel to prevent bold → italic double-conversion
-    text = re.sub(r"\*\*(.+?)\*\*", r"\x00\1\x00", text)
+    text = re.sub(r"\*\*(.+?)\*\*", lambda m: f"{sentinel}{m.group(1)}{sentinel}", text)
     text = re.sub(r"(?<!\*)\*([^*]+?)\*(?!\*)", r"/\1/", text)
-    text = text.replace("\x00", "*")
+    text = text.replace(sentinel, "*")
     return text
 
 

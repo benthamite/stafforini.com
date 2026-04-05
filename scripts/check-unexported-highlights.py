@@ -15,6 +15,8 @@ Usage:
     python check-unexported-highlights.py --min-gap 3  # Only report gaps >= 3
 """
 
+from __future__ import annotations
+
 import argparse
 import re
 from pathlib import Path

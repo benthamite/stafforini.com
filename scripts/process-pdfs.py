@@ -32,6 +32,7 @@ from lib import (
     BIB_FILES,
     MTIME_EPSILON,
     REPO_ROOT,
+    build_unique_slug_map,
     cite_key_to_slug,
     extract_pdf_path,
     load_json_manifest,
@@ -396,14 +397,9 @@ def main():
     entries = collect_entries()
     print(f"  Found {len(entries)} entries with PDF paths")
 
-    # Deduplicate by slug (first occurrence wins)
-    seen = set()
-    unique = []
-    for e in entries:
-        if e["slug"] not in seen:
-            seen.add(e["slug"])
-            unique.append(e)
-    entries = unique
+    slug_to_key = build_unique_slug_map(e["cite_key"] for e in entries)
+    entries_by_key = {e["cite_key"]: e for e in entries}
+    entries = [entries_by_key[slug_to_key[slug]] for slug in sorted(slug_to_key)]
     print(f"  Unique slugs: {len(entries)}")
 
     # Process

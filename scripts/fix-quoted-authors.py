@@ -12,6 +12,8 @@ Usage:
     python fix-quoted-authors.py --dry-run      # Preview changes without writing
 """
 
+from __future__ import annotations
+
 import argparse
 import json
 import re

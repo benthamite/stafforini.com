@@ -17,7 +17,7 @@ import argparse
 import re
 from pathlib import Path
 
-from lib import BIB_FILES, atomic_write_text, cite_key_to_slug, escape_yaml_string, parse_bib_entries, safe_remove
+from lib import BIB_FILES, atomic_write_text, build_unique_slug_map, cite_key_to_slug, escape_yaml_string, parse_bib_entries, safe_remove
 
 # === Constants ===
 
@@ -326,10 +326,7 @@ def generate_work_pages(bib_by_key: dict, dry_run: bool = False, limit: int = 0)
         WORKS_DIR.mkdir(parents=True, exist_ok=True)
 
     # Build slug -> cite_key mapping (all bib entries get a page)
-    slug_to_key = {}
-    for cite_key in bib_by_key:
-        slug = cite_key_to_slug(cite_key)
-        slug_to_key[slug] = cite_key
+    slug_to_key = build_unique_slug_map(bib_by_key)
 
     all_slugs = set(slug_to_key.keys())
     print(f"  {len(all_slugs)} unique slugs from bib files")
