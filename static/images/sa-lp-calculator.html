@@ -32,6 +32,10 @@ tr:hover td { background: rgba(0,0,0,0.02); }
 .summary { margin-top: 12px; font-size: 13px; display: flex;
             gap: 24px; font-weight: 500; }
 .summary span { color: #666; font-weight: 400; }
+td.cb { width: 24px; text-align: center; }
+td.cb input { margin: 0; cursor: pointer; }
+tr.excluded td { opacity: 0.35; }
+tr.excluded td.cb { opacity: 1; }
 body.dark { color: #d4d4d4; }
 body.dark .controls input, body.dark .controls select {
   background: #2a2a2a; color: #d4d4d4; border-color: #555; }
@@ -42,6 +46,7 @@ body.dark .tag-long { background: #14532d; color: #86efac; }
 body.dark .tag-call { background: #1e3a5f; color: #93c5fd; }
 body.dark .tag-put  { background: #450a0a; color: #fca5a5; }
 body.dark .meta { color: #777; }
+body.dark tr.excluded td { opacity: 0.3; }
 body.dark .summary span { color: #888; }
 </style>
 </head>
@@ -59,20 +64,32 @@ body.dark .summary span { color: #888; }
 </div>
 <div id="mode-desc" class="meta" style="font-style:italic"></div>
 <div class="meta">
-  Q4 2025 filing (filed 2026-02-11) &middot; prices as of 2026-03-06
+  Q4 2025 filing (filed 2026-02-11) &middot; prices as of 2026-03-13
 </div>
 <div id="output"></div>
 <script>
 
 var DATA = {
-  equity_only: [{"ticker": "BE", "type": "long", "weight": 0.223706, "price": 135.19}, {"ticker": "LITE", "type": "long", "weight": 0.122284, "price": 558.44}, {"ticker": "CRWV", "type": "long", "weight": 0.111593, "price": 72.99}, {"ticker": "CORZ", "type": "long", "weight": 0.106983, "price": 14.86}, {"ticker": "IREN", "type": "long", "weight": 0.083968, "price": 36.7}, {"ticker": "APLD", "type": "long", "weight": 0.071042, "price": 25.14}, {"ticker": "SNDK", "type": "long", "weight": 0.063942, "price": 527.33}, {"ticker": "CIFR", "type": "long", "weight": 0.039483, "price": 13.62}, {"ticker": "EQT", "type": "long", "weight": 0.033996, "price": 61.96}, {"ticker": "COHR", "type": "long", "weight": 0.022651, "price": 235.72}, {"ticker": "SEI", "type": "long", "weight": 0.021924, "price": 48.96}, {"ticker": "TSEM", "type": "long", "weight": 0.021692, "price": 110.59}, {"ticker": "RIOT", "type": "long", "weight": 0.019967, "price": 14.16}, {"ticker": "KRC", "type": "long", "weight": 0.012678, "price": 29.81}, {"ticker": "HUT", "type": "long", "weight": 0.010097, "price": 47.07}, {"ticker": "WYFI", "type": "long", "weight": 0.007096, "price": 15.5}, {"ticker": "PSIX", "type": "long", "weight": 0.006312, "price": 52.15}, {"ticker": "BTDR", "type": "long", "weight": 0.005121, "price": 7.28}, {"ticker": "CLSK", "type": "long", "weight": 0.004242, "price": 9.21}, {"ticker": "BITF", "type": "long", "weight": 0.004141, "price": 2.04}, {"ticker": "LBRT", "type": "long", "weight": 0.002675, "price": 26.8}, {"ticker": "PUMP", "type": "long", "weight": 0.002212, "price": 12.4}, {"ticker": "BW", "type": "long", "weight": 0.002193, "price": 13.1}, {"ticker": "INTC", "type": "long", "weight": 0.0, "price": 43.42}],
-  full: [{"ticker": "BE", "type": "long", "weight": 0.158699, "price": 135.19}, {"ticker": "CRWV", "type": "call", "weight": 0.140377, "price": 72.99, "strike": 270.0, "expiry": "2026-09-18"}, {"ticker": "INTC", "type": "call", "weight": 0.135362, "price": 43.42, "strike": 70.0, "expiry": "2026-12-18"}, {"ticker": "LITE", "type": "long", "weight": 0.08675, "price": 558.44}, {"ticker": "CRWV", "type": "long", "weight": 0.079165, "price": 72.99}, {"ticker": "CORZ", "type": "long", "weight": 0.075895, "price": 14.86}, {"ticker": "IREN", "type": "long", "weight": 0.059568, "price": 36.7}, {"ticker": "APLD", "type": "long", "weight": 0.050398, "price": 25.14}, {"ticker": "SNDK", "type": "long", "weight": 0.045361, "price": 527.33}, {"ticker": "CIFR", "type": "long", "weight": 0.02801, "price": 13.62}, {"ticker": "EQT", "type": "long", "weight": 0.024117, "price": 61.96}, {"ticker": "COHR", "type": "long", "weight": 0.016069, "price": 235.72}, {"ticker": "SEI", "type": "long", "weight": 0.015553, "price": 48.96}, {"ticker": "TSEM", "type": "long", "weight": 0.015389, "price": 110.59}, {"ticker": "RIOT", "type": "long", "weight": 0.014165, "price": 14.16}, {"ticker": "KRC", "type": "long", "weight": 0.008994, "price": 29.81}, {"ticker": "HUT", "type": "long", "weight": 0.007163, "price": 47.07}, {"ticker": "EQT", "type": "call", "weight": 0.006801, "price": 61.96, "strike": 90.0, "expiry": "2026-12-18"}, {"ticker": "BE", "type": "call", "weight": 0.006434, "price": 135.19, "strike": 220.0, "expiry": "2026-08-21"}, {"ticker": "WYFI", "type": "long", "weight": 0.005034, "price": 15.5}, {"ticker": "PSIX", "type": "long", "weight": 0.004478, "price": 52.15}, {"ticker": "BTDR", "type": "long", "weight": 0.003633, "price": 7.28}, {"ticker": "CLSK", "type": "long", "weight": 0.003009, "price": 9.21}, {"ticker": "BITF", "type": "long", "weight": 0.002938, "price": 2.04}, {"ticker": "LBRT", "type": "long", "weight": 0.001898, "price": 26.8}, {"ticker": "INFY", "type": "put", "weight": 0.001615, "price": 14.44, "strike": 25.0, "expiry": "2027-01-15"}, {"ticker": "PUMP", "type": "long", "weight": 0.001569, "price": 12.4}, {"ticker": "BW", "type": "long", "weight": 0.001556, "price": 13.1}, {"ticker": "INTC", "type": "long", "weight": 0.0, "price": 43.42}]
+  equity_only: [{"ticker": "BE", "type": "long", "weight": 0.223706, "price": 154.46}, {"ticker": "LITE", "type": "long", "weight": 0.122284, "price": 622.5}, {"ticker": "CRWV", "type": "long", "weight": 0.111593, "price": 81.11}, {"ticker": "CORZ", "type": "long", "weight": 0.106983, "price": 16.49}, {"ticker": "IREN", "type": "long", "weight": 0.083968, "price": 41.58}, {"ticker": "APLD", "type": "long", "weight": 0.071042, "price": 27.05}, {"ticker": "SNDK", "type": "long", "weight": 0.063942, "price": 661.62}, {"ticker": "CIFR", "type": "long", "weight": 0.039483, "price": 14.08}, {"ticker": "EQT", "type": "long", "weight": 0.033996, "price": 64.38}, {"ticker": "COHR", "type": "long", "weight": 0.022651, "price": 242.84}, {"ticker": "SEI", "type": "long", "weight": 0.021924, "price": 51.99}, {"ticker": "TSEM", "type": "long", "weight": 0.021692, "price": 124.71}, {"ticker": "RIOT", "type": "long", "weight": 0.019967, "price": 14.04}, {"ticker": "KRC", "type": "long", "weight": 0.012678, "price": 28.49}, {"ticker": "HUT", "type": "long", "weight": 0.010097, "price": 48.32}, {"ticker": "WYFI", "type": "long", "weight": 0.007096, "price": 15.75}, {"ticker": "PSIX", "type": "long", "weight": 0.006312, "price": 56.74}, {"ticker": "BTDR", "type": "long", "weight": 0.005121, "price": 7.5}, {"ticker": "CLSK", "type": "long", "weight": 0.004242, "price": 9.76}, {"ticker": "BITF", "type": "long", "weight": 0.004141, "price": 2.24}, {"ticker": "LBRT", "type": "long", "weight": 0.002675, "price": 30.22}, {"ticker": "PUMP", "type": "long", "weight": 0.002212, "price": 14.35}, {"ticker": "BW", "type": "long", "weight": 0.002193, "price": 10.51}, {"ticker": "INTC", "type": "long", "weight": 0.0, "price": 45.77}],
+  full: [{"ticker": "BE", "type": "long", "weight": 0.158699, "price": 154.46}, {"ticker": "CRWV", "type": "call", "weight": 0.140377, "price": 81.11, "strike": 270.0, "expiry": "2026-09-18"}, {"ticker": "INTC", "type": "call", "weight": 0.135362, "price": 45.77, "strike": 70.0, "expiry": "2026-12-18"}, {"ticker": "LITE", "type": "long", "weight": 0.08675, "price": 622.5}, {"ticker": "CRWV", "type": "long", "weight": 0.079165, "price": 81.11}, {"ticker": "CORZ", "type": "long", "weight": 0.075895, "price": 16.49}, {"ticker": "IREN", "type": "long", "weight": 0.059568, "price": 41.58}, {"ticker": "APLD", "type": "long", "weight": 0.050398, "price": 27.05}, {"ticker": "SNDK", "type": "long", "weight": 0.045361, "price": 661.62}, {"ticker": "CIFR", "type": "long", "weight": 0.02801, "price": 14.08}, {"ticker": "EQT", "type": "long", "weight": 0.024117, "price": 64.38}, {"ticker": "COHR", "type": "long", "weight": 0.016069, "price": 242.84}, {"ticker": "SEI", "type": "long", "weight": 0.015553, "price": 51.99}, {"ticker": "TSEM", "type": "long", "weight": 0.015389, "price": 124.71}, {"ticker": "RIOT", "type": "long", "weight": 0.014165, "price": 14.04}, {"ticker": "KRC", "type": "long", "weight": 0.008994, "price": 28.49}, {"ticker": "HUT", "type": "long", "weight": 0.007163, "price": 48.32}, {"ticker": "EQT", "type": "call", "weight": 0.006801, "price": 64.38, "strike": 90.0, "expiry": "2026-12-18"}, {"ticker": "BE", "type": "call", "weight": 0.006434, "price": 154.46, "strike": 220.0, "expiry": "2026-08-21"}, {"ticker": "WYFI", "type": "long", "weight": 0.005034, "price": 15.75}, {"ticker": "PSIX", "type": "long", "weight": 0.004478, "price": 56.74}, {"ticker": "BTDR", "type": "long", "weight": 0.003633, "price": 7.5}, {"ticker": "CLSK", "type": "long", "weight": 0.003009, "price": 9.76}, {"ticker": "BITF", "type": "long", "weight": 0.002938, "price": 2.24}, {"ticker": "LBRT", "type": "long", "weight": 0.001898, "price": 30.22}, {"ticker": "INFY", "type": "put", "weight": 0.001615, "price": 13.29, "strike": 25.0, "expiry": "2027-01-15"}, {"ticker": "PUMP", "type": "long", "weight": 0.001569, "price": 14.35}, {"ticker": "BW", "type": "long", "weight": 0.001556, "price": 10.51}, {"ticker": "INTC", "type": "long", "weight": 0.0, "price": 45.77}]
 };
+
+var excluded = {};
+function posKey(r) { return r.ticker + '_' + r.type; }
+
+function syncCutoff() {
+  var cutoff = (parseFloat(document.getElementById('cutoff').value) || 0) / 100;
+  var mode = document.getElementById('mode').value;
+  var rows = DATA[mode];
+  excluded = {};
+  rows.forEach(function(r) {
+    if (r.weight < cutoff) excluded[posKey(r)] = true;
+  });
+}
 
 function render() {
   var bankroll = parseFloat(document.getElementById('bankroll').value) || 0;
   var mode = document.getElementById('mode').value;
-  var cutoff = (parseFloat(document.getElementById('cutoff').value) || 0) / 100;
   var rows = DATA[mode];
   var showType = mode === 'full';
 
@@ -84,37 +101,40 @@ function render() {
     descEl.textContent = 'Includes all positions (equity + options).';
   }
 
-  // Filter by cutoff and reweight
-  var filtered = rows.filter(function(r) { return r.weight >= cutoff; });
-  var totalWeight = filtered.reduce(function(s, r) { return s + r.weight; }, 0);
+  // All rows shown; excluded rows are greyed out
+  var active = rows.filter(function(r) { return !excluded[posKey(r)]; });
+  var totalWeight = active.reduce(function(s, r) { return s + r.weight; }, 0);
 
   var allocated = 0;
-  var computed = filtered.map(function(r) {
-    var adjWeight = totalWeight > 0 ? r.weight / totalWeight : 0;
-    if (!r.price) return { ticker: r.ticker, type: r.type, weight: r.weight,
-                            adjWeight: adjWeight,
+  var computed = rows.map(function(r) {
+    var key = posKey(r);
+    var isExcl = !!excluded[key];
+    var adjWeight = (!isExcl && totalWeight > 0) ? r.weight / totalWeight : 0;
+    if (!r.price || isExcl) return { ticker: r.ticker, type: r.type, weight: r.weight,
+                            adjWeight: adjWeight, excluded: isExcl, key: key,
                             strike: r.strike || null, expiry: r.expiry || null,
-                            price: null, shares: null, cost: null };
+                            price: r.price, shares: null, cost: null };
     var dollarAlloc = bankroll * adjWeight;
     var shares = Math.floor(dollarAlloc / r.price);
     var cost = shares * r.price;
     allocated += cost;
     return { ticker: r.ticker, type: r.type, weight: r.weight,
-              adjWeight: adjWeight,
+              adjWeight: adjWeight, excluded: isExcl, key: key,
               strike: r.strike || null, expiry: r.expiry || null,
               price: r.price, shares: shares, cost: cost };
   });
 
-  var hasCutoff = cutoff > 0;
   var html = '<table><thead><tr>';
-  html += '<th>Ticker</th>';
+  html += '<th></th><th>Ticker</th>';
   if (showType) html += '<th>Type</th><th class="r">Strike</th><th class="r">Expiry</th>';
   html += '<th class="r">Weight</th>';
   html += '<th class="r">Price</th>';
   html += '<th class="r">Shares</th><th class="r">Cost</th></tr></thead><tbody>';
 
   computed.forEach(function(c) {
-    html += '<tr><td><strong>' + c.ticker + '</strong></td>';
+    html += '<tr' + (c.excluded ? ' class="excluded"' : '') + '>';
+    html += '<td class="cb"><input type="checkbox" data-key="' + c.key + '"' + (c.excluded ? '' : ' checked') + '></td>';
+    html += '<td><strong>' + c.ticker + '</strong></td>';
     if (showType) {
       var cls = c.type === 'put' ? 'tag-put' : c.type === 'call' ? 'tag-call' : 'tag-long';
       html += '<td><span class="tag ' + cls + '">' + c.type + '</span></td>';
@@ -125,7 +145,7 @@ function render() {
         html += '<td class="r">\u2014</td><td class="r">\u2014</td>';
       }
     }
-    html += '<td class="r">' + ((hasCutoff ? c.adjWeight : c.weight) * 100).toFixed(1) + '%</td>';
+    html += '<td class="r">' + (c.excluded ? '0.0' : (c.adjWeight * 100).toFixed(1)) + '%</td>';
     html += '<td class="r">' + (c.price != null ? '$' + c.price.toFixed(2) : 'N/A') + '</td>';
     html += '<td class="r">' + (c.shares != null ? c.shares.toLocaleString() : 'N/A') + '</td>';
     html += '<td class="r">' + (c.cost != null ? '$' + c.cost.toFixed(2) : 'N/A') + '</td>';
@@ -147,8 +167,18 @@ function render() {
 }
 
 document.getElementById('bankroll').addEventListener('input', render);
-document.getElementById('mode').addEventListener('change', render);
-document.getElementById('cutoff').addEventListener('input', render);
+document.getElementById('mode').addEventListener('change', function() { syncCutoff(); render(); });
+document.getElementById('cutoff').addEventListener('input', function() { syncCutoff(); render(); });
+document.getElementById('output').addEventListener('change', function(e) {
+  if (e.target.type === 'checkbox' && e.target.dataset.key) {
+    if (e.target.checked) {
+      delete excluded[e.target.dataset.key];
+    } else {
+      excluded[e.target.dataset.key] = true;
+    }
+    render();
+  }
+});
 
 // Dark mode
 function isDark() {
