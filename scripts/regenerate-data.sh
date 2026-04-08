@@ -26,20 +26,17 @@ else
   [[ " $* " == *" --quotes "* ]] && do_quotes=true
 fi
 
-# Shared: always run ID-slug map first (needed by both pipelines)
+# Shared: always run ID-slug map and tag injection first (needed by both pipelines)
 run_step "Generating ID→slug map" python3 "$SCRIPT_DIR/generate-id-slug-map.py"
+run_step "Injecting tags" python3 "$SCRIPT_DIR/inject-tags.py"
 
 if $do_notes; then
   run_step "Injecting lastmod dates" python3 "$SCRIPT_DIR/inject-lastmod.py"
   run_step "Generating backlinks" python3 "$SCRIPT_DIR/generate-backlinks.py"
   run_step "Generating citing-notes index" python3 "$SCRIPT_DIR/generate-citing-notes.py"
-  run_step "Generating note categories" python3 "$SCRIPT_DIR/generate-note-categories.py"
 fi
 
 if $do_quotes; then
   run_step "Extracting non-diary quotes" python3 "$SCRIPT_DIR/extract-non-diary-quotes.py"
-  run_step "Generating quote topics" python3 "$SCRIPT_DIR/generate-quote-topics.py"
   run_step "Generating work pages" python3 "$SCRIPT_DIR/generate-work-pages.py"
-  # Topic pages are now exported as regular notes with is_tag front matter;
-  # generate-topic-pages.py is no longer needed.
 fi

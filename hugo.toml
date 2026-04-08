@@ -46,9 +46,13 @@ refLinksErrorLevel = "WARNING"
     pageRef = "/quotes/"
     weight = 2
   [[menus.main]]
+    name = "Tags"
+    pageRef = "/tags/"
+    weight = 3
+  [[menus.main]]
     name = "About"
     pageRef = "/notes/about/"
-    weight = 3
+    weight = 4
 
 # Output formats
 [outputFormats]
@@ -60,8 +64,8 @@ refLinksErrorLevel = "WARNING"
   home = ["HTML", "RSS"]
   section = ["HTML", "RSS"]
 
-# Disable taxonomies (backlinks-as-taxonomy instead)
 [taxonomies]
+  tag = "tags"
 
 # Pagination (controls quotes per page in the /quotes/ feed)
 [pagination]

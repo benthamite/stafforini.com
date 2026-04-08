@@ -7,14 +7,8 @@
   {{ $inWork = .inWorkPage | default false }}
 {{ end }}
 
-{{/* Look up topics for this quote from the data file */}}
-{{ $topics := slice }}
-{{ $allTopics := index ($pg.Site.Data | default dict) "quote-topics" }}
-{{ with $pg.File }}
-  {{ with index ($allTopics | default dict) .ContentBaseName }}
-    {{ $topics = . }}
-  {{ end }}
-{{ end }}
+{{/* Look up tags from Hugo's taxonomy */}}
+{{ $topics := $pg.GetTerms "tags" }}
 
 <div class="quote-entry{{ if $inWork }} quote-entry--work{{ end }}">
   {{ $pg.Content }}
@@ -24,7 +18,7 @@
          diary bookmark in right margin */}}
     {{ if $topics }}
     <div class="quote-topics quote-topics--work">
-      {{ range $i, $t := $topics }}{{ if $i }} · {{ end }}<a href="/notes/{{ .slug }}/">{{ .title }}</a>{{ end }}
+      {{ range $i, $t := $topics }}{{ if $i }} · {{ end }}<a href="{{ $t.RelPermalink }}">{{ $t.LinkTitle }}</a>{{ end }}
     </div>
     {{ end }}
     {{ with $pg.Params.locator }}
@@ -63,7 +57,7 @@
     <div class="quote-meta">
       {{ if $topics }}
       <span class="quote-topics">
-        {{ range $i, $t := $topics }}{{ if $i }} · {{ end }}<a href="/notes/{{ .slug }}/">{{ .title }}</a>{{ end }}
+        {{ range $i, $t := $topics }}{{ if $i }} · {{ end }}<a href="{{ $t.RelPermalink }}">{{ $t.LinkTitle }}</a>{{ end }}
       </span>
       {{ end }}
       {{ if $showDate }}

@@ -87,8 +87,7 @@
 
 /* Section separators — shared border/spacing pattern */
 .backlinks,
-.topic-quotes,
-.category-notes,
+.tag-section,
 .work-body,
 .pdf-preview,
 .quote-nav {
@@ -98,24 +97,64 @@
 }
 
 .backlinks h2,
-.topic-quotes h2,
-.category-notes h2,
+.tag-section h2,
 .work-body h2,
 .pdf-preview h2 {
   font-size: var(--font-size-section-heading);
   margin-bottom: 0.75rem;
 }
 
-/* Backlinks / Category notes — shared list reset */
 .backlinks ul,
-.category-notes ul {
+.tag-section ul {
   list-style: none;
   padding: 0;
 }
 
 .backlinks li,
-.category-notes li {
+.tag-section li {
   margin: 0.4rem 0;
+}
+
+/* Tag index page */
+.tag-index {
+  column-count: 3;
+  column-gap: 2rem;
+}
+
+.tag-entry {
+  break-inside: avoid;
+  margin: 0.3rem 0;
+}
+
+.tag-count-badge {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  margin-left: 0.3rem;
+}
+
+.tag-count {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  margin-bottom: 1.5rem;
+}
+
+/* Work page tags */
+.work-tags {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .tag-index {
+    column-count: 2;
+  }
+}
+
+@media (max-width: 480px) {
+  .tag-index {
+    column-count: 1;
+  }
 }
 
 /* Metadata */
