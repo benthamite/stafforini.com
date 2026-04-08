@@ -2,9 +2,9 @@
      the channel structure lives in partials/rss-feed.html. */}}
 {{- $pages := slice -}}
 {{- if .IsHome -}}
-  {{- $pages = .Site.RegularPages.ByLastmod.Reverse -}}
+  {{- $pages = where .Site.RegularPages.ByLastmod.Reverse ".Params.unlisted" "ne" true -}}
 {{- else -}}
-  {{- $pages = .Pages.ByLastmod.Reverse -}}
+  {{- $pages = where .Pages.ByLastmod.Reverse ".Params.unlisted" "ne" true -}}
 {{- end -}}
 {{- $limit := .Site.Config.Services.RSS.Limit -}}
 {{- if ge $limit 1 -}}
