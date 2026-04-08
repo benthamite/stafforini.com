@@ -1,13 +1,9 @@
 {{ define "main" }}
 <article>
-  {{/* is_tag: tag notes that serve as taxonomy nodes — skip TOC, metadata, body, and sidenotes */}}
-  {{ if not .Params.is_tag }}
   {{ partial "toc-floating.html" . }}
-  {{ end }}
 
   <h1 data-pagefind-weight="10">{{ .Title | markdownify }}</h1>
 
-  {{ if not .Params.is_tag }}
   {{ partial "note-meta.html" . }}
 
   {{ partial "toc-inline.html" . }}
@@ -19,18 +15,12 @@
     </div>
     <aside class="sidenote-column" aria-label="Sidenotes"></aside>
   </div>
-  {{ end }}
 
   {{ partial "backlinks.html" . }}
-  {{ partial "topic-quotes.html" . }}
-  {{ partial "category-notes.html" . }}
 </article>
 
-{{ if not .Params.is_tag }}
 {{ partial "load-js.html" "breakpoint-toggle.js" }}
 {{ partial "load-js.html" "sidenotes.js" }}
 {{ partial "load-js.html" "toc.js" }}
-{{ end }}
-{{/* Link preview only needed on note pages (other sections don't have internal prose links to preview) */}}
 {{ partial "load-js.html" "link-preview.js" }}
 {{ end }}

@@ -56,6 +56,11 @@
         {{- with $.Params.year }}{{ if $location }}, {{ end }}{{ . }}{{ end -}}
       {{- end -}}
     </p>
+    {{ with .GetTerms "tags" }}
+    <div class="work-tags">
+      {{ range $i, $t := . }}{{ if $i }} · {{ end }}<a href="{{ $t.RelPermalink }}">{{ $t.LinkTitle }}</a>{{ end }}
+    </div>
+    {{ end }}
   </div>
 
   {{ $workSlug := "" }}

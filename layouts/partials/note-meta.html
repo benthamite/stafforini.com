@@ -12,13 +12,5 @@
   {{ else }}
   <span>{{ .WordCount }} words</span>
   {{ end }}
-  {{ $allCategories := index (.Site.Data | default dict) "note-categories" }}
-  {{ with .File }}
-    {{ $categories := index ($allCategories | default dict) .ContentBaseName }}
-    {{ with $categories }}
-    <span class="note-categories">
-      {{ range $i, $c := . }}{{ if $i }} · {{ end }}<a href="/notes/{{ .slug }}/">{{ .title }}</a>{{ end }}
-    </span>
-    {{ end }}
-  {{ end }}
+  {{ partial "tags.html" . }}
 </div>

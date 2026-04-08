@@ -1,4 +1,4 @@
-{{ $notes := where (where (where .Site.RegularPages "Section" "notes") ".Params.is_tag" "ne" true) ".Params.unlisted" "ne" true }}
+{{ $notes := where (where .Site.RegularPages "Section" "notes") ".Params.unlisted" "ne" true }}
 {{ $quotes := where (where .Site.RegularPages "Section" "quotes") ".Params.diary" true }}
 
 {{ with $notes }}

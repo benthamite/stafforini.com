@@ -12,6 +12,8 @@
   <main id="main-content"{{ if and .IsPage (not .Params.unlisted) }} data-pagefind-body{{ end }}>
     {{/* Pagefind section facet: hidden span provides filterable metadata. data-pagefind-ignore prevents the text itself from appearing in search results */}}
     <span data-pagefind-filter="section" data-pagefind-ignore class="visually-hidden">{{ .Section }}</span>
+    {{ range .GetTerms "tags" }}<span data-pagefind-filter="tag" data-pagefind-ignore class="visually-hidden">{{ .LinkTitle }}</span>
+    {{ end }}
     {{- block "main" . }}{{ end -}}
   </main>
   {{- partial "footer.html" . -}}
