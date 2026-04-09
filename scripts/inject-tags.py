@@ -67,8 +67,45 @@ def resolve_id_links(text: str, id_slug_map: dict) -> list[str]:
     return sorted(set(titles))
 
 
-def build_quote_tags(id_slug_map: dict) -> dict[str, list[str]]:
-    """Build {quote_slug: [tag_titles]} from :TOPICS: in bibliographic-notes."""
+def build_work_author_names() -> dict[str, set[str]]:
+    """Build {work_slug: {author_name, ...}} from work page front matter.
+
+    Used to filter out author-as-tag from quote topics: a person tag should
+    indicate a quote is *about* that person, not merely *by* them.
+    """
+    result: dict[str, set[str]] = {}
+    if not CONTENT_WORKS.exists():
+        return result
+    for md_file in CONTENT_WORKS.glob("*.md"):
+        if md_file.name == "_index.md":
+            continue
+        text = md_file.read_text()
+        m = re.search(r'^author:\s*"([^"]+)"', text, re.MULTILINE)
+        if not m:
+            m = re.search(r'^author\s*=\s*"([^"]+)"', text, re.MULTILINE)
+        if not m:
+            continue
+        author_str = m.group(1)
+        # Normalize Oxford comma, then split on " and " and ", "
+        normalized = re.sub(r",\s+and\s+", ", ", author_str)
+        names: set[str] = set()
+        for part in re.split(r"\s+and\s+|,\s+", normalized):
+            part = part.strip()
+            if part:
+                names.add(part)
+        result[md_file.stem] = names
+    return result
+
+
+def build_quote_tags(
+    id_slug_map: dict,
+    work_authors: dict[str, set[str]] | None = None,
+) -> dict[str, list[str]]:
+    """Build {quote_slug: [tag_titles]} from :TOPICS: in bibliographic-notes.
+
+    If *work_authors* is provided, any tag that matches a work's author name
+    is excluded — person tags should mark what a quote is about, not who wrote it.
+    """
     result: dict[str, list[str]] = {}
     org_files = sorted(BIBLIO_NOTES_DIR.glob("*.org"))
 
@@ -82,6 +119,7 @@ def build_quote_tags(id_slug_map: dict) -> dict[str, list[str]]:
 
         work_slug = cite_key_to_slug(cite_key)
         headings = parse_org_headings(text)
+        author_names = work_authors.get(work_slug, set()) if work_authors else set()
 
         for i, h in enumerate(headings):
             if h["level"] == 1:
@@ -90,6 +128,8 @@ def build_quote_tags(id_slug_map: dict) -> dict[str, list[str]]:
             if not topics_str:
                 continue
             titles = resolve_id_links(topics_str, id_slug_map)
+            if author_names:
+                titles = [t for t in titles if t not in author_names]
             if not titles:
                 continue
 
@@ -297,8 +337,12 @@ def main():
         process_single_file(Path(args.file), id_slug_map)
         return
 
-    print("\n  Building quote tags from :TOPICS:...")
-    quote_tags = build_quote_tags(id_slug_map)
+    print("\n  Building work author map...")
+    work_authors = build_work_author_names()
+    print(f"  Found authors for {len(work_authors)} works")
+
+    print("  Building quote tags from :TOPICS:...")
+    quote_tags = build_quote_tags(id_slug_map, work_authors)
     print(f"  Found tags for {len(quote_tags)} quotes")
 
     print("  Building note tags from :CATEGORY:...")
@@ -340,7 +384,8 @@ def process_single_file(md_path: Path, id_slug_map: dict):
 
     tags: list[str] = []
     if section == "quotes":
-        tags = build_quote_tags(id_slug_map).get(slug, [])
+        work_authors = build_work_author_names()
+        tags = build_quote_tags(id_slug_map, work_authors).get(slug, [])
     elif section == "notes":
         tags = build_note_tags(id_slug_map).get(slug, [])
     elif section == "works":
