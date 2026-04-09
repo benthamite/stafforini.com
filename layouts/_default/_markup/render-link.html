@@ -1,5 +1,5 @@
 {{- if .Destination -}}
-<a href="{{ .Destination }}"{{ with .Title }} title="{{ . }}"{{ end }}>{{ .Text }}</a>
+<a href="{{ .Destination | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}>{{ .Text }}</a>
 {{- else -}}
 {{- .Text -}}
 {{- end -}}
