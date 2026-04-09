@@ -109,8 +109,21 @@
   {{ with $citingQuotes }}
   <section class="backlinks" aria-label="Citing quotes" data-pagefind-ignore>
     <h2>Quotes from this work</h2>
-    {{ range (sort . "Date" "desc") }}
-      {{ partial "quote-entry.html" (dict "page" . "inWorkPage" true) }}
+    {{/* Sort quotes by page number extracted from locator (e.g. "p. 286" → 286) */}}
+    {{ $items := slice }}
+    {{ range . }}
+      {{ $sortNum := 999999 }}
+      {{ with .Params.locator }}
+        {{ $numStr := replaceRE `^[^0-9]*` "" . }}
+        {{ $numStr = replaceRE `[^0-9].*$` "" $numStr }}
+        {{ with $numStr }}
+          {{ $sortNum = int . }}
+        {{ end }}
+      {{ end }}
+      {{ $items = $items | append (dict "page" . "sortNum" $sortNum) }}
+    {{ end }}
+    {{ range sort $items "sortNum" }}
+      {{ partial "quote-entry.html" (dict "page" .page "inWorkPage" true) }}
     {{ end }}
   </section>
   {{ end }}
