@@ -20,6 +20,8 @@ _spec.loader.exec_module(_mod)
 
 get_front_matter_date = _mod.get_front_matter_date
 apply_front_matter_fixups = _mod.apply_front_matter_fixups
+find_org_file = _mod.find_org_file
+process_single_file = _mod.process_single_file
 
 
 # ---------------------------------------------------------------------------
@@ -127,3 +129,56 @@ class TestApplyFrontMatterFixups:
         content = md.read_text()
         assert 'title = "The \\"Good\\" Life"' in content
         assert 'title = "The "Good" Life"' not in content
+
+    def test_write_false_reports_change_without_writing(self, tmp_path):
+        md = tmp_path / "test.md"
+        original = '+++\ntitle = "Test"\ndate = 2024-01-15\n+++\n\nBody.\n'
+        md.write_text(original)
+
+        with patch.object(_mod, "get_org_title", return_value=None):
+            result = apply_front_matter_fixups(md, lastmod_date="2024-06-01", write=False)
+
+        assert result["lastmod_updated"] is True
+        assert md.read_text() == original
+
+
+class TestFindOrgFile:
+    def test_prefers_output_map_over_duplicate_basename(self, tmp_path):
+        direct = tmp_path / "anki.org"
+        nested_dir = tmp_path / "pablos-miscellany"
+        nested_dir.mkdir()
+        nested = nested_dir / "anki.org"
+        direct.write_text("* Direct\n")
+        nested.write_text("* Nested\n")
+
+        with patch.object(_mod, "ORG_DIR", tmp_path):
+            result = find_org_file("anki", {"anki.md": nested})
+
+        assert result == nested
+
+    def test_returns_none_for_ambiguous_fallback(self, tmp_path):
+        (tmp_path / "anki.org").write_text("* Direct\n")
+        nested_dir = tmp_path / "pablos-miscellany"
+        nested_dir.mkdir()
+        (nested_dir / "anki.org").write_text("* Nested\n")
+
+        with patch.object(_mod, "ORG_DIR", tmp_path):
+            result = find_org_file("anki")
+
+        assert result is None
+
+
+class TestProcessSingleFile:
+    def test_dry_run_does_not_write(self, tmp_path):
+        md = tmp_path / "test.md"
+        org = tmp_path / "test.org"
+        original = '+++\ntitle = "Test"\ndate = 2024-01-15\n+++\n\nBody.\n'
+        md.write_text(original)
+        org.write_text("* Test\n")
+
+        with patch.object(_mod, "load_output_to_source_map", return_value={"test.md": org}), \
+             patch.object(_mod, "_get_single_file_git_date", return_value="2024-06-01"), \
+             patch.object(_mod, "_get_single_file_first_date", return_value="2024-01-15"):
+            process_single_file(md, dry_run=True)
+
+        assert md.read_text() == original

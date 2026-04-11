@@ -1,7 +1,8 @@
 """Tests for scripts/generate-work-pages.py — work page generation.
 
 Covers: bib_author_to_display, strip_citation_from_content, resolve_crossrefs,
-generate_work_page (YAML front matter generation).
+generate_work_page (YAML front matter generation), diary flag injection,
+and slug-collision handling.
 """
 
 import re
@@ -31,6 +32,9 @@ bib_author_to_display = _mod.bib_author_to_display
 strip_citation_from_content = _mod.strip_citation_from_content
 resolve_crossrefs = _mod.resolve_crossrefs
 generate_work_page = _mod.generate_work_page
+ensure_diary_flag = _mod.ensure_diary_flag
+select_canonical_work_entry = _mod.select_canonical_work_entry
+generate_work_pages_for_test = _mod.generate_work_pages
 
 
 # ---------------------------------------------------------------------------
@@ -121,6 +125,22 @@ class TestStripCitationFromContent:
         result = strip_citation_from_content(text)
         assert "> Second paragraph." in result
         assert "Author, Year" not in result
+
+
+# ---------------------------------------------------------------------------
+# ensure_diary_flag
+# ---------------------------------------------------------------------------
+
+class TestEnsureDiaryFlag:
+    def test_injects_true_for_toml_front_matter(self):
+        front_matter = '+++\ntitle = "Quote"\ndate = 2026-04-09\n+++'
+        result = ensure_diary_flag(front_matter, is_toml=True)
+        assert "diary = true" in result
+
+    def test_preserves_existing_false_flag(self):
+        front_matter = '+++\ntitle = "Quote"\ndiary = false\n+++'
+        result = ensure_diary_flag(front_matter, is_toml=True)
+        assert result == front_matter
 
 
 # ---------------------------------------------------------------------------
@@ -349,3 +369,95 @@ class TestGenerateWorkPage:
         }
         result = generate_work_page(entry)
         assert 'author: "A Editor"' in result
+
+
+# ---------------------------------------------------------------------------
+# slug-collision handling
+# ---------------------------------------------------------------------------
+
+class TestWorkSlugCollisions:
+    def test_prefers_existing_page_match(self, tmp_path):
+        entry_book = {
+            "cite_key": "Shafer-Landau2006OxfordStudiesMetaethics",
+            "entry_type": "book",
+            "author": "Shafer-Landau, Russ",
+            "editor": "",
+            "title": "Oxford studies in metaethics",
+            "year": "2006",
+            "shorttitle": "",
+            "location": "Oxford",
+            "booktitle": "",
+            "journaltitle": "",
+            "volume": "1",
+            "number": "",
+            "pages": "",
+            "url": "",
+            "date": "",
+            "abstract": "",
+            "_source_index": 1,
+        }
+        entry_collection = {
+            **entry_book,
+            "cite_key": "ShaferLandau2006OxfordStudiesMetaethics",
+            "entry_type": "collection",
+            "author": "",
+            "editor": "Shafer-Landau, Russ",
+        }
+        work_path = tmp_path / "shafer-landau-2006-oxford-studies-metaethics.md"
+        work_path.write_text(generate_work_page(entry_book))
+
+        chosen = select_canonical_work_entry([entry_collection, entry_book], work_path)
+        assert chosen["cite_key"] == "Shafer-Landau2006OxfordStudiesMetaethics"
+
+    def test_generate_work_pages_does_not_raise_on_collisions(self, tmp_path):
+        works_dir = tmp_path / "works"
+        original = _mod.WORKS_DIR
+        _mod.WORKS_DIR = works_dir
+        try:
+            stats = generate_work_pages_for_test({
+                "KabatZinn1991FullCatastropheLiving": {
+                    "cite_key": "KabatZinn1991FullCatastropheLiving",
+                    "entry_type": "book",
+                    "author": "Kabat Zinn, Jon",
+                    "editor": "",
+                    "title": "Full catastrophe living: Using wisdom of your body and mind to face stress, pain, and illness",
+                    "year": "1991",
+                    "shorttitle": "",
+                    "location": "New York",
+                    "booktitle": "",
+                    "journaltitle": "",
+                    "volume": "",
+                    "number": "",
+                    "pages": "",
+                    "url": "",
+                    "date": "",
+                    "abstract": "",
+                    "_source_index": 0,
+                },
+                "Kabat-Zinn1991FullCatastropheLiving": {
+                    "cite_key": "Kabat-Zinn1991FullCatastropheLiving",
+                    "entry_type": "book",
+                    "author": "Kabat-Zinn, Jon",
+                    "editor": "",
+                    "title": "Full Catastrophe Living: Using the Wisdom of Your Body and Mind to Face Stress, Pain, and Illness",
+                    "year": "1991",
+                    "shorttitle": "",
+                    "location": "New York",
+                    "booktitle": "",
+                    "journaltitle": "",
+                    "volume": "",
+                    "number": "",
+                    "pages": "",
+                    "url": "",
+                    "date": "",
+                    "abstract": "",
+                    "_source_index": 5,
+                },
+            })
+        finally:
+            _mod.WORKS_DIR = original
+
+        assert stats["created"] == 1
+        work_path = works_dir / "kabat-zinn-1991-full-catastrophe-living.md"
+        assert work_path.exists()
+        assert "Using the Wisdom of Your Body and Mind" in work_path.read_text()
