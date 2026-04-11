@@ -127,9 +127,12 @@ def find_org_file(slug, output_map=None):
         source = output_map[md_name]
         if source.exists():
             return source
-    # Fallback: search by filename
-    for f in ORG_DIR.rglob(f"{slug}.org"):
-        return f
+    # Fallback: search by filename only when unambiguous. This protects
+    # single-file mode from picking the wrong org source when multiple files
+    # share the same basename in different subdirectories.
+    matches = list(ORG_DIR.rglob(f"{slug}.org"))
+    if len(matches) == 1:
+        return matches[0]
     return None
 
 
@@ -234,7 +237,7 @@ def get_org_title(slug, output_map=None):
 
 
 def apply_front_matter_fixups(md_path, output_map=None, lastmod_date=None,
-                              creation_date=None):
+                              creation_date=None, *, write=True):
     """Apply all front matter fixups in a single read/write cycle.
 
     Combines title injection, date injection, title markup fixing, and
@@ -324,7 +327,7 @@ def apply_front_matter_fixups(md_path, output_map=None, lastmod_date=None,
             changed = True
             result["lastmod_updated"] = True
 
-    if changed:
+    if changed and write:
         new_text = "+++\n" + front_matter.rstrip("\n") + "\n+++" + rest
         atomic_write_text(md_path, new_text)
 
@@ -334,7 +337,7 @@ def apply_front_matter_fixups(md_path, output_map=None, lastmod_date=None,
 # === Main ===
 
 
-def process_single_file(md_path):
+def process_single_file(md_path, dry_run=False):
     """Process a single markdown file (used by --file mode).
 
     Uses targeted git queries instead of scanning the full repo,
@@ -345,8 +348,9 @@ def process_single_file(md_path):
         print(f"Error: {md_path} not found.")
         return
 
+    output_map = load_output_to_source_map()
     slug = md_path.stem
-    org_file = find_org_file(slug)
+    org_file = find_org_file(slug, output_map)
     if not org_file:
         print(f"Warning: no org source found for {slug}")
         return
@@ -357,17 +361,24 @@ def process_single_file(md_path):
         mtime = os.path.getmtime(org_file)
         lastmod = datetime.fromtimestamp(mtime).strftime("%Y-%m-%d")
 
-    creation = _get_single_file_first_date(org_file)
+    creation = _get_single_file_first_date(org_file) or lastmod
 
-    result = apply_front_matter_fixups(md_path, None, lastmod, creation)
+    result = apply_front_matter_fixups(
+        md_path,
+        output_map,
+        lastmod,
+        creation,
+        write=not dry_run,
+    )
+    prefix = "would " if dry_run else ""
     if result["lastmod_updated"]:
-        print(f"  [LASTMOD] {md_path.name} -> lastmod = {lastmod}")
+        print(f"  [LASTMOD] {md_path.name} -> {prefix}set lastmod = {lastmod}")
     if result["title_injected"]:
-        print(f"  [TITLE] {md_path.name} -> injected missing title")
+        print(f"  [TITLE] {md_path.name} -> {prefix}inject missing title")
     if result["date_injected"]:
-        print(f"  [DATE] {md_path.name} -> injected missing date")
+        print(f"  [DATE] {md_path.name} -> {prefix}inject missing date")
     if result["title_markup_fixed"]:
-        print(f"  [MARKUP] {md_path.name} -> restored title markup")
+        print(f"  [MARKUP] {md_path.name} -> {prefix}restore title markup")
 
 
 def main():
@@ -384,7 +395,7 @@ def main():
     args = parser.parse_args()
 
     if args.file:
-        process_single_file(args.file)
+        process_single_file(args.file, dry_run=args.dry_run)
         return
 
     if not CONTENT_DIR.exists():
@@ -414,40 +425,34 @@ def main():
         if lastmod is None:
             stats["no_org"] += 1
 
-        if args.dry_run:
-            text = md_file.read_text()
-            fm_match = re.match(r"(\+\+\+\n)(.*?)(\n\+\+\+)", text, re.DOTALL)
-            if fm_match:
-                fm_text = fm_match.group(2)
-                if not re.search(r"^title\s*=", fm_text, re.MULTILINE):
-                    stats["title_injected"] += 1
-                    print(f"  [TITLE] {md_file.name} -> would inject title = \"{md_file.stem}\"")
-                if not re.search(r"^date\s*=", fm_text, re.MULTILINE) and creation:
-                    stats["date_injected"] += 1
-                    print(f"  [DATE] {md_file.name} -> would inject date = {creation}")
-            if lastmod is not None:
-                print(f"  [UPDATE] {md_file.name} -> lastmod = {lastmod}")
-                stats["updated"] += 1
-            else:
-                stats["unchanged"] += 1
+        result = apply_front_matter_fixups(
+            md_file,
+            output_map,
+            lastmod,
+            creation,
+            write=not args.dry_run,
+        )
+        prefix = "would " if args.dry_run else ""
+        if result["title_injected"]:
+            stats["title_injected"] += 1
+            print(f"  [TITLE] {md_file.name} -> {prefix}inject missing title")
+        if result["date_injected"]:
+            stats["date_injected"] += 1
+            print(f"  [DATE] {md_file.name} -> {prefix}inject missing date" + (f" = {creation}" if args.dry_run and creation else ""))
+        if result["title_markup_fixed"]:
+            stats["title_markup_fixed"] += 1
+            print(f"  [MARKUP] {md_file.name} -> {prefix}restore title markup")
+        if result["br_stripped"]:
+            stats["br_stripped"] += 1
+            if args.dry_run:
+                print(f"  [MARKUP] {md_file.name} -> would strip trailing <br/>")
+        if result["lastmod_updated"]:
+            print(f"  [LASTMOD] {md_file.name} -> {prefix}set lastmod = {lastmod}")
+
+        if any(result.values()):
+            stats["updated"] += 1
         else:
-            result = apply_front_matter_fixups(md_file, output_map, lastmod,
-                                               creation)
-            if result["title_injected"]:
-                stats["title_injected"] += 1
-                print(f"  [TITLE] {md_file.name} -> injected missing title")
-            if result["date_injected"]:
-                stats["date_injected"] += 1
-                print(f"  [DATE] {md_file.name} -> injected missing date")
-            if result["title_markup_fixed"]:
-                stats["title_markup_fixed"] += 1
-                print(f"  [MARKUP] {md_file.name} -> restored title markup")
-            if result["br_stripped"]:
-                stats["br_stripped"] += 1
-            if result["lastmod_updated"]:
-                stats["updated"] += 1
-            else:
-                stats["unchanged"] += 1
+            stats["unchanged"] += 1
 
     if stats["title_injected"]:
         print(f"\n  Titles injected: {stats['title_injected']}")

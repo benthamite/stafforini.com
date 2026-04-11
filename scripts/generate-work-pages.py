@@ -17,7 +17,7 @@ import argparse
 import re
 from pathlib import Path
 
-from lib import BIB_FILES, atomic_write_text, build_unique_slug_map, cite_key_to_slug, escape_yaml_string, parse_bib_entries, safe_remove
+from lib import BIB_FILES, atomic_write_text, cite_key_to_slug, escape_yaml_string, parse_bib_entries, safe_remove
 
 # === Constants ===
 
@@ -25,6 +25,7 @@ SCRIPTS_DIR = Path(__file__).parent
 HUGO_ROOT = SCRIPTS_DIR.parent
 QUOTES_DIR = HUGO_ROOT / "content" / "quotes"
 WORKS_DIR = HUGO_ROOT / "content" / "works"
+COLLECTION_LIKE_TYPES = frozenset({"collection", "proceedings"})
 
 
 # === Bib file parsing ===
@@ -195,30 +196,10 @@ def postprocess_quotes(dry_run: bool = False) -> dict:
             stats["skipped_no_blockquote"] += 1
             continue
 
-        # Inject diary field for ox-hugo-exported quotes that lack it.
-        # "diary" quotes appear in the chronological /quotes/ feed and RSS;
-        # non-diary quotes (diary = false) are only shown on their parent
-        # work page.  Real diary quotes have historical publication dates
-        # (from the WordPress era, ending 2023).  Quotes whose EXPORT_DATE
-        # is recent (2024+) were never published in the diary — they are
-        # reference quotes prepared for Hugo but not for the feed.
-        has_diary_key = (
-            re.search(r"^diary\s*=", front_matter, re.MULTILINE)
-            if content.startswith("+++")
-            else re.search(r"^diary\s*:", front_matter, re.MULTILINE)
-        )
-        if not has_diary_key:
-            # Detect recent dates (2024+) that indicate non-diary quotes
-            date_pat = r"^date\s*=\s*(\d{4})" if content.startswith("+++") else r"^date\s*:\s*(\d{4})"
-            date_match = re.search(date_pat, front_matter, re.MULTILINE)
-            is_diary = True
-            if date_match and int(date_match.group(1)) >= 2024:
-                is_diary = False
-            diary_value = "true" if is_diary else "false"
-            if content.startswith("+++"):
-                front_matter = front_matter[:-3] + f"diary = {diary_value}\n+++"
-            else:
-                front_matter = front_matter[:-3] + f"diary: {diary_value}\n---"
+        # ox-hugo-exported quotes are diary quotes unless they were extracted
+        # separately by extract-non-diary-quotes.py, which writes diary = false
+        # explicitly. Missing diary metadata should therefore default to true.
+        front_matter = ensure_diary_flag(front_matter, is_toml=content.startswith("+++"))
 
         cleaned_body = strip_citation_from_content(body.lstrip("\n"))
         new_content = front_matter + "\n" + cleaned_body
@@ -318,6 +299,77 @@ def generate_work_page(entry: dict) -> str:
     return "\n".join(lines)
 
 
+def ensure_diary_flag(front_matter: str, *, is_toml: bool) -> str:
+    """Ensure exported quote front matter has an explicit diary = true flag."""
+    diary_re = r"^diary\s*=" if is_toml else r"^diary\s*:"
+    if re.search(diary_re, front_matter, re.MULTILINE):
+        return front_matter
+
+    suffix = "\n+++" if is_toml else "\n---"
+    diary_line = "diary = true" if is_toml else "diary: true"
+    if not front_matter.endswith(suffix):
+        return front_matter
+    return front_matter[:-len(suffix)] + f"\n{diary_line}{suffix}"
+
+
+def _work_entry_preference(entry: dict) -> tuple:
+    """Return a tuple ranking competing bib entries for the same work slug."""
+    populated_fields = sum(
+        bool(entry.get(field))
+        for field in (
+            "author",
+            "editor",
+            "shorttitle",
+            "location",
+            "booktitle",
+            "journaltitle",
+            "volume",
+            "number",
+            "pages",
+            "url",
+            "date",
+            "abstract",
+        )
+    )
+    return (
+        int(entry.get("entry_type") in COLLECTION_LIKE_TYPES and bool(entry.get("editor"))),
+        int(bool(entry.get("author"))),
+        int(bool(entry.get("editor"))),
+        populated_fields,
+        len(entry.get("title", "")),
+        entry.get("_source_index", -1),
+        entry.get("cite_key", ""),
+    )
+
+
+def select_canonical_work_entry(entries: list[dict], work_path: Path | None = None) -> dict:
+    """Choose the canonical entry for a slug shared by multiple cite keys."""
+    if work_path and work_path.exists():
+        existing_text = work_path.read_text()
+        for entry in entries:
+            if generate_work_page(entry) == existing_text:
+                return entry
+    return max(entries, key=_work_entry_preference)
+
+
+def build_work_entry_map(bib_by_key: dict) -> tuple[dict[str, dict], dict[str, list[str]]]:
+    """Collapse cite-key aliases that normalize to the same work slug."""
+    grouped = {}
+    for entry in bib_by_key.values():
+        slug = cite_key_to_slug(entry["cite_key"])
+        grouped.setdefault(slug, []).append(entry)
+
+    slug_to_entry = {}
+    collisions = {}
+    for slug, entries in sorted(grouped.items()):
+        work_path = WORKS_DIR / f"{slug}.md"
+        slug_to_entry[slug] = select_canonical_work_entry(entries, work_path)
+        if len(entries) > 1:
+            collisions[slug] = sorted(entry["cite_key"] for entry in entries)
+
+    return slug_to_entry, collisions
+
+
 def generate_work_pages(bib_by_key: dict, dry_run: bool = False, limit: int = 0) -> dict:
     """Generate or update work pages for every bib entry."""
     stats = {"created": 0, "updated": 0, "unchanged": 0}
@@ -325,11 +377,15 @@ def generate_work_pages(bib_by_key: dict, dry_run: bool = False, limit: int = 0)
     if not WORKS_DIR.exists():
         WORKS_DIR.mkdir(parents=True, exist_ok=True)
 
-    # Build slug -> cite_key mapping (all bib entries get a page)
-    slug_to_key = build_unique_slug_map(bib_by_key)
-
-    all_slugs = set(slug_to_key.keys())
+    slug_to_entry, collisions = build_work_entry_map(bib_by_key)
+    all_slugs = set(slug_to_entry.keys())
     print(f"  {len(all_slugs)} unique slugs from bib files")
+    if collisions:
+        print(f"  Resolved {len(collisions)} slug collision(s) via canonical entry selection")
+        for slug, keys in list(collisions.items())[:10]:
+            chosen = slug_to_entry[slug]["cite_key"]
+            aliases = ", ".join(key for key in keys if key != chosen)
+            print(f"    {slug}: {chosen}" + (f" (aliases: {aliases})" if aliases else ""))
 
     processed = 0
     for slug in sorted(all_slugs):
@@ -337,7 +393,7 @@ def generate_work_pages(bib_by_key: dict, dry_run: bool = False, limit: int = 0)
             break
 
         work_path = WORKS_DIR / f"{slug}.md"
-        entry = bib_by_key[slug_to_key[slug]]
+        entry = slug_to_entry[slug]
         page_content = generate_work_page(entry)
 
         if work_path.exists():
@@ -417,12 +473,13 @@ def main():
         # Parse all bib files
         print("\n  Parsing bib files...")
         bib_by_key = {}
-        for bib_path in BIB_FILES:
+        for source_index, bib_path in enumerate(BIB_FILES):
             if not bib_path.exists():
                 print(f"  WARNING: {bib_path} not found, skipping")
                 continue
             entries = _parse_bib_entries_for_works(bib_path)
             for entry in entries:
+                entry["_source_index"] = source_index
                 bib_by_key[entry["cite_key"]] = entry
             print(f"    {bib_path.name}: {len(entries)} entries")
         print(f"  Total unique keys: {len(bib_by_key)}")
