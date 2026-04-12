@@ -1,5 +1,32 @@
 # TODO
 
+## Auto-populate work tags from external keyword sources
+
+~21,750 bib entries across 4 files; only 632 (2.9%) currently have keywords. The Hugo templates already render tags on work pages — the gap is that `generate-work-pages.py` doesn't extract the `keywords` field and no script populates it from external sources.
+
+### Pipeline
+
+1. **Wire existing keywords** — Add `"keywords"` to `extra_fields` in `generate-work-pages.py` so the 632 entries that already have keywords get tags immediately.
+2. **OpenAlex bulk fetch (primary source)** — Query OpenAlex API by DOI for the ~7,300 DOI-bearing entries. Extract subfields (252-category taxonomy), author keywords, and selectively the primary topic. Write back to bib `keywords` fields. Free, 10 req/sec, ~12 min total.
+3. **Books via Zotra/LoC (ISBN entries without DOI)** — Fetch via Zotra's `/search` endpoint for ISBN-bearing entries not covered by Phase 2. LCSH subject headings come through automatically. Callable via `zotra-get-entry` or the CLI (`node ~/source/zotra-server/bin/index.js search <isbn>`).
+4. **OpenAlex title search (no DOI, no ISBN)** — Fall back to OpenAlex title+author search for remaining entries. Lower confidence but decent coverage.
+5. **Normalization** — Merge synonyms, standardize casing, align with existing note/quote tag vocabulary. Most human judgment needed here.
+
+### Source preference (when multiple sources overlap)
+
+1. **OpenAlex subfields** (252 categories) — universal, consistent, browsable; backbone of the taxonomy
+2. **Author keywords from OpenAlex** — specific-topic supplement (needs normalization)
+3. **LCSH** (via Zotra/LoC) — higher quality than OpenAlex for books
+4. **MeSH** (via PubMed) — gold standard for biomedical works
+5. **OpenAlex topics** (~4,500) — only when label is human-readable and confidence > 0.5
+
+### Key facts
+
+- Zotero/Zotra DOI lookups go through CrossRef, which returns **zero keywords** — this is why we need direct OpenAlex integration
+- Zotero/Zotra ISBN lookups work well — LoC provides LCSH subject headings
+- Expected coverage: 70–85% from APIs; LLM fallback could push to 90%+
+- Entries with DOI: 7,320 (33.7%); with ISBN: 5,250 (24.1%)
+
 ## Export unexported PDF highlights
 
 172 PDFs have highlights not yet exported to their org notes. Run `python3 scripts/check-unexported-highlights.py` to regenerate the list. Use `--min-gap 3` to filter out likely false positives from cross-page highlight splitting.
