@@ -1,8 +1,48 @@
 {
+  "agent-log": [
+    {
+      "slug": "my-emacs-packages",
+      "title": "My Emacs packages"
+    }
+  ],
   "anki": [
+    {
+      "slug": "anki-decks-from-the-lesswrong-community",
+      "title": "Anki decks from the LessWrong community"
+    },
+    {
+      "slug": "bostrom-s-superintelligence-anki-deck",
+      "title": "Bostrom's <em>Superintelligence</em> Anki deck"
+    },
+    {
+      "slug": "ear-training-anki-deck",
+      "title": "Ear training Anki deck"
+    },
     {
       "slug": "evaluative-selection-effect",
       "title": "Footnotes"
+    },
+    {
+      "slug": "german-cases-and-musical-notes-anki-decks",
+      "title": "German cases and musical notes Anki decks"
+    },
+    {
+      "slug": "mac-keyboard-shortcuts",
+      "title": "Mac keyboard shortcuts"
+    },
+    {
+      "slug": "sublime-text-3-google-docs-mac-shortcuts-anki-decks",
+      "title": "Sublime Text 3, Google Docs Mac shortcuts Anki decks"
+    },
+    {
+      "slug": "wittgenstein-la-rochefoucauld-anki-decks",
+      "title": "Wittgenstein, La Rochefoucauld Anki decks"
+    }
+  ],
+  "anki-noter": [
+    {
+      "slug": "my-emacs-packages",
+      "title": "My Emacs packages"
     }
   ],
   "annas-archive": [
@@ -11,13 +51,95 @@
       "title": "My Emacs packages"
     }
   ],
+  "announcements": [
+    {
+      "slug": "i-m-available-to-talk",
+      "title": "I'm available to talk"
+    }
+  ],
   "bib": [
     {
       "slug": "my-emacs-packages",
       "title": "My Emacs packages"
     }
   ],
-  "claude-log": [
+  "bibliographies": [
+    {
+      "slug": "bibliography-for-a-course-on-effective-altruism",
+      "title": "Bibliography for a course on effective altruism"
+    },
+    {
+      "slug": "c-d-broad-a-bibliography",
+      "title": "C. D. Broad: a bibliography"
+    },
+    {
+      "slug": "california-proposition-2-a-bibliography",
+      "title": "California Proposition 2: a bibliography"
+    },
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    },
+    {
+      "slug": "derek-parfit-a-bibliography",
+      "title": "Derek Parfit: a bibliography"
+    },
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    },
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    },
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? - A bibliography"
+    },
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "books": [
+    {
+      "slug": "summary-of-clear-and-simple-as-the-truth-by-francis-noe-l-thomas-and-mark-turner",
+      "title": "Summary of <em>Clear and Simple as the Truth</em>, by Francis-Noël Thomas and Mark Turner"
+    },
+    {
+      "slug": "summary-of-let-their-people-come-by-lant-pritchett",
+      "title": "Summary of <em>Let Their People Come</em>, by Lant Pritchett"
+    },
+    {
+      "slug": "summary-of-style-lessons-in-clarity-and-grance",
+      "title": "Summary of <em>Style: Lessons in Clarity and Grance</em>"
+    },
+    {
+      "slug": "summary-of-the-first-20-hours-by-josh-kaufman",
+      "title": "Summary of <em>The First 20 Hours</em>, by Josh Kaufman"
+    },
+    {
+      "slug": "summary-of-the-little-book-of-productivity-by-scott-young",
+      "title": "Summary of <em>The Little Book of Productivity</em>, by Scott Young"
+    },
+    {
+      "slug": "summary-of-the-little-book-of-talent-by-daniel-coyle",
+      "title": "Summary of <em>The Little Book of Talent</em>, by Daniel Coyle"
+    },
+    {
+      "slug": "summary-of-the-point-of-view-of-the-universe-by-katarzyna-de-lazari-radek-and-peter-singer",
+      "title": "Summary of <em>The Point of View of the Universe</em>, by Katarzyna de Lazari-Radek and Peter Singer"
+    },
+    {
+      "slug": "summary-of-the-power-of-full-engagement-by-jim-loehr-and-tony-schwartz",
+      "title": "Summary of <em>The Power of Full Engagement</em>, by Jim Loehr and Tony Schwartz"
+    },
+    {
+      "slug": "summary-of-the-willpower-instinct-by-kelly-mcgonigal",
+      "title": "Summary of <em>The Willpower Instinct</em>, by Kelly McGonigal"
+    }
+  ],
+  "codex": [
     {
       "slug": "my-emacs-packages",
       "title": "My Emacs packages"
@@ -31,8 +153,96 @@
   ],
   "effective-altruism": [
     {
+      "slug": "crucial-considerations-and-wise-philanthropy-by-nick-bostrom",
+      "title": "'Crucial Considerations and Wise Philanthropy', by Nick Bostrom"
+    },
+    {
+      "slug": "a-new-donor-movement-seeks-to-put-data-ahead-of-passion",
+      "title": "A New Donor Movement Seeks to Put Data Ahead of Passion"
+    },
+    {
+      "slug": "ben-kuhn-on-the-effective-altruist-movement",
+      "title": "Ben Kuhn on the effective altruist movement"
+    },
+    {
+      "slug": "bibliography-for-a-course-on-effective-altruism",
+      "title": "Bibliography for a course on effective altruism"
+    },
+    {
+      "slug": "courses-on-longtermism",
+      "title": "Courses on longtermism"
+    },
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    },
+    {
+      "slug": "effective-altruism-blogs",
+      "title": "Effective altruism blogs"
+    },
+    {
+      "slug": "effective-altruism-syllabi",
+      "title": "Effective altruism syllabi"
+    },
+    {
+      "slug": "favorite-non-fiction-books-from-cea-people",
+      "title": "Favorite non-fiction books from CEA people"
+    },
+    {
       "slug": "evaluative-selection-effect",
       "title": "Footnotes"
+    },
+    {
+      "slug": "good-done-right",
+      "title": "Good Done Right"
+    },
+    {
+      "slug": "how-can-doctors-do-the-most-good-an-interview-with-dr-gregory-lewis",
+      "title": "How can doctors do the most good? An interview with Dr Gregory Lewis"
+    },
+    {
+      "slug": "my-donations-2013-2017",
+      "title": "My donations, 2013-2017"
+    },
+    {
+      "slug": "paul-christiano-on-cause-prioritization",
+      "title": "Paul Christiano on cause prioritization"
+    },
+    {
+      "slug": "please-record-your-talks",
+      "title": "Please record your talks!"
+    },
+    {
+      "slug": "the-most-important-questions-and-problems",
+      "title": "The most important questions and problems"
+    }
+  ],
+  "elfeed-ai": [
+    {
+      "slug": "my-emacs-packages",
+      "title": "My Emacs packages"
+    }
+  ],
+  "film": [
+    {
+      "slug": "films-i-loved",
+      "title": "Films I loved"
+    },
+    {
+      "slug": "great-short-films-you-can-watch-right-now",
+      "title": "Great short films you can watch right now"
+    },
+    {
+      "slug": "my-favorite-films-of-2011",
+      "title": "My favorite films of 2011"
+    },
+    {
+      "slug": "my-favorite-films-of-the-2000s",
+      "title": "My favorite films of the 2000s"
+    },
+    {
+      "slug": "some-film-lists-i-created",
+      "title": "Some film lists I created"
     }
   ],
   "gptel-plus": [
@@ -51,6 +261,24 @@
     {
       "slug": "my-emacs-packages",
       "title": "My Emacs packages"
+    }
+  ],
+  "learning": [
+    {
+      "slug": "gamified-learning-a-list-of-good-resources",
+      "title": "Gamified learning: a list of good resources"
+    }
+  ],
+  "longtermism": [
+    {
+      "slug": "courses-on-longtermism",
+      "title": "Courses on longtermism"
+    }
+  ],
+  "minimalism": [
+    {
+      "slug": "stuff-i-own",
+      "title": "Stuff I own"
     }
   ],
   "mullvad": [
@@ -85,6 +313,12 @@
       "title": "My Emacs packages"
     }
   ],
+  "org-table-wrap": [
+    {
+      "slug": "my-emacs-packages",
+      "title": "My Emacs packages"
+    }
+  ],
   "pangram": [
     {
       "slug": "my-emacs-packages",
@@ -97,16 +331,134 @@
       "title": "My Emacs packages"
     }
   ],
+  "personal": [
+    {
+      "slug": "my-beliefs",
+      "title": "My beliefs"
+    },
+    {
+      "slug": "my-beliefs-updated",
+      "title": "My beliefs, updated"
+    },
+    {
+      "slug": "my-personality",
+      "title": "My personality"
+    }
+  ],
+  "philosophy": [
+    {
+      "slug": "how-long-before-superintelligence",
+      "title": "How long before superintelligence?"
+    },
+    {
+      "slug": "william-lane-craig-a-complete-list-of-debates",
+      "title": "William Lane Craig: a complete list of debates"
+    }
+  ],
+  "productivity": [
+    {
+      "slug": "how-to-transcribe-recordings",
+      "title": "How to transcribe recordings"
+    }
+  ],
+  "self-help": [
+    {
+      "slug": "good-essays-by-luke-muehlhauser-no-longer-available-at-lukeprog-com",
+      "title": "Good essays by Luke Muehlhauser no longer available at lukeprog.com"
+    },
+    {
+      "slug": "how-to-increase-the-chances-of-recovering-your-lost-smartphone",
+      "title": "How to increase the chances of recovering your lost smartphone"
+    },
+    {
+      "slug": "minimizing-jet-lag",
+      "title": "Minimizing jet lag"
+    },
+    {
+      "slug": "summary-of-time-management-by-randy-pausch",
+      "title": "Summary of 'Time management', by Randy Pausch"
+    },
+    {
+      "slug": "the-best-resources-on-becoming-more-productive",
+      "title": "The best resources on becoming more productive"
+    }
+  ],
+  "spofy": [
+    {
+      "slug": "my-emacs-packages",
+      "title": "My Emacs packages"
+    }
+  ],
   "stafforini": [
     {
       "slug": "about",
       "title": "About"
     }
   ],
+  "things-i-like": [
+    {
+      "slug": "android-apps-i-use",
+      "title": "Android apps I like"
+    },
+    {
+      "slug": "blogs-i-like",
+      "title": "Blogs I like"
+    },
+    {
+      "slug": "chrome-extensions-i-like",
+      "title": "Chrome extensions I like"
+    },
+    {
+      "slug": "favorite-non-fiction-books-from-cea-people",
+      "title": "Favorite non-fiction books from CEA people"
+    },
+    {
+      "slug": "great-short-films-you-can-watch-right-now",
+      "title": "Great short films you can watch right now"
+    },
+    {
+      "slug": "my-favorite-films-of-2011",
+      "title": "My favorite films of 2011"
+    },
+    {
+      "slug": "my-favorite-films-of-the-2000s",
+      "title": "My favorite films of the 2000s"
+    },
+    {
+      "slug": "podcasts-i-like",
+      "title": "Podcasts I like"
+    }
+  ],
+  "translations": [
+    {
+      "slug": "spanish-translation-of-graham-s-keep-your-identity-small",
+      "title": "Spanish translation of Graham's 'Keep your identity small'"
+    }
+  ],
   "wikipedia": [
     {
       "slug": "my-emacs-packages",
       "title": "My Emacs packages"
+    }
+  ],
+  "writing": [
+    {
+      "slug": "resources-on-writing-well",
+      "title": "Resources on writing well"
+    }
+  ],
+  "writings-by-others": [
+    {
+      "slug": "crucial-considerations-and-wise-philanthropy-by-nick-bostrom",
+      "title": "'Crucial Considerations and Wise Philanthropy', by Nick Bostrom"
+    },
+    {
+      "slug": "a-new-donor-movement-seeks-to-put-data-ahead-of-passion",
+      "title": "A New Donor Movement Seeks to Put Data Ahead of Passion"
+    },
+    {
+      "slug": "the-gift",
+      "title": "The Gift"
     }
   ]
 }
