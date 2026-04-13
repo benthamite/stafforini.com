@@ -29,7 +29,8 @@ run_step "Processing PDFs" python3 "$SCRIPT_DIR/process-pdfs.py"
 
 # Clean stale build output (Hugo doesn't remove deleted/renamed pages)
 echo "Cleaning previous build..."
-trash public 2>/dev/null || true
+# Use find -delete instead of trash to preserve the public/ symlink (nosync)
+find public -mindepth 1 -delete 2>/dev/null || true
 
 # Build
 run_step "Building site" hugo --minify
