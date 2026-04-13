@@ -16,7 +16,7 @@
 # renders normally.
 [[cascade]]
   [cascade.build]
-    render = "never"
+    render = "link"
     list = "always"
   [cascade._target]
     path = "/works/**"
