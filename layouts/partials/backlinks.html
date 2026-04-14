@@ -3,7 +3,7 @@
      All backlinks are assumed to be in the /notes/ section. */}}
 {{ with .File }}
 {{ $slug := .ContentBaseName }}
-{{ $allBacklinks := index ($.Site.Data | default dict) "backlinks" }}
+{{ $allBacklinks := index (hugo.Data | default dict) "backlinks" }}
 {{ $backlinks := index ($allBacklinks | default dict) $slug }}
 {{ with $backlinks }}
 <section class="backlinks" aria-label="Backlinks">
