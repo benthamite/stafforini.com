@@ -90,7 +90,9 @@
                       ;; Extract suffix (locator) if present
                       (suffix (org-element-property :suffix ref))
                       (suffix-str (if suffix
-                                      (string-trim (org-element-interpret-data suffix))
+                                      (string-trim
+                                       (replace-regexp-in-string "\\`[, ]+" ""
+                                        (org-element-interpret-data suffix)))
                                     "")))
                  (if (string-empty-p suffix-str)
                      (format "{{< cite \"%s\" >}}" cite-key)
@@ -119,8 +121,6 @@
   (let* ((file-list-path (getenv "EXPORT_FILE_LIST"))
          (notes-dir (expand-file-name
                      "~/My Drive/notes/"))
-         (people-dir (expand-file-name
-                     "~/My Drive/people/"))
          (exportable
           (if file-list-path
               ;; Incremental: only export files from the list, filtering dataless
@@ -137,9 +137,7 @@
                        t))
                    files)))
             ;; Full: scan recursively and pre-filter
-            (let* ((all-files (append
-                               (directory-files-recursively notes-dir "\\.org$")
-                               (directory-files-recursively people-dir "\\.org$")))
+            (let* ((all-files (directory-files-recursively notes-dir "\\.org$"))
                    (files (seq-remove
                            ;; pablos-miscellany.org is the org-roam index file, not a blog post
                            (lambda (f) (string= (file-name-nondirectory f) "pablos-miscellany.org"))
