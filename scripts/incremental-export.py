@@ -23,6 +23,18 @@ from lib import BIBLIO_NOTES_DIR, MTIME_EPSILON, REPO_ROOT, atomic_write_json, i
 
 SCRIPT_DIR = REPO_ROOT / "scripts"
 
+
+def _has_exportable_subtrees(content: str) -> bool:
+    """Check if content has EXPORT_FILE_NAME under non-noexport headings."""
+    noexport = False
+    for line in content.splitlines():
+        if line.startswith("*"):
+            noexport = ":noexport:" in line
+        elif not noexport and ":EXPORT_FILE_NAME:" in line:
+            return True
+    return False
+
+
 SECTIONS = {
     "quotes": {
         "source_dirs": [BIBLIO_NOTES_DIR],
@@ -37,7 +49,7 @@ SECTIONS = {
         ],
         "output_dir": REPO_ROOT / "content/notes",
         "elisp": SCRIPT_DIR / "export-notes.el",
-        "pre_filter": lambda content: ":EXPORT_FILE_NAME:" in content,
+        "pre_filter": lambda content: _has_exportable_subtrees(content),
         # pablos-miscellany.org is the org-roam top-level index file, not an exportable note
         "skip_files": {"pablos-miscellany.org"},
     },
