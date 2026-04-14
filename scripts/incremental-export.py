@@ -19,7 +19,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from lib import BIBLIO_NOTES_DIR, MTIME_EPSILON, PEOPLE_DIR, REPO_ROOT, atomic_write_json, is_dataless, load_json_manifest, safe_remove, save_json_manifest
+from lib import BIBLIO_NOTES_DIR, MTIME_EPSILON, REPO_ROOT, atomic_write_json, is_dataless, load_json_manifest, safe_remove, save_json_manifest
 
 SCRIPT_DIR = REPO_ROOT / "scripts"
 
@@ -34,7 +34,6 @@ SECTIONS = {
     "notes": {
         "source_dirs": [
             Path.home() / "My Drive/notes",
-            PEOPLE_DIR,
         ],
         "output_dir": REPO_ROOT / "content/notes",
         "elisp": SCRIPT_DIR / "export-notes.el",
