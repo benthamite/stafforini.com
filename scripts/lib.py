@@ -22,7 +22,6 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 BIBLIO_NOTES_DIR = Path.home() / "My Drive" / "bibliographic-notes"
 NOTES_DIR = Path.home() / "My Drive" / "notes"
-NOTES_TAGS_DIR = NOTES_DIR / "tags"
 PEOPLE_DIR = Path.home() / "My Drive" / "people"
 
 ORGROAM_DB_PATH = Path(os.environ.get(
@@ -438,7 +437,7 @@ def parse_bib_entries(
 # === Org file discovery ===
 
 # Subdirectories typically skipped when scanning ~/My Drive/notes/ for content.
-NOTES_SKIP_DIRS = frozenset({"tags", "people", "claude-logs"})
+NOTES_SKIP_DIRS = frozenset({"people", "claude-logs"})
 
 
 def find_org_files(directory: Path, skip_dirs=NOTES_SKIP_DIRS) -> list[Path]:
