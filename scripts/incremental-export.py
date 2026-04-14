@@ -45,6 +45,7 @@ SECTIONS = {
 }
 
 EXPORT_FILE_NAME_RE = re.compile(r":EXPORT_FILE_NAME:\s+(\S+)")
+INCLUDE_RE = re.compile(r'^#\+INCLUDE:\s+"([^"]+)"', re.MULTILINE)
 
 
 # === Manifest helpers ===
@@ -141,6 +142,22 @@ def resolve_relpath(relpath: str, source_dirs: list[Path]) -> Path:
     return source_dirs[0] / relpath
 
 
+def effective_mtime(filepath: Path, content: str) -> float:
+    """Return the newest mtime among *filepath* and its #+INCLUDE targets."""
+    mtime = filepath.stat().st_mtime
+    for m in INCLUDE_RE.finditer(content):
+        # Strip the heading/line selector (everything after "::")
+        raw = m.group(1).split("::")[0]
+        inc_path = Path(raw).expanduser()
+        try:
+            inc_mtime = inc_path.stat().st_mtime
+            if inc_mtime > mtime:
+                mtime = inc_mtime
+        except OSError:
+            continue
+    return mtime
+
+
 def scan_source_files(cfg: dict) -> dict[str, float]:
     """Scan source directories recursively, return {relpath: mtime} for exportable files."""
     source_dirs = cfg["source_dirs"]
@@ -162,12 +179,11 @@ def scan_source_files(cfg: dict) -> dict[str, float]:
             skipped_dataless.append(f.name)
             continue
         try:
-            mtime = f.stat().st_mtime
             content = f.read_text(errors="replace")
         except OSError:
             continue
         if pre_filter(content):
-            result[relpath_for(f, source_dirs)] = mtime
+            result[relpath_for(f, source_dirs)] = effective_mtime(f, content)
     if skipped_dataless:
         print(
             f"WARNING: skipped {len(skipped_dataless)} dataless file(s) "
@@ -266,8 +282,9 @@ def run_full_export(section: str, cfg: dict, current_files: dict[str, float]) ->
     for name in current_files:
         filepath = resolve_relpath(name, source_dirs)
         if filepath.exists():
+            content = filepath.read_text(errors="replace")
             new_manifest["files"][name] = {
-                "mtime": filepath.stat().st_mtime,
+                "mtime": effective_mtime(filepath, content),
                 "outputs": extract_export_file_names(filepath),
             }
 
