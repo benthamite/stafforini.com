@@ -315,6 +315,25 @@ def remove_tags(md_file: Path, text: str, fmt: str, dry_run: bool) -> bool:
     return True
 
 
+ALL_TAGS_PATH = REPO_ROOT / "data" / "all-tags.json"
+
+
+def write_all_tags(
+    quote_tags: dict[str, list[str]],
+    note_tags: dict[str, list[str]],
+    work_tags: dict[str, list[str]],
+) -> None:
+    """Write the sorted union of all tags to data/all-tags.json."""
+    all_tags: set[str] = set()
+    for tag_map in (quote_tags, note_tags, work_tags):
+        for tags in tag_map.values():
+            all_tags.update(tags)
+    sorted_tags = sorted(all_tags, key=str.casefold)
+    ALL_TAGS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    atomic_write_text(ALL_TAGS_PATH, json.dumps(sorted_tags, ensure_ascii=False, indent=2) + "\n")
+    print(f"  Wrote {len(sorted_tags)} tags to {ALL_TAGS_PATH.relative_to(REPO_ROOT)}")
+
+
 # === Main ===
 
 
@@ -368,7 +387,9 @@ def main():
     total_updated = q_stats["updated"] + n_stats["updated"] + w_stats["updated"]
     print(f"\n  Total updated: {total_updated}")
 
-    if args.dry_run:
+    if not args.dry_run:
+        write_all_tags(quote_tags, note_tags, work_tags)
+    else:
         print("  *** DRY RUN — no files written ***")
     print("\nDone.")
 
