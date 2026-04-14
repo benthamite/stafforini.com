@@ -4,7 +4,20 @@
 # content/ and static/ox-hugo/ are gitignored on main but present on
 # disk after ox-hugo export.  This script builds Hugo (which reads
 # them), then pushes the built site directly to Netlify via CLI.
+#
+# Usage: bash scripts/deploy.sh [--quick]
+# --quick: skip data regeneration and PDF processing (just clean, build,
+#          index, deploy).  Use after a recent full export when only
+#          templates or styles changed.
 source "$(dirname "$0")/common.sh"
+
+quick=false
+for arg in "$@"; do
+  case "$arg" in
+    --quick) quick=true ;;
+    *) echo "Error: unknown flag '$arg'" >&2; exit 1 ;;
+  esac
+done
 
 cleanup() {
   local exit_code=$?
@@ -21,16 +34,17 @@ if [ ! -d content ]; then
   exit 1
 fi
 
-# Regenerate all pre-computed data
-bash "$SCRIPT_DIR/regenerate-data.sh" --all
+if ! $quick; then
+  # Regenerate all pre-computed data
+  bash "$SCRIPT_DIR/regenerate-data.sh" --all
 
-# Process PDFs (strip annotations, generate thumbnails)
-run_step "Processing PDFs" python3 "$SCRIPT_DIR/process-pdfs.py"
+  # Process PDFs (strip annotations, generate thumbnails)
+  run_step "Processing PDFs" python3 "$SCRIPT_DIR/process-pdfs.py"
+fi
 
 # Clean stale build output (Hugo doesn't remove deleted/renamed pages)
 echo "Cleaning previous build..."
-# Use find -delete instead of trash to preserve the public/ symlink (nosync)
-find public -mindepth 1 -delete 2>/dev/null || true
+clean_dir public
 
 # Build
 run_step "Building site" hugo --minify
