@@ -3,7 +3,7 @@
 
 Covers three sources of published notes:
 
-1. Tag/person stubs in notes/tags/ and people/ — slug = filename stem.
+1. Person stubs in people/ — slug = filename stem.
 2. Published notes under ~/My Drive/notes/ — slug = EXPORT_FILE_NAME value.
    Discovered by querying the org-roam SQLite database for all nodes whose
    files live under the notes directory, then reading each unique file to
@@ -23,7 +23,6 @@ from pathlib import Path
 
 from lib import (
     NOTES_DIR,
-    NOTES_TAGS_DIR,
     ORGROAM_DB_PATH,
     PEOPLE_DIR,
     REPO_ROOT,
@@ -156,14 +155,12 @@ def scan_notes_filesystem() -> dict[str, str]:
 
     Recursively scans ~/My Drive/notes/ for .org files with EXPORT_FILE_NAME,
     extracts all :ID: properties from each, and maps them to the slug.
-    Skips tag stub directories (already handled by scan_directory).
     """
     mapping = {}
     if not NOTES_DIR.is_dir():
         print(f"  Warning: directory not found: {NOTES_DIR}", file=sys.stderr)
         return mapping
 
-    skip_dirs = {NOTES_TAGS_DIR}
     org_files = sorted(NOTES_DIR.rglob("*.org"))
     total = len(org_files)
     skipped_dataless = 0
@@ -173,9 +170,6 @@ def scan_notes_filesystem() -> dict[str, str]:
         if i % 500 == 0 or i == total:
             print(f"  Filesystem scan: {i}/{total}", flush=True)
 
-        # Skip tag stub directories (handled separately)
-        if any(org_file.is_relative_to(d) for d in skip_dirs if d.is_dir()):
-            continue
         if is_dataless(org_file):
             skipped_dataless += 1
             continue
@@ -204,8 +198,7 @@ def scan_notes_filesystem() -> dict[str, str]:
 
 
 def main():
-    print("--- Scanning tag stubs ---")
-    notes_map = scan_directory(NOTES_TAGS_DIR)
+    print("--- Scanning person stubs ---")
     people_map = scan_directory(PEOPLE_DIR)
 
     print("--- Scanning published notes via org-roam DB ---")
@@ -214,18 +207,16 @@ def main():
     print("--- Scanning notes filesystem (catch files not in org-roam) ---")
     filesystem_map = scan_notes_filesystem()
 
-    # Merge: filesystem first, then org-roam, then tag stubs.
-    # Later entries override earlier ones; tag stubs are canonical for topic pages.
+    # Merge: filesystem first, then org-roam, then person stubs.
+    # Later entries override earlier ones; person stubs are canonical.
     combined = {}
     combined.update(filesystem_map)
     combined.update(published_map)
-    combined.update(notes_map)
     combined.update(people_map)
 
     atomic_write_json(OUTPUT_PATH, combined, ensure_ascii=False)
 
     print(f"\nID-slug map written to {OUTPUT_PATH}")
-    print(f"  notes/tags:        {len(notes_map)} IDs")
     print(f"  people:            {len(people_map)} IDs")
     print(f"  published (DB):    {len(published_map)} IDs")
     print(f"  published (files): {len(filesystem_map)} IDs")
