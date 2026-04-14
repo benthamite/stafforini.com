@@ -113,12 +113,10 @@ pre {
   line-height: 1.5;
 }
 
-/* On wide screens, let code blocks expand into the sidenote margin if needed */
+/* On wide screens, let code blocks span into the sidenote margin */
 @media (min-width: 1100px) {
   pre {
-    max-width: calc(100% + var(--sidenote-gap) + var(--sidenote-width));
-    width: fit-content;
-    min-width: 100%;
+    width: calc(100% + var(--sidenote-gap) + var(--sidenote-width));
   }
 }
 
