@@ -49,8 +49,8 @@ def _build_git_dates() -> tuple[dict[Path, str], dict[Path, str]]:
     oldest = {}
     try:
         out = subprocess.run(
-            ["git", "log", "--format=%ad", "--date=short", "--name-only",
-             "--diff-filter=ACMR", "--", "*.org"],
+            ["git", "log", "--format=%ad", "--date=format:%Y-%m-%dT%H:%M:%S",
+             "--name-only", "--diff-filter=ACMR", "--", "*.org"],
             capture_output=True, text=True, cwd=str(ORG_DIR), check=True,
         ).stdout
     except (subprocess.CalledProcessError, FileNotFoundError):
@@ -61,8 +61,8 @@ def _build_git_dates() -> tuple[dict[Path, str], dict[Path, str]]:
         line = line.strip()
         if not line:
             continue
-        # Date lines are YYYY-MM-DD
-        if re.match(r"\d{4}-\d{2}-\d{2}$", line):
+        # Date lines are YYYY-MM-DDTHH:MM:SS
+        if re.match(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$", line):
             current_date = line
         elif current_date and line.endswith(".org"):
             path = ORG_DIR / line
@@ -143,8 +143,8 @@ def _get_single_file_git_date(org_file):
     """
     try:
         result = subprocess.run(
-            ["git", "log", "-1", "--format=%ad", "--date=short", "--",
-             str(org_file.name)],
+            ["git", "log", "-1", "--format=%ad", "--date=format:%Y-%m-%dT%H:%M:%S",
+             "--", str(org_file.name)],
             capture_output=True, text=True,
             cwd=str(org_file.parent), check=True,
         )
@@ -158,8 +158,8 @@ def _get_single_file_first_date(org_file):
     """Get the earliest git commit date for a single org file."""
     try:
         result = subprocess.run(
-            ["git", "log", "--format=%ad", "--date=short", "--diff-filter=A",
-             "--", str(org_file.name)],
+            ["git", "log", "--format=%ad", "--date=format:%Y-%m-%dT%H:%M:%S",
+             "--diff-filter=A", "--", str(org_file.name)],
             capture_output=True, text=True,
             cwd=str(org_file.parent), check=True,
         )
@@ -185,7 +185,7 @@ def get_org_mtime(slug, output_map=None):
         return git_dates[org_file]
     # Fallback to filesystem mtime
     mtime = os.path.getmtime(org_file)
-    return datetime.fromtimestamp(mtime).strftime("%Y-%m-%d")
+    return datetime.fromtimestamp(mtime).strftime("%Y-%m-%dT%H:%M:%S")
 
 
 def get_org_creation_date(slug, output_map=None):
@@ -359,7 +359,7 @@ def process_single_file(md_path, dry_run=False):
     if not lastmod:
         # Fallback to filesystem mtime
         mtime = os.path.getmtime(org_file)
-        lastmod = datetime.fromtimestamp(mtime).strftime("%Y-%m-%d")
+        lastmod = datetime.fromtimestamp(mtime).strftime("%Y-%m-%dT%H:%M:%S")
 
     creation = _get_single_file_first_date(org_file) or lastmod
 
