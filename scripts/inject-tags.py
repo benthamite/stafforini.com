@@ -59,10 +59,10 @@ YAML_TAGS_RE = re.compile(r"^tags:.*$", re.MULTILINE)
 
 
 def resolve_id_links(text: str, id_slug_map: dict) -> list[str]:
-    """Extract tag titles from [[id:UUID][name]] links, keeping only resolvable ones."""
+    """Extract tag titles from [[id:UUID][name]] links."""
     titles = []
-    for uuid, name in ID_LINK_RE.findall(text):
-        if id_slug_map.get(uuid.upper(), ""):
+    for _uuid, name in ID_LINK_RE.findall(text):
+        if name:
             titles.append(name)
     return sorted(set(titles))
 
