@@ -54,12 +54,19 @@ YAML_TAGS_RE = re.compile(r"^tags:.*$", re.MULTILINE)
 
 
 def extract_tag_titles(text: str) -> list[str]:
-    """Extract tag titles from [[id:UUID][name]] links in a property value."""
-    titles = []
-    for _uuid, name in ID_LINK_RE.findall(text):
-        if name:
-            titles.append(name)
-    return sorted(set(titles))
+    """Extract tag titles from a :TOPICS: or :CATEGORY: property value.
+
+    Handles two formats:
+    - Legacy ID links: [[id:UUID][name]] (middot-separated)
+    - Plain text: name1 · name2 (middot-separated)
+    """
+    # First try to extract from ID links
+    titles = [name for _uuid, name in ID_LINK_RE.findall(text) if name]
+    if titles:
+        return sorted(set(titles))
+    # Fall back to middot-separated plain text
+    parts = [t.strip() for t in text.split("·")]
+    return sorted(set(p for p in parts if p))
 
 
 def build_work_author_names() -> dict[str, set[str]]:
