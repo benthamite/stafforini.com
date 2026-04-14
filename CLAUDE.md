@@ -52,6 +52,17 @@ To fix content issues, always edit the upstream source (org files or bib files),
 
 Workflow: export from org-mode, then run `scripts/deploy.sh`.
 
+### Deploy modes
+
+- **Full deploy** (`D` in menu): regenerates all data, processes PDFs, cleans `public/`, builds Hugo, builds Pagefind index, deploys. Takes ~4 minutes.
+- **Quick deploy** (`C-u D` in menu, or `deploy.sh --quick`): skips data regeneration and PDF processing. Use when only templates, styles, or Hugo config changed. Takes ~1 minute.
+
+Never run `hugo` directly and deploy with `--no-build` -- this skips the clean step and produces stale output.
+
+### Nosync symlinks
+
+`public/`, `static/pagefind/`, `static/pdfs/`, and `static/pdf-thumbnails/` are all symlinks to `~/.drive-nosync/repos/stafforini.com/...` to avoid Google Drive syncing build artifacts. All scripts use the `clean_dir` helper (defined in `common.sh`) which passes `-H` to `find` -- required on macOS where `find` does not follow starting-path symlinks by default.
+
 ## ox-hugo dropped-title bug
 
 `org-hugo--get-sanitized-title` intermittently returns nil during **interactive** Emacs exports. `(plist-get info :title)` is nil, tomelr drops the title from TOML front matter, and the note appears titleless on the site. Batch exports are never affected.
@@ -86,7 +97,7 @@ Do NOT add template-level fallbacks. The title must be present in front matter.
 
 The [`stafforini.el`](https://github.com/benthamite/stafforini.el) package provides Emacs commands for driving the build pipeline (exporting notes/quotes, regenerating work pages and backlinks, starting the dev server, etc.). See PUBLISHING.md for the full command reference. The package lives in a separate repo but wraps the scripts in this one.
 
-**Local path**: `~/.config/emacs-profiles/active/elpaca/repos/stafforini/stafforini.el`
+**Local path**: `~/.config/emacs-profiles/active/elpaca/sources/stafforini/stafforini.el`
 
 When telling the user to run a script, always mention the corresponding `stafforini.el` command (accessible via `stafforini-menu`):
 
@@ -106,7 +117,7 @@ When telling the user to run a script, always mention the corresponding `staffor
 | `scripts/inject-tags.py` | `stafforini-inject-tags` | `g` |
 | Full pipeline | `stafforini-full-rebuild` | `R` |
 | Search index | `stafforini-rebuild-search-index` | `i` |
-| `scripts/deploy.sh` | `stafforini-deploy` | `D` |
+| `scripts/deploy.sh` | `stafforini-deploy` | `D` (`C-u` for quick) |
 | Hugo dev server | `stafforini-start-server` / `stafforini-stop-server` | `s` / `k` |
 | *(insert)* | `stafforini-insert-image` | `I` |
 | *(insert)* | `stafforini-insert-topics` | `T` |
