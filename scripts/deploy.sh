@@ -36,7 +36,8 @@ find public -mindepth 1 -delete 2>/dev/null || true
 run_step "Building site" hugo --minify
 run_step "Building search index" npx --yes pagefind --site public
 
-# Deploy
-run_step "Deploying to Netlify" npx --yes netlify deploy --prod --dir=public --no-build
+# Deploy — resolve symlink so Netlify CLI reads the actual directory
+DEPLOY_DIR="$(cd public && pwd -P)"
+run_step "Deploying to Netlify" npx --yes netlify deploy --prod --dir="$DEPLOY_DIR" --no-build
 
 echo "Done."
