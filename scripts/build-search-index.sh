@@ -15,15 +15,14 @@ fi
 run_step "Generating citing-notes data" python3 "$SCRIPT_DIR/generate-citing-notes.py"
 
 # Clean stale build output (Hugo doesn't remove deleted/renamed pages)
-# Use find -delete instead of trash to preserve the public/ symlink (nosync)
-find public -mindepth 1 -delete 2>/dev/null || true
+clean_dir public
 
 run_step "Building site for search indexing" hugo --quiet
 run_step "Building search index" npx --yes pagefind --site public
 
 # Replace index contents in-place to preserve the static/pagefind symlink (nosync)
 echo "Copying search index to static/..."
-find static/pagefind -mindepth 1 -delete 2>/dev/null || true
+clean_dir static/pagefind
 cp -R public/pagefind/. static/pagefind/
 
 # Restore dev-server symlinks if the server is running (cleaning public/ removed them)

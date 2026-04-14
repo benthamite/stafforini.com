@@ -23,6 +23,18 @@ find_hugo_servers() {
   pgrep -U "$(id -u)" -f "hugo server.*--config" 2>/dev/null || true
 }
 
+# Delete contents of a directory, following symlinks at the starting path.
+# macOS find does NOT follow starting-path symlinks by default (unlike GNU
+# find), so -H is required.  Without it, `find public -delete` is a no-op
+# when public/ is a symlink — the root cause of ghost pages persisting
+# across builds.
+clean_dir() {
+  local dir="$1"
+  if [ -d "$dir" ]; then
+    find -H "$dir" -mindepth 1 -delete
+  fi
+}
+
 # Create symlinks for heavy static directories (pdfs, pdf-thumbnails)
 # in public/ so the dev server can serve them without copying.
 ensure_static_symlinks() {
