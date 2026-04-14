@@ -71,13 +71,21 @@ def save_manifest(section: str, data: dict) -> None:
 
 
 def extract_export_file_names(filepath: Path) -> list[str]:
-    """Extract all :EXPORT_FILE_NAME: values from an org file."""
+    """Extract all :EXPORT_FILE_NAME: values from an org file.
+
+    Skips headings tagged :noexport: (ox-hugo won't export them).
+    """
     names = []
+    noexport = False
     with open(filepath, errors="replace") as f:
         for line in f:
-            m = EXPORT_FILE_NAME_RE.search(line)
-            if m:
-                names.append(m.group(1) + ".md")
+            # Detect org headings and check for :noexport: tag
+            if line.startswith("*"):
+                noexport = ":noexport:" in line
+            elif not noexport:
+                m = EXPORT_FILE_NAME_RE.search(line)
+                if m:
+                    names.append(m.group(1) + ".md")
     return names
 
 
