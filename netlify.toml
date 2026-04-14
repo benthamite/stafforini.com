@@ -21,12 +21,13 @@ for = "/*"
   #   script-src  'unsafe-inline' — required for Hugo's inline dark-mode script (FOUC prevention)
   #               'wasm-unsafe-eval' — required for Pagefind's WebAssembly search engine
   #                cdn.jsdelivr.net — KaTeX JS
+  #                cdn.plot.ly     — Plotly charts (situational-awareness-lp)
   #   style-src   'unsafe-inline' — required for KaTeX inline styles
   #                cdn.jsdelivr.net — KaTeX CSS
   #   font-src    'self'          — only local fonts (Source Serif 4)
   #   img-src     'self' data:    — data: URIs used by KaTeX for rendering
   #   connect-src 'self'          — Pagefind search fetches index fragments via fetch()
-  Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src 'self'; img-src 'self' data:; media-src 'self'; connect-src 'self'"
+  Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://cdn.jsdelivr.net https://cdn.plot.ly; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src 'self'; img-src 'self' data:; media-src 'self'; connect-src 'self'"
 
 [[headers]]
 for = "/fonts/*"
