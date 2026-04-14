@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 """Inject tags into Hugo markdown front matter from org :TOPICS: and :CATEGORY: properties.
 
-Replaces the separate generate-quote-topics.py / generate-note-categories.py
-scripts with a single unified pipeline that writes tags directly into front
-matter, letting Hugo's built-in taxonomy system generate tag pages.
-
 Data flow:
   - Quotes: :TOPICS: in bibliographic-notes org files → tags in content/quotes/*.md
   - Notes:  :CATEGORY: in notes org files            → tags in content/notes/*.md
@@ -37,7 +33,6 @@ from lib import (
     find_ancestor_with_export,
     find_org_files,
     is_dataless,
-    load_id_slug_map,
     make_non_diary_slug,
     parse_org_headings,
 )
@@ -58,8 +53,8 @@ YAML_TAGS_RE = re.compile(r"^tags:.*$", re.MULTILINE)
 # === Tag extraction from org files ===
 
 
-def resolve_id_links(text: str, id_slug_map: dict) -> list[str]:
-    """Extract tag titles from [[id:UUID][name]] links."""
+def extract_tag_titles(text: str) -> list[str]:
+    """Extract tag titles from [[id:UUID][name]] links in a property value."""
     titles = []
     for _uuid, name in ID_LINK_RE.findall(text):
         if name:
@@ -98,13 +93,13 @@ def build_work_author_names() -> dict[str, set[str]]:
 
 
 def build_quote_tags(
-    id_slug_map: dict,
     work_authors: dict[str, set[str]] | None = None,
 ) -> dict[str, list[str]]:
     """Build {quote_slug: [tag_titles]} from :TOPICS: in bibliographic-notes.
 
-    If *work_authors* is provided, any tag that matches a work's author name
-    is excluded — person tags should mark what a quote is about, not who wrote it.
+    If WORK_AUTHORS is provided, any tag that matches a work's author
+    name is excluded -- person tags should mark what a quote is about,
+    not who wrote it.
     """
     result: dict[str, list[str]] = {}
     org_files = sorted(BIBLIO_NOTES_DIR.glob("*.org"))
@@ -127,7 +122,7 @@ def build_quote_tags(
             topics_str = h["properties"].get("TOPICS", "")
             if not topics_str:
                 continue
-            titles = resolve_id_links(topics_str, id_slug_map)
+            titles = extract_tag_titles(topics_str)
             if author_names:
                 titles = [t for t in titles if t not in author_names]
             if not titles:
@@ -149,7 +144,7 @@ def build_quote_tags(
     return result
 
 
-def build_note_tags(id_slug_map: dict) -> dict[str, list[str]]:
+def build_note_tags() -> dict[str, list[str]]:
     """Build {note_slug: [tag_titles]} from :CATEGORY: in notes."""
     result: dict[str, list[str]] = {}
 
@@ -166,7 +161,7 @@ def build_note_tags(id_slug_map: dict) -> dict[str, list[str]]:
         category_match = re.search(r":CATEGORY:\s+(.+)", text)
         if not category_match:
             continue
-        titles = resolve_id_links(category_match.group(1), id_slug_map)
+        titles = extract_tag_titles(category_match.group(1))
         if titles:
             result[note_slug] = titles
 
@@ -331,10 +326,8 @@ def main():
     print("Injecting tags into Hugo front matter")
     print("=" * 60)
 
-    id_slug_map = load_id_slug_map(REPO_ROOT)
-
     if args.file:
-        process_single_file(Path(args.file), id_slug_map)
+        process_single_file(Path(args.file))
         return
 
     print("\n  Building work author map...")
@@ -342,11 +335,11 @@ def main():
     print(f"  Found authors for {len(work_authors)} works")
 
     print("  Building quote tags from :TOPICS:...")
-    quote_tags = build_quote_tags(id_slug_map, work_authors)
+    quote_tags = build_quote_tags(work_authors)
     print(f"  Found tags for {len(quote_tags)} quotes")
 
     print("  Building note tags from :CATEGORY:...")
-    note_tags = build_note_tags(id_slug_map)
+    note_tags = build_note_tags()
     print(f"  Found tags for {len(note_tags)} notes")
 
     print("  Loading work tags...")
@@ -373,7 +366,7 @@ def main():
     print("\nDone.")
 
 
-def process_single_file(md_path: Path, id_slug_map: dict):
+def process_single_file(md_path: Path):
     """Process a single markdown file (used by --file mode)."""
     if not md_path.exists():
         print(f"Error: {md_path} not found")
@@ -385,9 +378,9 @@ def process_single_file(md_path: Path, id_slug_map: dict):
     tags: list[str] = []
     if section == "quotes":
         work_authors = build_work_author_names()
-        tags = build_quote_tags(id_slug_map, work_authors).get(slug, [])
+        tags = build_quote_tags(work_authors).get(slug, [])
     elif section == "notes":
-        tags = build_note_tags(id_slug_map).get(slug, [])
+        tags = build_note_tags().get(slug, [])
     elif section == "works":
         tags = load_work_tags().get(slug, [])
 

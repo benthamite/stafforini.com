@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Generate a JSON mapping from org-roam IDs to Hugo slugs.
 
-Covers three sources of published notes:
+Covers two sources of published notes:
 
-1. Person stubs in people/ — slug = filename stem.
-2. Published notes under ~/My Drive/notes/ — slug = EXPORT_FILE_NAME value.
+1. Published notes under ~/My Drive/notes/ — slug = EXPORT_FILE_NAME value.
    Discovered by querying the org-roam SQLite database for all nodes whose
    files live under the notes directory, then reading each unique file to
    check for :EXPORT_FILE_NAME:.  Sub-heading node IDs are mapped to their
    parent file's slug.
+2. Direct filesystem scan — catches files not yet tracked by org-roam.
 
 Writes data/id-slug-map.json.
 """
@@ -24,7 +24,6 @@ from pathlib import Path
 from lib import (
     NOTES_DIR,
     ORGROAM_DB_PATH,
-    PEOPLE_DIR,
     REPO_ROOT,
     atomic_write_json,
     is_dataless,
@@ -37,41 +36,6 @@ ID_RE = re.compile(r"^:ID:\s+(\S+)", re.MULTILINE)
 # Allow leading whitespace — notes use indented property drawers under headings
 ID_INDENTED_RE = re.compile(r"^\s*:ID:\s+(\S+)", re.MULTILINE)
 EXPORT_FILE_NAME_RE = re.compile(r"^\s*:EXPORT_FILE_NAME:\s+(\S+)", re.MULTILINE)
-
-
-def scan_directory(directory: Path) -> dict[str, str]:
-    """Extract {org-id: slug} pairs from all .org files in *directory*."""
-    mapping = {}
-    if not directory.is_dir():
-        print(f"  Warning: directory not found: {directory}", file=sys.stderr)
-        return mapping
-
-    org_files = sorted(directory.glob("*.org"))
-    total = len(org_files)
-    skipped_dataless = 0
-    for i, org_file in enumerate(org_files, 1):
-        if i % 100 == 0 or i == total:
-            print(f"  Scanning {directory.name}: {i}/{total}", flush=True)
-        if is_dataless(org_file):
-            skipped_dataless += 1
-            continue
-        try:
-            text = org_file.read_text(encoding="utf-8")
-        except (OSError, UnicodeDecodeError) as exc:
-            print(f"  Warning: skipping {org_file.name}: {exc}", file=sys.stderr)
-            continue
-
-        match = ID_RE.search(text)
-        if not match:
-            continue
-
-        org_id = match.group(1).upper()  # normalize to uppercase (org-roam convention)
-        slug = org_file.stem      # filename without .org
-        mapping[org_id] = slug
-
-    if skipped_dataless:
-        print(f"  Skipped {skipped_dataless} dataless (cloud-evicted) file(s)")
-    return mapping
 
 
 def scan_published_notes() -> dict[str, str]:
@@ -198,26 +162,20 @@ def scan_notes_filesystem() -> dict[str, str]:
 
 
 def main():
-    print("--- Scanning person stubs ---")
-    people_map = scan_directory(PEOPLE_DIR)
-
     print("--- Scanning published notes via org-roam DB ---")
     published_map = scan_published_notes()
 
     print("--- Scanning notes filesystem (catch files not in org-roam) ---")
     filesystem_map = scan_notes_filesystem()
 
-    # Merge: filesystem first, then org-roam, then person stubs.
-    # Later entries override earlier ones; person stubs are canonical.
+    # Merge: filesystem first, then org-roam DB (DB entries are more authoritative).
     combined = {}
     combined.update(filesystem_map)
     combined.update(published_map)
-    combined.update(people_map)
 
     atomic_write_json(OUTPUT_PATH, combined, ensure_ascii=False)
 
     print(f"\nID-slug map written to {OUTPUT_PATH}")
-    print(f"  people:            {len(people_map)} IDs")
     print(f"  published (DB):    {len(published_map)} IDs")
     print(f"  published (files): {len(filesystem_map)} IDs")
     print(f"  total (merged):    {len(combined)} IDs")

@@ -1,8 +1,8 @@
 """Tests for scripts/lib.py — shared utility functions.
 
 Covers: cite_key_to_slug, normalize, strip_accents, extract_pdf_path,
-escape_yaml_string, tag_to_filename, markdown_to_org_emphasis,
-escape_org_text, parse_bib_entries, atomic_write_json, atomic_write_text.
+escape_yaml_string, markdown_to_org_emphasis, escape_org_text,
+parse_bib_entries, atomic_write_json, atomic_write_text.
 """
 
 import json
@@ -195,31 +195,6 @@ class TestEscapeYamlString:
 
     def test_empty(self):
         assert lib.escape_yaml_string("") == ""
-
-
-# ---------------------------------------------------------------------------
-# tag_to_filename
-# ---------------------------------------------------------------------------
-
-class TestTagToFilename:
-    def test_basic(self):
-        assert lib.tag_to_filename("artificial intelligence") == "artificial-intelligence.org"
-
-    def test_trailing_period_stripped(self):
-        assert lib.tag_to_filename("Arnold Schwarzenegger.") == "arnold-schwarzenegger.org"
-
-    def test_special_characters(self):
-        assert lib.tag_to_filename("C++ programming") == "c-programming.org"
-
-    def test_accented_characters_preserved(self):
-        # Latin-1 extended range (\u00e0-\u00ff) is kept
-        assert lib.tag_to_filename("café latte") == "café-latte.org"
-
-    def test_multiple_spaces(self):
-        assert lib.tag_to_filename("too  many   spaces") == "too-many-spaces.org"
-
-    def test_leading_trailing_hyphens_stripped(self):
-        assert lib.tag_to_filename(" hello ") == "hello.org"
 
 
 # ---------------------------------------------------------------------------

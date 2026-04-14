@@ -3,8 +3,8 @@
 # Called by export and deploy scripts.
 #
 # Usage: bash scripts/regenerate-data.sh [--notes] [--quotes] [--all]
-# --notes: regenerate data for notes (backlinks, citing-notes, categories, lastmod)
-# --quotes: regenerate data for quotes (quote-topics, work-pages, topic-pages)
+# --notes: regenerate data for notes (backlinks, citing-notes, lastmod)
+# --quotes: regenerate data for quotes (non-diary quotes, work-pages)
 # --all: regenerate everything (default if no flags given, used by deploy)
 source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 

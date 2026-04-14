@@ -22,7 +22,6 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 BIBLIO_NOTES_DIR = Path.home() / "My Drive" / "bibliographic-notes"
 NOTES_DIR = Path.home() / "My Drive" / "notes"
-PEOPLE_DIR = Path.home() / "My Drive" / "people"
 
 ORGROAM_DB_PATH = Path(os.environ.get(
     "ORGROAM_DB",
@@ -309,17 +308,6 @@ def escape_org_text(text: str) -> str:
             line = "\u200B" + line
         escaped.append(line)
     return "\n".join(escaped)
-
-
-def tag_to_filename(tag: str) -> str:
-    """Convert a tag to a kebab-case .org filename.
-
-    "artificial intelligence" -> "artificial-intelligence.org"
-    """
-    slug = tag.lower().rstrip(".")
-    slug = re.sub(r"[^a-z0-9\u00e0-\u00ff-]+", "-", slug)
-    slug = re.sub(r"-+", "-", slug).strip("-")
-    return slug + ".org"
 
 
 def parse_bib_entries(
