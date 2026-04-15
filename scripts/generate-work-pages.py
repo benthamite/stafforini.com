@@ -46,28 +46,41 @@ def _parse_bib_entries_for_works(bib_path: Path) -> list[dict]:
 
 
 def resolve_crossrefs(bib_by_key: dict) -> None:
-    """Resolve crossref fields: inherit missing fields from parent entries."""
+    """Resolve crossref fields: inherit missing fields from parent entries.
+
+    Runs multiple passes to handle chained crossrefs (e.g. A → B → C),
+    stopping when no further changes occur.
+    """
     inherit_fields = ["booktitle", "journaltitle", "location", "editor", "volume", "number"]
-    for entry in bib_by_key.values():
-        crossref_key = entry.get("crossref", "")
-        if not crossref_key:
-            continue
-        parent = bib_by_key.get(crossref_key)
-        if not parent:
-            continue
-        # Inherit missing fields from parent
-        for field in inherit_fields:
-            if not entry.get(field) and parent.get(field):
-                entry[field] = parent[field]
-        # For booktitle, fall back to parent's title if still empty
-        if not entry.get("booktitle") and parent.get("title"):
-            entry["booktitle"] = parent["title"]
-        # Inherit year if missing
-        if not entry.get("year") and parent.get("year"):
-            entry["year"] = parent["year"]
-        # Inherit editor from parent if this entry has an author
-        if not entry.get("editor") and parent.get("editor") and entry.get("author"):
-            entry["editor"] = parent["editor"]
+    changed = True
+    while changed:
+        changed = False
+        for entry in bib_by_key.values():
+            crossref_key = entry.get("crossref", "")
+            if not crossref_key:
+                continue
+            parent = bib_by_key.get(crossref_key)
+            if not parent:
+                continue
+            for field in inherit_fields:
+                if not entry.get(field) and parent.get(field):
+                    entry[field] = parent[field]
+                    changed = True
+            if not entry.get("booktitle") and parent.get("title"):
+                entry["booktitle"] = parent["title"]
+                changed = True
+            if not entry.get("title") and parent.get("title"):
+                entry["title"] = parent["title"]
+                changed = True
+            if not entry.get("author") and parent.get("author"):
+                entry["author"] = parent["author"]
+                changed = True
+            if not entry.get("year") and parent.get("year"):
+                entry["year"] = parent["year"]
+                changed = True
+            if not entry.get("editor") and parent.get("editor") and entry.get("author"):
+                entry["editor"] = parent["editor"]
+                changed = True
 
 
 # === Author formatting ===
