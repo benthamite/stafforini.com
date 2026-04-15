@@ -42,16 +42,26 @@ if ! $quick; then
   run_step "Processing PDFs" python3 "$SCRIPT_DIR/process-pdfs.py"
 fi
 
-# Clean stale build output (Hugo doesn't remove deleted/renamed pages)
+# Clean stale Hugo output (notes, quotes, works, tags, etc.) but
+# preserve heavy static assets (pdfs, pdf-thumbnails, pagefind) that
+# don't change often and are expensive to re-copy.
 echo "Cleaning previous build..."
-clean_dir public
+clean_hugo_output public
 
-# Build
-run_step "Building site" hugo --minify
+# Ensure symlinks for heavy static directories.  Hugo's deploy config
+# excludes these from static mounts, so they persist in public/ via
+# symlinks rather than being copied on every build.
+ensure_static_symlinks
+
+# Build with deploy overlay (excludes heavy static dirs from mounts)
+run_step "Building site" hugo --minify --config hugo.toml,hugo.deploy.toml
 run_step "Building search index" npx --yes pagefind --site public
 
-# Deploy — resolve symlink so Netlify CLI reads the actual directory
+# Deploy — resolve symlink so Netlify CLI reads the actual directory.
+# --timeout 3600: the default 20-minute timeout is too short when many
+# files have changed (the CLI uploads files one-by-one, which is slow
+# from high-latency connections).
 DEPLOY_DIR="$(cd public && pwd -P)"
-run_step "Deploying to Netlify" npx --yes netlify deploy --prod --dir="$DEPLOY_DIR" --no-build
+run_step "Deploying to Netlify" npx --yes netlify deploy --prod --dir="$DEPLOY_DIR" --no-build --timeout 3600
 
 echo "Done."

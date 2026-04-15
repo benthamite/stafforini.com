@@ -35,11 +35,30 @@ clean_dir() {
   fi
 }
 
-# Create symlinks for heavy static directories (pdfs, pdf-thumbnails)
-# in public/ so the dev server can serve them without copying.
+# Delete Hugo-generated content from public/, preserving heavy static
+# assets (pdfs, pdf-thumbnails, pagefind) that persist across builds.
+# This is MUCH faster than clean_dir for the deploy workflow because
+# Hugo doesn't need to re-copy ~50 GB of PDFs and thumbnails.
+clean_hugo_output() {
+  local dir="$1"
+  if [ ! -d "$dir" ]; then
+    return
+  fi
+  # Delete everything except the directories we want to keep.
+  # Uses find -delete (like clean_dir) to avoid rm -rf.
+  for entry in "$dir"/*; do
+    case "$(basename "$entry")" in
+      pdfs|pdf-thumbnails|pagefind) continue ;;
+      *) find -H "$entry" -depth -delete 2>/dev/null ;;
+    esac
+  done
+}
+
+# Create symlinks for heavy static directories (pdfs, pdf-thumbnails,
+# pagefind) in public/ so Hugo doesn't need to copy them.
 ensure_static_symlinks() {
   mkdir -p public
-  for dir in pdfs pdf-thumbnails; do
+  for dir in pdfs pdf-thumbnails pagefind; do
     if [ -d "static/$dir" ] && [ ! -e "public/$dir" ]; then
       ln -s "$REPO_ROOT/static/$dir" "public/$dir"
     fi
