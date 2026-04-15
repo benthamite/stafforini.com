@@ -1901,6 +1901,9 @@
 /docs/Simmons - Animals, predators, the right to life, and the duty to save lives.pdf  /works/simmons-2009-animals-predators-right/  301
 /docs/Torres - The case for intervention in nature on behalf of animals.pdf  /works/torres-2015-case-intervention-nature/  301
 
+/docs/Bry-Chevalier-2024.pdf  /  301
+/docs/singer01.pdf  /  301
+
 # /txt/ was the older path that redirected to /docs/ on the WordPress site
 # Since /docs/ rules above handle the rest, just redirect /txt/ to /docs/
 /txt/*  /docs/:splat  301
