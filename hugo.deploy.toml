@@ -1,0 +1,45 @@
+# Deploy config overlay: excludes heavy static directories (pdfs,
+# pdf-thumbnails, pagefind) from Hugo's static mounts.  These are
+# served via symlinks created by ensure_static_symlinks in common.sh.
+#
+# Without this, Hugo copies ~50 GB of PDFs from static/ to public/
+# on every build, making deploys extremely slow.
+#
+# Used by scripts/deploy.sh via --config flag.
+
+[module]
+  # Override static mounts to include only lightweight directories.
+  # Heavy directories (pdfs, pdf-thumbnails, pagefind) are excluded
+  # and persist in public/ across builds via symlinks.
+  [[module.mounts]]
+    source = "static/fonts"
+    target = "static/fonts"
+  [[module.mounts]]
+    source = "static/images"
+    target = "static/images"
+  [[module.mounts]]
+    source = "static/ox-hugo"
+    target = "static/ox-hugo"
+  [[module.mounts]]
+    source = "static/ltximg"
+    target = "static/ltximg"
+  [[module.mounts]]
+    source = "static/_redirects"
+    target = "static/_redirects"
+
+  # Content, data, layouts, etc. still use default mounts.
+  [[module.mounts]]
+    source = "content"
+    target = "content"
+  [[module.mounts]]
+    source = "data"
+    target = "data"
+  [[module.mounts]]
+    source = "layouts"
+    target = "layouts"
+  [[module.mounts]]
+    source = "assets"
+    target = "assets"
+  [[module.mounts]]
+    source = "archetypes"
+    target = "archetypes"
