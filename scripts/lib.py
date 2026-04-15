@@ -28,7 +28,7 @@ ORGROAM_DB_PATH = Path(os.environ.get(
     str(Path.home() / ".config/emacs-profiles/var/org/org-roam.db"),
 ))
 
-# Match individual [[id:UUID][name]] links (used in :TOPICS:, :CATEGORY:, etc.)
+# Match individual [[id:UUID][name]] links (used in :TOPICS:, etc.)
 ID_LINK_RE = re.compile(r"\[\[id:([^\]]+)\]\[([^\]]*)\]\]")
 
 # Canonical list of all bib files used across scripts.

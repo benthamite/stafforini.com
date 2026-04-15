@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Inject tags into Hugo markdown front matter from org :TOPICS: and :CATEGORY: properties.
+"""Inject tags into Hugo markdown front matter from org :TOPICS: properties.
 
 Data flow:
   - Quotes: :TOPICS: in bibliographic-notes org files → tags in content/quotes/*.md
-  - Notes:  :CATEGORY: in notes org files            → tags in content/notes/*.md
+  - Notes:  :TOPICS: in notes org files               → tags in content/notes/*.md
   - Works:  data/work-tags.json (optional)            → tags in content/works/*.md
 
 Usage:
@@ -54,7 +54,7 @@ YAML_TAGS_RE = re.compile(r"^tags:.*$", re.MULTILINE)
 
 
 def extract_tag_titles(text: str) -> list[str]:
-    """Extract tag titles from a :TOPICS: or :CATEGORY: property value.
+    """Extract tag titles from a :TOPICS: property value.
 
     Handles two formats:
     - Legacy ID links: [[id:UUID][name]] (middot-separated)
@@ -152,23 +152,23 @@ def build_quote_tags(
 
 
 def build_note_tags() -> dict[str, list[str]]:
-    """Build {note_slug: [tag_titles]} from :CATEGORY: in notes."""
+    """Build {note_slug: [tag_titles]} from :TOPICS: in notes."""
     result: dict[str, list[str]] = {}
 
     for org_path in find_org_files(NOTES_DIR):
         if is_dataless(org_path):
             continue
         text = org_path.read_text(errors="replace")
-        if "[[id:" not in text or ":CATEGORY:" not in text:
+        if "[[id:" not in text or ":TOPICS:" not in text:
             continue
         export_match = re.search(r":EXPORT_FILE_NAME:\s+(\S+)", text)
         if not export_match:
             continue
         note_slug = export_match.group(1)
-        category_match = re.search(r":CATEGORY:\s+(.+)", text)
-        if not category_match:
+        topics_match = re.search(r":TOPICS:\s+(.+)", text)
+        if not topics_match:
             continue
-        titles = extract_tag_titles(category_match.group(1))
+        titles = extract_tag_titles(topics_match.group(1))
         if titles:
             result[note_slug] = titles
 
@@ -364,7 +364,7 @@ def main():
     quote_tags = build_quote_tags(work_authors)
     print(f"  Found tags for {len(quote_tags)} quotes")
 
-    print("  Building note tags from :CATEGORY:...")
+    print("  Building note tags from :TOPICS:...")
     note_tags = build_note_tags()
     print(f"  Found tags for {len(note_tags)} notes")
 
