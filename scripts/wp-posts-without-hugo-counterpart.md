@@ -58,5 +58,5 @@ No BibTeX entry found. No redirect added.
 | Old URL | Notes |
 |---------|-------|
 | `/docs/Bry-Chevalier-2024.pdf` | No bib entry; only reference is an EA syllabus link |
-| `/docs/Kagan - Reading Assignments with note.pdf` | Course handout, not a published work |
+| `/docs/Kagan - Reading Assignments with note.pdf` | Syllabus PDF; stored in note folder |
 | `/docs/singer01.pdf` | Amazon affiliate ID fragment, not a cite key |
