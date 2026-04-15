@@ -53,18 +53,10 @@ For each entry, specify the redirect target or "404" to let it fall through.
 
 ## /docs/ files with no matching work page
 
-No BibTeX entry found in the four bibliography files. Cite keys referenced in
-Hugo content (wild-animal-welfare bibliography etc.) but missing from bib files.
+No BibTeX entry found. No redirect added.
 
-| Old URL | Redirect target |
-|---------|-----------------|
-| `/docs/Bry-Chevalier-2024.pdf` | |
-| `/docs/Clark - The rights of wild things.pdf` | |
-| `/docs/Ebert & Machan - Innocent threats and the moral problem of carnivorous animals.pdf` | |
-| `/docs/Everett - Environmental ethics, animal welfarism, and the problem of predation.pdf` | |
-| `/docs/Favre - Wildlife rights.pdf` | |
-| `/docs/Fink - The predation argument.pdf` | |
-| `/docs/Kagan - Reading Assignments with note.pdf` | |
-| `/docs/Simmons - Animals, predators, the right to life, and the duty to save lives.pdf` | |
-| `/docs/Torres - The case for intervention in nature on behalf of animals.pdf` | |
-| `/docs/singer01.pdf` | |
+| Old URL | Notes |
+|---------|-------|
+| `/docs/Bry-Chevalier-2024.pdf` | No bib entry; only reference is an EA syllabus link |
+| `/docs/Kagan - Reading Assignments with note.pdf` | Course handout, not a published work |
+| `/docs/singer01.pdf` | Amazon affiliate ID fragment, not a cite key |
