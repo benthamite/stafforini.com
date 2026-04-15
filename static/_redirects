@@ -1,0 +1,1899 @@
+# WordPress quote redirects: /quotes/?p={id} → /quotes/{slug}/
+/quotes/  p=3  /quotes/blædel-dissidence/  301!
+/quotes/  p=4  /quotes/mill-sanctity-of-life/  301!
+/quotes/  p=6  /quotes/russell-appeal-of-utilitarianism/  301!
+/quotes/  p=7  /quotes/dawkins-language/  301!
+/quotes/  p=8  /quotes/unknown-bias/  301!
+/quotes/  p=9  /quotes/borges-odin/  301!
+/quotes/  p=10  /quotes/lakatos-anecdotes/  301!
+/quotes/  p=11  /quotes/unger-mortality/  301!
+/quotes/  p=12  /quotes/thoreau-barbarism/  301!
+/quotes/  p=13  /quotes/gruen-speciesism/  301!
+/quotes/  p=14  /quotes/seneca-reason/  301!
+/quotes/  p=15  /quotes/burroughs-drugs/  301!
+/quotes/  p=16  /quotes/singer-animal-intelligence/  301!
+/quotes/  p=17  /quotes/nino-is-ought-gap/  301!
+/quotes/  p=18  /quotes/wittgenstein-ethics/  301!
+/quotes/  p=19  /quotes/stafforini-culture/  301!
+/quotes/  p=20  /quotes/hodge-english-language/  301!
+/quotes/  p=21  /quotes/smart-appeal-of-utilitarianism/  301!
+/quotes/  p=22  /quotes/harris-labeling/  301!
+/quotes/  p=24  /quotes/borges-poetry/  301!
+/quotes/  p=25  /quotes/james-desire-fulfillment/  301!
+/quotes/  p=26  /quotes/godwin-agent-relativity/  301!
+/quotes/  p=27  /quotes/coetzee-hermann-goring/  301!
+/quotes/  p=28  /quotes/martinez-estrada-speciesism/  301!
+/quotes/  p=29  /quotes/bentham-eloquent/  301!
+/quotes/  p=30  /quotes/harford-gdp/  301!
+/quotes/  p=31  /quotes/nozick-debunking-arguments/  301!
+/quotes/  p=32  /quotes/jurado-personal-description/  301!
+/quotes/  p=33  /quotes/grotius-nimirum-leges-ut-ait-cicero/  301!
+/quotes/  p=34  /quotes/wilde-witty/  301!
+/quotes/  p=35  /quotes/nozick-metaphilosophy/  301!
+/quotes/  p=36  /quotes/kamm-moral-philosophy/  301!
+/quotes/  p=37  /quotes/hume-miracles/  301!
+/quotes/  p=38  /quotes/kamenka-metaphilosophy/  301!
+/quotes/  p=39  /quotes/nozick-retributivism/  301!
+/quotes/  p=40  /quotes/degrazia-animal-rights/  301!
+/quotes/  p=41  /quotes/dennett-resource-allocation/  301!
+/quotes/  p=42  /quotes/russell-bayesian-rationality/  301!
+/quotes/  p=43  /quotes/pinker-t-biology-consciousness-offers-sounder/  301!
+/quotes/  p=44  /quotes/hospers-clarity/  301!
+/quotes/  p=45  /quotes/wittgenstein-importance-of-philosophy/  301!
+/quotes/  p=46  /quotes/sabsay-law/  301!
+/quotes/  p=47  /quotes/axelrod-cooperation/  301!
+/quotes/  p=48  /quotes/reps-koan/  301!
+/quotes/  p=49  /quotes/unknown-lucius-annaeus-seneca/  301!
+/quotes/  p=50  /quotes/descartes-aristotle/  301!
+/quotes/  p=51  /quotes/gruen-animal-experimentation/  301!
+/quotes/  p=52  /quotes/bentham-corruption/  301!
+/quotes/  p=53  /quotes/shulgin-drugs/  301!
+/quotes/  p=54  /quotes/pascal-inequality/  301!
+/quotes/  p=55  /quotes/nino-utopia/  301!
+/quotes/  p=56  /quotes/chomsky-morality/  301!
+/quotes/  p=57  /quotes/bentham-beneficence/  301!
+/quotes/  p=58  /quotes/russell-epistemology/  301!
+/quotes/  p=59  /quotes/dawkins-altruism/  301!
+/quotes/  p=60  /quotes/russell-inspiring/  301!
+/quotes/  p=61  /quotes/borges-blindness-2/  301!
+/quotes/  p=62  /quotes/hofstadter-early-days-often-wondered-personal/  301!
+/quotes/  p=63  /quotes/said-reject-ultrapostmodern-position-like-taken/  301!
+/quotes/  p=64  /quotes/hume-u-pon-whole-conclude-christian/  301!
+/quotes/  p=65  /quotes/bool-m-c-escher/  301!
+/quotes/  p=66  /quotes/rousseau-freedom/  301!
+/quotes/  p=68  /quotes/bunge-barbarism/  301!
+/quotes/  p=69  /quotes/parfit-gautama-buddha/  301!
+/quotes/  p=70  /quotes/escude-herd-mentality/  301!
+/quotes/  p=71  /quotes/glover-sanctity-of-life/  301!
+/quotes/  p=72  /quotes/chomsky-george-orwell/  301!
+/quotes/  p=73  /quotes/hume-error/  301!
+/quotes/  p=74  /quotes/lindbergh-sleep/  301!
+/quotes/  p=75  /quotes/mill-jeremy-bentham/  301!
+/quotes/  p=76  /quotes/russell-immanuel-kant/  301!
+/quotes/  p=77  /quotes/mill-consequentialism/  301!
+/quotes/  p=78  /quotes/herrick-desert/  301!
+/quotes/  p=79  /quotes/cicero-friendship/  301!
+/quotes/  p=80  /quotes/kamm-nonconsequentialists-argue-moral-importance-many/  301!
+/quotes/  p=81  /quotes/gallup-consciousness/  301!
+/quotes/  p=82  /quotes/ng-subjective-and-objective/  301!
+/quotes/  p=83  /quotes/ng-welfare/  301!
+/quotes/  p=84  /quotes/singer-fair-trade/  301!
+/quotes/  p=85  /quotes/smith-animal-welfare/  301!
+/quotes/  p=86  /quotes/ng-irrationality/  301!
+/quotes/  p=87  /quotes/pears-personal-identity/  301!
+/quotes/  p=88  /quotes/nino-utilitarianism/  301!
+/quotes/  p=89  /quotes/fowler-writing-style/  301!
+/quotes/  p=90  /quotes/parfit-descriptive-vs-revisionary/  301!
+/quotes/  p=91  /quotes/butler-one-bring-greater-reproach-against/  301!
+/quotes/  p=92  /quotes/charlesworth-future-of-humanity/  301!
+/quotes/  p=93  /quotes/menand-modernity/  301!
+/quotes/  p=94  /quotes/jones-philosophy/  301!
+/quotes/  p=95  /quotes/harris-marriage/  301!
+/quotes/  p=97  /quotes/wittgenstein-metaethics/  301!
+/quotes/  p=98  /quotes/hendrick-humanism/  301!
+/quotes/  p=99  /quotes/parfit-amnesia/  301!
+/quotes/  p=100  /quotes/bentham-pain/  301!
+/quotes/  p=101  /quotes/singer-ethics/  301!
+/quotes/  p=102  /quotes/stock-genetic-engineering/  301!
+/quotes/  p=103  /quotes/russell-books/  301!
+/quotes/  p=105  /quotes/borges-germany/  301!
+/quotes/  p=106  /quotes/ridley-civilization/  301!
+/quotes/  p=107  /quotes/egan-happiness/  301!
+/quotes/  p=108  /quotes/egan-meaning-of-life/  301!
+/quotes/  p=109  /quotes/buss-heredity-vs-environment/  301!
+/quotes/  p=110  /quotes/bunge-falsificationism/  301!
+/quotes/  p=111  /quotes/skorupski-people-s-ideas-mill-says/  301!
+/quotes/  p=112  /quotes/unknown-bigotry/  301!
+/quotes/  p=113  /quotes/bravo-juan-domingo-peron/  301!
+/quotes/  p=114  /quotes/gazzaniga-reductionism/  301!
+/quotes/  p=115  /quotes/bioy-casares-women-2/  301!
+/quotes/  p=116  /quotes/wilde-hedonism/  301!
+/quotes/  p=117  /quotes/glover-moral-authority/  301!
+/quotes/  p=118  /quotes/dotti-georg-wilhelm-friedrich-hegel/  301!
+/quotes/  p=119  /quotes/lakatos-karl-popper/  301!
+/quotes/  p=120  /quotes/rousseau-animal-rights/  301!
+/quotes/  p=123  /quotes/wilde-poetry/  301!
+/quotes/  p=124  /quotes/nietzsche-poetry/  301!
+/quotes/  p=125  /quotes/carnap-metaphysics/  301!
+/quotes/  p=126  /quotes/sarlo-argentina/  301!
+/quotes/  p=127  /quotes/graves-poetry/  301!
+/quotes/  p=128  /quotes/mondolfo-ambiguity/  301!
+/quotes/  p=130  /quotes/rousseau-pardons/  301!
+/quotes/  p=131  /quotes/hobbes-golden-rule/  301!
+/quotes/  p=132  /quotes/wood-dialectics/  301!
+/quotes/  p=133  /quotes/clark-vegetarianism/  301!
+/quotes/  p=134  /quotes/ferrater-mora-nixon-goes-to-china/  301!
+/quotes/  p=135  /quotes/bioy-casares-women/  301!
+/quotes/  p=136  /quotes/bunge-lacanianism/  301!
+/quotes/  p=137  /quotes/craft-igor-stravinsky/  301!
+/quotes/  p=138  /quotes/bentham-law/  301!
+/quotes/  p=139  /quotes/singer-equal-consideration-of-interests/  301!
+/quotes/  p=141  /quotes/coleridge-dreaming/  301!
+/quotes/  p=142  /quotes/keynes-belief-change/  301!
+/quotes/  p=143  /quotes/bioy-casares-argentina/  301!
+/quotes/  p=144  /quotes/bioy-casares-face/  301!
+/quotes/  p=145  /quotes/sorrentino-meaning-of-life/  301!
+/quotes/  p=146  /quotes/kociancich-aging/  301!
+/quotes/  p=147  /quotes/wordsworth-oh-pleasant-exercise-hope-joy/  301!
+/quotes/  p=148  /quotes/thoreau-vitality/  301!
+/quotes/  p=149  /quotes/huxley-human-nature/  301!
+/quotes/  p=150  /quotes/stock-bioethics/  301!
+/quotes/  p=151  /quotes/dworkin-bioethics/  301!
+/quotes/  p=152  /quotes/feyerabend-depression/  301!
+/quotes/  p=153  /quotes/unknown-appeal-to-full-relativity/  301!
+/quotes/  p=154  /quotes/cifuentes-bioethics/  301!
+/quotes/  p=155  /quotes/clarin-united-states/  301!
+/quotes/  p=156  /quotes/chacon-peronism/  301!
+/quotes/  p=157  /quotes/lopez-murphy-argentina/  301!
+/quotes/  p=158  /quotes/bioy-casares-postmodernism/  301!
+/quotes/  p=159  /quotes/unknown-argumentation/  301!
+/quotes/  p=160  /quotes/sebreli-domingo-faustino-sarmiento/  301!
+/quotes/  p=161  /quotes/russell-bertrand-russell/  301!
+/quotes/  p=162  /quotes/herford-anarchism/  301!
+/quotes/  p=163  /quotes/hume-government/  301!
+/quotes/  p=164  /quotes/donnelly-persuasion/  301!
+/quotes/  p=165  /quotes/ehrlich-english-language/  301!
+/quotes/  p=166  /quotes/unknown-ignorance/  301!
+/quotes/  p=167  /quotes/bentham-religion/  301!
+/quotes/  p=168  /quotes/borges-libraries/  301!
+/quotes/  p=169  /quotes/bioy-casares-happiness/  301!
+/quotes/  p=170  /quotes/borges-argentina-2/  301!
+/quotes/  p=171  /quotes/richerson-culture/  301!
+/quotes/  p=172  /quotes/bolano-y-cuando-hubo-movimiento-todas/  301!
+/quotes/  p=173  /quotes/mill-animal-welfare/  301!
+/quotes/  p=174  /quotes/caplan-economics/  301!
+/quotes/  p=175  /quotes/cowen-perfect-bubble/  301!
+/quotes/  p=176  /quotes/vazquez-love/  301!
+/quotes/  p=177  /quotes/huxley-future-of-humanity/  301!
+/quotes/  p=178  /quotes/fisher-love/  301!
+/quotes/  p=179  /quotes/pinker-metacontrarianism/  301!
+/quotes/  p=180  /quotes/parfit-truth/  301!
+/quotes/  p=181  /quotes/hubin-donald-hubin/  301!
+/quotes/  p=182  /quotes/katz-evolution-and-morality/  301!
+/quotes/  p=183  /quotes/wilson-evolution/  301!
+/quotes/  p=184  /quotes/wittgenstein-happiness/  301!
+/quotes/  p=185  /quotes/unknown-human-extinction/  301!
+/quotes/  p=186  /quotes/moran-compassion/  301!
+/quotes/  p=187  /quotes/chaussee-quand-tout-le-monde-tort/  301!
+/quotes/  p=188  /quotes/locke-retribution/  301!
+/quotes/  p=189  /quotes/blake-poetry/  301!
+/quotes/  p=190  /quotes/caponi-bias/  301!
+/quotes/  p=192  /quotes/shakespeare-free-will/  301!
+/quotes/  p=193  /quotes/singer-death/  301!
+/quotes/  p=195  /quotes/dennett-best-of-all-worlds/  301!
+/quotes/  p=196  /quotes/sartori-definitions/  301!
+/quotes/  p=197  /quotes/harris-spirituality/  301!
+/quotes/  p=198  /quotes/carney-emotion/  301!
+/quotes/  p=199  /quotes/brown-accidental-harm/  301!
+/quotes/  p=200  /quotes/parfit-reasons/  301!
+/quotes/  p=201  /quotes/richerson-evolution/  301!
+/quotes/  p=202  /quotes/railton-consequentialism-2/  301!
+/quotes/  p=203  /quotes/williams-paradox-of-hedonism/  301!
+/quotes/  p=204  /quotes/elster-multiple-comparisons/  301!
+/quotes/  p=205  /quotes/johnson-decision-making/  301!
+/quotes/  p=206  /quotes/carter-consequentialism/  301!
+/quotes/  p=207  /quotes/benatar-antinatalism/  301!
+/quotes/  p=208  /quotes/schelling-precommitment/  301!
+/quotes/  p=209  /quotes/sumner-utilitarianism/  301!
+/quotes/  p=210  /quotes/walsh-balliol-college/  301!
+/quotes/  p=211  /quotes/barrow-future-of-humanity/  301!
+/quotes/  p=212  /quotes/hawking-debunking-arguments/  301!
+/quotes/  p=213  /quotes/dawkins-darwinism/  301!
+/quotes/  p=214  /quotes/hume-panpsychism/  301!
+/quotes/  p=215  /quotes/nietzsche-marriage/  301!
+/quotes/  p=216  /quotes/stafforini-economic-growth/  301!
+/quotes/  p=217  /quotes/bentham-human-nature/  301!
+/quotes/  p=219  /quotes/orwell-power/  301!
+/quotes/  p=220  /quotes/laski-education/  301!
+/quotes/  p=221  /quotes/milton-poetry/  301!
+/quotes/  p=222  /quotes/shelley-poetry/  301!
+/quotes/  p=223  /quotes/sarmiento-education/  301!
+/quotes/  p=224  /quotes/unknown-poetry/  301!
+/quotes/  p=225  /quotes/moreland-philosophical-methodology/  301!
+/quotes/  p=226  /quotes/elster-deception/  301!
+/quotes/  p=228  /quotes/hanson-belief/  301!
+/quotes/  p=229  /quotes/sagan-emotions/  301!
+/quotes/  p=230  /quotes/barrow-philosophical-methodology/  301!
+/quotes/  p=231  /quotes/narveson-adolf-hitler/  301!
+/quotes/  p=232  /quotes/sagan-skepticism/  301!
+/quotes/  p=233  /quotes/rundle-teleological-argument/  301!
+/quotes/  p=234  /quotes/leslie-why-anything/  301!
+/quotes/  p=235  /quotes/schlesinger-common-sense/  301!
+/quotes/  p=236  /quotes/moorhead-meaning-of-life/  301!
+/quotes/  p=237  /quotes/barrow-extraterrestrial-intelligence/  301!
+/quotes/  p=238  /quotes/van-inwagen-teleological-argument/  301!
+/quotes/  p=239  /quotes/weinberg-why-anything/  301!
+/quotes/  p=240  /quotes/van-inwagen-darwins-problem/  301!
+/quotes/  p=241  /quotes/barrow-algorithmic-compression/  301!
+/quotes/  p=242  /quotes/rees-future-of-humanity/  301!
+/quotes/  p=243  /quotes/edgeworth-pleasure/  301!
+/quotes/  p=244  /quotes/hobsbawm-overpopulation/  301!
+/quotes/  p=245  /quotes/hare-aggregation/  301!
+/quotes/  p=246  /quotes/singer-capitalism/  301!
+/quotes/  p=248  /quotes/russell-love/  301!
+/quotes/  p=249  /quotes/di-tella-evolution/  301!
+/quotes/  p=250  /quotes/elster-reason/  301!
+/quotes/  p=251  /quotes/unknown-conformity/  301!
+/quotes/  p=252  /quotes/huxley-evolution/  301!
+/quotes/  p=253  /quotes/dawkins-evolution-2/  301!
+/quotes/  p=254  /quotes/schopenhauer-deep-work/  301!
+/quotes/  p=255  /quotes/singer-inadequate-equilibria/  301!
+/quotes/  p=256  /quotes/orwell-totalitarianism/  301!
+/quotes/  p=257  /quotes/feyerabend-death/  301!
+/quotes/  p=258  /quotes/chomsky-capitalism/  301!
+/quotes/  p=259  /quotes/russell-excluded-middle/  301!
+/quotes/  p=260  /quotes/pigou-impartiality/  301!
+/quotes/  p=261  /quotes/parfit-beauty/  301!
+/quotes/  p=262  /quotes/bentham-intuition/  301!
+/quotes/  p=263  /quotes/orwell-surveillance/  301!
+/quotes/  p=264  /quotes/unknown-conformity-2/  301!
+/quotes/  p=265  /quotes/orwell-badness-of-pain/  301!
+/quotes/  p=266  /quotes/chomsky-cognitive-dissonance/  301!
+/quotes/  p=267  /quotes/dreze-agency/  301!
+/quotes/  p=269  /quotes/smith-philosophical-life/  301!
+/quotes/  p=270  /quotes/kaufmann-analytic-philosophy/  301!
+/quotes/  p=271  /quotes/russell-appeal-to-full-relativity/  301!
+/quotes/  p=272  /quotes/orwell-writing/  301!
+/quotes/  p=274  /quotes/godwin-heredity-vs-environment/  301!
+/quotes/  p=275  /quotes/miller-system-justification/  301!
+/quotes/  p=276  /quotes/grayling-science-and-religion/  301!
+/quotes/  p=278  /quotes/keynes-sunk-cost-fallacy/  301!
+/quotes/  p=279  /quotes/chessman-retributivism/  301!
+/quotes/  p=280  /quotes/barnes-aristotle/  301!
+/quotes/  p=281  /quotes/ortega-y-gasset-truthfulness/  301!
+/quotes/  p=282  /quotes/harris-suffering/  301!
+/quotes/  p=283  /quotes/nagel-authority/  301!
+/quotes/  p=284  /quotes/russell-authority/  301!
+/quotes/  p=285  /quotes/poe-poetry/  301!
+/quotes/  p=286  /quotes/glover-genetic-engineering/  301!
+/quotes/  p=287  /quotes/chomsky-freedom/  301!
+/quotes/  p=288  /quotes/kant-justice/  301!
+/quotes/  p=289  /quotes/unknown-education/  301!
+/quotes/  p=290  /quotes/unknown-laws-of-nature/  301!
+/quotes/  p=291  /quotes/unknown-capitalism-2/  301!
+/quotes/  p=292  /quotes/godwin-consequentialism/  301!
+/quotes/  p=293  /quotes/russell-history/  301!
+/quotes/  p=294  /quotes/locke-skepticism/  301!
+/quotes/  p=295  /quotes/lakatos-dishonesty/  301!
+/quotes/  p=296  /quotes/unknown-moderation/  301!
+/quotes/  p=297  /quotes/sokal-left-wing/  301!
+/quotes/  p=298  /quotes/lockspeiser-claude-debussy/  301!
+/quotes/  p=299  /quotes/darwin-altruism/  301!
+/quotes/  p=300  /quotes/singer-debunking-arguments/  301!
+/quotes/  p=301  /quotes/dawkins-human-evolution/  301!
+/quotes/  p=302  /quotes/singer-evolution/  301!
+/quotes/  p=303  /quotes/vaughan-williams-meaning/  301!
+/quotes/  p=304  /quotes/hume-animal-intelligence/  301!
+/quotes/  p=305  /quotes/shaw-john-rawls/  301!
+/quotes/  p=306  /quotes/austin-utilitarianism/  301!
+/quotes/  p=307  /quotes/paul-interpersonal-comparisons/  301!
+/quotes/  p=308  /quotes/paul-private-property/  301!
+/quotes/  p=309  /quotes/nagel-free-will/  301!
+/quotes/  p=310  /quotes/zaffaroni-consent/  301!
+/quotes/  p=311  /quotes/burroughs-addiction/  301!
+/quotes/  p=312  /quotes/carney-character/  301!
+/quotes/  p=313  /quotes/bentham-beneficence-2/  301!
+/quotes/  p=314  /quotes/finkelstein-rationalization/  301!
+/quotes/  p=315  /quotes/voltaire-animal-sentience/  301!
+/quotes/  p=316  /quotes/hindemith-creativity/  301!
+/quotes/  p=317  /quotes/orwell-orthodoxy/  301!
+/quotes/  p=318  /quotes/glover-esoteric-morality/  301!
+/quotes/  p=319  /quotes/huxley-human-evolution/  301!
+/quotes/  p=320  /quotes/wilkinson-happiness/  301!
+/quotes/  p=321  /quotes/kennedy-economics/  301!
+/quotes/  p=322  /quotes/swinburne-arbitrariness/  301!
+/quotes/  p=323  /quotes/black-legal-positivism/  301!
+/quotes/  p=324  /quotes/unknown-noam-chomsky-2/  301!
+/quotes/  p=325  /quotes/finkelstein-israelipalestinian-conflict/  301!
+/quotes/  p=326  /quotes/edwards-writing/  301!
+/quotes/  p=327  /quotes/finkelstein-israelipalestinian-conflict-2/  301!
+/quotes/  p=328  /quotes/sidgwick-ethics/  301!
+/quotes/  p=329  /quotes/bunge-socialism/  301!
+/quotes/  p=330  /quotes/pincione-egalitarianism/  301!
+/quotes/  p=331  /quotes/garzon-valdes-relativism/  301!
+/quotes/  p=333  /quotes/singer-appeal-of-utilitarianism/  301!
+/quotes/  p=334  /quotes/myers-astrology/  301!
+/quotes/  p=335  /quotes/garzon-valdes-diversity/  301!
+/quotes/  p=336  /quotes/scheffler-norms/  301!
+/quotes/  p=337  /quotes/singer-retributivism/  301!
+/quotes/  p=338  /quotes/garzon-valdes-postmodernism/  301!
+/quotes/  p=339  /quotes/hart-impossibility-results/  301!
+/quotes/  p=340  /quotes/singer-henry-spira/  301!
+/quotes/  p=341  /quotes/singer-utilitarianism/  301!
+/quotes/  p=342  /quotes/bentham-miracles/  301!
+/quotes/  p=343  /quotes/smolin-string-theory/  301!
+/quotes/  p=344  /quotes/clark-human-evolution/  301!
+/quotes/  p=345  /quotes/ramachandran-skepticism/  301!
+/quotes/  p=346  /quotes/elster-conspiracy-theories/  301!
+/quotes/  p=347  /quotes/unknown-irrationality/  301!
+/quotes/  p=348  /quotes/coates-inequality/  301!
+/quotes/  p=349  /quotes/birnbaum-power/  301!
+/quotes/  p=350  /quotes/malem-sena-academia/  301!
+/quotes/  p=351  /quotes/kymlicka-utilitarianism/  301!
+/quotes/  p=352  /quotes/hare-intuition/  301!
+/quotes/  p=353  /quotes/unknown-capitalism/  301!
+/quotes/  p=355  /quotes/stratton-lake-derek-parfit/  301!
+/quotes/  p=356  /quotes/shaw-demands-of-morality/  301!
+/quotes/  p=357  /quotes/guariglia-libertarianism/  301!
+/quotes/  p=358  /quotes/strawson-ethics/  301!
+/quotes/  p=359  /quotes/grover-favorite/  301!
+/quotes/  p=361  /quotes/mill-goodness-2/  301!
+/quotes/  p=362  /quotes/keynes-beauty-contest/  301!
+/quotes/  p=363  /quotes/wilde-luxury/  301!
+/quotes/  p=364  /quotes/chomsky-ideology/  301!
+/quotes/  p=365  /quotes/nino-corruption/  301!
+/quotes/  p=366  /quotes/gowani-power/  301!
+/quotes/  p=367  /quotes/myers-forecasting/  301!
+/quotes/  p=368  /quotes/sokurov-entertainment/  301!
+/quotes/  p=369  /quotes/koestler-psychoanalysis/  301!
+/quotes/  p=370  /quotes/gardner-flat-earth/  301!
+/quotes/  p=371  /quotes/singer-evolution-and-morality/  301!
+/quotes/  p=372  /quotes/nietzsche-truth/  301!
+/quotes/  p=373  /quotes/simpson-joseph-stalin/  301!
+/quotes/  p=374  /quotes/mill-theory-and-practice/  301!
+/quotes/  p=376  /quotes/ryan-science/  301!
+/quotes/  p=377  /quotes/schelling-expectations/  301!
+/quotes/  p=378  /quotes/ryan-christianity/  301!
+/quotes/  p=379  /quotes/williamson-intuition/  301!
+/quotes/  p=380  /quotes/nagel-bias/  301!
+/quotes/  p=381  /quotes/mill-diminishing-marginal-utility/  301!
+/quotes/  p=382  /quotes/stich-epistemology/  301!
+/quotes/  p=383  /quotes/stich-intuition/  301!
+/quotes/  p=384  /quotes/kagan-demands-of-morality/  301!
+/quotes/  p=385  /quotes/skorupski-hedonism/  301!
+/quotes/  p=386  /quotes/elster-communism/  301!
+/quotes/  p=387  /quotes/reeves-john-stuart-mill/  301!
+/quotes/  p=388  /quotes/russell-thomas-paine/  301!
+/quotes/  p=389  /quotes/sebreli-friedrich-nietzsche/  301!
+/quotes/  p=390  /quotes/situaciones-capitalism/  301!
+/quotes/  p=391  /quotes/chomsky-capitalism-2/  301!
+/quotes/  p=392  /quotes/nagel-spiders/  301!
+/quotes/  p=393  /quotes/mill-goodness/  301!
+/quotes/  p=394  /quotes/mora-cultural-pessimism/  301!
+/quotes/  p=395  /quotes/romero-quality-and-quantity/  301!
+/quotes/  p=397  /quotes/dawes-popular-myths/  301!
+/quotes/  p=398  /quotes/nun-neoliberalism/  301!
+/quotes/  p=399  /quotes/dahl-philosopher-kings/  301!
+/quotes/  p=400  /quotes/smart-evolution/  301!
+/quotes/  p=401  /quotes/bunge-neoclassical-economics/  301!
+/quotes/  p=402  /quotes/unknown-david-hume/  301!
+/quotes/  p=403  /quotes/williams-utilitarianism/  301!
+/quotes/  p=404  /quotes/francione-animal-rights/  301!
+/quotes/  p=405  /quotes/chomsky-coercion/  301!
+/quotes/  p=406  /quotes/herrera-romero-generalists/  301!
+/quotes/  p=407  /quotes/wolff-conformity/  301!
+/quotes/  p=408  /quotes/douglass-conflict-theory/  301!
+/quotes/  p=409  /quotes/pryce-jones-courage/  301!
+/quotes/  p=410  /quotes/unknown-sentience/  301!
+/quotes/  p=411  /quotes/esslin-collective-consciousness/  301!
+/quotes/  p=413  /quotes/cockburn-john-malkovich/  301!
+/quotes/  p=414  /quotes/austen-anticipation/  301!
+/quotes/  p=415  /quotes/carrio-facts-and-values/  301!
+/quotes/  p=416  /quotes/huxley-pharmacology/  301!
+/quotes/  p=417  /quotes/solar-favorite/  301!
+/quotes/  p=418  /quotes/shaw-human-nature/  301!
+/quotes/  p=419  /quotes/woodcock-incentives/  301!
+/quotes/  p=421  /quotes/chacon-power/  301!
+/quotes/  p=422  /quotes/kuehn-character/  301!
+/quotes/  p=423  /quotes/mattlin-evolution/  301!
+/quotes/  p=424  /quotes/truffaut-fiction/  301!
+/quotes/  p=425  /quotes/moore-goodness/  301!
+/quotes/  p=426  /quotes/unamuno-persuasion/  301!
+/quotes/  p=427  /quotes/hart-retributivism/  301!
+/quotes/  p=428  /quotes/unknown-sharks/  301!
+/quotes/  p=429  /quotes/edwards-cultural-relativism/  301!
+/quotes/  p=430  /quotes/borges-blindness/  301!
+/quotes/  p=431  /quotes/unknown-chess/  301!
+/quotes/  p=432  /quotes/harris-mass-media/  301!
+/quotes/  p=433  /quotes/hare-the-moral-life/  301!
+/quotes/  p=434  /quotes/mcginn-evolution-and-morality/  301!
+/quotes/  p=435  /quotes/popper-scientific-methodology/  301!
+/quotes/  p=436  /quotes/grillparzer-meine-wohnung-reicht-nur-bis/  301!
+/quotes/  p=437  /quotes/doherty-libertarianism/  301!
+/quotes/  p=438  /quotes/borges-cultural-pessimism/  301!
+/quotes/  p=439  /quotes/hardin-evolution/  301!
+/quotes/  p=440  /quotes/bostrom-nature/  301!
+/quotes/  p=441  /quotes/orwell-god/  301!
+/quotes/  p=442  /quotes/kelly-liberty/  301!
+/quotes/  p=443  /quotes/hare-verbal-disputes/  301!
+/quotes/  p=444  /quotes/vidal-drugs/  301!
+/quotes/  p=445  /quotes/bentham-happiness/  301!
+/quotes/  p=446  /quotes/wright-evolution/  301!
+/quotes/  p=447  /quotes/soros-overton-window/  301!
+/quotes/  p=448  /quotes/singer-christianity/  301!
+/quotes/  p=449  /quotes/shelley-pain/  301!
+/quotes/  p=451  /quotes/hahnel-present-pace-undo-couple-years/  301!
+/quotes/  p=452  /quotes/yudkowsky-engineering/  301!
+/quotes/  p=453  /quotes/krugman-charles-darwin/  301!
+/quotes/  p=454  /quotes/borges-fame/  301!
+/quotes/  p=455  /quotes/cavalieri-contingency/  301!
+/quotes/  p=456  /quotes/bynum-ethics/  301!
+/quotes/  p=457  /quotes/wilson-intuition/  301!
+/quotes/  p=458  /quotes/magee-intuition/  301!
+/quotes/  p=459  /quotes/vogel-cooperation/  301!
+/quotes/  p=460  /quotes/arendt-holocaust/  301!
+/quotes/  p=461  /quotes/broome-aggregation/  301!
+/quotes/  p=463  /quotes/lem-altruism/  301!
+/quotes/  p=464  /quotes/barry-demands-of-morality/  301!
+/quotes/  p=465  /quotes/gargarella-felix-ovejero/  301!
+/quotes/  p=466  /quotes/bookchin-scarcity/  301!
+/quotes/  p=467  /quotes/carter-anarchism/  301!
+/quotes/  p=468  /quotes/elster-marxism/  301!
+/quotes/  p=469  /quotes/anderson-justice/  301!
+/quotes/  p=470  /quotes/chaplin-thinking/  301!
+/quotes/  p=471  /quotes/mcginn-conference-group-philosophers-playing-guitars/  301!
+/quotes/  p=472  /quotes/wolin-reason/  301!
+/quotes/  p=473  /quotes/sarmiento-books/  301!
+/quotes/  p=474  /quotes/nino-moral-philosophy/  301!
+/quotes/  p=476  /quotes/chalmers-cognitive-mind/  301!
+/quotes/  p=477  /quotes/borges-peronism/  301!
+/quotes/  p=478  /quotes/amor-republicanos-reg-menes-que-reglaron/  301!
+/quotes/  p=479  /quotes/unknown-solitude/  301!
+/quotes/  p=480  /quotes/rawls-consequentialism/  301!
+/quotes/  p=481  /quotes/carter-capitalism/  301!
+/quotes/  p=482  /quotes/schopenhauer-thinking/  301!
+/quotes/  p=483  /quotes/nagel-argumentation/  301!
+/quotes/  p=484  /quotes/unknown-ethics/  301!
+/quotes/  p=485  /quotes/stafforini-anarchism/  301!
+/quotes/  p=486  /quotes/russell-capitalism/  301!
+/quotes/  p=487  /quotes/pogge-malaria/  301!
+/quotes/  p=488  /quotes/jamieson-philosophical-methodology/  301!
+/quotes/  p=489  /quotes/nardin-bill-clinton/  301!
+/quotes/  p=490  /quotes/locke-idealism/  301!
+/quotes/  p=491  /quotes/amor-pluralism/  301!
+/quotes/  p=492  /quotes/lewis-utilitarianism/  301!
+/quotes/  p=493  /quotes/mautner-impossibility-results/  301!
+/quotes/  p=494  /quotes/łukasiewicz-consistency/  301!
+/quotes/  p=495  /quotes/mcginn-bias/  301!
+/quotes/  p=496  /quotes/oglesby-authoritarianism/  301!
+/quotes/  p=497  /quotes/rand-libertarianism/  301!
+/quotes/  p=498  /quotes/lakatos-humorous/  301!
+/quotes/  p=499  /quotes/broome-badness-of-pain/  301!
+/quotes/  p=500  /quotes/mencken-humorous/  301!
+/quotes/  p=501  /quotes/borradori-philosophy-that-matters/  301!
+/quotes/  p=502  /quotes/borges-autobiographical/  301!
+/quotes/  p=503  /quotes/gigerenzer-heuristics/  301!
+/quotes/  p=504  /quotes/brown-fame/  301!
+/quotes/  p=505  /quotes/huxley-debunking-arguments/  301!
+/quotes/  p=507  /quotes/unger-care/  301!
+/quotes/  p=508  /quotes/glover-amoralism/  301!
+/quotes/  p=509  /quotes/schilpp-curiosity/  301!
+/quotes/  p=510  /quotes/dreze-famine/  301!
+/quotes/  p=511  /quotes/pogge-david-hume/  301!
+/quotes/  p=512  /quotes/kymlicka-coercion/  301!
+/quotes/  p=513  /quotes/unknown-rationalization/  301!
+/quotes/  p=514  /quotes/mill-poverty/  301!
+/quotes/  p=515  /quotes/mulgan-tradeoff/  301!
+/quotes/  p=516  /quotes/hume-verbal-disputes/  301!
+/quotes/  p=517  /quotes/bentham-happiness-2/  301!
+/quotes/  p=518  /quotes/beder-status-quo-bias/  301!
+/quotes/  p=520  /quotes/ollman-capitalism/  301!
+/quotes/  p=521  /quotes/pogge-cause-prioritization/  301!
+/quotes/  p=522  /quotes/ortega-y-gasset-quest-for-meaning/  301!
+/quotes/  p=523  /quotes/griffin-intuition/  301!
+/quotes/  p=524  /quotes/dennett-animal-suffering/  301!
+/quotes/  p=525  /quotes/thoreau-personal-purity/  301!
+/quotes/  p=526  /quotes/schelling-conflict-of-interest/  301!
+/quotes/  p=527  /quotes/vidal-abortion/  301!
+/quotes/  p=528  /quotes/murphy-deontology/  301!
+/quotes/  p=529  /quotes/vasseur-money/  301!
+/quotes/  p=530  /quotes/hillman-psychotherapy/  301!
+/quotes/  p=531  /quotes/russell-happiness/  301!
+/quotes/  p=532  /quotes/carter-communism/  301!
+/quotes/  p=533  /quotes/kagan-global-poverty/  301!
+/quotes/  p=534  /quotes/elster-compartimentalization/  301!
+/quotes/  p=535  /quotes/pierson-love/  301!
+/quotes/  p=536  /quotes/capablanca-exuberance/  301!
+/quotes/  p=537  /quotes/unknown-private-property/  301!
+/quotes/  p=538  /quotes/popper-steelmanning/  301!
+/quotes/  p=539  /quotes/schumacher-efficiency/  301!
+/quotes/  p=540  /quotes/unknown-anarchism/  301!
+/quotes/  p=541  /quotes/cappelletti-anarchism/  301!
+/quotes/  p=542  /quotes/woodcock-anarchism/  301!
+/quotes/  p=543  /quotes/cohen-capitalism/  301!
+/quotes/  p=544  /quotes/wright-utilitarianism/  301!
+/quotes/  p=545  /quotes/teson-migration/  301!
+/quotes/  p=546  /quotes/register-badness-of-pain/  301!
+/quotes/  p=547  /quotes/garzon-valdes-alfredo-astiz/  301!
+/quotes/  p=548  /quotes/fishkin-equality/  301!
+/quotes/  p=549  /quotes/harris-suffering-2/  301!
+/quotes/  p=550  /quotes/huxley-open-eyes-again-look-nataraja/  301!
+/quotes/  p=551  /quotes/hobsbawm-bicycle/  301!
+/quotes/  p=552  /quotes/charlton-modernity/  301!
+/quotes/  p=553  /quotes/suber-simplicity/  301!
+/quotes/  p=554  /quotes/thomson-animal-suffering/  301!
+/quotes/  p=555  /quotes/mayerfeld-badness-of-pain/  301!
+/quotes/  p=556  /quotes/sagan-georg-wilhelm-friedrich-hegel/  301!
+/quotes/  p=557  /quotes/adamovsky-scale/  301!
+/quotes/  p=558  /quotes/unknown-human-rights/  301!
+/quotes/  p=559  /quotes/situaciones-globalization/  301!
+/quotes/  p=560  /quotes/ackerman-contractarianism/  301!
+/quotes/  p=561  /quotes/holmes-cass-sunstein/  301!
+/quotes/  p=562  /quotes/pohl-embodiment/  301!
+/quotes/  p=563  /quotes/suriano-anarchism/  301!
+/quotes/  p=564  /quotes/russell-favorite-2/  301!
+/quotes/  p=565  /quotes/borges-finitude/  301!
+/quotes/  p=566  /quotes/mill-jurisprudence/  301!
+/quotes/  p=567  /quotes/nielsen-inequality/  301!
+/quotes/  p=568  /quotes/enzensberger-conflict-theory/  301!
+/quotes/  p=569  /quotes/solar-cho-ent-n-upas-ltome/  301!
+/quotes/  p=570  /quotes/fernandez-nonbeing/  301!
+/quotes/  p=571  /quotes/villegas-humor/  301!
+/quotes/  p=572  /quotes/fatone-interesting-people/  301!
+/quotes/  p=573  /quotes/mill-one-sidedness/  301!
+/quotes/  p=574  /quotes/kravinsky-demands-of-morality/  301!
+/quotes/  p=575  /quotes/ferrater-mora-common-sense/  301!
+/quotes/  p=576  /quotes/russell-karl-marx/  301!
+/quotes/  p=577  /quotes/railton-consequentialism/  301!
+/quotes/  p=578  /quotes/hume-folly/  301!
+/quotes/  p=579  /quotes/pearce-poetry/  301!
+/quotes/  p=580  /quotes/whiteman-poetry/  301!
+/quotes/  p=581  /quotes/wright-evolution-2/  301!
+/quotes/  p=582  /quotes/goldman-anarchism/  301!
+/quotes/  p=583  /quotes/oakeshott-moderation/  301!
+/quotes/  p=584  /quotes/turing-alan-turing/  301!
+/quotes/  p=585  /quotes/singer-jean-jacques-rousseau/  301!
+/quotes/  p=586  /quotes/rue-human-nature/  301!
+/quotes/  p=587  /quotes/honderich-politics/  301!
+/quotes/  p=588  /quotes/stevenson-poetry/  301!
+/quotes/  p=589  /quotes/adams-conformity/  301!
+/quotes/  p=590  /quotes/sebreli-psychoanalysis/  301!
+/quotes/  p=591  /quotes/slonimsky-conditioning/  301!
+/quotes/  p=592  /quotes/magee-crisis-of-modernism/  301!
+/quotes/  p=593  /quotes/hume-natural/  301!
+/quotes/  p=594  /quotes/muller-far-future/  301!
+/quotes/  p=595  /quotes/cortazar-driving/  301!
+/quotes/  p=596  /quotes/sreenivasan-egalitarianism/  301!
+/quotes/  p=597  /quotes/joyce-asked-eyes-ask-again-yes/  301!
+/quotes/  p=598  /quotes/anderson-abraham-lincoln/  301!
+/quotes/  p=599  /quotes/dennett-academia-2/  301!
+/quotes/  p=600  /quotes/pohl-anarchism/  301!
+/quotes/  p=601  /quotes/dawkins-thought-experiments/  301!
+/quotes/  p=602  /quotes/herzog-intuition/  301!
+/quotes/  p=603  /quotes/fernandez-dreaming/  301!
+/quotes/  p=604  /quotes/ferrater-mora-entertainment/  301!
+/quotes/  p=605  /quotes/giussani-70s/  301!
+/quotes/  p=606  /quotes/dunn-legal-naturalism/  301!
+/quotes/  p=607  /quotes/giussani-argentina-2/  301!
+/quotes/  p=608  /quotes/fowler-writing-style-2/  301!
+/quotes/  p=609  /quotes/combe-gonzalez-neoliberalism/  301!
+/quotes/  p=610  /quotes/mcgilvray-intellectuals/  301!
+/quotes/  p=611  /quotes/scruton-pain/  301!
+/quotes/  p=612  /quotes/temkin-foreign-aid/  301!
+/quotes/  p=613  /quotes/cohen-frank-cyril-james/  301!
+/quotes/  p=614  /quotes/murphy-private-property/  301!
+/quotes/  p=615  /quotes/ord-hume-art/  301!
+/quotes/  p=616  /quotes/levi-agency/  301!
+/quotes/  p=617  /quotes/truffaut-pharmacology/  301!
+/quotes/  p=618  /quotes/bernardez-macedonio-fernandez/  301!
+/quotes/  p=619  /quotes/kaufmann-drugs/  301!
+/quotes/  p=620  /quotes/levine-human-condition/  301!
+/quotes/  p=621  /quotes/smith-amoralism/  301!
+/quotes/  p=622  /quotes/seligman-ethics-of-belief/  301!
+/quotes/  p=623  /quotes/dunn-john-locke/  301!
+/quotes/  p=624  /quotes/cronenberg-dreaming/  301!
+/quotes/  p=625  /quotes/nino-why-be-moral/  301!
+/quotes/  p=626  /quotes/miller-anarchism/  301!
+/quotes/  p=627  /quotes/stephen-goodness/  301!
+/quotes/  p=628  /quotes/neruda-love/  301!
+/quotes/  p=629  /quotes/borges-john-milton/  301!
+/quotes/  p=630  /quotes/russell-realism/  301!
+/quotes/  p=631  /quotes/sidgwick-appeal-to-authority/  301!
+/quotes/  p=632  /quotes/bentham-altruism/  301!
+/quotes/  p=633  /quotes/nino-mass-media/  301!
+/quotes/  p=634  /quotes/rodrik-institution-design/  301!
+/quotes/  p=635  /quotes/maurice-james-mill/  301!
+/quotes/  p=636  /quotes/finkelstein-culture/  301!
+/quotes/  p=637  /quotes/goodman-anarchism/  301!
+/quotes/  p=638  /quotes/berlin-anarchism/  301!
+/quotes/  p=639  /quotes/scruton-animal-suffering/  301!
+/quotes/  p=640  /quotes/sumner-bias-towards-the-new/  301!
+/quotes/  p=641  /quotes/nagel-nihilism/  301!
+/quotes/  p=642  /quotes/honderich-intelligence/  301!
+/quotes/  p=643  /quotes/gershwin-arthur-schopenhauer/  301!
+/quotes/  p=644  /quotes/edgeworth-hedonium/  301!
+/quotes/  p=645  /quotes/chomsky-science/  301!
+/quotes/  p=646  /quotes/bunge-animal-experimentation/  301!
+/quotes/  p=647  /quotes/broome-intuition/  301!
+/quotes/  p=648  /quotes/giussani-argentina/  301!
+/quotes/  p=649  /quotes/packard-manipulation/  301!
+/quotes/  p=650  /quotes/russell-evil/  301!
+/quotes/  p=651  /quotes/smart-animal-welfare/  301!
+/quotes/  p=652  /quotes/cohen-inequality/  301!
+/quotes/  p=653  /quotes/leiter-john-rawls/  301!
+/quotes/  p=654  /quotes/bentham-consequentialism/  301!
+/quotes/  p=655  /quotes/magee-philosophy/  301!
+/quotes/  p=656  /quotes/parfit-small-effects/  301!
+/quotes/  p=657  /quotes/nozick-philosophy/  301!
+/quotes/  p=658  /quotes/feldman-hedonism-2/  301!
+/quotes/  p=659  /quotes/darwin-expanding-circle/  301!
+/quotes/  p=660  /quotes/feinberg-thought-experiments/  301!
+/quotes/  p=661  /quotes/parfit-normativity/  301!
+/quotes/  p=662  /quotes/ginsberg-free-market/  301!
+/quotes/  p=663  /quotes/herman-neoclassical-economics/  301!
+/quotes/  p=664  /quotes/neurath-favorite/  301!
+/quotes/  p=665  /quotes/blackburn-abortion/  301!
+/quotes/  p=666  /quotes/russell-bolshevism-2/  301!
+/quotes/  p=667  /quotes/pinker-genocide/  301!
+/quotes/  p=668  /quotes/grosvenor-left-wing/  301!
+/quotes/  p=669  /quotes/marx-dialectics/  301!
+/quotes/  p=670  /quotes/stanford-creationism/  301!
+/quotes/  p=671  /quotes/mises-ideology/  301!
+/quotes/  p=672  /quotes/williamson-formal-semantics/  301!
+/quotes/  p=673  /quotes/broome-contractarianism/  301!
+/quotes/  p=674  /quotes/pyke-free-will/  301!
+/quotes/  p=675  /quotes/zilsel-ancient-greece/  301!
+/quotes/  p=676  /quotes/reiman-capitalism/  301!
+/quotes/  p=677  /quotes/honderich-debunking-arguments/  301!
+/quotes/  p=678  /quotes/pinker-human-nature/  301!
+/quotes/  p=679  /quotes/jamieson-war/  301!
+/quotes/  p=680  /quotes/russell-favorite/  301!
+/quotes/  p=681  /quotes/smith-atheism/  301!
+/quotes/  p=682  /quotes/swoyer-counterfactuals/  301!
+/quotes/  p=683  /quotes/finkelstein-antisemitism/  301!
+/quotes/  p=684  /quotes/parfit-anticipation/  301!
+/quotes/  p=685  /quotes/leiter-descriptive-vs-revisionary/  301!
+/quotes/  p=686  /quotes/tan-migration/  301!
+/quotes/  p=687  /quotes/pogge-egalitarianism/  301!
+/quotes/  p=688  /quotes/milanovic-inequality/  301!
+/quotes/  p=689  /quotes/putnam-meaning/  301!
+/quotes/  p=690  /quotes/hart-simplicity/  301!
+/quotes/  p=691  /quotes/nagel-common-sense/  301!
+/quotes/  p=692  /quotes/jamison-depression/  301!
+/quotes/  p=693  /quotes/sumner-natural/  301!
+/quotes/  p=694  /quotes/waldron-freedom/  301!
+/quotes/  p=695  /quotes/strunk-style/  301!
+/quotes/  p=696  /quotes/teran-argentine-guerrilla-fighters/  301!
+/quotes/  p=697  /quotes/tamburrini-consequentialism/  301!
+/quotes/  p=698  /quotes/crisp-welfarism/  301!
+/quotes/  p=699  /quotes/kenny-philosophy/  301!
+/quotes/  p=700  /quotes/rowe-christianity/  301!
+/quotes/  p=701  /quotes/geach-why-anything/  301!
+/quotes/  p=702  /quotes/humberstone-agent-relativity/  301!
+/quotes/  p=703  /quotes/layard-bhutan/  301!
+/quotes/  p=704  /quotes/talbott-self-defeat/  301!
+/quotes/  p=706  /quotes/moore-philosophy/  301!
+/quotes/  p=707  /quotes/stevenson-henry-david-thoreau/  301!
+/quotes/  p=708  /quotes/bioy-casares-contraposition/  301!
+/quotes/  p=709  /quotes/orwell-resourcefulness/  301!
+/quotes/  p=710  /quotes/orwell-personal-identity/  301!
+/quotes/  p=711  /quotes/gray-conservatism/  301!
+/quotes/  p=712  /quotes/mcmahan-doing-and-allowing/  301!
+/quotes/  p=713  /quotes/guyer-intuition/  301!
+/quotes/  p=714  /quotes/timmermann-personal-rules/  301!
+/quotes/  p=715  /quotes/railton-w-e-without-realizing-even/  301!
+/quotes/  p=716  /quotes/rand-pain/  301!
+/quotes/  p=717  /quotes/tarkovskii-meaning-of-life/  301!
+/quotes/  p=718  /quotes/schultz-knowledge/  301!
+/quotes/  p=719  /quotes/wilde-arrogance/  301!
+/quotes/  p=720  /quotes/reid-coherentism/  301!
+/quotes/  p=721  /quotes/hanson-intuition/  301!
+/quotes/  p=722  /quotes/nozick-meaning-of-life/  301!
+/quotes/  p=723  /quotes/nozick-work/  301!
+/quotes/  p=724  /quotes/katz-debunking-arguments/  301!
+/quotes/  p=725  /quotes/papineau-common-sense/  301!
+/quotes/  p=726  /quotes/grover-best-of-all-worlds/  301!
+/quotes/  p=727  /quotes/tallis-love/  301!
+/quotes/  p=728  /quotes/jackson-consequentialism/  301!
+/quotes/  p=729  /quotes/eliot-dedication/  301!
+/quotes/  p=730  /quotes/haffenden-alcoholism/  301!
+/quotes/  p=731  /quotes/miller-sexual-selection/  301!
+/quotes/  p=732  /quotes/kitcher-ethics/  301!
+/quotes/  p=733  /quotes/sagan-animal-suffering/  301!
+/quotes/  p=734  /quotes/sawyer-meaning-of-life/  301!
+/quotes/  p=735  /quotes/de-grey-aging/  301!
+/quotes/  p=736  /quotes/thomas-kissing/  301!
+/quotes/  p=737  /quotes/nuzzo-orgasm/  301!
+/quotes/  p=738  /quotes/smith-death/  301!
+/quotes/  p=739  /quotes/smith-meaning-of-life/  301!
+/quotes/  p=740  /quotes/martin-cosmological-argument/  301!
+/quotes/  p=741  /quotes/egan-death/  301!
+/quotes/  p=742  /quotes/mayerfeld-meaning-of-life/  301!
+/quotes/  p=743  /quotes/miller-arnold-schwarzenegger/  301!
+/quotes/  p=744  /quotes/katz-function/  301!
+/quotes/  p=745  /quotes/craig-faith-healing/  301!
+/quotes/  p=746  /quotes/mcmahan-abortion/  301!
+/quotes/  p=747  /quotes/nagel-badness-of-pain/  301!
+/quotes/  p=748  /quotes/bentham-pleasure-and-pain/  301!
+/quotes/  p=749  /quotes/feldman-hedonism/  301!
+/quotes/  p=750  /quotes/kahneman-experience-sampling-method/  301!
+/quotes/  p=751  /quotes/rowe-humorous/  301!
+/quotes/  p=752  /quotes/olson-philosophy/  301!
+/quotes/  p=753  /quotes/einstein-death/  301!
+/quotes/  p=755  /quotes/sumner-pain/  301!
+/quotes/  p=756  /quotes/parfit-personal-identity/  301!
+/quotes/  p=757  /quotes/nagel-altruism/  301!
+/quotes/  p=758  /quotes/rachels-badness-of-pain-2/  301!
+/quotes/  p=759  /quotes/feyerabend-favorite/  301!
+/quotes/  p=760  /quotes/burton-depression/  301!
+/quotes/  p=761  /quotes/testament-let-day-perish-wherein-born/  301!
+/quotes/  p=762  /quotes/feyerabend-dreaming/  301!
+/quotes/  p=763  /quotes/schmitt-naturalistic-fallacy/  301!
+/quotes/  p=764  /quotes/bravo-dada/  301!
+/quotes/  p=765  /quotes/berti-argentine-literature/  301!
+/quotes/  p=766  /quotes/smart-why-anything/  301!
+/quotes/  p=767  /quotes/davobe-pessimism/  301!
+/quotes/  p=768  /quotes/hare-equal-consideration-of-interests/  301!
+/quotes/  p=769  /quotes/broad-desire-fulfillment/  301!
+/quotes/  p=770  /quotes/kociancich-pain/  301!
+/quotes/  p=771  /quotes/searle-critical-thinking/  301!
+/quotes/  p=772  /quotes/smith-bad-is-stronger-than-good/  301!
+/quotes/  p=773  /quotes/huppert-evolution/  301!
+/quotes/  p=774  /quotes/bioy-casares-seduction/  301!
+/quotes/  p=775  /quotes/flanagan-humorous/  301!
+/quotes/  p=776  /quotes/harford-evolutionary-psychology/  301!
+/quotes/  p=777  /quotes/leknes-pleasure/  301!
+/quotes/  p=778  /quotes/cummings-poetry/  301!
+/quotes/  p=779  /quotes/melzack-pain/  301!
+/quotes/  p=780  /quotes/lewis-argumentation/  301!
+/quotes/  p=781  /quotes/kurzweil-factory-farming/  301!
+/quotes/  p=782  /quotes/rousseau-mania/  301!
+/quotes/  p=783  /quotes/broad-debunking-arguments/  301!
+/quotes/  p=784  /quotes/sidgwick-hedonism/  301!
+/quotes/  p=785  /quotes/sidgwick-materialism/  301!
+/quotes/  p=786  /quotes/gunaratana-by-products/  301!
+/quotes/  p=787  /quotes/elster-by-products/  301!
+/quotes/  p=788  /quotes/parfit-collective-action/  301!
+/quotes/  p=789  /quotes/hare-imagination/  301!
+/quotes/  p=790  /quotes/tannsjo-happiness/  301!
+/quotes/  p=791  /quotes/sprigge-pleasure-2/  301!
+/quotes/  p=792  /quotes/sprigge-hedonic-tone/  301!
+/quotes/  p=793  /quotes/hare-logic/  301!
+/quotes/  p=794  /quotes/tannsjo-utilitarianism/  301!
+/quotes/  p=795  /quotes/ng-genetic-engineering/  301!
+/quotes/  p=796  /quotes/butchvarov-pleasure/  301!
+/quotes/  p=797  /quotes/broad-sweden/  301!
+/quotes/  p=798  /quotes/mcmahan-meat/  301!
+/quotes/  p=799  /quotes/trapani-irrationality/  301!
+/quotes/  p=800  /quotes/elster-emotions-2/  301!
+/quotes/  p=801  /quotes/sprigge-pleasure/  301!
+/quotes/  p=802  /quotes/cohen-analytical-marxism/  301!
+/quotes/  p=803  /quotes/katz-normativity/  301!
+/quotes/  p=804  /quotes/locke-appearance-and-reality/  301!
+/quotes/  p=805  /quotes/duncker-intensity/  301!
+/quotes/  p=806  /quotes/kahane-badness-of-pain/  301!
+/quotes/  p=807  /quotes/lopez-guix-semicolon/  301!
+/quotes/  p=808  /quotes/sidgwick-christianity/  301!
+/quotes/  p=810  /quotes/chomsky-france/  301!
+/quotes/  p=811  /quotes/moore-advice/  301!
+/quotes/  p=812  /quotes/strawson-galen-strawson/  301!
+/quotes/  p=813  /quotes/broome-distribution/  301!
+/quotes/  p=814  /quotes/grover-basic-beliefs/  301!
+/quotes/  p=815  /quotes/russell-human-nature/  301!
+/quotes/  p=816  /quotes/prior-time/  301!
+/quotes/  p=817  /quotes/broome-death/  301!
+/quotes/  p=818  /quotes/scheffler-appeal-to-full-relativity/  301!
+/quotes/  p=819  /quotes/sidgwick-sentience/  301!
+/quotes/  p=820  /quotes/hobsbawm-appeal-of-communism/  301!
+/quotes/  p=821  /quotes/strawson-euphemism/  301!
+/quotes/  p=823  /quotes/berridge-affect/  301!
+/quotes/  p=824  /quotes/dawkins-favorite/  301!
+/quotes/  p=825  /quotes/ng-favorite/  301!
+/quotes/  p=826  /quotes/bykvist-humorous/  301!
+/quotes/  p=827  /quotes/mcmahan-jeff-mcmahan-2/  301!
+/quotes/  p=828  /quotes/mencken-alcohol/  301!
+/quotes/  p=829  /quotes/jackson-frank-jackson-2/  301!
+/quotes/  p=830  /quotes/ayer-definitions/  301!
+/quotes/  p=831  /quotes/mackaye-future-of-humanity/  301!
+/quotes/  p=832  /quotes/inwagen-disagreement/  301!
+/quotes/  p=833  /quotes/magee-bryan-magee/  301!
+/quotes/  p=834  /quotes/williamson-skepticism/  301!
+/quotes/  p=835  /quotes/nino-autonomy/  301!
+/quotes/  p=836  /quotes/oneill-nikola-tesla/  301!
+/quotes/  p=837  /quotes/lewis-afterlife/  301!
+/quotes/  p=838  /quotes/lewis-evil/  301!
+/quotes/  p=839  /quotes/katz-personal-identity/  301!
+/quotes/  p=840  /quotes/parfit-death/  301!
+/quotes/  p=841  /quotes/broad-emergence/  301!
+/quotes/  p=842  /quotes/broome-global-warming/  301!
+/quotes/  p=843  /quotes/smith-cognitive-science/  301!
+/quotes/  p=844  /quotes/regan-donald-regan/  301!
+/quotes/  p=845  /quotes/huxley-evolution-and-morality/  301!
+/quotes/  p=846  /quotes/flynn-cognitive-environment/  301!
+/quotes/  p=847  /quotes/elster-meaning-of-life/  301!
+/quotes/  p=848  /quotes/cowen-self-centered-bias/  301!
+/quotes/  p=849  /quotes/cowen-globalization/  301!
+/quotes/  p=850  /quotes/russell-etiology-of-belief/  301!
+/quotes/  p=851  /quotes/goldman-intuition/  301!
+/quotes/  p=852  /quotes/rand-meaning-of-life/  301!
+/quotes/  p=853  /quotes/landis-evolution/  301!
+/quotes/  p=854  /quotes/rees-human-extinction/  301!
+/quotes/  p=855  /quotes/jackson-frank-jackson/  301!
+/quotes/  p=856  /quotes/tonn-human-extinction/  301!
+/quotes/  p=857  /quotes/nagel-death/  301!
+/quotes/  p=858  /quotes/yudkowsky-bias/  301!
+/quotes/  p=859  /quotes/bernal-physical-eschathology/  301!
+/quotes/  p=860  /quotes/trisel-human-extinction/  301!
+/quotes/  p=861  /quotes/hanson-disagreement/  301!
+/quotes/  p=862  /quotes/posner-human-extinction/  301!
+/quotes/  p=863  /quotes/egan-evolution/  301!
+/quotes/  p=864  /quotes/crowley-meaning-of-life/  301!
+/quotes/  p=865  /quotes/ward-astrobiology/  301!
+/quotes/  p=866  /quotes/green-christianity/  301!
+/quotes/  p=868  /quotes/feinberg-autonomy/  301!
+/quotes/  p=869  /quotes/pinker-humorous/  301!
+/quotes/  p=870  /quotes/egan-design/  301!
+/quotes/  p=871  /quotes/wilson-edward-wilson/  301!
+/quotes/  p=872  /quotes/kociancich-aging-2/  301!
+/quotes/  p=873  /quotes/mill-emotions/  301!
+/quotes/  p=874  /quotes/kociancich-explanation/  301!
+/quotes/  p=875  /quotes/sagan-carl-sagan/  301!
+/quotes/  p=876  /quotes/schelling-precommitment-2/  301!
+/quotes/  p=877  /quotes/kanazawa-evolutionary-psychology/  301!
+/quotes/  p=878  /quotes/gangestad-jeffry-simpson/  301!
+/quotes/  p=879  /quotes/schelling-self-management/  301!
+/quotes/  p=880  /quotes/sagan-carl-sagan-2/  301!
+/quotes/  p=881  /quotes/searle-consciousness/  301!
+/quotes/  p=882  /quotes/grau-colin-mcginn/  301!
+/quotes/  p=883  /quotes/schmidtz-david-schmidtz/  301!
+/quotes/  p=884  /quotes/nozick-capitalism-2/  301!
+/quotes/  p=885  /quotes/mill-intuition/  301!
+/quotes/  p=886  /quotes/scarre-geoffrey-scarre/  301!
+/quotes/  p=887  /quotes/petersen-ethics/  301!
+/quotes/  p=888  /quotes/james-greatness/  301!
+/quotes/  p=889  /quotes/krugman-paul-krugman/  301!
+/quotes/  p=890  /quotes/elster-reason-and-passion/  301!
+/quotes/  p=891  /quotes/elster-cravings/  301!
+/quotes/  p=892  /quotes/john-duka-cary-grant/  301!
+/quotes/  p=893  /quotes/darwin-cosmological-argument/  301!
+/quotes/  p=894  /quotes/lycan-esoteric-morality/  301!
+/quotes/  p=895  /quotes/ten-c-l-ten/  301!
+/quotes/  p=896  /quotes/stephen-james-fitzjames-stephen/  301!
+/quotes/  p=897  /quotes/goldacre-pseudoscience/  301!
+/quotes/  p=898  /quotes/mill-advice/  301!
+/quotes/  p=899  /quotes/feynman-chance/  301!
+/quotes/  p=900  /quotes/kelly-disagreement/  301!
+/quotes/  p=901  /quotes/parfit-personal-identity-2/  301!
+/quotes/  p=902  /quotes/mill-fallibilism/  301!
+/quotes/  p=903  /quotes/ryan-aging/  301!
+/quotes/  p=904  /quotes/lewis-david-lewis/  301!
+/quotes/  p=905  /quotes/ten-c-l-ten-2/  301!
+/quotes/  p=906  /quotes/bentham-animal-welfare/  301!
+/quotes/  p=907  /quotes/nietzsche-friedrich-nietzsche/  301!
+/quotes/  p=908  /quotes/savulescu-appeal-of-utilitarianism/  301!
+/quotes/  p=909  /quotes/norcross-animal-experimentation/  301!
+/quotes/  p=910  /quotes/jensen-politics/  301!
+/quotes/  p=911  /quotes/russell-critical-thinking/  301!
+/quotes/  p=912  /quotes/jensen-bias/  301!
+/quotes/  p=913  /quotes/mill-conformity/  301!
+/quotes/  p=914  /quotes/broad-happiness/  301!
+/quotes/  p=919  /quotes/waugh-diamonds/  301!
+/quotes/  p=925  /quotes/cummings-e-e-cummings/  301!
+/quotes/  p=928  /quotes/ladyman-anti-science/  301!
+/quotes/  p=930  /quotes/mill-belief/  301!
+/quotes/  p=934  /quotes/cheney-mood/  301!
+/quotes/  p=936  /quotes/ladyman-bias/  301!
+/quotes/  p=938  /quotes/dennett-conservatism/  301!
+/quotes/  p=941  /quotes/post-explanation/  301!
+/quotes/  p=945  /quotes/pogge-coercion/  301!
+/quotes/  p=947  /quotes/post-causation/  301!
+/quotes/  p=949  /quotes/church-humorous/  301!
+/quotes/  p=956  /quotes/auden-action/  301!
+/quotes/  p=959  /quotes/stanovich-cognitive-mind/  301!
+/quotes/  p=961  /quotes/mirvish-business/  301!
+/quotes/  p=965  /quotes/leakey-human-condition/  301!
+/quotes/  p=967  /quotes/hajek-atheism/  301!
+/quotes/  p=970  /quotes/stanovich-intelligence/  301!
+/quotes/  p=972  /quotes/broad-advice/  301!
+/quotes/  p=977  /quotes/suber-georg-cantor/  301!
+/quotes/  p=984  /quotes/nino-argentina/  301!
+/quotes/  p=986  /quotes/epstein-education/  301!
+/quotes/  p=988  /quotes/egan-mystery/  301!
+/quotes/  p=992  /quotes/hardwick-chris-hardwick/  301!
+/quotes/  p=995  /quotes/schmidtz-david-schmidtz-2/  301!
+/quotes/  p=997  /quotes/singer-expanding-circle/  301!
+/quotes/  p=999  /quotes/singer-dear-and-near/  301!
+/quotes/  p=1001  /quotes/tipler-frank-tipler/  301!
+/quotes/  p=1011  /quotes/ng-happiness-2/  301!
+/quotes/  p=1014  /quotes/ng-climate-change/  301!
+/quotes/  p=1016  /quotes/lockwood-consciousness/  301!
+/quotes/  p=1018  /quotes/davies-paul-davies/  301!
+/quotes/  p=1021  /quotes/gray-christianity/  301!
+/quotes/  p=1099  /quotes/huemer-badness-of-pain/  301!
+/quotes/  p=1101  /quotes/lucas-determinism/  301!
+/quotes/  p=1103  /quotes/kagan-consequentialism/  301!
+/quotes/  p=1105  /quotes/scheffler-appeal-of-utilitarianism/  301!
+/quotes/  p=1111  /quotes/broome-explanation/  301!
+/quotes/  p=1115  /quotes/capote-love/  301!
+/quotes/  p=1117  /quotes/norcross-common-sense/  301!
+/quotes/  p=1119  /quotes/egan-honesty/  301!
+/quotes/  p=1122  /quotes/walford-humor/  301!
+/quotes/  p=1125  /quotes/ceci-ideology/  301!
+/quotes/  p=1129  /quotes/cochran-aggression/  301!
+/quotes/  p=1131  /quotes/wittgenstein-awe/  301!
+/quotes/  p=1137  /quotes/cacioppo-william-patrick/  301!
+/quotes/  p=1139  /quotes/parfit-naturalism/  301!
+/quotes/  p=1141  /quotes/enoch-argumentation/  301!
+/quotes/  p=1144  /quotes/seth-activism/  301!
+/quotes/  p=1146  /quotes/bostrom-de-se/  301!
+/quotes/  p=1151  /quotes/huemer-argumentation/  301!
+/quotes/  p=1155  /quotes/oddie-graham-oddie/  301!
+/quotes/  p=1158  /quotes/mill-feeling/  301!
+/quotes/  p=1161  /quotes/crisp-demands-of-morality/  301!
+/quotes/  p=1163  /quotes/weatherson-indifference-principle/  301!
+/quotes/  p=1166  /quotes/rogers-anecdotes/  301!
+/quotes/  p=1168  /quotes/lockwood-common-sense/  301!
+/quotes/  p=1171  /quotes/morris-human-condition/  301!
+/quotes/  p=1176  /quotes/lockwood-n-o-nonsense-materialism-understand/  301!
+/quotes/  p=1178  /quotes/saer-doppelganger/  301!
+/quotes/  p=1180  /quotes/grosman-conterfactuals/  301!
+/quotes/  p=1182  /quotes/bolano-suicide/  301!
+/quotes/  p=1184  /quotes/fine-cornell-realism/  301!
+/quotes/  p=1187  /quotes/singer-higher-education/  301!
+/quotes/  p=1189  /quotes/fine-kit-fine/  301!
+/quotes/  p=1191  /quotes/ng-rights/  301!
+/quotes/  p=1195  /quotes/saer-marriage/  301!
+/quotes/  p=1197  /quotes/sagan-carl-sagan-2-2/  301!
+/quotes/  p=1200  /quotes/cowen-animal-rights/  301!
+/quotes/  p=1202  /quotes/mancini-abolitionism/  301!
+/quotes/  p=1207  /quotes/elster-economic-growth/  301!
+/quotes/  p=1210  /quotes/mancini-felicific-calculus/  301!
+/quotes/  p=1214  /quotes/craig-functionalism/  301!
+/quotes/  p=1216  /quotes/kim-jaegwon-kim/  301!
+/quotes/  p=1218  /quotes/chalmers-david-chalmers/  301!
+/quotes/  p=1223  /quotes/broad-hedonic-tone/  301!
+/quotes/  p=1226  /quotes/geher-mating-intelligence/  301!
+/quotes/  p=1229  /quotes/thoreau-henry-david-thoreau/  301!
+/quotes/  p=1231  /quotes/schaefer-eloquence/  301!
+/quotes/  p=1233  /quotes/nino-anomie/  301!
+/quotes/  p=1237  /quotes/carnegie-dale-carnegie/  301!
+/quotes/  p=1239  /quotes/alston-british-empiricism/  301!
+/quotes/  p=1241  /quotes/broad-aggregation/  301!
+/quotes/  p=1245  /quotes/bostrom-disease/  301!
+/quotes/  p=1249  /quotes/duncker-pleasure/  301!
+/quotes/  p=1251  /quotes/favio-childhood/  301!
+/quotes/  p=1254  /quotes/bioy-casares-eschathology/  301!
+/quotes/  p=1258  /quotes/egan-accomplishment/  301!
+/quotes/  p=1260  /quotes/shaw-aggregation/  301!
+/quotes/  p=1263  /quotes/egan-immortality/  301!
+/quotes/  p=1265  /quotes/branden-humorous/  301!
+/quotes/  p=1267  /quotes/gilbert-bias/  301!
+/quotes/  p=1270  /quotes/gilbert-daniel-gilbert/  301!
+/quotes/  p=1286  /quotes/nozick-experience-machine/  301!
+/quotes/  p=1289  /quotes/leary-lsd/  301!
+/quotes/  p=1292  /quotes/smilansky-free-will/  301!
+/quotes/  p=1342  /quotes/frey-animal-suffering/  301!
+/quotes/  p=1344  /quotes/rachels-badness-of-pain/  301!
+/quotes/  p=1346  /quotes/mcmahan-badness-of-pain/  301!
+/quotes/  p=1348  /quotes/mctaggart-compatibilism/  301!
+/quotes/  p=1350  /quotes/broad-georg-wilhelm-friedrich-hegel/  301!
+/quotes/  p=1354  /quotes/mctaggart-badness-of-pain-2/  301!
+/quotes/  p=1356  /quotes/kagan-wellbeing/  301!
+/quotes/  p=1358  /quotes/mctaggart-eloquent/  301!
+/quotes/  p=1361  /quotes/mctaggart-epistemology/  301!
+/quotes/  p=1363  /quotes/lomasky-badness-of-pain/  301!
+/quotes/  p=1367  /quotes/parfit-suffering/  301!
+/quotes/  p=1369  /quotes/mackie-j-l-mackie/  301!
+/quotes/  p=1372  /quotes/johnston-illusion/  301!
+/quotes/  p=1374  /quotes/reibetanz-doctrine-of-double-effect/  301!
+/quotes/  p=1376  /quotes/hare-egocentrism/  301!
+/quotes/  p=1378  /quotes/olson-eric-olson-2/  301!
+/quotes/  p=1381  /quotes/olson-eric-olson/  301!
+/quotes/  p=1383  /quotes/campbell-need-notion-phenomenal-character-experience/  301!
+/quotes/  p=1385  /quotes/wiseman-bad-luck/  301!
+/quotes/  p=1387  /quotes/milo-constructivism/  301!
+/quotes/  p=1389  /quotes/kim-humorous/  301!
+/quotes/  p=1393  /quotes/eysenck-hans-eysenck/  301!
+/quotes/  p=1395  /quotes/elga-disagreement/  301!
+/quotes/  p=1401  /quotes/murray-thought-experiments/  301!
+/quotes/  p=1403  /quotes/landsburg-belief-in-god/  301!
+/quotes/  p=1405  /quotes/kaplow-consequentialism/  301!
+/quotes/  p=1407  /quotes/broad-g-e-moore/  301!
+/quotes/  p=1409  /quotes/handler-betrayal/  301!
+/quotes/  p=1411  /quotes/miller-consumer-behavior/  301!
+/quotes/  p=1413  /quotes/watts-personal-identity/  301!
+/quotes/  p=1415  /quotes/broad-absolutism/  301!
+/quotes/  p=1421  /quotes/stoljar-daniel-stoljar/  301!
+/quotes/  p=1424  /quotes/price-huw-price/  301!
+/quotes/  p=1427  /quotes/gray-genetic-determinism/  301!
+/quotes/  p=1431  /quotes/kagan-intrerference/  301!
+/quotes/  p=1445  /quotes/strawson-common-sense/  301!
+/quotes/  p=1465  /quotes/geher-individual-differences/  301!
+/quotes/  p=1467  /quotes/brink-david-brink/  301!
+/quotes/  p=1469  /quotes/smith-georg-wilhelm-friedrich-hegel/  301!
+/quotes/  p=1474  /quotes/smith-metaphysics-of-normativity/  301!
+/quotes/  p=1475  /quotes/chalmers-consciousness/  301!
+/quotes/  p=1477  /quotes/kabat-zinn-mindfulness/  301!
+/quotes/  p=1480  /quotes/balaguer-mark-balaguer/  301!
+/quotes/  p=1482  /quotes/james-compatibilism/  301!
+/quotes/  p=1484  /quotes/eddington-panpsychism/  301!
+/quotes/  p=1486  /quotes/smart-disagreement/  301!
+/quotes/  p=1488  /quotes/chalmers-david-chalmers-2/  301!
+/quotes/  p=1492  /quotes/copp-david-copp/  301!
+/quotes/  p=1494  /quotes/rees-cosmic-understanding/  301!
+/quotes/  p=1496  /quotes/chiang-fiction/  301!
+/quotes/  p=1498  /quotes/nagel-analytic-philosophy/  301!
+/quotes/  p=1500  /quotes/sidgwick-disagreement/  301!
+/quotes/  p=1502  /quotes/parfit-why-be-moral/  301!
+/quotes/  p=1504  /quotes/broad-change-of-mind/  301!
+/quotes/  p=1506  /quotes/broad-animal-suffering/  301!
+/quotes/  p=1522  /quotes/hartmann-george-hartmann/  301!
+/quotes/  p=1524  /quotes/nino-legal-positivism/  301!
+/quotes/  p=1526  /quotes/broome-long-term/  301!
+/quotes/  p=1528  /quotes/norcross-badness-of-pain/  301!
+/quotes/  p=1531  /quotes/machado-dreaming/  301!
+/quotes/  p=1535  /quotes/hardy-evidence/  301!
+/quotes/  p=1548  /quotes/slonimsky-humorous-2/  301!
+/quotes/  p=1554  /quotes/franklin-decision-making/  301!
+/quotes/  p=1556  /quotes/sapontzis-nature/  301!
+/quotes/  p=1558  /quotes/dawkins-evolution/  301!
+/quotes/  p=1565  /quotes/filippini-argentina/  301!
+/quotes/  p=1567  /quotes/bioy-casares-buenos-aires/  301!
+/quotes/  p=1569  /quotes/huxley-empathy/  301!
+/quotes/  p=1571  /quotes/egan-abundance/  301!
+/quotes/  p=1601  /quotes/sebreli-conceptual-mistakes/  301!
+/quotes/  p=1603  /quotes/sebreli-gambling/  301!
+/quotes/  p=1606  /quotes/sebreli-argentine-guerrilla-fighters/  301!
+/quotes/  p=1608  /quotes/sebreli-coffee-shops/  301!
+/quotes/  p=1611  /quotes/sebreli-guevarism/  301!
+/quotes/  p=1614  /quotes/sebreli-discrimination/  301!
+/quotes/  p=1617  /quotes/teran-falklands-war/  301!
+/quotes/  p=1620  /quotes/groussac-domingo-faustino-sarmiento/  301!
+/quotes/  p=1623  /quotes/novaro-human-rights-in-argentina/  301!
+/quotes/  p=1625  /quotes/mill-education/  301!
+/quotes/  p=1626  /quotes/saer-death/  301!
+/quotes/  p=1629  /quotes/levitt-condoms/  301!
+/quotes/  p=1639  /quotes/gueguen-experimentation/  301!
+/quotes/  p=1641  /quotes/darwin-animal-suffering/  301!
+/quotes/  p=1644  /quotes/klimovsky-galileo-galilei/  301!
+/quotes/  p=1648  /quotes/highsmith-patricia-highsmith-2/  301!
+/quotes/  p=1650  /quotes/highsmith-patricia-highsmith/  301!
+/quotes/  p=1652  /quotes/giannetti-communism/  301!
+/quotes/  p=1654  /quotes/pessoa-fernando-pessoa/  301!
+/quotes/  p=1656  /quotes/giannetti-drugs/  301!
+/quotes/  p=1658  /quotes/bailey-femininity/  301!
+/quotes/  p=1666  /quotes/bailey-femininity-2/  301!
+/quotes/  p=1672  /quotes/ridley-fashion/  301!
+/quotes/  p=1689  /quotes/ridley-evolution/  301!
+/quotes/  p=1691  /quotes/rhode-aging/  301!
+/quotes/  p=1697  /quotes/ridley-matt-ridley/  301!
+/quotes/  p=1699  /quotes/gray-attention/  301!
+/quotes/  p=1701  /quotes/roberts-critical-thinking/  301!
+/quotes/  p=1703  /quotes/parfit-concepts/  301!
+/quotes/  p=1707  /quotes/ross-debunking-arguments/  301!
+/quotes/  p=1709  /quotes/bioy-casares-marriage/  301!
+/quotes/  p=1714  /quotes/caplan-adolescence/  301!
+/quotes/  p=1716  /quotes/colvin-deliberate-practice/  301!
+/quotes/  p=1719  /quotes/wiseman-happiness/  301!
+/quotes/  p=1723  /quotes/wiseman-reciprocity/  301!
+/quotes/  p=1743  /quotes/ristik-false-negatives/  301!
+/quotes/  p=1745  /quotes/yeats-favorite/  301!
+/quotes/  p=1747  /quotes/muller-richard-muller/  301!
+/quotes/  p=1749  /quotes/broad-appeal-to-authority/  301!
+/quotes/  p=1751  /quotes/darwin-debunking-arguments/  301!
+/quotes/  p=1753  /quotes/kurtz-jaime-kurtz/  301!
+/quotes/  p=1755  /quotes/kagan-small-chances/  301!
+/quotes/  p=1757  /quotes/ogas-fetishes/  301!
+/quotes/  p=1760  /quotes/gray-human-condition/  301!
+/quotes/  p=1762  /quotes/mackaye-efficiency/  301!
+/quotes/  p=1764  /quotes/stanhope-advice/  301!
+/quotes/  p=1766  /quotes/nagel-meaning-of-life/  301!
+/quotes/  p=1768  /quotes/parfit-humorous/  301!
+/quotes/  p=1772  /quotes/wilson-daniel-gilbert/  301!
+/quotes/  p=1774  /quotes/stevens-perception/  301!
+/quotes/  p=1777  /quotes/stanley-death/  301!
+/quotes/  p=1779  /quotes/franklin-cod/  301!
+/quotes/  p=1783  /quotes/mctaggart-immortality/  301!
+/quotes/  p=1785  /quotes/mctaggart-georg-wilhelm-friedrich-hegel/  301!
+/quotes/  p=1787  /quotes/mctaggart-badness-of-pain/  301!
+/quotes/  p=1789  /quotes/mastronardi-mientras-otros-cumplen-con-rigor/  301!
+/quotes/  p=1791  /quotes/mastronardi-una-noche-del-o-sale/  301!
+/quotes/  p=1793  /quotes/schopenhauer-problem-of-evil/  301!
+/quotes/  p=1795  /quotes/johnson-necessity/  301!
+/quotes/  p=1797  /quotes/cozarinsky-breasts/  301!
+/quotes/  p=1801  /quotes/tracy-cynicism/  301!
+/quotes/  p=1803  /quotes/rowland-cold-reading/  301!
+/quotes/  p=1805  /quotes/foer-joshua-foer/  301!
+/quotes/  p=1809  /quotes/iglesias-argentina/  301!
+/quotes/  p=1811  /quotes/holt-jim-holt/  301!
+/quotes/  p=1836  /quotes/judt-ecole-normale-superieure/  301!
+/quotes/  p=1838  /quotes/judt-communism/  301!
+/quotes/  p=1840  /quotes/fowler-reference-class/  301!
+/quotes/  p=1841  /quotes/rosenberg-emotions/  301!
+/quotes/  p=1844  /quotes/darwin-human-extinction/  301!
+/quotes/  p=1846  /quotes/cadicamo-crying/  301!
+/quotes/  p=1861  /quotes/salt-henry-salt/  301!
+/quotes/  p=1866  /quotes/kagan-pain-2/  301!
+/quotes/  p=1869  /quotes/bostrom-future-of-humanity/  301!
+/quotes/  p=1874  /quotes/cheeke-chickens/  301!
+/quotes/  p=1877  /quotes/rachels-animal-suffering/  301!
+/quotes/  p=1881  /quotes/mcmahan-jeff-mcmahan/  301!
+/quotes/  p=1916  /quotes/norwood-factory-farming/  301!
+/quotes/  p=1919  /quotes/sagoff-evolution/  301!
+/quotes/  p=1922  /quotes/hapgood-death/  301!
+/quotes/  p=1926  /quotes/newport-cal-newport/  301!
+/quotes/  p=1929  /quotes/holt-big-bang/  301!
+/quotes/  p=1934  /quotes/hanson-future/  301!
+/quotes/  p=1937  /quotes/sagoff-factory-farming/  301!
+/quotes/  p=1940  /quotes/darwin-evolution/  301!
+/quotes/  p=1943  /quotes/kahneman-daniel-kahneman/  301!
+/quotes/  p=1948  /quotes/elster-self-interest/  301!
+/quotes/  p=1951  /quotes/wallace-david-wallace/  301!
+/quotes/  p=1954  /quotes/mackaye-happiness/  301!
+/quotes/  p=1959  /quotes/steel-magical-thinking/  301!
+/quotes/  p=1962  /quotes/montaigne-explanation/  301!
+/quotes/  p=1964  /quotes/ariely-dan-ariely/  301!
+/quotes/  p=1978  /quotes/minghella-effectiveness/  301!
+/quotes/  p=1981  /quotes/ariely-endowment-effect/  301!
+/quotes/  p=1983  /quotes/ariely-argument/  301!
+/quotes/  p=1986  /quotes/dawkins-evolution-2-2/  301!
+/quotes/  p=1988  /quotes/pinker-law/  301!
+/quotes/  p=1992  /quotes/miller-recommendation/  301!
+/quotes/  p=1994  /quotes/chalmers-human-intelligence/  301!
+/quotes/  p=2001  /quotes/siskind-badness-of-pain/  301!
+/quotes/  p=2004  /quotes/broad-humorous-4/  301!
+/quotes/  p=2007  /quotes/moen-consciousness/  301!
+/quotes/  p=2009  /quotes/dennett-academia/  301!
+/quotes/  p=2014  /quotes/lusk-animal-welfare/  301!
+/quotes/  p=2018  /quotes/mackaye-time/  301!
+/quotes/  p=2021  /quotes/broad-humorous/  301!
+/quotes/  p=2027  /quotes/bostrom-evolution/  301!
+/quotes/  p=2030  /quotes/mayerfeld-suffering/  301!
+/quotes/  p=2033  /quotes/sinhababu-objectivity/  301!
+/quotes/  p=2036  /quotes/kagan-pain/  301!
+/quotes/  p=2038  /quotes/mackaye-happiness-2/  301!
+/quotes/  p=2041  /quotes/cowen-discounting/  301!
+/quotes/  p=2044  /quotes/cowen-economic-growth/  301!
+/quotes/  p=2046  /quotes/parfit-far-future/  301!
+/quotes/  p=2052  /quotes/bentham-autobiographical/  301!
+/quotes/  p=2055  /quotes/broad-humorous-5/  301!
+/quotes/  p=2058  /quotes/parfit-pleasure-and-pain/  301!
+/quotes/  p=2062  /quotes/mill-utilitarianism/  301!
+/quotes/  p=2064  /quotes/beckstead-bias/  301!
+/quotes/  p=2071  /quotes/thomas-analogies/  301!
+/quotes/  p=2076  /quotes/thomas-classic-style/  301!
+/quotes/  p=2085  /quotes/silver-bias/  301!
+/quotes/  p=2096  /quotes/levine-advertising/  301!
+/quotes/  p=2099  /quotes/mcgonigal-modularity-of-mind/  301!
+/quotes/  p=2102  /quotes/crane-action/  301!
+/quotes/  p=2105  /quotes/mill-conduct-class-wrong-criminal-suppose/  301!
+/quotes/  p=2107  /quotes/zaillian-earning-to-give/  301!
+/quotes/  p=2110  /quotes/edgeworth-hedonimetry/  301!
+/quotes/  p=2113  /quotes/hanson-contrarians/  301!
+/quotes/  p=2115  /quotes/szymanska-altruism/  301!
+/quotes/  p=2121  /quotes/graham-clutter/  301!
+/quotes/  p=2127  /quotes/keynes-frank-plumpton-ramsey/  301!
+/quotes/  p=2129  /quotes/cooney-calculation/  301!
+/quotes/  p=2131  /quotes/sinclair-cosmological-argument/  301!
+/quotes/  p=2133  /quotes/streeten-diminishing-marginal-utility/  301!
+/quotes/  p=2135  /quotes/harford-business/  301!
+/quotes/  p=2161  /quotes/bioy-casares-level-of-neutrality/  301!
+/quotes/  p=2163  /quotes/eslick-cause-prioritization/  301!
+/quotes/  p=2166  /quotes/huff-bias/  301!
+/quotes/  p=2168  /quotes/morgan-factorials/  301!
+/quotes/  p=2170  /quotes/pinker-prediction/  301!
+/quotes/  p=2172  /quotes/oppenheim-fair-trade/  301!
+/quotes/  p=2174  /quotes/pricthett-progress/  301!
+/quotes/  p=2176  /quotes/baumeister-information-processing/  301!
+/quotes/  p=2180  /quotes/greene-heuristics/  301!
+/quotes/  p=2182  /quotes/greene-debunking-arguments/  301!
+/quotes/  p=2184  /quotes/greene-rhetoric/  301!
+/quotes/  p=2186  /quotes/bloom-culture/  301!
+/quotes/  p=2189  /quotes/wilson-pleasure/  301!
+/quotes/  p=2192  /quotes/james-explanation/  301!
+/quotes/  p=2194  /quotes/thompson-choice/  301!
+/quotes/  p=2196  /quotes/bioy-casares-crime-fiction/  301!
+/quotes/  p=2198  /quotes/laski-civilization/  301!
+/quotes/  p=2200  /quotes/harford-keyhole-solutions/  301!
+/quotes/  p=2202  /quotes/pinker-animal-rights/  301!
+/quotes/  p=2205  /quotes/taleb-prediction/  301!
+/quotes/  p=2208  /quotes/young-procrastination/  301!
+/quotes/  p=2210  /quotes/cohen-blame/  301!
+/quotes/  p=2214  /quotes/clark-chile/  301!
+/quotes/  p=2216  /quotes/newman-quantification/  301!
+/quotes/  p=2251  /quotes/geher-confabulation/  301!
+/quotes/  p=2255  /quotes/teasdale-mindfulness/  301!
+/quotes/  p=2260  /quotes/ridley-prosperity/  301!
+/quotes/  p=2262  /quotes/hotelling-humorous/  301!
+/quotes/  p=2268  /quotes/hume-explanation/  301!
+/quotes/  p=2270  /quotes/graham-job-security/  301!
+/quotes/  p=2272  /quotes/bostrom-computronium/  301!
+/quotes/  p=2275  /quotes/winter-deathbed/  301!
+/quotes/  p=2281  /quotes/tynan-consummerism/  301!
+/quotes/  p=2283  /quotes/russell-georg-wilhelm-friedrich-hegel/  301!
+/quotes/  p=2285  /quotes/thomas-empathy/  301!
+/quotes/  p=2287  /quotes/franklin-learning/  301!
+/quotes/  p=2289  /quotes/moller-abortion/  301!
+/quotes/  p=2293  /quotes/broome-moral-philosophy/  301!
+/quotes/  p=2295  /quotes/mcmahan-dehumanization/  301!
+/quotes/  p=2300  /quotes/pinker-intensifiers/  301!
+/quotes/  p=2302  /quotes/mcmahan-fortune/  301!
+/quotes/  p=2307  /quotes/parfit-equality/  301!
+/quotes/  p=2310  /quotes/chesterton-dissent/  301!
+/quotes/  p=2312  /quotes/lockwood-utilitarianism/  301!
+/quotes/  p=2404  /quotes/baumeister-political-correctness/  301!
+/quotes/  p=2406  /quotes/broad-conservatism/  301!
+/quotes/  p=2416  /quotes/chesterton-chestertons-fence/  301!
+/quotes/  p=2420  /quotes/bloom-empathy/  301!
+/quotes/  p=2451  /quotes/russell-bolshevism/  301!
+/quotes/  p=2453  /quotes/banerjee-banking/  301!
+/quotes/  p=2455  /quotes/hubbard-james-randi/  301!
+/quotes/  p=2458  /quotes/brown-aging/  301!
+/quotes/  p=2460  /quotes/cobb-measurement/  301!
+/quotes/  p=2462  /quotes/hubbard-cause-prioritization/  301!
+/quotes/  p=2468  /quotes/lear-conformity/  301!
+/quotes/  p=2485  /quotes/singer-art/  301!
+/quotes/  p=2488  /quotes/styron-depression/  301!
+/quotes/  p=2490  /quotes/styron-depression-2/  301!
+/quotes/  p=2495  /quotes/bioy-casares-jorge-luis-borges/  301!
+/quotes/  p=2499  /quotes/feynman-dancing/  301!
+/quotes/  p=2501  /quotes/feynman-death/  301!
+/quotes/  p=2504  /quotes/baumeister-feminism/  301!
+/quotes/  p=2507  /quotes/patai-feminism/  301!
+/quotes/  p=2510  /quotes/galton-argument-from-universality/  301!
+/quotes/  p=2512  /quotes/singer-existential-risk/  301!
+/quotes/  p=2515  /quotes/smuts-aggression/  301!
+/quotes/  p=2539  /quotes/bunge-postmodernism/  301!
+/quotes/  p=2542  /quotes/feynman-feedback/  301!
+/quotes/  p=2545  /quotes/carlyle-planning/  301!
+/quotes/  p=2548  /quotes/phillips-human-condition/  301!
+/quotes/  p=2550  /quotes/gilbert-happiness/  301!
+/quotes/  p=2552  /quotes/seneca-happiness/  301!
+/quotes/  p=2554  /quotes/rieznik-james-randi/  301!
+/quotes/  p=2557  /quotes/branwen-drugs/  301!
+/quotes/  p=2559  /quotes/einstein-arthur-schopenhauer/  301!
+/quotes/  p=2564  /quotes/mark-harris-abolitionism/  301!
+/quotes/  p=2567  /quotes/branson-note-taking/  301!
+/quotes/  p=2569  /quotes/heath-system-1/  301!
+/quotes/  p=2575  /quotes/rogers-empathy/  301!
+/quotes/  p=2577  /quotes/beckstead-far-future/  301!
+/quotes/  p=2580  /quotes/gawande-harm/  301!
+/quotes/  p=2582  /quotes/easton-clitoris/  301!
+/quotes/  p=2585  /quotes/sethi-decision-making/  301!
+/quotes/  p=2588  /quotes/nettle-explanation/  301!
+/quotes/  p=2590  /quotes/craig-abortion/  301!
+/quotes/  p=2593  /quotes/miller-bad-is-stronger-than-good/  301!
+/quotes/  p=2596  /quotes/carnegie-implementation/  301!
+/quotes/  p=2598  /quotes/hume-pain/  301!
+/quotes/  p=2600  /quotes/benton-animals/  301!
+/quotes/  p=2603  /quotes/hornbacher-mania/  301!
+/quotes/  p=2605  /quotes/cowen-economic-growth-2/  301!
+/quotes/  p=2607  /quotes/gardner-prediction/  301!
+/quotes/  p=2609  /quotes/williams-moral-uncertainty/  301!
+/quotes/  p=2611  /quotes/algarotti-humorous/  301!
+/quotes/  p=2613  /quotes/nettle-discrimination/  301!
+/quotes/  p=2616  /quotes/edwards-meaning-of-life/  301!
+/quotes/  p=2619  /quotes/elster-self-deception/  301!
+/quotes/  p=2621  /quotes/de-tocqueville-rationalization/  301!
+/quotes/  p=2627  /quotes/nature-psychoanalysis/  301!
+/quotes/  p=2629  /quotes/regis-asymmetry/  301!
+/quotes/  p=2633  /quotes/tynan-jokes/  301!
+/quotes/  p=2636  /quotes/matthews-foreign-policy/  301!
+/quotes/  p=2639  /quotes/richards-feminism/  301!
+/quotes/  p=2641  /quotes/louw-communism/  301!
+/quotes/  p=2643  /quotes/cooney-bias/  301!
+/quotes/  p=2646  /quotes/cooney-effective-altruism/  301!
+/quotes/  p=2648  /quotes/keene-arthur-waley/  301!
+/quotes/  p=2650  /quotes/keene-moving/  301!
+/quotes/  p=2652  /quotes/macfarquhar-earning-to-give/  301!
+/quotes/  p=2654  /quotes/nagel-consciousness/  301!
+/quotes/  p=2656  /quotes/nagel-badness-of-pain-2/  301!
+/quotes/  p=2659  /quotes/james-procrastination/  301!
+/quotes/  p=2662  /quotes/hapgood-humorous/  301!
+/quotes/  p=2665  /quotes/maccann-fame/  301!
+/quotes/  p=2668  /quotes/cowen-criticism/  301!
+/quotes/  p=2671  /quotes/cowen-fame/  301!
+/quotes/  p=2673  /quotes/soddy-observation-selection-effect/  301!
+/quotes/  p=2675  /quotes/caplan-children/  301!
+/quotes/  p=2677  /quotes/im-looking-for-a-market-for-wisdom-leo/  301!
+/quotes/  p=2681  /quotes/parfit-anger/  301!
+/quotes/  p=2683  /quotes/la-rochefoucauld-ability/  301!
+/quotes/  p=2686  /quotes/rhodes-speaking/  301!
+/quotes/  p=2690  /quotes/macfarquhar-aaron-swartz/  301!
+/quotes/  p=2692  /quotes/tavris-lyndon-johnson/  301!
+/quotes/  p=2695  /quotes/ng-happiness/  301!
+/quotes/  p=2697  /quotes/brennan-exceptionalism/  301!
+/quotes/  p=2699  /quotes/illingworth-news/  301!
+/quotes/  p=2701  /quotes/gallwey-implementation/  301!
+/quotes/  p=2703  /quotes/rescher-arthur-schopenhauer/  301!
+/quotes/  p=2706  /quotes/tomasik-overconfidence/  301!
+/quotes/  p=2708  /quotes/hanson-bias-towards-the-new/  301!
+/quotes/  p=2710  /quotes/gallwey-curation/  301!
+/quotes/  p=2712  /quotes/einstein-solitude/  301!
+/quotes/  p=2714  /quotes/clark-botany/  301!
+/quotes/  p=2717  /quotes/kamm-asterix/  301!
+/quotes/  p=2719  /quotes/de-botton-human-condition/  301!
+/quotes/  p=2721  /quotes/mcdermott-artificial-intelligence/  301!
+/quotes/  p=2725  /quotes/chernow-earning-to-give/  301!
+/quotes/  p=2729  /quotes/theroux-corruption/  301!
+/quotes/  p=2731  /quotes/vance-elon-musk/  301!
+/quotes/  p=2733  /quotes/moller-beneficence/  301!
+/quotes/  p=2735  /quotes/james-habit/  301!
+/quotes/  p=2739  /quotes/chalmers-uploading/  301!
+/quotes/  p=2741  /quotes/james-depression/  301!
+/quotes/  p=2748  /quotes/huemer-debunking-arguments/  301!
+/quotes/  p=2750  /quotes/james-debunking-arguments/  301!
+/quotes/  p=2752  /quotes/neurath-insight/  301!
+/quotes/  p=2754  /quotes/professor-mathematics/  301!
+/quotes/  p=2760  /quotes/easterly-humorous/  301!
+/quotes/  p=2762  /quotes/de-tocqueville-social-comparison/  301!
+/quotes/  p=2765  /quotes/harvey-negative-results/  301!
+/quotes/  p=2767  /quotes/unger-what-the-fuck/  301!
+/quotes/  p=2769  /quotes/lazari-radek-difference/  301!
+/quotes/  p=2771  /quotes/rothbard-libertarianism/  301!
+/quotes/  p=2773  /quotes/feynman-scientific-methodology/  301!
+/quotes/  p=2776  /quotes/elster-emotions/  301!
+/quotes/  p=2778  /quotes/romilly-james-mill/  301!
+/quotes/  p=2781  /quotes/thomas-james-mill/  301!
+/quotes/  p=2785  /quotes/de-quincey-solitude/  301!
+/quotes/  p=2790  /quotes/grazer-curiosity/  301!
+/quotes/  p=2793  /quotes/taurek-additivity/  301!
+/quotes/  p=2798  /quotes/broad-humorous-3/  301!
+/quotes/  p=2800  /quotes/broad-bias/  301!
+/quotes/  p=2802  /quotes/elster-authenticity/  301!
+/quotes/  p=2806  /quotes/lean-by-products/  301!
+/quotes/  p=2809  /quotes/elster-intentional-behavior/  301!
+/quotes/  p=2812  /quotes/elster-justification/  301!
+/quotes/  p=2815  /quotes/redpath-birthdays/  301!
+/quotes/  p=2817  /quotes/winter-travel/  301!
+/quotes/  p=2819  /quotes/johnson-concentration/  301!
+/quotes/  p=2825  /quotes/johnson-decision-making-2/  301!
+/quotes/  p=2828  /quotes/bostrom-death/  301!
+/quotes/  p=2831  /quotes/boswell-depression/  301!
+/quotes/  p=2846  /quotes/boswell-excellence/  301!
+/quotes/  p=2848  /quotes/kahane-nihilism/  301!
+/quotes/  p=2850  /quotes/kahane-arthur-schopenhauer/  301!
+/quotes/  p=2852  /quotes/parfit-nihilism/  301!
+/quotes/  p=2858  /quotes/schelling-identifiable-victim/  301!
+/quotes/  p=2861  /quotes/bloom-empathy-2/  301!
+/quotes/  p=2863  /quotes/bloom-bertrand-russell/  301!
+/quotes/  p=2865  /quotes/arias-chachero-death/  301!
+/quotes/  p=2870  /quotes/bioy-casares-beauty/  301!
+/quotes/  p=2872  /quotes/piglia-seduction/  301!
+/quotes/  p=2874  /quotes/russell-by-products/  301!
+/quotes/  p=2877  /quotes/pizarnik-death/  301!
+/quotes/  p=2880  /quotes/bioy-casares-argentina-2/  301!
+/quotes/  p=2882  /quotes/cervantes-saavedra-self-reference/  301!
+/quotes/  p=2885  /quotes/ries-innovation/  301!
+/quotes/  p=2887  /quotes/russell-aging/  301!
+/quotes/  p=2889  /quotes/hanson-intellectual-honesty/  301!
+/quotes/  p=2893  /quotes/bostrom-ad-hominem-arguments/  301!
+/quotes/  p=2898  /quotes/karnofsky-cluster-thinking/  301!
+/quotes/  p=2901  /quotes/norcross-bernard-williams/  301!
+/quotes/  p=2905  /quotes/lazari-radek-human-extinction/  301!
+/quotes/  p=2907  /quotes/matthews-debunking-arguments/  301!
+/quotes/  p=2909  /quotes/graham-by-products/  301!
+/quotes/  p=2911  /quotes/graham-wisdom-of-nature/  301!
+/quotes/  p=2913  /quotes/graham-pain/  301!
+/quotes/  p=2915  /quotes/graham-bugs/  301!
+/quotes/  p=2918  /quotes/broome-average-view/  301!
+/quotes/  p=2920  /quotes/simler-cynicism/  301!
+/quotes/  p=2922  /quotes/natalie-angier-human-evolution/  301!
+/quotes/  p=2924  /quotes/trivers-deception/  301!
+/quotes/  p=2926  /quotes/good-artificial-intelligence/  301!
+/quotes/  p=2930  /quotes/good-recursive-self-improvement/  301!
+/quotes/  p=2932  /quotes/hanson-argumentation/  301!
+/quotes/  p=2935  /quotes/russell-human-extinction/  301!
+/quotes/  p=2938  /quotes/chalmers-artificial-intelligence/  301!
+/quotes/  p=2940  /quotes/tannsjo-utilitarianism-2/  301!
+/quotes/  p=2943  /quotes/smart-far-future/  301!
+/quotes/  p=2945  /quotes/vance-human-extinction/  301!
+/quotes/  p=2947  /quotes/parfit-favorite/  301!
+/quotes/  p=2949  /quotes/schell-human-extinction/  301!
+/quotes/  p=2952  /quotes/broome-human-extinction/  301!
+/quotes/  p=2955  /quotes/haidt-irrationality/  301!
+/quotes/  p=2957  /quotes/swedberg-autobiographical/  301!
+/quotes/  p=2960  /quotes/schell-favorite/  301!
+/quotes/  p=2963  /quotes/haidt-hypocrisy/  301!
+/quotes/  p=2965  /quotes/de-quincey-aesthetics/  301!
+/quotes/  p=2967  /quotes/de-quincey-humorous/  301!
+/quotes/  p=2971  /quotes/hanson-future-2/  301!
+/quotes/  p=2973  /quotes/paul-intensity/  301!
+/quotes/  p=2978  /quotes/boswell-farewell/  301!
+/quotes/  p=2980  /quotes/zweig-austria/  301!
+/quotes/  p=2984  /quotes/pinker-heredity/  301!
+/quotes/  p=2986  /quotes/reynard-economics/  301!
+/quotes/  p=2989  /quotes/schumpeter-art/  301!
+/quotes/  p=2991  /quotes/keynes-adam-smith/  301!
+/quotes/  p=2993  /quotes/keynes-diminishing-returns/  301!
+/quotes/  p=2995  /quotes/beste-endearing/  301!
+/quotes/  p=2997  /quotes/cain-colonialism/  301!
+/quotes/  p=3000  /quotes/eriksen-social-science/  301!
+/quotes/  p=3002  /quotes/barnett-kindness/  301!
+/quotes/  p=3004  /quotes/malcolm-bias/  301!
+/quotes/  p=3006  /quotes/malcolm-g-e-moore/  301!
+/quotes/  p=3008  /quotes/flynn-hypothetical-examples/  301!
+/quotes/  p=3010  /quotes/de-quincey-personal-identity/  301!
+/quotes/  p=3012  /quotes/brown-irrationality/  301!
+/quotes/  p=3015  /quotes/gibbon-modesty/  301!
+/quotes/  p=3017  /quotes/baujard-humorous/  301!
+/quotes/  p=3021  /quotes/metzinger-suffering/  301!
+/quotes/  p=3024  /quotes/gibbon-brothers/  301!
+/quotes/  p=3026  /quotes/pavlina-complaints/  301!
+/quotes/  p=3030  /quotes/de-saint-exupery-numbers/  301!
+/quotes/  p=3032  /quotes/macaulay-problem-of-induction/  301!
+/quotes/  p=3035  /quotes/kelton-reid-presentism-bias/  301!
+/quotes/  p=3037  /quotes/dutton-psychopaths/  301!
+/quotes/  p=3040  /quotes/bukowski-daily-routines/  301!
+/quotes/  p=3042  /quotes/james-consciousness/  301!
+/quotes/  p=3045  /quotes/gibbon-translation/  301!
+/quotes/  p=3047  /quotes/wright-charles-darwin/  301!
+/quotes/  p=3049  /quotes/simler-humorous/  301!
+/quotes/  p=3052  /quotes/gibbon-probability/  301!
+/quotes/  p=3055  /quotes/elster-contrast-effect/  301!
+/quotes/  p=3057  /quotes/schelling-bias-towards-the-future/  301!
+/quotes/  p=3062  /quotes/clinton-artificial-intelligence/  301!
+/quotes/  p=3065  /quotes/chesterton-ideals/  301!
+/quotes/  p=3070  /quotes/armstrong-forecasting/  301!
+/quotes/  p=3072  /quotes/mill-optimism/  301!
+/quotes/  p=3074  /quotes/lilla-expressive-function-of-politics/  301!
+/quotes/  p=3079  /quotes/melville-philosophy/  301!
+/quotes/  p=3081  /quotes/smith-luggage/  301!
+/quotes/  p=3086  /quotes/hardy-bertrand-russell/  301!
+/quotes/  p=3088  /quotes/hubbard-epistemics/  301!
+/quotes/  p=3090  /quotes/library-deep-work/  301!
+/quotes/  p=3095  /quotes/nietzsche-deep-work/  301!
+/quotes/  p=3097  /quotes/pascal-philosophy/  301!
+/quotes/  p=3102  /quotes/smith-human-nature/  301!
+/quotes/  p=3105  /quotes/mill-humor/  301!
+/quotes/  p=3107  /quotes/alexander-memetics/  301!
+/quotes/  p=3109  /quotes/recorde-mathematics/  301!
+/quotes/  p=3111  /quotes/truffaut-art/  301!
+/quotes/  p=3113  /quotes/sumner-expert/  301!
+/quotes/  p=3115  /quotes/dolgov-philosophy/  301!
+/quotes/  p=3117  /quotes/drexler-expertise/  301!
+/quotes/  p=3123  /quotes/welles-beauty-contest/  301!
+/quotes/  p=3125  /quotes/smith-humorous/  301!
+/quotes/  p=3127  /quotes/shryock-johann-wolfgang-von-goethe/  301!
+/quotes/  p=3133  /quotes/garfinkel-cost/  301!
+/quotes/  p=3135  /quotes/nisbett-discrimination/  301!
+/quotes/  p=3138  /quotes/tetlock-balance/  301!
+/quotes/  p=3140  /quotes/bennett-time-management/  301!
+/quotes/  p=3143  /quotes/mcgrath-power/  301!
+/quotes/  p=3146  /quotes/lewis-copernican-principle/  301!
+/quotes/  p=3150  /quotes/chekhov-love/  301!
+/quotes/  p=3152  /quotes/aaronson-humorous/  301!
+/quotes/  p=3154  /quotes/dolgov-capitalism/  301!
+/quotes/  p=3156  /quotes/schwager-anecdotes/  301!
+/quotes/  p=3158  /quotes/ferguson-asceticism/  301!
+/quotes/  p=3161  /quotes/boswell-englishmen/  301!
+/quotes/  p=3167  /quotes/tamura-brevity-of-life/  301!
+/quotes/  p=3169  /quotes/nin-living-life-to-the-fullest/  301!
+/quotes/  p=3173  /quotes/kahneman-social-science/  301!
+/quotes/  p=3175  /quotes/lewis-amos-tversky/  301!
+/quotes/  p=3178  /quotes/byron-cycles/  301!
+/quotes/  p=3181  /quotes/wright-misanthropy/  301!
+/quotes/  p=3183  /quotes/krishnamurti-confidence/  301!
+/quotes/  p=3185  /quotes/buswell-gautama-buddha/  301!
+/quotes/  p=3187  /quotes/radelet-humorous/  301!
+/quotes/  p=3190  /quotes/thaler-economics-2/  301!
+/quotes/  p=3192  /quotes/sowell-root-causes/  301!
+/quotes/  p=3195  /quotes/pinker-consequentialism/  301!
+/quotes/  p=3197  /quotes/sunstein-amos-tversky/  301!
+/quotes/  p=3204  /quotes/stephen-dissent/  301!
+/quotes/  p=3206  /quotes/halpern-ability/  301!
+/quotes/  p=3208  /quotes/sumner-foreign-aid/  301!
+/quotes/  p=3220  /quotes/craig-abstract-objects/  301!
+/quotes/  p=3223  /quotes/stephens-davidowitz-digital-truth-serum/  301!
+/quotes/  p=3225  /quotes/jefferson-intelligence/  301!
+/quotes/  p=3229  /quotes/pepys-bias-towards-the-new/  301!
+/quotes/  p=3231  /quotes/lee-genetic-engineering/  301!
+/quotes/  p=3236  /quotes/elster-bias-towards-the-new/  301!
+/quotes/  p=3238  /quotes/escohotado-drugs-2/  301!
+/quotes/  p=3244  /quotes/thompson-suicide/  301!
+/quotes/  p=3246  /quotes/kurzban-self-deception/  301!
+/quotes/  p=3249  /quotes/tynan-cruises/  301!
+/quotes/  p=3255  /quotes/frankfurt-bullshit/  301!
+/quotes/  p=3259  /quotes/malcolm-affection/  301!
+/quotes/  p=3261  /quotes/monk-paul-engelmann/  301!
+/quotes/  p=3264  /quotes/behn-fable/  301!
+/quotes/  p=3267  /quotes/wolf-ad-hominem-arguments/  301!
+/quotes/  p=3286  /quotes/tetlock-forecasting/  301!
+/quotes/  p=3288  /quotes/kerouac-interesting-people/  301!
+/quotes/  p=3292  /quotes/gibbon-endings/  301!
+/quotes/  p=3294  /quotes/chalmers-consciousness-2/  301!
+/quotes/  p=3296  /quotes/sumpter-football/  301!
+/quotes/  p=3303  /quotes/latham-pain/  301!
+/quotes/  p=3305  /quotes/hargittai-humorous/  301!
+/quotes/  p=3309  /quotes/pinker-root-causes/  301!
+/quotes/  p=3311  /quotes/white-anarchy/  301!
+/quotes/  p=3315  /quotes/pinker-ideology/  301!
+/quotes/  p=3319  /quotes/friedman-crisis/  301!
+/quotes/  p=3322  /quotes/stephens-davidowitz-cynicism/  301!
+/quotes/  p=3325  /quotes/helmut-reich-equal-consideration-of-interests/  301!
+/quotes/  p=3328  /quotes/williams-depressive-realism/  301!
+/quotes/  p=3332  /quotes/jason-cowley-freedom/  301!
+/quotes/  p=3335  /quotes/wootton-scientific-worldview/  301!
+/quotes/  p=3337  /quotes/cicero-leisure/  301!
+/quotes/  p=3342  /quotes/pepys-happiness/  301!
+/quotes/  p=3344  /quotes/pinker-progress/  301!
+/quotes/  p=3348  /quotes/elster-art/  301!
+/quotes/  p=3351  /quotes/macintyre-cold-war/  301!
+/quotes/  p=3403  /quotes/martinez-intelligence/  301!
+/quotes/  p=3405  /quotes/orwell-fat/  301!
+/quotes/  p=3409  /quotes/caplan-betting/  301!
+/quotes/  p=3412  /quotes/andreas-humorous/  301!
+/quotes/  p=3452  /quotes/helmut-reich-human-nature/  301!
+/quotes/  p=3457  /quotes/rosling-calculation/  301!
+/quotes/  p=3464  /quotes/alexander-steven-pinker/  301!
+/quotes/  p=3467  /quotes/nozick-metaphysics/  301!
+/quotes/  p=3472  /quotes/broad-aging/  301!
+/quotes/  p=3475  /quotes/hoffman-cold-war/  301!
+/quotes/  p=3480  /quotes/williams-dublin/  301!
+/quotes/  p=3483  /quotes/williams-aging/  301!
+/quotes/  p=3485  /quotes/moore-attention/  301!
+/quotes/  p=3490  /quotes/mackay-anecdotes/  301!
+/quotes/  p=3494  /quotes/wu-advertising/  301!
+/quotes/  p=3497  /quotes/hunt-dialectics/  301!
+/quotes/  p=3501  /quotes/kevles-eugenics/  301!
+/quotes/  p=3505  /quotes/funder-capitalism/  301!
+/quotes/  p=3510  /quotes/hardy-epistemology/  301!
+/quotes/  p=3512  /quotes/odriscoll-private-property/  301!
+/quotes/  p=3515  /quotes/gamow-calculus/  301!
+/quotes/  p=3521  /quotes/funder-eastern-germany/  301!
+/quotes/  p=3524  /quotes/keyes-disability/  301!
+/quotes/  p=3527  /quotes/kandel-auguste-rodin/  301!
+/quotes/  p=3534  /quotes/schelling-john-strachey/  301!
+/quotes/  p=3538  /quotes/greene-ethics/  301!
+/quotes/  p=3541  /quotes/walker-anecdotes/  301!
+/quotes/  p=3543  /quotes/nozick-capitalism/  301!
+/quotes/  p=3547  /quotes/broad-autobiographical/  301!
+/quotes/  p=3550  /quotes/simler-institutional-reform/  301!
+/quotes/  p=3555  /quotes/sagan-intelligence-explosion/  301!
+/quotes/  p=3557  /quotes/mill-disease/  301!
+/quotes/  p=3564  /quotes/llach-learning/  301!
+/quotes/  p=3567  /quotes/llach-zero-sum/  301!
+/quotes/  p=3583  /quotes/lucas-economic-growth/  301!
+/quotes/  p=3590  /quotes/thorp-anchoring/  301!
+/quotes/  p=3592  /quotes/broad-humorous-2/  301!
+/quotes/  p=3598  /quotes/keller-curiosity/  301!
+/quotes/  p=3601  /quotes/bentham-cats/  301!
+/quotes/  p=3603  /quotes/mencken-happiness/  301!
+/quotes/  p=3606  /quotes/bostrom-cosmic-endowment/  301!
+/quotes/  p=3611  /quotes/elster-democracy/  301!
+/quotes/  p=3614  /quotes/alifano-humorous/  301!
+/quotes/  p=3620  /quotes/mill-cynicism/  301!
+/quotes/  p=3630  /quotes/cade-metz-planning/  301!
+/quotes/  p=3632  /quotes/thorp-karl-pearson/  301!
+/quotes/  p=3636  /quotes/cousins-cuban-missile-crisis/  301!
+/quotes/  p=3641  /quotes/landsburg-alfred-marshall/  301!
+/quotes/  p=3644  /quotes/kant-betting/  301!
+/quotes/  p=3649  /quotes/van-helmont-betting/  301!
+/quotes/  p=3652  /quotes/hanson-betting/  301!
+/quotes/  p=3657  /quotes/hanson-betting-2/  301!
+/quotes/  p=3661  /quotes/ng-cardinal-utility/  301!
+/quotes/  p=3664  /quotes/miller-virtue-signaling/  301!
+/quotes/  p=3666  /quotes/davis-behavioral-genetics/  301!
+/quotes/  p=3668  /quotes/aaronson-appeal-to-authority/  301!
+/quotes/  p=3670  /quotes/ulam-john-von-neumann/  301!
+/quotes/  p=3673  /quotes/kerouac-cravings/  301!
+/quotes/  p=3676  /quotes/huemer-existential-risk/  301!
+/quotes/  p=3678  /quotes/poundstone-future-of-humanity/  301!
+/quotes/  p=3681  /quotes/landsburg-free-trade/  301!
+/quotes/  p=3691  /quotes/ord-epistemics/  301!
+/quotes/  p=3695  /quotes/schopenhauer-compassion/  301!
+/quotes/  p=3697  /quotes/bostrom-common-sense-morality/  301!
+/quotes/  p=3701  /quotes/russell-atom-bomb/  301!
+/quotes/  p=3705  /quotes/russell-brinkmanship/  301!
+/quotes/  p=3708  /quotes/boswell-epistemics/  301!
+/quotes/  p=3712  /quotes/malthus-hinge-of-history/  301!
+/quotes/  p=3760  /quotes/funder-foreknowledge/  301!
+/quotes/  p=3854  /quotes/blasi-galapagos-islands/  301!
+/quotes/  p=3882  /quotes/sweigart-humorous/  301!
+/quotes/  p=3885  /quotes/thaler-economics/  301!
+/quotes/  p=3900  /quotes/burton-favorite/  301!
+/quotes/  p=3904  /quotes/chappell-science-ethics-deicision-making-is-ought-gap/  301!
+/quotes/  p=3912  /quotes/mcmahan-human-extinction/  301!
+/quotes/  p=3917  /quotes/kagan-animal-suffering/  301!
+/quotes/  p=3919  /quotes/kennedy-bernhard-von-bulow/  301!
+/quotes/  p=3925  /quotes/fried-repugnant-conclusion/  301!
+/quotes/  p=3927  /quotes/sen-humorous/  301!
+/quotes/  p=3930  /quotes/escohotado-drugs/  301!
+/quotes/  p=3933  /quotes/clauset-power-laws/  301!
+/quotes/  p=3937  /quotes/morton-dragutin-dimitrijevic/  301!
+/quotes/  p=3940  /quotes/lugones-disagreement/  301!
+/quotes/  p=3953  /quotes/pinker-status/  301!
+/quotes/  p=3957  /quotes/harden-genetics/  301!
+/quotes/  p=3978  /quotes/steinberg-encyclopedias/  301!
+/quotes/  p=3980  /quotes/leonhardt-amos-tversky/  301!
+/quotes/  p=4874  /quotes/borges-infinite/  301!
+/quotes/  p=4987  /quotes/broad-left-wing/  301!
+/quotes/  p=5002  /quotes/broad-birthday/  301!
+/quotes/  p=5016  /quotes/borges-argentina/  301!
+/quotes/  p=5022  /quotes/borges-narration/  301!
+/quotes/  p=5026  /quotes/slonimsky-humorous/  301!
+
+# Blog posts with renamed slugs
+/blog/android-apps-i-like/  /notes/android-apps-i-use/  301
+/blog/anki-decks-by-lesswrong-users/  /notes/anki-decks-from-the-lesswrong-community/  301
+/blog/bibliography-for-a-course-on-effective-altruism/  /notes/effective-altruism-syllabi/  301
+/blog/gamified-learning-a-list-of-useful-sites/  /notes/gamified-learning-a-list-of-good-resources/  301
+/blog/good-essays-by-luke-muehlhauser-no-longer-online/  /notes/good-essays-by-luke-muehlhauser-no-longer-available-at-lukeprog-com/  301
+/blog/interview-with-gregory-lewis/  /notes/how-can-doctors-do-the-most-good-an-interview-with-dr-gregory-lewis/  301
+/blog/summary-of-clear-and-simple-as-the-truth/  /notes/summary-of-clear-and-simple-as-the-truth-by-francis-noe-l-thomas-and-mark-turner/  301
+/blog/summary-of-the-power-of-full-engagement/  /notes/summary-of-the-power-of-full-engagement-by-jim-loehr-and-tony-schwartz/  301
+/blog/what-to-do-if-your-thinkpad-t520-wont-power-on/  /notes/what-to-do-if-your-thinkpad-t520-won-t-power-on/  301
+/blog/writings-on-earning-to-give-an-annotated-bibliography/  /notes/earning-to-give-an-annotated-bibliography/  301
+
+# Blog categories → Hugo tags
+/blog/category/anki/  /tags/anki/  301
+/blog/category/bibliographies/  /tags/bibliographies/  301
+/blog/category/books/  /tags/books/  301
+/blog/category/effective-altruism/  /tags/effective-altruism/  301
+/blog/category/film/  /tags/film/  301
+/blog/category/learning/  /tags/learning/  301
+/blog/category/longtermism/  /tags/longtermism/  301
+/blog/category/minimalism/  /tags/minimalism/  301
+/blog/category/personal/  /tags/personal/  301
+/blog/category/philosophy/  /tags/philosophy/  301
+/blog/category/productivity/  /tags/productivity/  301
+/blog/category/self-help/  /tags/self-help/  301
+/blog/category/things-i-like/  /tags/things-i-like/  301
+/blog/category/translations/  /tags/translation/  301
+/blog/category/writing/  /tags/writing/  301
+/blog/category/writings-by-others/  /tags/writings-by-others/  301
+/blog/category/misc/  /notes/  301
+/blog/category/announcements/  /notes/  301
+
+# Blog pages and misc redirects
+/blog/about/  /about/  301
+/blog/rialta/  /notes/my-1996-winnebago-rialta-is-for-sale/  301
+/blog/tag/*  /notes/  301
+/blog/author/*  /notes/  301
+/blog/page/*  /notes/  301
+/contact/  /contact/  301
+
+# Preserve /notes/contact/ since org links still point there
+/notes/contact/  /contact/  301
+
+# /docs/ -> /works/ redirects
+# Old PDF URLs from the WordPress era redirect to corresponding work pages
+/docs/Aaltola - Animal ethics and the argument from absurdity.pdf  /works/aaltola-2010-animal-ethics-argument/  301
+/docs/Aron et al - The experimental generation of interpersonal closeness.pdf  /works/aron-1997-experimental-generation-interpersonal/  301
+/docs/Banerjee - A simple model of herd behavior.pdf  /works/banerjee-1992-simple-model-herd/  301
+/docs/Baumann - Counting on numbers.pdf  /works/baumann-2009-counting-numbers/  301
+/docs/Bell - A review of recent publications on animal welfare issues for table egg laying hens.pdf  /works/bell-2005-review-recent-publications/  301
+/docs/Benatar - Why the naive argument against moral vegetarianism really is naive.pdf  /works/benatar-2001-why-naive-argument/  301
+/docs/Bly - The copywriter's handbook.pdf  /works/bly-2006-copywriter-handbook-stepbystep/  301
+/docs/Borde & Chaumeton - A panorama of American film noir.pdf  /works/borde-1979-panorama-film-noir/  301
+/docs/Bostrom - Are we living in a computer simulation.pdf  /works/bostrom-2005-simulation-argument-reply/  301
+/docs/Bostrom - Infinite ethics.pdf  /works/bostrom-2016-infinite-ethics/  301
+/docs/Bostrom - The future of humanity.pdf  /works/bostrom-2009-future-humanity/  301
+/docs/Bovenkerk et al - To act or not to act.pdf  /works/bovenkerk-2003-act-not-act/  301
+/docs/Broad - Five types of ethical theory.pdf  /works/broad-1930-five-types-ethical/  301
+/docs/Broad1926PhilosophyFrancisBacon.pdf  /works/broad-1926-philosophy-francis-bacon/  301
+/docs/Broad1931ReviewWrightMiracle.pdf  /works/broad-1931-review-wright-miracle/  301
+/docs/Broad1942BerkeleyArgumentMaterial.pdf  /works/broad-1942-berkeley-argument-material/  301
+/docs/Broad1942CertainFeaturesMoorea.pdf  /works/broad-1942-certain-features-moore/  301
+/docs/Broad1953TranslatorPreface.pdf  /works/broad-1953-translator-preface/  301
+/docs/Broad1956HalfcenturyPsychicalResearch.pdf  /works/broad-1956-halfcentury-psychical-research/  301
+/docs/Broad1959ReviewNormanMalcolm.pdf  /works/broad-1959-review-norman-malcolm/  301
+/docs/Broad1964MemoirAxelHagerstrom.pdf  /works/broad-1964-memoir-axel-hagerstrom/  301
+/docs/Broad1967NotionPrecognition.pdf  /works/broad-1967-notion-precognition/  301
+/docs/Broad1978KantIntroduction.pdf  /works/broad-1978-kant-introduction/  301
+/docs/Bruers - The predation and procreation problems.pdf  /works/bruers-2015-predation-procreation-problems/  301
+/docs/Burns - The feeling good handbook.pdf  /works/burns-1999-feeling-good-handbook/  301
+/docs/Cabane - The charisma myth.pdf  /works/cabane-2012-charisma-myth-how/  301
+/docs/Carey - The effective altruism handbook.pdf  /works/carey-2015-effective-altruism-handbook/  301
+/docs/Carpendale - Welfare biology as an extension of biology.pdf  /works/carpendale-2015-welfare-biology-extension/  301
+/docs/Clarke & Ng - Population dynamics and animal welfare.pdf  /works/clarke-2006-population-dynamics-animal/  301
+/docs/Cookson - UK to test vaccines on volunteers deliberately infected with Covid-19.pdf  /works/cookson-2020-uktest-vaccines/  301
+/docs/Corbin - What factors influence how a state will vote on animal welfare ballot initiatives.pdf  /works/corbin-2011-what-factors-influence/  301
+/docs/Covey - The 7 habits of highly effective people.pdf  /works/covey-seven-habits-highly/  301
+/docs/Cowen & Parfit - Against the social discount rate.pdf  /works/cowen-1992-social-discount-rate/  301
+/docs/Cowen - Policing nature.pdf  /works/cowen-2003-policing-nature/  301
+/docs/Cunha - If natural entities have intrinsic value, should we then abstain from helping animals who are victims of natural processes.pdf  /works/cunha-2015-if-natural-entities/  301
+/docs/Dawkins - God's utility function.pdf  /works/dawkins-1995-god-utility-function/  301
+/docs/De Vany & Walls - Uncertainty in the movie industry.pdf  /works/de-vany-1999-uncertainty-movie-industry/  301
+/docs/Doherty - Informational cascades in financial markets.pdf  /works/doherty-2018-informational-cascades-financial/  301
+/docs/Donaldson & Kymlicka - A defense of animal citizens and sovereigns.pdf  /works/donaldson-2013-defense-animal-citizens/  301
+/docs/Donaldson & Kymlicka - Zoopolis.pdf  /works/donaldson-2011-zoopolis-political-theory/  301
+/docs/Dorado - Ethical interventions in the wild.pdf  /works/dorado-2015-ethical-interventions-wild/  301
+/docs/Faria & Paez - Animals in need.pdf  /works/faria-2015-animals-need-problem/  301
+/docs/Faria - Disentangling obligations of assistance.pdf  /works/faria-2015-disentangling-obligations-assistance/  301
+/docs/Faria - Making a difference on behalf of animals living in the wild.pdf  /works/faria-2015-making-difference-behalf/  301
+/docs/Gould - Nonmoral nature.pdf  /works/gould-1982-nonmoral-nature/  301
+/docs/Greaves - Cluelessness.pdf  /works/greaves-2016-cluelessness/  301
+/docs/Hadley - The duty to aid animals in dire need.pdf  /works/hadley-2006-duty-to-aid/  301
+/docs/Hagerstrom1953InquiriesNatureLaw.pdf  /works/hagerstrom-1953-inquiries-nature-law/  301
+/docs/Hettinger - Valuing predation in Rolston's environmental ethics.pdf  /works/hettinger-1994-valuing-predation-rolston/  301
+/docs/Heylen - Why is there something rather than nothing.pdf  /works/heylen-2017-why-there-something/  301
+/docs/Hills - Utilitarianism, contractualism and demandingness.pdf  /works/hills-2010-utilitarianism-contractualism-demandingness/  301
+/docs/Horta - Debunking the idyllic view of natural processes.pdf  /works/horta-2010-debunking-idyllic-view/  301
+/docs/Horta - Disvalue in nature and intervention.pdf  /works/horta-2010-disvalue-nature-intervention/  301
+/docs/Horta - The ethics of the ecology of fear against the nonspeciesist paradigm.pdf  /works/horta-2010-ethics-ecology-fear/  301
+/docs/Horta - The problem of evil in nature- evolutionary bases of the prevalence of disvalue.pdf  /works/horta-2015-problem-evil-nature/  301
+/docs/Horta - Zoopolis, intervention, and the state of nature.pdf  /works/horta-2013-zoopolis-intervention-state/  301
+/docs/Hutchins & Wemmer - Wildlife conservation and animal rights.pdf  /works/hutchins-1987-wildlife-conservation-animal/  301
+/docs/Kagan - The limits of well-being.pdf  /works/kagan-2009-well-being-as/  301
+/docs/Kahane - Feeling pain for the very first time.pdf  /works/kahane-2010-feeling-pain-very/  301
+/docs/Kaufman - The personal MBA.pdf  /works/kaufman-2010-personal-mbaworldclass/  301
+/docs/Keeling - McTaggart's Nature of existence, vol. I, comments and amendments.pdf  /works/keeling-1938-mc-taggart-nature-existence/  301
+/docs/Kirkwood & Sainsbury - Ethics of interventions for the welfare of free-living animals.pdf  /works/kirkwood-1996-ethics-interventions-welfare/  301
+/docs/Kuykendall - Selected newspaper coverage of the 2008 California Proposition 2.pdf  /works/kuykendall-2012-selected-newspaper-coverage/  301
+/docs/Landesman - When to terminate a charitable trust.pdf  /works/landesman-1995-when-terminate-charitable/  301
+/docs/Lee - Market crashes and informational avalanches.pdf  /works/lee-1998-market-crashes-informational/  301
+/docs/Leslie - Review of Rundle's Why there is something rather than nothing.pdf  /works/leslie-2009-why-there-something/  301
+/docs/Lovvorn & Perry - California Proposition 2.pdf  /works/lovvorn-2008-california-proposition-watershed/  301
+/docs/Lowe - Why is there anything at all.pdf  /works/lowe-1996-why-there-anything/  301
+/docs/Lusk - The effect of Proposition 2 on the demand for eggs in California.pdf  /works/lusk-2010-effect-proposition-demand/  301
+/docs/MacFarquhar - How to be good.pdf  /works/mac-farquhar-2011-how-be-good/  301
+/docs/Mannino - Humanitarian intervention in nature.pdf  /works/mannino-2015-humanitarian-intervention-nature/  301
+/docs/McTaggart - A commentary on Hegel's Logic.pdf  /works/mc-taggart-1910-commentary-hegel-logic/  301
+/docs/McTaggart - Critical notice of A. S. Pringle-Pattison, The idea of immortality.pdf  /works/mc-taggart-1907-critical-notice-ormond/  301
+/docs/McTaggart - Critical notice of A. T. Ormond, Concepts of philosophy.pdf  /works/mc-taggart-1907-critical-notice-ormond/  301
+/docs/McTaggart - Critical notice of B. Bosanquet, The principle of individuation and value.pdf  /works/mc-taggart-1907-critical-notice-ormond/  301
+/docs/McTaggart - Critical notice of G. H. Howison, The limits of evolution and other essays illustrating the metaphysical theory of personal idealism.pdf  /works/mc-taggart-1902-critical-notice-howison/  301
+/docs/McTaggart - Critical notice of J. Royce, The world and the individual, first series.pdf  /works/mc-taggart-1907-critical-notice-ormond/  301
+/docs/McTaggart - Critical notice of J. Royce, The world and the individual, second series.pdf  /works/mc-taggart-1907-critical-notice-ormond/  301
+/docs/McTaggart - Critical notice of W. James, Pragmatism.pdf  /works/mc-taggart-1907-critical-notice-ormond/  301
+/docs/McTaggart - Dare to be wise.pdf  /works/mc-taggart-1910-dare-be-wise/  301
+/docs/McTaggart - Hegel's theory of the categories of quantity.pdf  /works/mc-taggart-1897-hegel-treatment-categories/  301
+/docs/McTaggart - Hegel's treatment of the categories of the idea.pdf  /works/mc-taggart-1902-hegel-treatment-categories/  301
+/docs/McTaggart - Hegel's treatment of the categories of the objective notion.pdf  /works/mc-taggart-1902-hegel-treatment-categories/  301
+/docs/McTaggart - Hegel's treatment of the categories of the subjective notion (I).pdf  /works/mc-taggart-1902-hegel-treatment-categories/  301
+/docs/McTaggart - Hegel's treatment of the categories of the subjective notion (II).pdf  /works/mc-taggart-1902-hegel-treatment-categories/  301
+/docs/McTaggart - Human immortality and pre-existence.pdf  /works/mc-taggart-1916-human-immortality-pre-existence/  301
+/docs/McTaggart - Immortality and monadistic idealism.pdf  /works/mc-taggart-1921-immortality-monadistic-idealism/  301
+/docs/McTaggart - Review of A. Phalén, Die Erkenntnisproblem in Hegels Philosophie.pdf  /works/mc-taggart-1913-review-adolf-phalen/  301
+/docs/McTaggart - Review of Aspects of Vedanta.pdf  /works/mc-taggart-1904-review-aspects-vedanta/  301
+/docs/McTaggart - Review of E. Westermarck, The origin and development of the moral ideas.pdf  /works/mc-taggart-1903-review-tennant-origin/  301
+/docs/McTaggart - Review of F. R. Tennant, The origin and propagation of sin.pdf  /works/mc-taggart-1903-review-tennant-origin/  301
+/docs/McTaggart - Review of G. Lasson (ed.), G. W. F. Hegel, Grundlinien der Philosophie des Rechts.pdf  /works/mc-taggart-1912-review-georg-lasson/  301
+/docs/McTaggart - Review of G. Noël, La logique de Hegel.pdf  /works/mc-taggart-1895-review-wallace-hegel/  301
+/docs/McTaggart - Review of H. H. Joachim, A study of the ethics of Spinoza.pdf  /works/mc-taggart-1902-review-joachim-study/  301
+/docs/McTaggart - Review of J. G. Hibben, Hegel's Logic.pdf  /works/mc-taggart-1910-commentary-hegel-logic/  301
+/docs/McTaggart - Review of J. M. Wilson, Two sermons on some of the mutual influences of theology and the natural sciences.pdf  /works/mc-taggart-1900-review-wilson-two/  301
+/docs/McTaggart - Review of J. Watson, Christianity and idealism.pdf  /works/mc-taggart-1897-review-watson-christianity/  301
+/docs/McTaggart - Review of R. Adamson, The development of modern philosophy.pdf  /works/mc-taggart-1904-review-robert-adamson/  301
+/docs/McTaggart - Review of T. Mackay, A plea for liberty.pdf  /works/mc-taggart-1892-review-thomas-mackay/  301
+/docs/McTaggart - Review of W. R. Inge, Christian mysticism.pdf  /works/mc-taggart-1900-review-inge-christian/  301
+/docs/McTaggart - Review of W. Wallace, Hegel's philosophy of mind.pdf  /works/mc-taggart-1895-review-wallace-hegel/  301
+/docs/McTaggart - Review of X. Léon, Fichte et son temps.pdf  /works/mc-taggart-1925-review-xavier-leon/  301
+/docs/McTaggart - Some dogmas of religion.pdf  /works/mc-taggart-1906-dogmas-religion/  301
+/docs/McTaggart - Studies in hegelian cosmology.pdf  /works/mc-taggart-1901-studies-hegelian-cosmology/  301
+/docs/McTaggart - Studies in hegelian dialectic.pdf  /works/mc-taggart-1896-studies-hegelian-dialectic/  301
+/docs/McTaggart - The changes of method in Hegel's dialectic (I).pdf  /works/mc-taggart-1892-changes-method-hegela/  301
+/docs/McTaggart - The changes of method in Hegel's dialectic (II).pdf  /works/mc-taggart-1892-changes-method-hegela/  301
+/docs/McTaggart - The further determination of the absolute.pdf  /works/mc-taggart-1893-further-determination-absolute/  301
+/docs/McTaggart - The meaning of causality.pdf  /works/mc-taggart-1915-meaning-causality/  301
+/docs/McTaggart - The nature of existence 1.pdf  /works/mc-taggart-1921-nature-existence/  301
+/docs/McTaggart - The nature of existence 2.pdf  /works/mc-taggart-1921-nature-existence/  301
+/docs/McTaggart - The necessity of dogma.pdf  /works/mc-taggart-1895-necessity-dogma/  301
+/docs/McTaggart - The relation of time and eternity.pdf  /works/mc-taggart-1909-relation-time-eternity/  301
+/docs/McTaggart - The unreality of time.pdf  /works/mc-taggart-1908-unreality-time/  301
+/docs/McTaggart - Time and the Hegelian dialectic (I).pdf  /works/mc-taggart-1894-time-hegelian-dialectic/  301
+/docs/McTaggart - Time and the Hegelian dialectic (II).pdf  /works/mc-taggart-1894-time-hegelian-dialectic/  301
+/docs/Morris & Thornhill - Animal liberationist responses to non-anthropogenic animal suffering.pdf  /works/thornhill-2006-animal-liberationist-responses/  301
+/docs/Mosquera - The harm they inflict when values conflict.pdf  /works/mosquera-2015-harm-they-inflict/  301
+/docs/Musschenga - Naturalness.pdf  /works/musschenga-2002-naturalness-animal-welfare/  301
+/docs/Naess - Should we try to relieve clear cases of suffering in nature.pdf  /works/naess-1991-should-we-try/  301
+/docs/Newman, Gage & McMahon - Fiscal and economics effects of Proposition 2.pdf  /works/newman-2008-fiscal-economic-effects/  301
+/docs/Newport - So good they can't ignore you.pdf  /works/newport-2012-good-they-can/  301
+/docs/Ng - Towards welfare biology.pdf  /works/ng-1995-welfare-biology-evolutionary/  301
+/docs/Paez - Intuitions gone astray.pdf  /works/paez-2015-intuitions-gone-astray/  301
+/docs/Paez - Refusing help and inflicting harm.pdf  /works/paez-2015-refusing-help-inflicting/  301
+/docs/Palmer - Against the view that we are normally required to assist animals.pdf  /works/palmer-2015-view-that-we/  301
+/docs/Parfit  Persons, bodies, and human beings.pdf  /works/parfit-2007-persons-bodies-human/  301
+/docs/Parfit - A reply to Sterba.pdf  /works/parfit-1987-reply-sterba/  301
+/docs/Parfit - A response.pdf  /works/parfit-1987-response/  301
+/docs/Parfit - Acts and outcomes.pdf  /works/parfit-1996-acts-outcomes-reply/  301
+/docs/Parfit - An attack on the social discount rate.pdf  /works/parfit-1981-attack-social-discount/  301
+/docs/Parfit - Another defence of the priority view.pdf  /works/parfit-2012-another-defence-priority/  301
+/docs/Parfit - Bombs and coconuts, or practical irrationality.pdf  /works/parfit-2001-bombs-coconuts-rational/  301
+/docs/Parfit - Comments.pdf  /works/parfit-1986-comments/  301
+/docs/Parfit - Conflicting reasons.pdf  /works/parfit-2016-conflicting-reasons/  301
+/docs/Parfit - Correspondence 2.pdf  /works/parfit-1981-correspondence/  301
+/docs/Parfit - Correspondence.pdf  /works/parfit-1981-correspondence/  301
+/docs/Parfit - Divided minds and the nature of persons.pdf  /works/parfit-1987-divided-minds-nature/  301
+/docs/Parfit - Equality and priority.pdf  /works/parfit-1991-equality-priority/  301
+/docs/Parfit - Equality or priority.pdf  /works/parfit-1991-equality-priority/  301
+/docs/Parfit - Experiences, subjects and conceptual schemes.pdf  /works/parfit-1999-experiences-subjects-conceptual/  301
+/docs/Parfit - Five mistakes in moral mathematics.pdf  /works/parfit-1984-five-mistakes-moral/  301
+/docs/Parfit - Future generations.pdf  /works/parfit-1982-future-generations-further/  301
+/docs/Parfit - How can we avoid the Repugnant Conclusion.pdf  /works/parfit-2016-can-we-avoid/  301
+/docs/Parfit - Innumerate ethics.pdf  /works/parfit-1978-innumerate-ethics/  301
+/docs/Parfit - Is common-sense morality self-defeating.pdf  /works/parfit-1979-commonsense-morality-selfdefeating/  301
+/docs/Parfit - Is personal identity what matters.pdf  /works/parfit-1982-personal-identity-rationality/  301
+/docs/Parfit - Isaiah Berlin.pdf  /works/parfit-1991-isaiah-berlin/  301
+/docs/Parfit - Justifiability to each person.pdf  /works/parfit-2003-justifiability-each-person/  301
+/docs/Parfit - Kant's argument for his formula of universal law.pdf  /works/parfit-2006-kant-arguments-his/  301
+/docs/Parfit - Later selves and moral principles.pdf  /works/parfit-1973-later-selves-moral/  301
+/docs/Parfit - Like pebbles.pdf  /works/parfit-1963-like-pebbles/  301
+/docs/Parfit - Normativity.pdf  /works/parfit-2006-normativity/  301
+/docs/Parfit - On the importance of self-identity.pdf  /works/parfit-1982-personal-identity-rationality/  301
+/docs/Parfit - Overpopulation and the quality of life.pdf  /works/parfit-2004-overpopulation-quality-life/  301
+/docs/Parfit - Paul Seabright.pdf  /works/parfit-1993-paul-seabright-pluralism/  301
+/docs/Parfit - Personal and omnipersonal duties.pdf  /works/parfit-2016-personal-omnipersonal-duties/  301
+/docs/Parfit - Personal identity and rationality.pdf  /works/parfit-1982-personal-identity-rationality/  301
+/docs/Parfit - Personal identity.pdf  /works/parfit-1982-personal-identity-rationality/  301
+/docs/Parfit - Persons, bodies, and human beings.pdf  /works/parfit-2007-persons-bodies-human/  301
+/docs/Parfit - Prudence, morality, and the prisoner's dilemma.pdf  /works/parfit-1979-prudence-morality-prisoner/  301
+/docs/Parfit - Rationality and reasons.pdf  /works/parfit-2001-rationality-reasons/  301
+/docs/Parfit - Rationality and time.pdf  /works/parfit-1984-rationality-time/  301
+/docs/Parfit - Reasons and motivation.pdf  /works/parfit-1997-reasons-motivation/  301
+/docs/Parfit - Reasons and persons.pdf  /works/parfit-1984-reasons-persons/  301
+/docs/Parfit - Responses.pdf  /works/parfit-2017-responses/  301
+/docs/Parfit - Rights, interests, and possible people.pdf  /works/parfit-1976-rights-interests-possible/  301
+/docs/Parfit - Summary of discussion.pdf  /works/parfit-1982-summary-discussion/  301
+/docs/Parfit - The Eton College chronicle.pdf  /works/parfit-1964-eton-college-chronicle/  301
+/docs/Parfit - The fish.pdf  /works/parfit-1964-fish/  301
+/docs/Parfit - The indeterminacy of identity.pdf  /works/parfit-1993-indeterminacy-identity-reply/  301
+/docs/Parfit - The puzzle of reality.pdf  /works/parfit-1992-puzzle-reality-why/  301
+/docs/Parfit - The unimportance of identity.pdf  /works/parfit-1995-unimportance-identity/  301
+/docs/Parfit - We are not human beings.pdf  /works/parfit-1984-how-both-human/  301
+/docs/Parfit - What we could rationally will.pdf  /works/parfit-2004-what-we-could/  301
+/docs/Parfit - What we together do.pdf  /works/parfit-1988-what-we-together/  301
+/docs/Parfit - Who do you think you are.pdf  /works/parfit-1992-who-you-think/  301
+/docs/Parfit - Why anything.pdf  /works/parfit-1998-why-anything-why/  301
+/docs/Parfit - Why does the universe exist.pdf  /works/parfit-1991-why-does-universe/  301
+/docs/Parfit1976DoingBestOur.pdf  /works/parfit-1976-doing-best-our/  301
+/docs/Parfit1976LewisPerryWhat.pdf  /works/parfit-1976-lewis-perry-what/  301
+/docs/Parfit1983EnergyPolicyFurther.pdf  /works/parfit-1983-energy-policy-further/  301
+/docs/Parfit1983EnergyPolicyFurthera.pdf  /works/parfit-1983-energy-policy-furthera/  301
+/docs/Parfit2021ImprovingScanlonContractualism.pdf  /works/parfit-2021-improving-scanlon-s/  301
+/docs/Pearce - A welfare state for elephants.pdf  /works/pearce-2012-welfare-state-elephants/  301
+/docs/Rees - Our final hour.pdf  /works/rees-2003-our-final-hour/  301
+/docs/Richards et al - Media advertising and ballot initiatives.pdf  /works/richards-2011-media-advertising-ballot/  301
+/docs/Rolston - Disvalues in nature.pdf  /works/rolston-1992-disvalues-nature/  301
+/docs/Romano - Informational cascades in financial economics.pdf  /works/romano-2009-informational-cascades-financial/  301
+/docs/Sapontzis - Predation.pdf  /works/sapontzis-1984-predation/  301
+/docs/Schlesinger - The enigma of existence.pdf  /works/schlesinger-1998-enigma-existence/  301
+/docs/Singer  Practical ethics.pdf  /works/singer-2011-practical-ethics/  301
+/docs/Singer - All animals are equal.pdf  /works/singer-2023-all-animals-are/  301
+/docs/Singer - Practical ethics.pdf  /works/singer-2011-practical-ethics/  301
+/docs/Singer - The expanding circle.pdf  /works/singer-1981-expanding-circle-ethics/  301
+/docs/Smith - Simplicity and why the universe exists.pdf  /works/smith-1997-simplicity-why-universe/  301
+/docs/Smith - The reason the universe exists is that it caused itself to exist.pdf  /works/smith-1999-reason-universe-exists/  301
+/docs/Spears & Budolfson - Repugnant conclusions.pdf  /works/spears-2021-repugnant-conclusions/  301
+/docs/Sumner - Welfare, happiness, and ethics.pdf  /works/sumner-1996-welfare-happiness-ethics/  301
+/docs/Sumner et al - The economics of regulations on hen housing in California.pdf  /works/sumner-2010-economics-regulations-hen/  301
+/docs/Sözmen - Harm in the wild.pdf  /works/sozmen-2013-harm-wild-facing/  301
+/docs/Sözmen - Relations and moral obligations towards other animals.pdf  /works/sozmen-2015-relations-moral-obligations/  301
+/docs/Thapar - Taking (live)stock of animal welfare in agriculture.pdf  /works/thapar-2011-taking-live-stock/  301
+/docs/Tomasik - The importance of wild-animal suffering.pdf  /works/tomasik-2015-importance-of-wild/  301
+/docs/Unger - Minimizing arbitrariness.pdf  /works/unger-1984-minimizing-arbitrariness-metaphysics/  301
+/docs/Walls - Increasing returns to information.pdf  /works/walls-1997-increasing-returns-information/  301
+/docs/White - On treating oneself and others as thermometers.pdf  /works/white-2009-treating-oneself-others/  301
+/docs/Young - On the status of vermin.pdf  /works/young-2006-status-vermin/  301
+/docs/Young - The little book of productivity.pdf  /works/young-2008-little-book-productivity/  301
+/docs/aron-et-al-the-experimental-generation-of-interpersonal-closeness.pdf  /works/aron-1997-experimental-generation-interpersonal/  301
+/docs/bouchard_-_genetic_influence_on_human_psychological_traits.pdf  /works/bouchard-2004-genetic-influence-human/  301
+/docs/elster_-_explaining_social_behavior.pdf  /works/elster-2010-explaining-social-behavior/  301
+/docs/miller_-_introduction_to_contemporary_metaethics.pdf  /works/miller-2003-introduction-contemporary-metaethics/  301
+/docs/parfit_-_divided_minds_and_the_nature_of_persons.pdf  /works/parfit-1987-divided-minds-nature/  301
+/docs/parfit_-_experiences,_subjects,_and_conceptual_schemes.pdf  /works/parfit-1999-experiences-subjects-conceptual/  301
+/docs/parfit_-_is_personal_iden-tity_what_matters.pdf  /works/parfit-2017-what-matters-volume/  301
+/docs/parfit_-_is_personal_identity_what_matters.pdf  /works/parfit-1982-personal-identity-rationality/  301
+/docs/parfit_-_normativity.pdf  /works/parfit-2006-normativity/  301
+/docs/parfit_-_overpopulation_and_the_quality_of_life.pdf  /works/parfit-2004-overpopulation-quality-life/  301
+/docs/parfit_-_rationality_and_reasons.pdf  /works/parfit-2001-rationality-reasons/  301
+/docs/parfit_-_rationality_and_time.pdf  /works/parfit-1984-rationality-time/  301
+/docs/parfit_-_unimportance_of_identity.pdf  /works/parfit-1995-unimportance-identity/  301
+/docs/pereboom_-_living_without_free_will.pdf  /works/pereboom-2001-living-free-will/  301
+/docs/pyle_-_interview_with_derek_parfit.pdf  /works/pyle-1999-derek-parfit/  301
+/docs/regan_-_moral_basis_of_vegetarianism.PDF  /works/regan-1975-moral-basis-vegetarianism/  301
+/docs/scanlon_-_moral_dimensions.pdf  /works/scanlon-2008-moral-dimensions-permissibility/  301
+/docs/schelling_-_egonomics.pdf  /works/schelling-1978-egonomics-art-selfmanagement/  301
+/docs/snyderman_&_rothman_-_survey_of_expert_opinion_on_intelligence_and_aptitude_testing.pdf  /works/snyderman-1987-survey-expert-opinion/  301
+/docs/Broad1932ReviewBrailsfordRobertson.pdf  /works/broad-1933-review-brailsford-robertson/  301
+/docs/Hewitt - Normative qualia and a robust moral realism.pdf  /works/rawlette-2008-normative-qualia-robust/  301
+/docs/Jamison - Rights, justice, and duties to provide assistance.pdf  /works/jamieson-1990-rights-justice-duties/  301
+/docs/Lauber et al - The role of ethical judgments related to wildlife fertility control.pdf  /works/bruce-lauber-2007-role-ethical-judgments/  301
+/docs/McKelvie - Seeking to increase awareness of speciesism and its impact on all animals.pdf  /works/mc-kelvie-2015-seeking-increase-awareness/  301
+/docs/Parfit - Postscript.pdf  /works/parfit-2004-postcript/  301
+/docs/Sagoff - Animal liberation and environmental ethics.pdf  /works/sagoff-1984-osgoode-law-journal/  301
+
+# /txt/ was the older path that redirected to /docs/ on the WordPress site
+# Since /docs/ rules above handle the rest, just redirect /txt/ to /docs/
+/txt/*  /docs/:splat  301
