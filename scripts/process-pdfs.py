@@ -96,9 +96,39 @@ def needs_processing(slug: str, src_path: Path, manifest: dict, force: bool) -> 
     return abs(current_mtime - entry.get("src_mtime", 0)) > MTIME_EPSILON
 
 
+def _repair_with_mutool(src: Path, dst: Path) -> bool:
+    """Attempt to repair a damaged PDF using mutool clean. Returns True on success."""
+    result = subprocess.run(
+        [MUTOOL, "clean", str(src), str(dst)],
+        capture_output=True,
+        text=True,
+    )
+    return result.returncode == 0 and dst.exists() and dst.stat().st_size > 0
+
+
 def strip_annotations(src: Path, dst: Path) -> None:
-    """Copy *src* to *dst* with all page annotations removed."""
-    with pikepdf.open(src) as pdf:
+    """Copy *src* to *dst* with all page annotations removed.
+
+    Falls back to ``mutool clean`` when pikepdf cannot open a damaged file.
+    """
+    try:
+        pdf = pikepdf.open(src)
+    except pikepdf.PdfError as orig_err:
+        # pikepdf can't parse this file — try repairing with mutool
+        with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmp:
+            repaired = Path(tmp.name)
+        try:
+            if _repair_with_mutool(src, repaired):
+                pdf = pikepdf.open(repaired)
+                print(f"  NOTICE: repaired damaged PDF with mutool: {src.name}")
+            else:
+                repaired.unlink(missing_ok=True)
+                raise orig_err
+        except Exception:
+            repaired.unlink(missing_ok=True)
+            raise
+
+    with pdf:
         for page in pdf.pages:
             if Name.Annots in page:
                 del page[Name.Annots]
@@ -159,8 +189,12 @@ def render_thumbnail(pdf_path: Path, out_png: Path) -> bool:
     Checks up to MAX_PAGES_TO_CHECK pages, skipping blank ones.
     Returns True on success, False on failure.
     """
-    with pikepdf.open(pdf_path) as pdf:
-        num_pages = len(pdf.pages)
+    try:
+        with pikepdf.open(pdf_path) as pdf:
+            num_pages = len(pdf.pages)
+    except pikepdf.PdfError:
+        # Can't determine page count — just try up to MAX_PAGES_TO_CHECK
+        num_pages = MAX_PAGES_TO_CHECK
 
     pages_to_check = min(num_pages, MAX_PAGES_TO_CHECK)
 
@@ -350,10 +384,23 @@ def process_pdfs(entries: list[dict], *, dry_run: bool, force: bool, limit: int)
             print(f"  WARNING: password-protected, skipping: {slug}")
             stats["errors"] += 1
         except (pikepdf.PdfError, OSError, subprocess.SubprocessError, ValueError) as exc:
-            print(f"  WARNING: error processing {slug}: {exc}")
             dst_pdf.unlink(missing_ok=True)
             dst_thumb.unlink(missing_ok=True)
             stats["errors"] += 1
+            # Check if the file is actually a PDF at all
+            try:
+                with open(src, "rb") as fh:
+                    magic = fh.read(4)
+            except OSError:
+                magic = b""
+            if magic != b"%PDF":
+                print(
+                    f"  WARNING: not a valid PDF (starts with {magic!r}), "
+                    f"replace or delete: {src}"
+                )
+            else:
+                print(f"  WARNING: corrupt PDF, replace or delete: {src}")
+                print(f"           ({exc})")
 
     if not dry_run:
         # Remove stale outputs no longer backed by a bib entry
