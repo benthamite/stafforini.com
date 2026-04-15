@@ -1665,7 +1665,7 @@
 /docs/Bell - A review of recent publications on animal welfare issues for table egg laying hens.pdf  /works/bell-2005-review-recent-publications/  301
 /docs/Benatar - Why the naive argument against moral vegetarianism really is naive.pdf  /works/benatar-2001-why-naive-argument/  301
 /docs/Bly - The copywriter's handbook.pdf  /works/bly-2006-copywriter-handbook-stepbystep/  301
-/docs/Borde & Chaumeton - A panorama of American film noir.pdf  /works/borde-1979-panorama-film-noir/  301
+/docs/Borde & Chaumeton - A panorama of American film noir.pdf  /works/borde-2002-panorama-american-film/  301
 /docs/Bostrom - Are we living in a computer simulation.pdf  /works/bostrom-2005-simulation-argument-reply/  301
 /docs/Bostrom - Infinite ethics.pdf  /works/bostrom-2016-infinite-ethics/  301
 /docs/Bostrom - The future of humanity.pdf  /works/bostrom-2009-future-humanity/  301
@@ -1825,7 +1825,7 @@
 /docs/Parfit - Reasons and persons.pdf  /works/parfit-1984-reasons-persons/  301
 /docs/Parfit - Responses.pdf  /works/parfit-2017-responses/  301
 /docs/Parfit - Rights, interests, and possible people.pdf  /works/parfit-1976-rights-interests-possible/  301
-/docs/Parfit - Summary of discussion.pdf  /works/parfit-1982-summary-discussion/  301
+/docs/Parfit - Summary of discussion.pdf  /works/dennett-1982-summary-of-discussion/  301
 /docs/Parfit - The Eton College chronicle.pdf  /works/parfit-1964-eton-college-chronicle/  301
 /docs/Parfit - The fish.pdf  /works/parfit-1964-fish/  301
 /docs/Parfit - The indeterminacy of identity.pdf  /works/parfit-1993-indeterminacy-identity-reply/  301
@@ -1892,7 +1892,14 @@
 /docs/Lauber et al - The role of ethical judgments related to wildlife fertility control.pdf  /works/bruce-lauber-2007-role-ethical-judgments/  301
 /docs/McKelvie - Seeking to increase awareness of speciesism and its impact on all animals.pdf  /works/mc-kelvie-2015-seeking-increase-awareness/  301
 /docs/Parfit - Postscript.pdf  /works/parfit-2004-postcript/  301
-/docs/Sagoff - Animal liberation and environmental ethics.pdf  /works/sagoff-1984-osgoode-law-journal/  301
+/docs/Sagoff - Animal liberation and environmental ethics.pdf  /works/sagoff-1984-animal-liberation-environmental/  301
+/docs/Clark - The rights of wild things.pdf  /works/clark-1979-rights-wild-things/  301
+/docs/Ebert & Machan - Innocent threats and the moral problem of carnivorous animals.pdf  /works/ebert-2012-innocent-threats-problem/  301
+/docs/Everett - Environmental ethics, animal welfarism, and the problem of predation.pdf  /works/everett-2001-environmental-ethics-animal/  301
+/docs/Favre - Wildlife rights.pdf  /works/favre-1979-wildlife-rights-ever/  301
+/docs/Fink - The predation argument.pdf  /works/fink-2005-predation-argument/  301
+/docs/Simmons - Animals, predators, the right to life, and the duty to save lives.pdf  /works/simmons-2009-animals-predators-right/  301
+/docs/Torres - The case for intervention in nature on behalf of animals.pdf  /works/torres-2015-case-intervention-nature/  301
 
 # /txt/ was the older path that redirected to /docs/ on the WordPress site
 # Since /docs/ rules above handle the rest, just redirect /txt/ to /docs/
