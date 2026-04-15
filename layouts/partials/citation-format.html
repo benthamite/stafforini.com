@@ -14,7 +14,7 @@
 */}}
 {{- $work := .work -}}
 {{- $type := .type -}}
-{{- $locator := .locator -}}
+{{- $locator := .locator | default "" | replaceRE `^[, ]+` "" -}}
 {{- $link := .link -}}
 {{- if or (eq $type "incollection") (eq $type "inbook") (eq $type "inproceedings") -}}
   {{/* Chapter/section in a book: Author, Title, in Editor (ed.) *BookTitle*, Place, Year */}}
@@ -28,7 +28,7 @@
   {{- with $work.Params.editor }} in {{ . }} {{ partial "editor-abbrev.html" . }}{{ end }} <em>{{ $work.Params.booktitle | default $work.Title | safeHTML }}</em>
   {{- with $work.Params.location }}, {{ . }}{{ end -}}
   {{- with $work.Params.year }}, {{ . }}{{ end -}}
-  {{- with $work.Params.pages }}, pp. {{ . }}{{ end -}}
+  {{- with $work.Params.pages }}, pp. {{ replace (replace . "---" "—") "--" "–" }}{{ end -}}
   {{- with $locator }}, {{ . }}{{ end -}}
 {{- else if eq $type "article" -}}
   {{/* Journal article: Author, Title, *Journal*, vol. X, no. Y, Year */}}
@@ -42,7 +42,7 @@
   {{- with $work.Params.volume }}, vol. {{ . }}{{ end -}}
   {{- with $work.Params.number }}, no. {{ . }}{{ end -}}
   {{- with $work.Params.year }}, {{ . }}{{ end -}}
-  {{- with $work.Params.pages }}, pp. {{ . }}{{ end -}}
+  {{- with $work.Params.pages }}, pp. {{ replace (replace . "---" "—") "--" "–" }}{{ end -}}
   {{- with $locator }}, {{ . }}{{ end -}}
 {{- else if eq $type "online" -}}
   {{/* Online/blog post: Author, Title, *Publication*, Year */}}
