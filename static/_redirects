@@ -1656,6 +1656,32 @@
 # Preserve /notes/contact/ since org links still point there
 /notes/contact/  /contact/  301
 
+# WP blog posts without Hugo counterparts (individual redirects)
+/blog/anki-deck-and-google-form-for-the-feeling-good-handbook-by-david-burns/  /notes/anki-decks-from-the-lesswrong-community/  301
+/blog/anki-deck-of-chalmerss-constructing-the-world/  /notes/anki-decks-from-the-lesswrong-community/  301
+/blog/bostroms-superintelligence-anki-deck/  /notes/anki-decks-from-the-lesswrong-community/  301
+/blog/chrome-and-vimium-shortcuts-anki-decks/  /notes/anki-decks-from-the-lesswrong-community/  301
+/blog/ear-training-anki-deck/  /notes/anki-decks-from-the-lesswrong-community/  301
+/blog/sublime-text-3-google-docs-anki-for-mac-decks/  /notes/anki-decks-from-the-lesswrong-community/  301
+/blog/wittgenstein-la-rochefoucauld-anki-decks/  /notes/anki-decks-from-the-lesswrong-community/  301
+/blog/why-is-there-anything-at-all-a-bibliography/  /notes/why-does-the-world-exist-a-bibliography/  301
+/blog/california-proposition-2-a-bibliography/  /  301
+/blog/other-reading-lists/  /  301
+/blog/donations/  /  301
+/blog/my_beliefs/  /notes/my-beliefs/  301
+/blog/my-beliefs-updated/  /notes/my-beliefs-updated/  301
+/blog/comments-now-enabled/  /  301
+/blog/485/  /  301
+/blog/resources-on-writing-well/  /  301
+/blog/my-favorite-films-of-the-2000s/  /  301
+/blog/selected-passages-from-pinkers-enlightenment-now/  /works/pinker-2018-enlightenment-now-case/  301
+/blog/favorite-passages-from-pepyss-diary/  /works/pepys-1669-diary-samuel-pepys/  301
+/blog/spanish-translation-of-grahams-keep-your-identity-small/  /  301
+/blog/mac-keyboard-shortcuts/  /notes/anki-decks-from-the-lesswrong-community/  301
+/blog/wild/  /notes/wild-animal-welfare-a-bibliography/  301
+/blog/stuff/  /  301
+/blog/2171-2/  /  301
+
 # /docs/ -> /works/ redirects
 # Old PDF URLs from the WordPress era redirect to corresponding work pages
 /docs/Aaltola - Animal ethics and the argument from absurdity.pdf  /works/aaltola-2010-animal-ethics-argument/  301
