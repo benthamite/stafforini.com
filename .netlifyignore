@@ -1,0 +1,5 @@
+# Heavy static assets: skip during quick deploys.
+# These are already deployed and rarely change.
+# To deploy PDF changes, run: deploy.sh (full deploy) which removes this file temporarily.
+pdfs/
+pdf-thumbnails/
