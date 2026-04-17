@@ -1,0 +1,18 @@
+/*
+ Theme Name:     twentytwelve child theme
+ Template:       twentytwelve
+*/
+
+@import url("../twentytwelve/style.css");
+
+/* =Theme customization starts here
+------------------------------------------------------- */
+
+.post-meta {
+  font-style: italic;
+  font-size: 85%;
+}
+
+.site-info {
+   display: none;
+}

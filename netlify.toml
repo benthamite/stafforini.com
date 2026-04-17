@@ -34,6 +34,16 @@ for = "/fonts/*"
   [headers.values]
   Cache-Control = "public, max-age=31536000, immutable" # 1 year in seconds
 
+# Permissive CSP for the archived WordPress tango blog under /tango/*.
+# The mirrored pages embed YouTube/Spotify iframes, Facebook widgets, and
+# Google Docs references that the site-wide CSP would block.  This override
+# widens CSP for this subtree only; the rest of the site keeps the strict
+# policy defined above.
+[[headers]]
+for = "/tango/*"
+  [headers.values]
+  Content-Security-Policy = "default-src 'self' https: 'unsafe-inline' 'unsafe-eval'; img-src * data: blob:; media-src * data: blob:; frame-src https:; connect-src https:; font-src 'self' https: data:"
+
 # RSS feed redirects (preserve subscribers from WordPress)
 [[redirects]]
 from = "/blog/feed/"
