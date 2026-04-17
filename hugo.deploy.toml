@@ -26,6 +26,9 @@
   [[module.mounts]]
     source = "static/_redirects"
     target = "static/_redirects"
+  [[module.mounts]]
+    source = "static/tango"
+    target = "static/tango"
 
   # Content, data, layouts, etc. still use default mounts.
   [[module.mounts]]
