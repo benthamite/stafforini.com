@@ -326,18 +326,33 @@ so that transcluded content is included in the export."
 (defvar export-id-slug-map nil
   "Hash-table mapping org-id → Hugo slug for cross-references.")
 
+(defvar export-id-url-overrides nil
+  "Hash-table mapping org-id → EXPORT_HUGO_URL for notes that override their URL.")
+
+(defvar export-slug-url-overrides nil
+  "Hash-table mapping Hugo slug → EXPORT_HUGO_URL for notes that override their URL.")
+
+(defun export-common--load-json-table (path)
+  "Return the JSON object at PATH parsed as a hash-table, or an empty table."
+  (if (file-exists-p path)
+      (with-temp-buffer
+        (insert-file-contents path)
+        (json-parse-string (buffer-string) :object-type 'hash-table))
+    (make-hash-table :test 'equal)))
+
 ;; Load the id-slug map and build the org-id database only in batch mode.
 ;; Interactive Emacs already has org-id configured and the full scan is expensive.
 (when noninteractive
-  (let ((map-file (expand-file-name "data/id-slug-map.json"
-                                    (locate-dominating-file load-file-name ".git"))))
+  (let* ((repo-root (locate-dominating-file load-file-name ".git"))
+         (map-file (expand-file-name "data/id-slug-map.json" repo-root))
+         (url-file (expand-file-name "data/id-url-overrides.json" repo-root))
+         (slug-url-file (expand-file-name "data/slug-url-overrides.json" repo-root)))
     (if (file-exists-p map-file)
-        (setq export-id-slug-map
-              (with-temp-buffer
-                (insert-file-contents map-file)
-                (json-parse-string (buffer-string) :object-type 'hash-table)))
+        (setq export-id-slug-map (export-common--load-json-table map-file))
       (setq export-id-slug-map (make-hash-table :test 'equal))
-      (message "WARNING: %s not found — id: links will render as plain text" map-file)))
+      (message "WARNING: %s not found — id: links will render as plain text" map-file))
+    (setq export-id-url-overrides (export-common--load-json-table url-file))
+    (setq export-slug-url-overrides (export-common--load-json-table slug-url-file)))
 
   ;;;; Pre-build org-id database for cross-reference resolution
 

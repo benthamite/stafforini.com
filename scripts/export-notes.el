@@ -30,6 +30,18 @@
 ;; relref shortcodes.  Published targets get proper markdown links;
 ;; unpublished targets become plain text.  Non-ID/file broken links also
 ;; degrade gracefully.
+(defun export-notes--slug-url (slug)
+  "Return the Hugo URL for SLUG, honouring EXPORT_HUGO_URL overrides."
+  (or (gethash slug export-slug-url-overrides)
+      (format "/notes/%s/" slug)))
+
+(defun export-notes--id-url (id slug)
+  "Return the Hugo URL for ID with fallback SLUG.
+Prefers a per-file EXPORT_HUGO_URL override when present so links to
+notes with custom URLs resolve to the real page."
+  (or (gethash id export-id-url-overrides)
+      (export-notes--slug-url slug)))
+
 (define-advice org-hugo-link (:around (orig-fn link contents info) resolve-links)
   "For id:/file: links, resolve via slug map; for others, catch broken links."
   (let ((type (org-element-property :type link))
@@ -40,7 +52,7 @@
       (let* ((id (upcase path))
              (slug (gethash id export-id-slug-map)))
         (if slug
-            (format "[%s](/notes/%s/)" (or contents slug) slug)
+            (format "[%s](%s)" (or contents slug) (export-notes--id-url id slug))
           (or contents ""))))
      ;; file: links to .org files: check if the target slug is published
      ((and (string= type "file")
@@ -48,7 +60,7 @@
       (let* ((slug (file-name-sans-extension (file-name-nondirectory path)))
              (published (gethash slug export-published-slugs)))
         (if published
-            (format "[%s](/notes/%s/)" (or contents slug) slug)
+            (format "[%s](%s)" (or contents slug) (export-notes--slug-url slug))
           (or contents ""))))
      ;; Everything else: delegate to ox-hugo, catch broken links
      (t

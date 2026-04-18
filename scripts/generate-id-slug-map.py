@@ -31,23 +31,29 @@ from lib import (
 )
 
 OUTPUT_PATH = REPO_ROOT / "data" / "id-slug-map.json"
+URL_OVERRIDES_PATH = REPO_ROOT / "data" / "id-url-overrides.json"
+SLUG_URL_OVERRIDES_PATH = REPO_ROOT / "data" / "slug-url-overrides.json"
 
 ID_RE = re.compile(r"^:ID:\s+(\S+)", re.MULTILINE)
 # Allow leading whitespace — notes use indented property drawers under headings
 ID_INDENTED_RE = re.compile(r"^\s*:ID:\s+(\S+)", re.MULTILINE)
 EXPORT_FILE_NAME_RE = re.compile(r"^\s*:EXPORT_FILE_NAME:\s+(\S+)", re.MULTILINE)
+EXPORT_HUGO_URL_RE = re.compile(r"^\s*:EXPORT_HUGO_URL:\s+(\S+)", re.MULTILINE)
 
 
-def scan_published_notes() -> dict[str, str]:
+def scan_published_notes() -> tuple[dict[str, str], dict[str, str]]:
     """Query org-roam DB and map node IDs to slugs for published notes.
 
     A note is "published" if its org file contains :EXPORT_FILE_NAME:.
     The slug comes from that property value (not the filename).
     Sub-heading nodes inherit their parent file's slug.
+
+    Returns (slug_map, url_overrides) where url_overrides maps ids to the
+    note's :EXPORT_HUGO_URL: value when that property is set.
     """
     if not ORGROAM_DB_PATH.exists():
         print(f"  Warning: org-roam DB not found at {ORGROAM_DB_PATH}", file=sys.stderr)
-        return {}
+        return {}, {}
 
     notes_prefix = str(NOTES_DIR) + "/"
 
@@ -71,6 +77,7 @@ def scan_published_notes() -> dict[str, str]:
 
     # For each unique file, check if it's published (has EXPORT_FILE_NAME)
     mapping = {}
+    url_overrides: dict[str, str] = {}
     files_checked = 0
     files_published = 0
     skipped_dataless = 0
@@ -103,27 +110,35 @@ def scan_published_notes() -> dict[str, str]:
         slug = match.group(1)
         files_published += 1
 
+        url_match = EXPORT_HUGO_URL_RE.search(text)
+        override_url = url_match.group(1) if url_match else None
+
         # Map every node ID in this file to the slug
         for node_id, _level in file_nodes[file_path]:
             mapping[node_id] = slug
+            if override_url:
+                url_overrides[node_id] = override_url
 
     if skipped_dataless:
         print(f"  Skipped {skipped_dataless} dataless (cloud-evicted) file(s)")
     print(f"  Published notes: {files_published}/{files_checked} files checked")
 
-    return mapping
+    return mapping, url_overrides
 
 
-def scan_notes_filesystem() -> dict[str, str]:
+def scan_notes_filesystem() -> tuple[dict[str, str], dict[str, str]]:
     """Direct filesystem scan for published notes not tracked by org-roam.
 
     Recursively scans ~/My Drive/notes/ for .org files with EXPORT_FILE_NAME,
     extracts all :ID: properties from each, and maps them to the slug.
+
+    Returns (slug_map, url_overrides), matching scan_published_notes.
     """
-    mapping = {}
+    mapping: dict[str, str] = {}
+    url_overrides: dict[str, str] = {}
     if not NOTES_DIR.is_dir():
         print(f"  Warning: directory not found: {NOTES_DIR}", file=sys.stderr)
-        return mapping
+        return mapping, url_overrides
 
     org_files = sorted(NOTES_DIR.rglob("*.org"))
     total = len(org_files)
@@ -150,35 +165,59 @@ def scan_notes_filesystem() -> dict[str, str]:
         slug = efn_match.group(1)
         files_published += 1
 
+        url_match = EXPORT_HUGO_URL_RE.search(text)
+        override_url = url_match.group(1) if url_match else None
+
         # Map ALL :ID: properties in this file to the slug
         for id_match in ID_INDENTED_RE.finditer(text):
             org_id = id_match.group(1).upper()
             mapping[org_id] = slug
+            if override_url:
+                url_overrides[org_id] = override_url
 
     if skipped_dataless:
         print(f"  Skipped {skipped_dataless} dataless (cloud-evicted) file(s)")
     print(f"  Published (filesystem): {files_published} files")
-    return mapping
+    return mapping, url_overrides
 
 
 def main():
     print("--- Scanning published notes via org-roam DB ---")
-    published_map = scan_published_notes()
+    published_map, published_urls = scan_published_notes()
 
     print("--- Scanning notes filesystem (catch files not in org-roam) ---")
-    filesystem_map = scan_notes_filesystem()
+    filesystem_map, filesystem_urls = scan_notes_filesystem()
 
     # Merge: filesystem first, then org-roam DB (DB entries are more authoritative).
     combined = {}
     combined.update(filesystem_map)
     combined.update(published_map)
 
+    combined_urls: dict[str, str] = {}
+    combined_urls.update(filesystem_urls)
+    combined_urls.update(published_urls)
+
+    # Derive a slug → URL override map from the ID → URL overrides: every ID
+    # in an overridden note maps to the same URL, so collapsing by slug gives
+    # a stable slug → URL map used by file: link resolution.
+    slug_url_overrides: dict[str, str] = {}
+    for node_id, override_url in combined_urls.items():
+        slug = combined.get(node_id)
+        if slug:
+            slug_url_overrides[slug] = override_url
+
     atomic_write_json(OUTPUT_PATH, combined, ensure_ascii=False)
+    atomic_write_json(URL_OVERRIDES_PATH, combined_urls, ensure_ascii=False)
+    atomic_write_json(SLUG_URL_OVERRIDES_PATH, slug_url_overrides, ensure_ascii=False)
 
     print(f"\nID-slug map written to {OUTPUT_PATH}")
     print(f"  published (DB):    {len(published_map)} IDs")
     print(f"  published (files): {len(filesystem_map)} IDs")
     print(f"  total (merged):    {len(combined)} IDs")
+    print(f"URL overrides written to {URL_OVERRIDES_PATH}")
+    print(f"  total overrides:   {len(combined_urls)} IDs")
+    print(f"Slug URL overrides written to {SLUG_URL_OVERRIDES_PATH}")
+    print(f"  total slug overrides: {len(slug_url_overrides)}")
 
 
 if __name__ == "__main__":
