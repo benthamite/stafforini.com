@@ -4,6 +4,7 @@
   "scripts": {
     "build": "hugo --minify && npx pagefind --site public",
     "dev": "bash scripts/start-dev-server.sh",
+    "test": "bash scripts/test.sh",
     "reindex": "bash scripts/build-search-index.sh",
     "index": "npx pagefind --site public"
   },
