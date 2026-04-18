@@ -23,6 +23,9 @@ apply_front_matter_fixups = _mod.apply_front_matter_fixups
 find_org_file = _mod.find_org_file
 process_single_file = _mod.process_single_file
 load_output_to_source_map = _mod.load_output_to_source_map
+get_org_mtime = _mod.get_org_mtime
+_org_keyword = _mod._org_keyword
+_read_org_keywords = _mod._read_org_keywords
 
 
 # ---------------------------------------------------------------------------
@@ -206,3 +209,77 @@ class TestProcessSingleFile:
             process_single_file(md, dry_run=True)
 
         assert md.read_text() == original
+
+    def test_keyword_lastmod_takes_precedence_over_git(self, tmp_path):
+        md = tmp_path / "test.md"
+        org = tmp_path / "test.org"
+        md.write_text('+++\ntitle = "Test"\ndate = 2024-01-15\n+++\n\nBody.\n')
+        org.write_text("#+title: Test\n#+lastmod: 2024-03-10T09:00:00\n\n* Test\n")
+        _read_org_keywords.cache_clear()
+
+        with patch.object(_mod, "load_output_to_source_map", return_value={"test.md": org}), \
+             patch.object(_mod, "_get_single_file_git_date", return_value="2024-06-01T12:00:00"), \
+             patch.object(_mod, "_get_single_file_first_date", return_value="2024-01-15"):
+            process_single_file(md)
+
+        assert "lastmod = 2024-03-10T09:00:00" in md.read_text()
+        assert "2024-06-01" not in md.read_text()
+
+
+class TestOrgKeywords:
+    def test_reads_lastmod_keyword(self, tmp_path):
+        org = tmp_path / "note.org"
+        org.write_text(
+            "#+title: Note\n"
+            "#+lastmod: 2024-09-15T11:30:00\n"
+            "#+hugo_base_dir: ~/stafforini.com/\n"
+            "\n* Note\nBody\n"
+        )
+        _read_org_keywords.cache_clear()
+        assert _org_keyword(org, "lastmod") == "2024-09-15T11:30:00"
+        assert _org_keyword(org, "title") == "Note"
+
+    def test_missing_keyword_returns_none(self, tmp_path):
+        org = tmp_path / "note.org"
+        org.write_text("#+title: Note\n\n* Note\n")
+        _read_org_keywords.cache_clear()
+        assert _org_keyword(org, "lastmod") is None
+
+    def test_keyword_is_case_insensitive(self, tmp_path):
+        org = tmp_path / "note.org"
+        org.write_text("#+LASTMOD: 2024-09-15\n\n* Note\n")
+        _read_org_keywords.cache_clear()
+        assert _org_keyword(org, "lastmod") == "2024-09-15"
+
+    def test_does_not_read_past_first_heading(self, tmp_path):
+        """Keywords below the first heading are not file-level and must be ignored."""
+        org = tmp_path / "note.org"
+        org.write_text(
+            "#+title: Note\n"
+            "\n* Note\n"
+            "#+lastmod: 2099-12-31\n"  # fake keyword inside body
+        )
+        _read_org_keywords.cache_clear()
+        assert _org_keyword(org, "lastmod") is None
+
+
+class TestGetOrgMtimePriority:
+    def test_keyword_wins_over_git(self, tmp_path):
+        org = tmp_path / "note.org"
+        org.write_text("#+title: Note\n#+lastmod: 2024-01-02T03:04:05\n\n* Note\n")
+        _read_org_keywords.cache_clear()
+
+        output_map = {"note.md": org}
+        with patch.object(_mod, "ORG_DIR", tmp_path), \
+             patch.object(_mod, "_get_git_dates", return_value={org: "2025-06-01T00:00:00"}):
+            assert get_org_mtime("note", output_map) == "2024-01-02T03:04:05"
+
+    def test_git_used_when_keyword_absent(self, tmp_path):
+        org = tmp_path / "note.org"
+        org.write_text("#+title: Note\n\n* Note\n")
+        _read_org_keywords.cache_clear()
+
+        output_map = {"note.md": org}
+        with patch.object(_mod, "ORG_DIR", tmp_path), \
+             patch.object(_mod, "_get_git_dates", return_value={org: "2025-06-01T00:00:00"}):
+            assert get_org_mtime("note", output_map) == "2025-06-01T00:00:00"

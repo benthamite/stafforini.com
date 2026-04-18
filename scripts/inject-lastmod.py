@@ -7,9 +7,12 @@ For each markdown file in content/notes/:
    files using #+INCLUDE directives). When missing, the slug (filename
    without extension) is used as the title.
 
-2. Sets `lastmod` in the TOML front matter to the org file's last git
-   commit date. Falls back to filesystem mtime when git history is
-   unavailable.
+2. Sets `lastmod` in the TOML front matter from the source org file.
+   Resolution order:
+     (a) `#+lastmod:` keyword in the org file (written by the Elisp
+         save-hook on interactive content edits).
+     (b) Last git commit touching the org file.
+     (c) Filesystem mtime (last-resort fallback).
 
 Usage:
     python scripts/inject-lastmod.py            # Full run
@@ -19,6 +22,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import functools
 import os
 import re
 import subprocess
@@ -40,8 +44,40 @@ from lib import (
 CONTENT_DIR = REPO_ROOT / "content" / "notes"
 ORG_DIR = NOTES_DIR
 
+# Matches file-level #+keyword: value lines at the top of org files.
+_ORG_KEYWORD_RE = re.compile(r"^#\+(\w+):\s*(.*)$")
+
 
 # === Helpers ===
+
+
+@functools.lru_cache(maxsize=None)
+def _read_org_keywords(org_file_str: str) -> dict[str, str]:
+    """Return {lowercased_keyword: value} for file-level #+keyword: lines.
+
+    Reads the prelude of the org file up to the first heading. Cached
+    per-path since each file is parsed multiple times during a full run
+    (once per keyword lookup). Missing/unreadable files return {}.
+    """
+    org_file = Path(org_file_str)
+    try:
+        text = org_file.read_text(errors="replace")
+    except OSError:
+        return {}
+    keywords: dict[str, str] = {}
+    for line in text.splitlines():
+        if line.startswith("*"):
+            break  # first heading ends the prelude
+        m = _ORG_KEYWORD_RE.match(line)
+        if m:
+            keywords[m.group(1).lower()] = m.group(2).strip()
+    return keywords
+
+
+def _org_keyword(org_file: Path, keyword: str) -> str | None:
+    """Return the value of #+keyword: in *org_file*, or None if absent/empty."""
+    value = _read_org_keywords(str(org_file)).get(keyword.lower())
+    return value or None
 
 
 def _build_git_dates() -> tuple[dict[Path, str], dict[Path, str]]:
@@ -177,17 +213,25 @@ def _get_single_file_first_date(org_file):
 def get_org_mtime(slug, output_map=None):
     """Get the last modification date of the org file for a given slug.
 
-    Prefers git commit date (more reliable) over filesystem mtime
-    (which gets clobbered by bulk operations and cloud sync).
+    Resolution order:
+      1. `#+lastmod:` keyword in the org file (written by the Elisp
+         save-hook only on interactive content edits — the authoritative
+         source when present).
+      2. Last git commit touching the org file. Bulk/mechanical commits
+         (property migrations, cache refreshes) perturb this, which is
+         why the keyword takes precedence.
+      3. Filesystem mtime — clobbered by bulk operations and cloud sync,
+         used only as a last resort.
     """
     org_file = find_org_file(slug, output_map)
     if not org_file:
         return None
-    # Prefer git commit date
+    keyword = _org_keyword(org_file, "lastmod")
+    if keyword:
+        return keyword
     git_dates = _get_git_dates()
     if org_file in git_dates:
         return git_dates[org_file]
-    # Fallback to filesystem mtime
     mtime = os.path.getmtime(org_file)
     return datetime.fromtimestamp(mtime).strftime("%Y-%m-%dT%H:%M:%S")
 
@@ -359,7 +403,9 @@ def process_single_file(md_path, dry_run=False):
         print(f"Warning: no org source found for {slug}")
         return
 
-    lastmod = _get_single_file_git_date(org_file)
+    lastmod = _org_keyword(org_file, "lastmod")
+    if not lastmod:
+        lastmod = _get_single_file_git_date(org_file)
     if not lastmod:
         # Fallback to filesystem mtime
         mtime = os.path.getmtime(org_file)
