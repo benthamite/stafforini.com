@@ -26,9 +26,9 @@ else
   [[ " $* " == *" --quotes "* ]] && do_quotes=true
 fi
 
-# Shared: always run ID-slug map and tag injection first (needed by both pipelines)
+# Shared: keep the ID-slug map fresh before any data generation that may need
+# published note URLs.
 run_step "Generating ID→slug map" python3 "$SCRIPT_DIR/generate-id-slug-map.py"
-run_step "Injecting tags" python3 "$SCRIPT_DIR/inject-tags.py"
 
 if $do_notes; then
   run_step "Injecting lastmod dates" python3 "$SCRIPT_DIR/inject-lastmod.py"
@@ -40,3 +40,8 @@ if $do_quotes; then
   run_step "Extracting non-diary quotes" python3 "$SCRIPT_DIR/extract-non-diary-quotes.py"
   run_step "Generating work pages" python3 "$SCRIPT_DIR/generate-work-pages.py"
 fi
+
+# Tags must run after every generator that creates or rewrites markdown.
+# Hugo taxonomies and Pagefind facets read tags from front matter, so running
+# this earlier leaves newly generated quote/work pages without tags.
+run_step "Injecting tags" python3 "$SCRIPT_DIR/inject-tags.py"
