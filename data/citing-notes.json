@@ -2357,6 +2357,10 @@
     {
       "slug": "about",
       "title": "About"
+    },
+    {
+      "slug": "how-can-doctors-do-the-most-good-an-interview-with-dr-gregory-lewis",
+      "title": "How can doctors do the most good? An interview with Gregory Lewis"
     }
   ],
   "mac-askill-201580000-hours-thinks": [
@@ -4609,12 +4613,6 @@
       "title": "Derek Parfit: a bibliography"
     }
   ],
-  "parfit-1986-overpopulation-and-quality": [
-    {
-      "slug": "derek-parfit-a-bibliography",
-      "title": "Derek Parfit: a bibliography"
-    }
-  ],
   "parfit-1987-divided-minds-nature": [
     {
       "slug": "derek-parfit-a-bibliography",
@@ -4758,6 +4756,12 @@
     }
   ],
   "parfit-2003-justifiability-each-person": [
+    {
+      "slug": "derek-parfit-a-bibliography",
+      "title": "Derek Parfit: a bibliography"
+    }
+  ],
+  "parfit-2004-overpopulation-quality-life": [
     {
       "slug": "derek-parfit-a-bibliography",
       "title": "Derek Parfit: a bibliography"
@@ -5115,6 +5119,12 @@
     {
       "slug": "why-does-the-world-exist-a-bibliography",
       "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "unger-1996-living-high-letting": [
+    {
+      "slug": "how-can-doctors-do-the-most-good-an-interview-with-dr-gregory-lewis",
+      "title": "How can doctors do the most good? An interview with Gregory Lewis"
     }
   ],
   "van-inwagen-1996-why-there-anything": [
