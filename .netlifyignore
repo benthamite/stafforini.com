@@ -1,5 +1,6 @@
-# Heavy static assets: skip during quick deploys.
-# These are already deployed and rarely change.
-# To deploy PDF changes, run: deploy.sh (full deploy) which removes this file temporarily.
+# Heavy PDF assets are skipped by default to keep Netlify CLI deploys
+# from scanning/uploading ~50 GB of rarely changing files.
+# To publish changed PDFs or thumbnails, run:
+#   bash scripts/deploy.sh --include-pdfs
 pdfs/
 pdf-thumbnails/
