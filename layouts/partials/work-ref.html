@@ -1,0 +1,14 @@
+{{- $slug := . -}}
+{{- $work := site.GetPage (printf "/works/%s" $slug) -}}
+
+{{- if not $work -}}
+  {{- with index hugo.Data.works $slug -}}
+    {{- $work = dict
+      "Title" .title
+      "RelPermalink" (printf "/works/%s/" $slug)
+      "Params" .
+    -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $work -}}

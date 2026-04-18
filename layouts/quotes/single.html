@@ -5,7 +5,7 @@
 {{ $workPage := false }}
 {{ $workAuthor := "" }}{{ $workTitle := "" }}
 {{ with .Params.work }}
-  {{ $workPage = $.Site.GetPage (printf "/works/%s" .) }}
+  {{ $workPage = partial "work-ref.html" . }}
   {{ with $workPage }}
     {{ $workAuthor = .Params.author }}
     {{ $workTitle = .Title }}

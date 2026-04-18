@@ -34,7 +34,7 @@
 {{- $slug = replaceRE "([a-z])([A-Z])" "${1}-${2}" $slug -}}
 {{- $slug = lower $slug -}}
 
-{{- $work := site.GetPage (printf "/works/%s" $slug) -}}
+{{- $work := partial "work-ref.html" $slug -}}
 {{- if $work -}}
   {{- if $short -}}
     {{/* Short citation: title linked to work page.

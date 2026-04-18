@@ -32,7 +32,7 @@
       {{ $quote := . }}
       {{ with .Params.work }}
         {{/* Params.work is a slug matching a page under /works/ (bibliographic entries) */}}
-        {{ $work := $.Site.GetPage (printf "/works/%s" .) }}
+        {{ $work := partial "work-ref.html" . }}
         <a href="{{ $quote.RelPermalink }}">{{ with $work }}{{ .Params.author }}{{ else }}{{ $quote.Title }}{{ end }}</a>
       {{ else }}
         <a href="{{ .RelPermalink }}">{{ .Title }}</a>
