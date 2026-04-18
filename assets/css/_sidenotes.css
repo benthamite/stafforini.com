@@ -1,8 +1,9 @@
 /* Sidenotes — margin notes that replace bottom-of-page footnotes on wide screens.
-   Z-index scale (local, within isolation: isolate on .sidenote):
+   Z-index scale:
      0  — sidenote content
      1  — fade-out gradient
      2  — cover (solid background hiding overflow)
+     5  — temporary code-block mask
      10 — hovered sidenote (brought to front) */
 
 /* ── Wide-screen layout ──────────────────────────────────────────── */
@@ -71,6 +72,13 @@
   left: 0;
   width: 100%;
   bottom: 0;
+  background: var(--color-bg);
+  pointer-events: none;
+}
+
+.sidenote-code-mask {
+  position: absolute;
+  z-index: 5;
   background: var(--color-bg);
   pointer-events: none;
 }

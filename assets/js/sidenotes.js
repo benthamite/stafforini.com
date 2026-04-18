@@ -78,6 +78,7 @@
       fullHeight: 0,
       top: 0,
       visibleHeight: null,
+      codeBlocksToMask: [],
       overlaps: []
     });
     refElements.push(ref);
@@ -87,6 +88,8 @@
 
   // ── Computed values ─────────────────────────────────────────────
   var lineHeight;
+  var wideCodeBlocks = [];
+  var activeCodeMasks = [];
 
   function computeLineHeight() {
     var style = getComputedStyle(sidenotes[0].el);
@@ -107,6 +110,11 @@
     if (oldCover) oldCover.remove();
   }
 
+  function cleanupCodeMasks() {
+    activeCodeMasks.forEach(function (mask) { mask.remove(); });
+    activeCodeMasks = [];
+  }
+
   // ── Positioning algorithm — helper phases ───────────────────────
 
   /**
@@ -114,6 +122,8 @@
    * Returns the positioned container element.
    */
   function resetAndMeasure(container) {
+    cleanupCodeMasks();
+
     // Use getBoundingClientRect for accurate positioning of inline elements
     var containerRect = container.getBoundingClientRect();
     sidenotes.forEach(function (sn) {
@@ -135,6 +145,7 @@
     sidenotes.forEach(function (sn) {
       sn.fullHeight = sn.el.scrollHeight;
       sn.visibleHeight = null;
+      sn.codeBlocksToMask = [];
       sn.overlaps = [];
     });
   }
@@ -168,36 +179,62 @@
   }
 
   /**
-   * Phase 4: Truncate sidenotes that would overlap with wide code blocks.
-   * On wide screens, <pre> blocks extend into the sidenote margin, so
-   * any sidenote whose bottom edge intrudes into a code block's vertical
-   * range must be collapsed — just as for sidenote-sidenote collisions.
+   * Phase 4: Truncate sidenotes before wide code blocks.
+   * On wide screens, rendered <pre> blocks extend into the sidenote margin.
+   * Treat a code block like a following sidenote: if it starts below a
+   * sidenote but before that sidenote's visible bottom edge, fade the sidenote
+   * out at the collision point.  Closed <details> content has no rendered
+   * rectangle and is ignored.
    */
   function truncateForCodeBlocks(container) {
-    // .note-body is a class set in layouts/notes/single.html (not in CSS)
-    var noteBody = container.querySelector('.note-body');
+    // .note-body and .quote-body are layout classes, not styling hooks.
+    var noteBody = container.querySelector('.note-body, .quote-body');
     var preEls = noteBody ? noteBody.querySelectorAll('pre') : [];
     var containerRect = container.getBoundingClientRect();
+    var columnRect = sidenoteColumn.getBoundingClientRect();
     var codeBlockTops = [];
+    wideCodeBlocks = [];
+
     Array.prototype.forEach.call(preEls, function (pre) {
-      codeBlockTops.push(pre.getBoundingClientRect().top - containerRect.top);
+      var rect = pre.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+      if (rect.right <= columnRect.left || rect.left >= columnRect.right) return;
+
+      var block = {
+        top: rect.top - containerRect.top,
+        bottom: rect.bottom - containerRect.top,
+        left: rect.left - containerRect.left,
+        right: rect.right - containerRect.left
+      };
+      wideCodeBlocks.push(block);
+      codeBlockTops.push(block.top);
     });
+
+    wideCodeBlocks.sort(function (a, b) {
+      return a.top - b.top;
+    });
+    codeBlockTops = wideCodeBlocks.map(function (block) { return block.top; });
 
     for (var i = 0; i < sidenotes.length; i++) {
       var sn = sidenotes[i];
-      var snBottom = sn.top + (sn.visibleHeight !== null ? sn.visibleHeight : sn.fullHeight);
+      var visibleHeight = sn.visibleHeight !== null ? sn.visibleHeight : sn.fullHeight;
+      var snBottom = sn.top + visibleHeight;
+
       for (var p = 0; p < codeBlockTops.length; p++) {
         var cbTop = codeBlockTops[p];
-        if (cbTop <= sn.top) continue; // code block above this sidenote
+        if (cbTop <= sn.top) continue;
+        if (cbTop >= snBottom) break;
+
         if (snBottom > cbTop) {
           var available = cbTop - sn.top;
           var lines = Math.floor(available / lineHeight);
           var newVisible = lines * lineHeight;
           if (newVisible > 0 && (sn.visibleHeight === null || newVisible < sn.visibleHeight)) {
             sn.visibleHeight = newVisible;
+            sn.codeBlocksToMask = [wideCodeBlocks[p]];
           }
+          break;
         }
-        break; // pre elements are in document order; first one below suffices
       }
     }
   }
@@ -244,6 +281,37 @@
     }
   }
 
+  function maskCodeBlocksForExpandedSidenote(sn) {
+    cleanupCodeMasks();
+
+    var container = sidenoteColumn.closest('.content-with-sidenotes');
+    if (!container || sn.codeBlocksToMask.length === 0) return;
+
+    var containerRect = container.getBoundingClientRect();
+    var columnRect = sidenoteColumn.getBoundingClientRect();
+    var maskLeft = Math.max(0, containerRect.width);
+    var maskRight = columnRect.right - containerRect.left;
+
+    sn.codeBlocksToMask.forEach(function (block) {
+      var top = block.top;
+      var bottom = block.bottom;
+      var left = Math.max(maskLeft, block.left);
+      var right = Math.min(maskRight, block.right);
+      var width = right - left;
+      var height = bottom - top;
+      if (width <= 0 || height <= 0) return;
+
+      var mask = document.createElement('div');
+      mask.className = 'sidenote-code-mask';
+      mask.style.left = left + 'px';
+      mask.style.top = top + 'px';
+      mask.style.width = width + 'px';
+      mask.style.height = height + 'px';
+      container.appendChild(mask);
+      activeCodeMasks.push(mask);
+    });
+  }
+
   // ── Positioning algorithm — orchestrator ──────────────────────
 
   function positionSidenotes() {
@@ -273,6 +341,7 @@
   function activateSidenote(index) {
     var sn = sidenotes[index];
     sn.el.classList.add('is-hovered');
+    maskCodeBlocksForExpandedSidenote(sn);
 
     // Expand to full height; CSS transition animates smoothly and
     // clip-path: inset(0 ...) tracks the growing border box automatically.
@@ -293,6 +362,7 @@
   function deactivateSidenote(index) {
     var sn = sidenotes[index];
     sn.el.classList.remove('is-hovered');
+    cleanupCodeMasks();
 
     // Restore constrained height; CSS transition animates the collapse.
     if (sn.visibleHeight !== null) {
@@ -333,6 +403,7 @@
 
   function deactivate() {
     document.body.classList.remove('has-sidenotes');
+    cleanupCodeMasks();
 
     // Reset inline styles
     sidenotes.forEach(function (sn) {
