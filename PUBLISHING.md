@@ -25,9 +25,14 @@ npm install     # first time only, or after dependency changes
 npm run dev     # kills old servers, regenerates data, starts hugo server
 ```
 
-The site will be available at `http://localhost:1313/`.
+The site will be available at `http://localhost:1313/`. The default dev server
+is optimized for editing notes: `hugo.dev.toml` mounts notes, posts, and
+lightweight static assets only. It intentionally omits the full quotes and
+works corpus because loading ~25K work pages can wedge `hugo server` while
+browser requests wait forever. Full builds and deploys still render the
+complete site.
 
-**Important**: Hugo watches `content/` for changes and does live reload, but this only works reliably for changes to the file you're editing. Changes that affect other pages (e.g. updating a BibTeX entry that changes how citations render on note pages) require restarting the server. Always call `stafforini-start-server` after running `stafforini-update-works` or `stafforini-update-backlinks`.
+**Important**: Hugo watches `content/` for changes and does live reload, but this only works reliably for changes to the file you're editing. Changes that affect other pages (e.g. updating a BibTeX entry that changes how citations render on note pages) require a fresh server. The `stafforini-export-all-notes` Emacs command restarts the preview server after a successful export; from the shell, run `stafforini-start-server` (`s` from `stafforini-menu`) or `npm run dev` after batch exports when you want to preview the result.
 
 To also include draft content:
 
@@ -116,7 +121,7 @@ All build commands are provided by the `stafforini` package. They run asynchrono
 
 ## Batch workflow
 
-For bulk operations (e.g. after a migration or mass edit), use the batch Emacs commands:
+For bulk operations (e.g. after a migration or mass edit), use the batch export commands:
 
 - `M-x stafforini-export-all-notes` — exports all notes
 - `M-x stafforini-export-all-quotes` — exports all quotes
@@ -125,11 +130,16 @@ Or from the shell:
 
 ```bash
 # Export all notes
-emacs --batch -l scripts/export-notes.el
+bash scripts/export-notes.sh
 
 # Export all quotes
 bash scripts/export-quotes.sh
 ```
+
+Both shell wrappers now do a full source scan/export every time.  They no
+longer depend on an incremental export manifest.  If a Hugo dev server is
+running, these wrappers stop it after a successful export; restart with
+`M-x stafforini-start-server` (`s` from `stafforini-menu`) or `npm run dev`.
 
 ## Full rebuild
 
@@ -147,29 +157,59 @@ The export scripts handle intermediate steps automatically. Steps 2 and 3 each r
 Or from the shell:
 
 ```bash
-bash scripts/export-notes.sh --full          # export notes + lastmod, backlinks, citing-notes
-bash scripts/export-quotes.sh --full         # id-slug map + export quotes + works, topics
-python scripts/process-pdfs.py               # strip annotations, generate thumbnails
-rm -rf public                                # clean stale build output
-hugo --minify                                # build the site
-npx pagefind --site public                   # generate search index
+bash scripts/deploy.sh                       # export content, process PDFs, build, index, deploy
+bash scripts/deploy.sh --include-pdfs        # also publish changed PDFs/thumbnails
+
+# Or, to regenerate content without deploying:
+bash scripts/export-notes.sh                 # export notes + lastmod, backlinks, citing-notes
+bash scripts/export-quotes.sh                # id-slug map + export quotes + works, tags
 ```
 
 ## Deployment
 
-Run `scripts/deploy.sh` from the project root. There is no CI/CD from git pushes — all deploys are triggered manually by running the script.
+Run `scripts/deploy.sh` from the project root, or `M-x stafforini-deploy`
+from `stafforini-menu` (`D`, with `C-u` for quick deploy). There is no CI/CD
+from git pushes — all deploys are triggered manually by running the script.
 
-The deploy script:
+In full mode, the deploy script:
 
-1. Injects lastmod dates from org file modification times
-2. Processes PDFs (strip annotations, generate thumbnails)
-3. Generates citing-notes data
+1. Exports notes and regenerates note-derived data
+2. Exports quotes, extracts non-diary quotes, generates work pages, and injects tags
+3. Processes PDFs (strip annotations, generate thumbnails)
 4. Cleans `public/` (removes stale files from previous builds)
 5. Builds the site with `hugo --minify`
 6. Generates the Pagefind search index
-7. Deploys to Netlify via CLI
+7. Verifies the rendered homepage has the expected recent notes and quotes
+8. Deploys to Netlify via CLI
 
-Note: The org-to-markdown export must be run locally before deploying. The org source files and `content/` directory are not tracked in this repository.
+Use `scripts/deploy.sh --quick` only after a recent full export when changing
+templates, styles, or configuration. Quick deploy skips content export and data
+regeneration.
+
+PDFs and PDF thumbnails are processed during full deploys, but they are skipped
+during the Netlify upload by default via `.netlifyignore`; otherwise the CLI has
+to scan/upload roughly 50 GB of rarely changing assets. When adding or changing
+PDF files, run `scripts/deploy.sh --include-pdfs` from the shell so the script
+temporarily disables `.netlifyignore` for that deploy.
+
+The export scripts also run `scripts/verify-site.py --build dev` before
+returning success. This is a rendered-output smoke test, not just a syntax
+check: it catches cases where Hugo builds but the homepage loses visible
+sections such as recent quotes.
+
+## Testing
+
+Use the repo-local wrapper rather than the global `pytest` executable:
+
+```bash
+npm test
+# or
+bash scripts/test.sh
+```
+
+The wrapper runs `python -m pytest` through a valid interpreter and disables
+pytest's cache writes, which avoids the stale Homebrew `pytest` shim and the
+nosync `.pytest_cache` symlink.
 
 ## Configuration
 
