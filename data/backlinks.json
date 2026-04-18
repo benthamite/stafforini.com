@@ -33,6 +33,10 @@
     {
       "slug": "about",
       "title": "About"
+    },
+    {
+      "slug": "situational-awareness-lp",
+      "title": "Footnotes"
     }
   ],
   "elfeed-ai": [
