@@ -13,13 +13,13 @@ A stable symlink `~/.config/emacs-profiles/active` points to the current profile
 ### Notes workflow
 
 1. **`stafforini-publish-note` (`p`)** -- Only adds ox-hugo metadata (`:EXPORT_FILE_NAME:`, `:EXPORT_HUGO_SECTION:`, `:EXPORT_DATE:`) to the org file. Does NOT export.
-2. **`stafforini-export-all-notes` (`n`)** -- Runs `export-notes.sh`, which calls `incremental-export.py` -> Emacs batch ox-hugo export -> inject-lastmod -> generate-backlinks -> generate-citing-notes. This produces the `.md` files in `content/notes/`.
+2. **`stafforini-export-all-notes` (`n`)** -- Runs `export-notes.sh`, which calls `export-org.py` -> Emacs batch ox-hugo export -> inject-lastmod -> generate-backlinks -> generate-citing-notes -> inject-tags. This produces the `.md` files in `content/notes/`.
 3. **Hugo dev server** -- Watches `content/` and auto-reloads.
 
 ### Key pipeline files
 
 - `scripts/export-notes.el` -- Emacs batch export logic
-- `scripts/incremental-export.py` -- Orchestrator that tracks file mtimes via manifest
+- `scripts/export-org.py` -- Stateless full-export orchestrator that scans source files each run and prunes stale outputs after a successful export
 - `scripts/export-notes.sh` -- Shell wrapper that runs the full notes export pipeline
 
 ### Properties format
@@ -50,14 +50,21 @@ To fix content issues, always edit the upstream source (org files or bib files),
 
 `scripts/deploy.sh` builds the Hugo site locally and pushes it directly to Netlify via CLI. There is no CI/CD from git pushes -- all deploys are triggered by running the script.
 
-Workflow: export from org-mode, then run `scripts/deploy.sh`.
+Workflow: run `scripts/deploy.sh` for the full export/build/deploy pipeline.
 
 ### Deploy modes
 
-- **Full deploy** (`D` in menu): regenerates all data, processes PDFs, cleans `public/`, builds Hugo, builds Pagefind index, deploys. Takes ~4 minutes.
-- **Quick deploy** (`C-u D` in menu, or `deploy.sh --quick`): skips data regeneration and PDF processing. Use when only templates, styles, or Hugo config changed. Takes ~1 minute.
+- **Full deploy** (`D` in menu): exports notes and quotes, regenerates derived data, processes PDFs, cleans `public/`, builds Hugo, builds Pagefind index, verifies rendered output, deploys. Netlify upload skips `pdfs/` and `pdf-thumbnails/` by default via `.netlifyignore`. Takes ~4 minutes.
+- **Quick deploy** (`C-u D` in menu, or `deploy.sh --quick`): skips content export, data regeneration, and PDF processing. Use when only templates, styles, or Hugo config changed after a recent full export. Takes ~1 minute.
+- **PDF asset deploy** (`deploy.sh --include-pdfs` from the shell): use only after adding or changing PDFs/thumbnails. Temporarily disables `.netlifyignore` so Netlify sees the heavy PDF asset trees.
 
 Never run `hugo` directly and deploy with `--no-build` -- this skips the clean step and produces stale output.
+
+Export and deploy scripts run `scripts/verify-site.py` before reporting success. This smoke test renders/checks the homepage and fails if visible sections such as recent notes or recent quotes disappear.
+
+## Testing
+
+Use `npm test` or `bash scripts/test.sh` rather than the global `pytest` command. The repo-local wrapper avoids the stale Homebrew pytest shim and disables pytest cache writes against the nosync `.pytest_cache` symlink.
 
 ### Nosync symlinks
 
