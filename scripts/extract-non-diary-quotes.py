@@ -240,7 +240,9 @@ def main():
     if not args.dry_run:
         QUOTES_DIR.mkdir(parents=True, exist_ok=True)
 
-    org_files = sorted(BIBLIO_NOTES_DIR.glob("*.org"))
+    org_files = sorted(
+        p for p in BIBLIO_NOTES_DIR.glob("*.org") if not p.name.startswith(".")
+    )
     stats = {"files_scanned": 0, "files_skipped_dataless": 0,
              "quotes_extracted": 0, "files_written": 0}
 
