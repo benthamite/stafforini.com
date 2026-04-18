@@ -39,6 +39,12 @@ fi
 if $do_quotes; then
   run_step "Extracting non-diary quotes" python3 "$SCRIPT_DIR/extract-non-diary-quotes.py"
   run_step "Generating work pages" python3 "$SCRIPT_DIR/generate-work-pages.py"
+else
+  # ox-hugo emits diary quotes without the `diary = true` marker that the
+  # homepage activity feed, quotes RSS, and verify-site smoke test rely on.
+  # Postprocessing is cheap and idempotent, so run it even on --notes to keep
+  # the quote front matter valid between quote exports.
+  run_step "Maintaining quote front matter" python3 "$SCRIPT_DIR/generate-work-pages.py" --skip-works
 fi
 
 # Tags must run after every generator that creates or rewrites markdown.
