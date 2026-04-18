@@ -47,8 +47,12 @@
 {{ $dark := resources.Get "css/_dark.css" }}
 {{ $search := resources.Get "css/_search.css" }}
 {{ $preview := resources.Get "css/_preview.css" }}
-{{ $css := slice $base $layout $components $content $sidenotes $toc $chromaLight $chromaDark $dark $search $preview | resources.Concat "css/bundle.css" | minify | fingerprint }}
-<link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+{{/* Stable filename (no fingerprint): embedding the bundle hash in the URL
+     means every CSS edit changes every page's HTML, so every deploy re-uploads
+     ~30K pages. Cache invalidation is handled by Netlify's default ETag
+     revalidation on /css/* (see netlify.toml cache headers). */}}
+{{ $css := slice $base $layout $components $content $sidenotes $toc $chromaLight $chromaDark $dark $search $preview | resources.Concat "css/bundle.css" | minify }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}">
 
 {{/* Conditional KaTeX loading: only include JS/CSS on pages whose content
      contains math delimiters ($$, \(, or \[) */}}

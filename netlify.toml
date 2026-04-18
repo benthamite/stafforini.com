@@ -34,6 +34,19 @@ for = "/fonts/*"
   [headers.values]
   Cache-Control = "public, max-age=31536000, immutable" # 1 year in seconds
 
+# CSS/JS use stable filenames (no fingerprint — see head.html / load-js.html).
+# must-revalidate forces browsers to check ETag on every request, so edits
+# propagate immediately while unchanged assets still get served as 304.
+[[headers]]
+for = "/css/*"
+  [headers.values]
+  Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+for = "/js/*"
+  [headers.values]
+  Cache-Control = "public, max-age=0, must-revalidate"
+
 # Permissive CSP for the archived WordPress tango blog under /tango/*.
 # The mirrored pages embed YouTube/Spotify iframes, Facebook widgets, and
 # Google Docs references that the site-wide CSP would block.  This override
