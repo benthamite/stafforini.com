@@ -44,19 +44,12 @@ fi
 echo "--- Evaluating babel blocks in $(basename "$ORG_FILE") ---"
 # Run in an isolated batch Emacs with a minimal init so the user's active
 # session stays fully responsive. -Q skips site + user init entirely; we
-# explicitly load sa-lp-init.el which pulls in just org + ob-python.
-BLOCK_LIST="$(printf '"%s" ' "${BLOCKS[@]}")"
+# explicitly load sa-lp-init.el which pulls in just org + ob-python and
+# defines sa-lp-refresh (with per-block retry + backoff).
 INIT_FILE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/sa-lp-init.el"
 
-emacs -Q --batch --load "$INIT_FILE" --eval "
-(progn
-  (find-file \"$ORG_FILE\")
-  (dolist (name '($BLOCK_LIST))
-    (message \"sa-lp-refresh: running %s\" name)
-    (org-babel-goto-named-src-block name)
-    (org-babel-execute-src-block))
-  (save-buffer))
-"
+emacs -Q --batch --load "$INIT_FILE" \
+  --eval "(sa-lp-refresh \"$ORG_FILE\")"
 
 echo "--- Re-exporting notes to Hugo ---"
 bash "$STAFFORINI_REPO/scripts/export-notes.sh"
