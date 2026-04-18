@@ -36,7 +36,7 @@
   {{ else }}
     {{/* Default mode: full citation + date (quotes index, feed, etc.) */}}
     {{ with $pg.Params.work }}
-      {{ $work := $pg.Site.GetPage (printf "/works/%s" .) }}
+      {{ $work := partial "work-ref.html" . }}
       {{ if $work }}
       {{ $type := $work.Params.entry_type | default "book" }}
       <p class="quote-attribution">

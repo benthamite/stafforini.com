@@ -17,7 +17,15 @@ import argparse
 import re
 from pathlib import Path
 
-from lib import BIB_FILES, atomic_write_text, cite_key_to_slug, escape_yaml_string, parse_bib_entries, safe_remove
+from lib import (
+    BIB_FILES,
+    atomic_write_json,
+    atomic_write_text,
+    cite_key_to_slug,
+    escape_yaml_string,
+    parse_bib_entries,
+    safe_remove,
+)
 
 # === Constants ===
 
@@ -25,6 +33,7 @@ SCRIPTS_DIR = Path(__file__).parent
 HUGO_ROOT = SCRIPTS_DIR.parent
 QUOTES_DIR = HUGO_ROOT / "content" / "quotes"
 WORKS_DIR = HUGO_ROOT / "content" / "works"
+WORK_METADATA_PATH = HUGO_ROOT / "data" / "works.json"
 COLLECTION_LIKE_TYPES = frozenset({"collection", "proceedings"})
 
 
@@ -231,38 +240,68 @@ def postprocess_quotes(dry_run: bool = False) -> dict:
 # === Work page generation ===
 
 
+def clean_work_field(value: str) -> str:
+    """Strip BibTeX braces, unescape special chars, and convert org italic."""
+    value = value.replace("{", "").replace("}", "")
+    # Convert BibTeX escape sequences to plain characters
+    value = value.replace("\\&", "&")
+    value = value.replace("\\%", "%")
+    value = value.replace("\\$", "$")
+    value = value.replace("\\_", "_")
+    value = value.replace("\\#", "#")
+    # Convert org-mode /italic/ markup to HTML <em>.
+    # Require at least 2 chars between slashes to avoid matching URL path segments.
+    return re.sub(r'(?<!\w)/([^/\n]{2,})/(?!\w)', r'<em>\1</em>', value)
+
+
+def work_metadata(entry: dict) -> dict:
+    """Return template-facing metadata for a BibTeX entry."""
+    title = clean_work_field(entry["title"])
+    shorttitle = clean_work_field(entry.get("shorttitle", ""))
+    if not shorttitle and title and ":" in title:
+        shorttitle = title.split(":")[0].strip()
+
+    author_raw = entry["author"] or entry["editor"]
+    editor_raw = entry.get("editor", "")
+    raw_date = entry.get("date", "")
+    pub_date = raw_date[:10] if re.match(r"\d{4}-\d{2}-\d{2}", raw_date) else ""
+
+    return {
+        "title": title,
+        "author": bib_author_to_display(author_raw),
+        "entry_type": entry.get("entry_type", "book"),
+        "shorttitle": shorttitle,
+        "year": entry.get("year", ""),
+        "location": clean_work_field(entry.get("location", "")),
+        "booktitle": clean_work_field(entry.get("booktitle", "")),
+        "journaltitle": clean_work_field(entry.get("journaltitle", "")),
+        "volume": clean_work_field(entry.get("volume", "")),
+        "number": clean_work_field(entry.get("number", "")),
+        "pages": clean_work_field(entry.get("pages", "")),
+        "editor": bib_author_to_display(editor_raw) if editor_raw else "",
+        "external_url": entry.get("url", "").replace("{", "").replace("}", ""),
+        "pub_date": pub_date,
+    }
+
+
 def generate_work_page(entry: dict) -> str:
     """Generate YAML front matter for a work page."""
-    def clean(s: str) -> str:
-        """Strip BibTeX braces, unescape special chars, convert org italic to HTML."""
-        s = s.replace("{", "").replace("}", "")
-        # Convert BibTeX escape sequences to plain characters
-        s = s.replace("\\&", "&")
-        s = s.replace("\\%", "%")
-        s = s.replace("\\$", "$")
-        s = s.replace("\\_", "_")
-        s = s.replace("\\#", "#")
-        # Convert org-mode /italic/ markup to HTML <em>
-        # Require at least 2 chars between slashes to avoid matching URL path segments
-        s = re.sub(r'(?<!\w)/([^/\n]{2,})/(?!\w)', r'<em>\1</em>', s)
-        return s
-
-    title = clean(entry["title"])
+    title = clean_work_field(entry["title"])
     # Compute short title: use BibTeX shorttitle if present, otherwise
     # truncate at the first colon (the standard subtitle separator)
-    shorttitle = clean(entry.get("shorttitle", ""))
+    shorttitle = clean_work_field(entry.get("shorttitle", ""))
     if not shorttitle and title and ":" in title:
         shorttitle = title.split(":")[0].strip()
     author_raw = entry["author"] or entry["editor"]
     author = bib_author_to_display(author_raw)
     year = entry["year"]
-    location = clean(entry.get("location", ""))
+    location = clean_work_field(entry.get("location", ""))
     entry_type = entry.get("entry_type", "book")
-    booktitle = clean(entry.get("booktitle", ""))
-    journaltitle = clean(entry.get("journaltitle", ""))
-    volume = clean(entry.get("volume", ""))
-    number = clean(entry.get("number", ""))
-    pages = clean(entry.get("pages", ""))
+    booktitle = clean_work_field(entry.get("booktitle", ""))
+    journaltitle = clean_work_field(entry.get("journaltitle", ""))
+    volume = clean_work_field(entry.get("volume", ""))
+    number = clean_work_field(entry.get("number", ""))
+    pages = clean_work_field(entry.get("pages", ""))
     editor_raw = entry.get("editor", "")
     editor = bib_author_to_display(editor_raw) if editor_raw else ""
     url = entry.get("url", "").replace("{", "").replace("}", "")
@@ -304,7 +343,7 @@ def generate_work_page(entry: dict) -> str:
     lines.append("")
 
     # Add abstract as page body content if available
-    abstract = clean(entry.get("abstract", "")).strip()
+    abstract = clean_work_field(entry.get("abstract", "")).strip()
     if abstract:
         lines.append(abstract)
         lines.append("")
@@ -399,6 +438,18 @@ def generate_work_pages(bib_by_key: dict, dry_run: bool = False, limit: int = 0)
             chosen = slug_to_entry[slug]["cite_key"]
             aliases = ", ".join(key for key in keys if key != chosen)
             print(f"    {slug}: {chosen}" + (f" (aliases: {aliases})" if aliases else ""))
+
+    if not limit:
+        metadata = {
+            slug: work_metadata(entry)
+            for slug, entry in sorted(slug_to_entry.items())
+        }
+        if dry_run:
+            print(f"  [DRY RUN] Would write {len(metadata)} work metadata entries")
+        else:
+            WORK_METADATA_PATH.parent.mkdir(parents=True, exist_ok=True)
+            atomic_write_json(WORK_METADATA_PATH, metadata, ensure_ascii=False)
+            print(f"  Wrote {len(metadata)} work metadata entries to data/works.json")
 
     processed = 0
     for slug in sorted(all_slugs):

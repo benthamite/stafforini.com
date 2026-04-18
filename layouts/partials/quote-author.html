@@ -2,7 +2,7 @@
 {{- $author := $page.Params.quoted_author -}}
 {{- if not $author -}}
   {{- with $page.Params.work -}}
-    {{- with site.GetPage (printf "/works/%s" .) -}}
+    {{- with partial "work-ref.html" . -}}
       {{- $author = .Params.author -}}
     {{- end -}}
   {{- end -}}
