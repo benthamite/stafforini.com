@@ -1,7 +1,7 @@
 {{ define "main" }}
 <h1>{{ .Title }}</h1>
 
-{{ $pages := .Pages }}
+{{ $pages := where .Pages "Params.unlisted" "ne" true }}
 
 {{/* Notes */}}
 {{ $notes := where $pages "Section" "notes" }}
