@@ -59,6 +59,16 @@ for = "/tango/*"
 
 # RSS feed redirects (preserve subscribers from WordPress)
 [[redirects]]
+from = "/feed/"
+to = "/notes/index.xml"
+status = 301
+
+[[redirects]]
+from = "/feed"
+to = "/notes/index.xml"
+status = 301
+
+[[redirects]]
 from = "/blog/feed/"
 to = "/notes/index.xml"
 status = 301
@@ -78,11 +88,14 @@ from = "/tango/feed"
 to = "/notes/index.xml"
 status = 301
 
+# force = true is required because /quotes/ exists as a static page;
+# without it Netlify serves the HTML and ignores the query-string redirect.
 [[redirects]]
 from = "/quotes/"
 query = { feed = "rss2" }
 to = "/quotes/index.xml"
 status = 301
+force = true
 
 # General blog → notes redirect
 [[redirects]]
