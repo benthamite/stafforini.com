@@ -29,6 +29,9 @@
   [[module.mounts]]
     source = "static/tango"
     target = "static/tango"
+  [[module.mounts]]
+    source = "static/feed"
+    target = "static/feed"
 
   # Content, data, layouts, etc. still use default mounts.
   [[module.mounts]]
