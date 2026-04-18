@@ -123,9 +123,9 @@
                      "~/My Drive/notes/"))
          (exportable
           (if file-list-path
-              ;; Incremental: only export files from the list, filtering dataless
+              ;; Batch wrapper passes the full exportable file list.
               (progn
-                (message "Incremental mode: reading file list from %s" file-list-path)
+                (message "Reading export file list from %s" file-list-path)
                 (let ((files (with-temp-buffer
                                (insert-file-contents file-list-path)
                                (split-string (buffer-string) "\n" t))))
@@ -167,6 +167,8 @@
           (let ((buf (find-file-noselect file)))
             (unwind-protect
                 (with-current-buffer buf
+                  (export--expand-includes)
+                  (export--expose-visible-named-results)
                   (export--expand-transclusions)
                   (org-hugo-export-wim-to-md :all-subtrees)
                   (setq export-notes-exported (1+ export-notes-exported))
@@ -194,7 +196,8 @@
     (when export-notes-errors
       (message "Errors: %d" (length export-notes-errors))
       (dolist (err export-notes-errors)
-        (message "  %s: %s" (file-name-nondirectory (car err)) (cdr err))))))
+        (message "  %s: %s" (file-name-nondirectory (car err)) (cdr err)))
+      (kill-emacs 1))))
 
 ;; Run the export
 (export-notes-batch)

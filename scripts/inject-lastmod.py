@@ -19,18 +19,24 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import json
 import os
 import re
 import subprocess
 from datetime import datetime
 from pathlib import Path
 
-from lib import NOTES_DIR, REPO_ROOT, atomic_write_text, escape_toml_string, is_dataless
+from lib import (
+    NOTES_DIR,
+    REPO_ROOT,
+    atomic_write_text,
+    escape_toml_string,
+    extract_export_file_names,
+    find_org_files,
+    is_dataless,
+)
 
 # === Constants ===
 
-SCRIPT_DIR = REPO_ROOT / "scripts"
 CONTENT_DIR = REPO_ROOT / "content" / "notes"
 ORG_DIR = NOTES_DIR
 
@@ -98,20 +104,18 @@ def _get_git_first_dates() -> dict[Path, str]:
 
 
 def load_output_to_source_map() -> dict[str, Path]:
-    """Build {output_filename: source_path} from the export manifest.
-
-    Uses the manifest to resolve which org file produced each .md file,
-    avoiding ambiguity when multiple org files share the same basename.
-    """
-    manifest_path = SCRIPT_DIR / ".export-notes-manifest.json"
-    if not manifest_path.exists():
-        return {}
-    with open(manifest_path) as f:
-        manifest = json.load(f)
+    """Build {output_filename: source_path} directly from note org files."""
     result = {}
-    for relpath, info in manifest.get("files", {}).items():
-        source = ORG_DIR / relpath
-        for output in info.get("outputs", []):
+    for source in find_org_files(ORG_DIR):
+        if is_dataless(source):
+            continue
+        for output in extract_export_file_names(source):
+            existing = result.get(output)
+            if existing and existing != source:
+                raise ValueError(
+                    f"Duplicate EXPORT_FILE_NAME output {output}: "
+                    f"{existing} and {source}"
+                )
             result[output] = source
     return result
 
@@ -119,7 +123,7 @@ def load_output_to_source_map() -> dict[str, Path]:
 def find_org_file(slug, output_map=None):
     """Find the org file for a given slug.
 
-    Checks the export manifest first (via output_map) for an exact match,
+    Checks the source-derived output map first for an exact match,
     then falls back to searching ORG_DIR recursively.
     """
     md_name = f"{slug}.md"

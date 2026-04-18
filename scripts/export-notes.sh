@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # Batch export blog org files to Hugo markdown via ox-hugo.
-# Uses incremental export by default (only changed files).
-# Pass --full to force a complete re-export.
+# Always does a full source scan/export.  The optional --full flag is accepted
+# for compatibility with older Emacs commands and shell habits.
 # Usage: bash scripts/export-notes.sh [--full]
 source "$(dirname "$0")/common.sh"
 
 # Pre-export: ensure the ID-slug map is fresh (the export itself needs it)
 run_step "Generating ID-slug map" python3 "$SCRIPT_DIR/generate-id-slug-map.py"
 
-python3 "$SCRIPT_DIR/incremental-export.py" notes "$@"
+python3 "$SCRIPT_DIR/export-org.py" notes "$@"
 
 bash "$SCRIPT_DIR/regenerate-data.sh" --notes
 
@@ -38,3 +38,7 @@ if missing:
     sys.exit(1)
 print(f'Validation OK: all exported files have titles.')
 "
+
+run_step "Verifying dev site" python3 "$SCRIPT_DIR/verify-site.py" --build dev
+
+stop_hugo_servers_after_content_change "notes export"
