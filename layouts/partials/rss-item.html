@@ -2,10 +2,17 @@
   Shared RSS <item> template used by both _default/rss.xml and quotes/rss.xml.
   Receives a page as context (.).
 */}}
+{{- $description := "" -}}
+{{- with .Description -}}
+  {{- $description = . -}}
+{{- else -}}
+  {{- $description = .RawContent -}}
+{{- end -}}
+{{- $description = $description | replaceRE `(?m)^>\s?` "" | replaceRE `(?m)^\s*#+\s*` "" | strings.TrimSpace -}}
     <item>
       <title>{{ .Title | plainify }}</title>
       <link>{{ .Permalink }}</link>
       <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
       <guid>{{ .Permalink }}</guid>
-      <description><![CDATA[{{ .Content | replaceRE "]]>" "]]]]><![CDATA[>" | safeHTML }}]]></description>
+      <description><![CDATA[{{ $description | replaceRE "]]>" "]]]]><![CDATA[>" | safeHTML }}]]></description>
     </item>
