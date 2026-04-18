@@ -7,31 +7,15 @@
 
 ;;; Code:
 
+(require 'subr-x)
+
 ;; Add all elpaca build directories to load-path.
 ;; Only needed in batch mode — interactive Emacs already has elpaca configured.
 (when noninteractive
-  (let* ((profiles-dir (expand-file-name "~/.config/emacs-profiles/"))
-         (candidates
-          (seq-filter
-           (lambda (d)
-             (file-directory-p
-              (expand-file-name "elpaca/builds/" d)))
-           (directory-files profiles-dir t "^[0-9]")))
-         ;; Sort by version number (strip non-numeric suffixes like "-target"
-         ;; before comparing, since version< rejects them)
-         (latest (car (last (sort candidates
-                                  (lambda (a b)
-                                    (let ((va (replace-regexp-in-string
-                                               "-.*" ""
-                                               (file-name-nondirectory a)))
-                                          (vb (replace-regexp-in-string
-                                               "-.*" ""
-                                               (file-name-nondirectory b))))
-                                      (version< va vb)))))))
-         (builds-dir (when latest
-                       (expand-file-name "elpaca/builds/" latest))))
-    (when builds-dir
-      (message "Using elpaca builds from: %s" builds-dir)
+  (let* ((active-profile (expand-file-name "~/.config/emacs-profiles/active/"))
+         (builds-dir (expand-file-name "elpaca/builds/" active-profile)))
+    (when (file-directory-p builds-dir)
+      (message "Using elpaca builds from active profile: %s" builds-dir)
       (dolist (dir (directory-files builds-dir t "^[^.]"))
         (when (file-directory-p dir)
           (add-to-list 'load-path dir))))))
@@ -207,6 +191,114 @@ into any exported .md file that lacks one."
   (add-to-list 'org-export-filter-body-functions #'export--fix-broken-italic-close))
 
 ;;;; Transclusion support
+
+(defun export--expand-includes ()
+  "Expand all #+INCLUDE keywords in the current buffer before ox-hugo runs.
+The batch exporters visit source files in throwaway buffers, so this mutates
+only the export buffer and never writes expanded includes back to disk."
+  (org-export-expand-include-keyword nil nil nil buffer-file-name t))
+
+;;;; Babel result visibility
+
+(defun export--example-result-at-point ()
+  "Return metadata for a named #+RESULTS example block at point.
+Point must be on the #+RESULTS line.  The return value is a plist
+containing line and block bounds, the example block text, and the
+example body."
+  (let ((result-start (line-beginning-position))
+        (result-line-end (save-excursion
+                           (forward-line 1)
+                           (point))))
+    (save-excursion
+      (forward-line 1)
+      (when (looking-at "^[ \t]*#\\+begin_example\\b")
+        (let ((example-start (point))
+              body-start body-end example-end)
+          (forward-line 1)
+          (setq body-start (point))
+          (when (re-search-forward "^[ \t]*#\\+end_example\\b.*$" nil t)
+            (setq body-end (match-beginning 0))
+            (forward-line 1)
+            (setq example-end (point))
+            (list :result-start result-start
+                  :result-line-end result-line-end
+                  :example-start example-start
+                  :example-end example-end
+                  :example-text
+                  (buffer-substring-no-properties example-start example-end)
+                  :body
+                  (buffer-substring-no-properties body-start body-end))))))))
+
+(defun export--human-readable-result-p (name body)
+  "Return non-nil when named result NAME with BODY should render as content.
+Large machine-readable Babel results, especially data-returning JSON blocks,
+should remain implementation details.  Small named output blocks are treated
+as curated article output."
+  (let ((trimmed (string-trim body)))
+    (and name
+         (not (string-empty-p trimmed))
+         (< (length trimmed) 8000)
+         (not (string-match-p "\\(?:\\`\\|[-_]\\)data\\'" name))
+         (not (string-match-p "\\`[ \t\n]*[{\[]" trimmed)))))
+
+(defun export--enclosing-details-end (pos)
+  "Return the position after the enclosing #+end_details for POS, if any."
+  (let ((case-fold-search t))
+    (save-excursion
+      (goto-char pos)
+      (when (and (re-search-backward
+                  "^[ \t]*#\\+\\(begin\\|end\\)_details\\b" nil t)
+                 (string= (downcase (match-string 1)) "begin"))
+        (goto-char pos)
+        (when (re-search-forward "^[ \t]*#\\+end_details\\b.*$" nil t)
+          (forward-line 1)
+          (point))))))
+
+(defun export--expose-visible-named-results ()
+  "Expose human-readable named Babel results before ox-hugo export.
+Org exports source blocks according to their :exports header and suppresses
+associated #+RESULTS blocks when the source is code-only.  For articles that
+keep code inside a collapsed details block, this would hide the cached output.
+This function operates only on the transient export buffer: it converts small,
+named, human-readable example results into ordinary example blocks.  If such a
+result appears inside a details block, the visible copy is moved just after the
+details block so the code remains collapsed while the result stays readable."
+  (let ((inhibit-read-only t)
+        ops)
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward "^#\\+RESULTS:\\s-+\\([^ \t\n]+\\)\\s-*$" nil t)
+        (let* ((name (match-string-no-properties 1))
+               (info (export--example-result-at-point))
+               (body (plist-get info :body)))
+          (when (and info (export--human-readable-result-p name body))
+            (push (list
+                   :result-start
+                   (copy-marker (plist-get info :result-start))
+                   :result-line-end
+                   (copy-marker (plist-get info :result-line-end))
+                   :example-end
+                   (copy-marker (plist-get info :example-end))
+                   :details-end
+                   (let ((details-end
+                          (export--enclosing-details-end
+                           (plist-get info :result-start))))
+                     (when details-end (copy-marker details-end t)))
+                   :example-text
+                   (plist-get info :example-text))
+                  ops)))))
+    (dolist (op ops)
+      (let ((result-start (plist-get op :result-start))
+            (result-line-end (plist-get op :result-line-end))
+            (example-end (plist-get op :example-end))
+            (details-end (plist-get op :details-end))
+            (example-text (plist-get op :example-text)))
+        (if details-end
+            (progn
+              (goto-char details-end)
+              (insert "\n" example-text)
+              (delete-region result-start example-end))
+          (delete-region result-start result-line-end))))))
 
 ;; In batch mode, load org-transclusion ourselves; interactive Emacs has it already.
 (when noninteractive

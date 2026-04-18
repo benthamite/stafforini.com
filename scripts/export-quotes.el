@@ -68,9 +68,9 @@
          (notes-dir (expand-file-name "~/My Drive/bibliographic-notes/"))
          (public-files
           (if file-list-path
-              ;; Incremental: only export files from the list, filtering dataless
+              ;; Batch wrapper passes the full exportable file list.
               (progn
-                (message "Incremental mode: reading file list from %s" file-list-path)
+                (message "Reading export file list from %s" file-list-path)
                 (let ((files (with-temp-buffer
                                (insert-file-contents file-list-path)
                                (split-string (buffer-string) "\n" t))))
@@ -111,6 +111,7 @@
             (unwind-protect
                 (with-current-buffer buf
                   (export--rewrite-hugo-base-dir)
+                  (export--expand-includes)
                   (export--expand-transclusions)
                   (let ((count (org-hugo-export-wim-to-md :all-subtrees)))
                     (when count
@@ -134,7 +135,8 @@
     (when export-errors
       (message "Errors: %d" (length export-errors))
       (dolist (err export-errors)
-        (message "  %s: %s" (file-name-nondirectory (car err)) (cdr err))))))
+        (message "  %s: %s" (file-name-nondirectory (car err)) (cdr err)))
+      (kill-emacs 1))))
 
 ;; Run the export
 (export-quotes-batch)

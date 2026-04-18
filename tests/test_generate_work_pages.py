@@ -412,7 +412,9 @@ class TestWorkSlugCollisions:
     def test_generate_work_pages_does_not_raise_on_collisions(self, tmp_path):
         works_dir = tmp_path / "works"
         original = _mod.WORKS_DIR
+        original_metadata = _mod.WORK_METADATA_PATH
         _mod.WORKS_DIR = works_dir
+        _mod.WORK_METADATA_PATH = tmp_path / "data" / "works.json"
         try:
             stats = generate_work_pages_for_test({
                 "KabatZinn1991FullCatastropheLiving": {
@@ -456,8 +458,10 @@ class TestWorkSlugCollisions:
             })
         finally:
             _mod.WORKS_DIR = original
+            _mod.WORK_METADATA_PATH = original_metadata
 
         assert stats["created"] == 1
         work_path = works_dir / "kabat-zinn-1991-full-catastrophe-living.md"
         assert work_path.exists()
         assert "Using the Wisdom of Your Body and Mind" in work_path.read_text()
+        assert (_mod.WORK_METADATA_PATH == original_metadata)

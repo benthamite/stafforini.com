@@ -22,6 +22,7 @@ get_front_matter_date = _mod.get_front_matter_date
 apply_front_matter_fixups = _mod.apply_front_matter_fixups
 find_org_file = _mod.find_org_file
 process_single_file = _mod.process_single_file
+load_output_to_source_map = _mod.load_output_to_source_map
 
 
 # ---------------------------------------------------------------------------
@@ -166,6 +167,29 @@ class TestFindOrgFile:
             result = find_org_file("anki")
 
         assert result is None
+
+
+class TestLoadOutputToSourceMap:
+    def test_builds_map_from_export_file_name(self, tmp_path):
+        org = tmp_path / "source.org"
+        org.write_text("* Source\n:PROPERTIES:\n:EXPORT_FILE_NAME: custom-slug\n:END:\n")
+
+        with patch.object(_mod, "ORG_DIR", tmp_path):
+            result = load_output_to_source_map()
+
+        assert result == {"custom-slug.md": org}
+
+    def test_duplicate_export_file_name_raises(self, tmp_path):
+        (tmp_path / "one.org").write_text("* One\n:PROPERTIES:\n:EXPORT_FILE_NAME: same\n:END:\n")
+        (tmp_path / "two.org").write_text("* Two\n:PROPERTIES:\n:EXPORT_FILE_NAME: same\n:END:\n")
+
+        with patch.object(_mod, "ORG_DIR", tmp_path):
+            try:
+                load_output_to_source_map()
+            except ValueError as exc:
+                assert "Duplicate EXPORT_FILE_NAME" in str(exc)
+            else:
+                raise AssertionError("expected duplicate EXPORT_FILE_NAME to raise")
 
 
 class TestProcessSingleFile:

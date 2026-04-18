@@ -30,6 +30,9 @@ ORGROAM_DB_PATH = Path(os.environ.get(
 
 # Match individual [[id:UUID][name]] links (used in :TOPICS:, etc.)
 ID_LINK_RE = re.compile(r"\[\[id:([^\]]+)\]\[([^\]]*)\]\]")
+EXPORT_FILE_NAME_RE = re.compile(r"^\s*:EXPORT_FILE_NAME:\s+(\S+)", re.MULTILINE)
+ORG_HEADING_RE = re.compile(r"^(\*+)\s+")
+ORG_EXPORT_EXCLUDED_TAGS = ("noexport", "ARCHIVE")
 
 # Canonical list of all bib files used across scripts.
 # Individual scripts select subsets as needed.
@@ -502,6 +505,44 @@ def parse_org_headings(text: str) -> list[dict]:
         })
 
     return headings
+
+
+def heading_has_export_excluded_tag(line: str) -> bool:
+    """Return true if an org heading line has a tag that prevents export."""
+    return any(f":{tag}:" in line for tag in ORG_EXPORT_EXCLUDED_TAGS)
+
+
+def extract_export_file_names_from_text(text: str) -> list[str]:
+    """Extract exported markdown filenames from non-excluded org subtrees.
+
+    Honors inherited ``:noexport:`` and ``:ARCHIVE:`` tags, matching the
+    export exclusion settings used by the batch ox-hugo scripts.
+    """
+    names: list[str] = []
+    excluded_levels: list[int] = []
+
+    for line in text.splitlines():
+        heading = ORG_HEADING_RE.match(line)
+        if heading:
+            level = len(heading.group(1))
+            excluded_levels = [l for l in excluded_levels if l < level]
+            if heading_has_export_excluded_tag(line):
+                excluded_levels.append(level)
+            continue
+
+        if excluded_levels:
+            continue
+
+        match = EXPORT_FILE_NAME_RE.match(line)
+        if match:
+            names.append(match.group(1) + ".md")
+
+    return names
+
+
+def extract_export_file_names(path: Path) -> list[str]:
+    """Extract exported markdown filenames from an org file."""
+    return extract_export_file_names_from_text(path.read_text(errors="replace"))
 
 
 def extract_roam_refs(text: str) -> str:
