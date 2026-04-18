@@ -1,2 +1,6 @@
-{{- $js := resources.Get (printf "js/%s" .) | minify | fingerprint -}}
-<script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}"></script>
+{{- /* Stable filename (no fingerprint): editing a JS file must not change
+       every HTML page that references it, or deploys upload ~30K files. Cache
+       invalidation is handled by Netlify's default ETag revalidation on
+       /js/* (see netlify.toml cache headers). */ -}}
+{{- $js := resources.Get (printf "js/%s" .) | minify -}}
+<script src="{{ $js.RelPermalink }}"></script>
