@@ -86,7 +86,9 @@ def scan_source_files(cfg: dict) -> tuple[dict[str, list[str]], list[Path]]:
     skipped_dataless: list[Path] = []
     org_files: list[Path] = []
     for source_dir in source_dirs:
-        org_files.extend(sorted(source_dir.rglob("*.org")))
+        org_files.extend(sorted(
+            p for p in source_dir.rglob("*.org") if not p.name.startswith(".")
+        ))
 
     total = len(org_files)
     for index, org_file in enumerate(org_files, 1):

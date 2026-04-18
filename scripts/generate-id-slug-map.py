@@ -140,7 +140,9 @@ def scan_notes_filesystem() -> tuple[dict[str, str], dict[str, str]]:
         print(f"  Warning: directory not found: {NOTES_DIR}", file=sys.stderr)
         return mapping, url_overrides
 
-    org_files = sorted(NOTES_DIR.rglob("*.org"))
+    org_files = sorted(
+        p for p in NOTES_DIR.rglob("*.org") if not p.name.startswith(".")
+    )
     total = len(org_files)
     skipped_dataless = 0
     files_published = 0

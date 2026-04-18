@@ -93,7 +93,9 @@ def main():
         print(f"ERROR: {BIBLIO_NOTES_DIR} does not exist")
         return
 
-    org_files = sorted(BIBLIO_NOTES_DIR.glob("*.org"))
+    org_files = sorted(
+        p for p in BIBLIO_NOTES_DIR.glob("*.org") if not p.name.startswith(".")
+    )
     stats = {
         "scanned": 0,
         "skipped_dataless": 0,

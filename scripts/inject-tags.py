@@ -109,7 +109,9 @@ def build_quote_tags(
     not who wrote it.
     """
     result: dict[str, list[str]] = {}
-    org_files = sorted(BIBLIO_NOTES_DIR.glob("*.org"))
+    org_files = sorted(
+        p for p in BIBLIO_NOTES_DIR.glob("*.org") if not p.name.startswith(".")
+    )
 
     for org_path in org_files:
         if is_dataless(org_path):
