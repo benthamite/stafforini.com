@@ -2,6 +2,11 @@ baseURL = "https://stafforini.com/"
 languageCode = "en"
 title = "Pablo Stafforini"
 
+# Preserve the natural case of taxonomy terms, section titles, etc.
+# With the default "ap" style, Hugo rewrites "Effective altruism" as
+# "Effective Altruism" on tag pages, which we don't want.
+titleCaseStyle = "none"
+
 # Degrade broken relref shortcodes to warnings instead of build errors.
 # The custom ID link handler in export-notes.el resolves most ID links, but
 # this safety net prevents build failures if any relref slips through.
