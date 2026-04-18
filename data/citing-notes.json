@@ -1,8 +1,50 @@
 {
-  "bostrom-2002-anthropic-bias-observation": [
+  "aaltola-2010-animal-ethics-argument": [
     {
-      "slug": "evaluative-selection-effect",
-      "title": "evaluative selection effect"
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "alward-2000-naive-argument-moral": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "andreev-2013-maximizing-donations-via": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "armour-1987-values-god-problem": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "bacque-1967-tema-interpretacion-ley": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "bell-2005-review-recent-publications": [
+    {
+      "slug": "california-proposition-2-a-bibliography",
+      "title": "California Proposition 2: a bibliography"
+    }
+  ],
+  "benatar-2001-why-naive-argument": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "blackburn-2009-philosophy": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
     }
   ],
   "bostrom-2009-moral-uncertainty-solution": [
@@ -15,6 +57,12 @@
     {
       "slug": "crucial-considerations-and-wise-philanthropy-by-nick-bostrom",
       "title": "'Crucial Considerations and Wise Philanthropy', by Nick Bostrom"
+    }
+  ],
+  "bovenkerk-2003-act-not-act": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
     }
   ],
   "broad-1906-philosophy-omar-khayyam": [
@@ -795,6 +843,10 @@
     {
       "slug": "c-d-broad-a-bibliography",
       "title": "C. D. Broad: a bibliography"
+    },
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
     }
   ],
   "broad-1930-five-types-ethical": [
@@ -1721,16 +1773,70 @@
       "title": "C. D. Broad: a bibliography"
     }
   ],
+  "brooks-1992-why-this-world": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "brooks-2013-way-produce-person": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "bruce-lauber-2007-role-ethical-judgments": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "bruers-2015-predation-procreation-problems": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "bulygin-1983-lenguaje-derecho-homenaje": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "burke-1984-hume-edwards-why": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
   "burton-1638-anatomy-melancholy": [
     {
       "slug": "contact",
       "title": "Contact"
     }
   ],
-  "chade-2006-matching-with-noise": [
+  "carlson-2001-presumption-nothingness": [
     {
-      "slug": "evaluative-selection-effect",
-      "title": "evaluative selection effect"
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "carpendale-2015-welfare-biology-extension": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "carroll-2018-why-there-something": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "carter-2013-vocation-earning-give": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
     }
   ],
   "cheetham-1964-eton-microcosm": [
@@ -1739,10 +1845,28 @@
       "title": "Derek Parfit: a bibliography"
     }
   ],
-  "cirkovic-2010-anthropic-shadow-observation": [
+  "clark-1979-rights-wild-things": [
     {
-      "slug": "evaluative-selection-effect",
-      "title": "evaluative selection effect"
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "clarke-2006-population-dynamics-animal": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "conee-2005-riddles-existence": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "corbin-2011-what-factors-influence": [
+    {
+      "slug": "california-proposition-2-a-bibliography",
+      "title": "California Proposition 2: a bibliography"
     }
   ],
   "cowen-1992-social-discount-rate": [
@@ -1751,10 +1875,34 @@
       "title": "Derek Parfit: a bibliography"
     }
   ],
+  "cowen-2003-policing-nature": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "cunha-2015-if-natural-entities": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "davies-2003-why-there-anything": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
   "dawes-hicks-1919-symposium-there-knowledge": [
     {
       "slug": "c-d-broad-a-bibliography",
       "title": "C. D. Broad: a bibliography"
+    }
+  ],
+  "dawkins-1995-god-utility-function": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
     }
   ],
   "dennett-1982-summary-of-discussion": [
@@ -1763,16 +1911,2564 @@
       "title": "Derek Parfit: a bibliography"
     }
   ],
+  "donaldson-2011-zoopolis-political-theory": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "donaldson-2013-defense-animal-citizens": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "dorado-2015-ethical-interventions-wild": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "ebert-2012-innocent-threats-problem": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "edwards-1967-why": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "everett-2001-environmental-ethics-animal": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "faria-2015-animals-need-problem": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "faria-2015-disentangling-obligations-assistance": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "faria-2015-making-difference-behalf": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "farquhar-2012-collective-action-working": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "farquhar-2012-replaceability-effect-working": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "farquhar-2012-universalisability-immoral": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "favre-1979-wildlife-rights-ever": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "fink-2005-predation-argument": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "fleming-1988-why-there-something": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "goldschmidt-2013-puzzle-existence-why": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "goldstick-1979-why-there-something": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "gould-1982-nonmoral-nature": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "grover-1998-cosmological-fecundity": [
+    {
+      "slug": "my-beliefs",
+      "title": "My beliefs"
+    },
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "grunbaum-1993-creation-cosmology": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "grunbaum-2009-why-there-world": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "hadley-2006-duty-to-aid": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
   "hagerstrom-1953-inquiries-nature-law": [
     {
       "slug": "c-d-broad-a-bibliography",
       "title": "C. D. Broad: a bibliography"
     }
   ],
+  "hallquist-2014-why-earn-give": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "heller-2009-ultimate-explanations-universe": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "hettinger-1994-valuing-predation-rolston": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "heylen-2017-why-there-something": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "hills-2010-utilitarianism-contractualism-demandingness": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "horta-2010-debunking-idyllic-view": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "horta-2010-disvalue-nature-intervention": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "horta-2010-ethics-ecology-fear": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "horta-2012-publications-in-english": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "horta-2013-zoopolis-intervention-state": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "horta-2015-problem-evil-nature": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "hoskin-2013-how-much-taxes": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "hurford-2013-what-earning-give": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "hutchins-1987-wildlife-conservation-animal": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "james-1911-problem-being": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "jamieson-1990-rights-justice-duties": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "jedick-2020-stimulants-sleep-aids": [
+    {
+      "slug": "minimizing-jet-lag",
+      "title": "Minimizing jet lag"
+    }
+  ],
+  "karnofsky-2013-our-take-earning": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "kaufman-2011-how-much-should-you": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "kaufman-2011-what-about-non-work": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "kaufman-2012-history-earning-give": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "kaufman-2012-professional-philanthropy": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "kaufman-2013-arguing-about-banking": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "kaufman-2013-history-earning-give-ii": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "kaufman-2013-history-earning-give-iii": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "kaufman-2013-summaries-earning-give": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "kaufman-2016-earning-give": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "keeling-1938-mc-taggart-nature-existence": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "kirkwood-1996-ethics-interventions-welfare": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "knight-1956-why-not-nothing": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "kuhn-2007-closer-truth-science": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "kuhn-2007-why-this-universe": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "kuhn-2013-common-objections-earning": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "kuhn-2013-downgrading-confidence-earning": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "kuhn-2013-why-not-nothing": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "kusch-1990-why-there-something": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "kuykendall-2012-selected-newspaper-coverage": [
+    {
+      "slug": "california-proposition-2-a-bibliography",
+      "title": "California Proposition 2: a bibliography"
+    }
+  ],
+  "leslie-1978-efforts-explain-all": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "leslie-1979-value-existence": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "leslie-2005-review-bede-rundle": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "leslie-2009-cosmos-existing-ethical": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "leslie-2009-why-there-something": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "leslie-2013-mystery-existence-why": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "lovvorn-2008-california-proposition-watershed": [
+    {
+      "slug": "california-proposition-2-a-bibliography",
+      "title": "California Proposition 2: a bibliography"
+    }
+  ],
+  "lowe-1996-why-there-anything": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "lusk-2010-effect-proposition-demand": [
+    {
+      "slug": "california-proposition-2-a-bibliography",
+      "title": "California Proposition 2: a bibliography"
+    }
+  ],
+  "mac-askill-2011-banking-ethical-career": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "mac-askill-2012-following-schindlers-footsteps": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "mac-askill-2013-save-world-dont": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "mac-askill-2014-replaceability-career-choice": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
   "mac-askill-2015-doing-good-better": [
     {
       "slug": "about",
       "title": "About"
+    }
+  ],
+  "mac-askill-201580000-hours-thinks": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "mac-askill-2016-banking-ethical-career": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "mac-askill-2016-should-you-switch": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "maitzen-2012-stop-asking-why": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "mann-2009-puzzle-existence": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "mannino-2015-humanitarian-intervention-nature": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "matthews-2013-join-wall-street": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "maurino-2008-fundamentos-de-derecho-penal": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "mawson-2009-why-there-anything": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "mc-kelvie-2015-seeking-increase-awareness": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "mc-mahan-2010-meat-eaters": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "mc-mahan-2010-predators-response": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "mc-mahan-2015-moral-problem-predation": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "mc-taggart-1892-changes-method-hegel": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1892-changes-method-hegela": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1892-review-thomas-mackay": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1893-further-determination-absolute": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1893-time-hegelian-dialectic": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1894-time-hegelian-dialectic": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1895-necessity-dogma": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1895-review-wallace-hegel": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1896-hegel-theory-punishment": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1896-studies-hegelian-dialectic": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1897-conception-society-organism": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1897-hegel-treatment-categories": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1897-hegel-treatment-categoriesa": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1897-review-noel-logique": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1897-review-watson-christianity": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1899-hegel-treatment-categories": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1900-critical-notice-josiah": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1900-hegel-treatment-categories": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1900-review-inge-christian": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1900-review-wilson-two": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1901-studies-hegelian-cosmology": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1902-critical-notice-howison": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1902-hegel-treatment-categories": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1902-review-joachim-study": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1902-review-josiah-roycea": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1903-considerations-relating-human": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1903-review-john-grier": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1903-review-tennant-origin": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1904-hegel-treatment-categories": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1904-human-preexistence": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1904-review-aspects-vedanta": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1904-review-robert-adamson": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1906-dogmas-religion": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1907-critical-notice-ormond": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1908-critical-notice-william": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1908-individualism-value": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1908-unreality-time": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1909-relation-time-eternity": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1909-review-edward-westermarck": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1910-commentary-hegel-logic": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1910-dare-be-wise": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1912-review-bosanquet-principle": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1912-review-georg-lasson": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1913-review-adolf-phalen": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1915-meaning-causality": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1916-human-immortality-pre-existence": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1921-immortality-monadistic-idealism": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1921-nature-existence": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1923-propositions-applicable-themselves": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1923-review-seth-pringle-pattison": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1925-review-xavier-leon": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1927-the-nature-existence": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "mc-taggart-1934-philosophical-studies": [
+    {
+      "slug": "john-mctaggart-ellis-mctaggart-a-bibliography",
+      "title": "John McTaggart Ellis McTaggart: a bibliography"
+    }
+  ],
+  "moen-2016-ethics-of-wild": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "mortensen-1986-explaining-existence": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "mosquera-2015-harm-they-inflict": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "munitz-1965-mystery-existence-essay": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "musschenga-2002-naturalness-animal-welfare": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "naess-1991-should-we-try": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "nagel-2010-why-there-anything": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "newman-2008-fiscal-economic-effects": [
+    {
+      "slug": "california-proposition-2-a-bibliography",
+      "title": "California Proposition 2: a bibliography"
+    }
+  ],
+  "ng-1995-welfare-biology-evolutionary": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "ng-2019-evolved-god-creationism-view": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "nino-1966-efectos-ilicito-civil": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1966-prologo": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1966-review-norberto-eduardo": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1967-lesiones-retorica-problema": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1968-review-richard-robinson": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1969-definicion-delito": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1970-dogmatica-juridica-sus": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1972-concurso-derecho-penal": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1972-pequena-historia-dolo": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1973-conceptos-basicos-derecho": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1973-definicion-derecho-norma": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1974-concepto-accion-derecho": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1974-concepto-sistema-juridico": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1975-ciencia-derecho-interpretacion": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1976-concepto-validez-problema": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1977-general-strategy-criminal": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1978-concepciones-fundamentales-liberalismo": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1978-confusions-kelsen-concept": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1979-algunos-modelos-metodologicos": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1979-contexto-social-regimen": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1979-es-tenencia-drogas": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1979-fundamentacion-legitima-defensa": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1979-mismo-omitir-que": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1980-alf-ross-maestro": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1980-dworkin-disolucion-controversia": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1980-dworkin-disolucion-revista-ciencias": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1980-dworkin-legal-positivism": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1980-introduccion-analisis-derecho": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1980-libre-albedrio-responsabilidad": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1980-limites-responsabilidad-penal": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1981-conceptos-derecho": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1981-pena-muerte-consentimiento": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1981-razones-prescripciones-respuesta": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1981-respuesta-bayon": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1981-respuesta-malamud-goti": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1981-review-carlos-alchourron": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1981-review-stuart-hampshire": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1982-concurso-continuacion-delitos": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1982-legitima-defensa-fundamentacion": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1983-caso-conciencia-cuestion": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1983-concepcion-alf-ross": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1983-concepto-poder-constituyente": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1983-consensual-theory-punishment": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1983-legal-ethics-metaphysics": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1983-ley-amnistia": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1983-nueva-estrategia-para": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1983-review-julio-maier": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1984-consideraciones-sobre-dogmatica": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1984-etica-derechos-humanos": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1984-legal-norms-reasons": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1984-liberty-equality-causality": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1984-limits-enforcement-morality": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1984-problemas-abiertos-filosofia": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1984-proyecto-reformulacion-obediencia": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1984-reforma-estudios-abogacia": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1984-ross-reforma-procedimiento": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1985-competencia-constituyente": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1985-concepto-validez-kelsen": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1985-concepto-validez-kelsen-aplicado": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1985-enfoque-esencialista": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1985-hombre-sus-derechos": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1985-human-rights-policy": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1985-limitaciones-teoria-hart": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1985-mismo-omitir-gracia": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1985-normas-juridicas-razones": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1985-puede-sistema-juridico": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1985-que-es-democracia": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1985-responsabilidad-juridica-represion": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1985-son-prescripciones": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1985-superacion-controversia": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1985-validez-derecho": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1985-validez-normas-de-facto": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1986-concepto-derecho-hart": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1986-constructivismo-epistemologico-entre": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1986-democracia-verdad-moral": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1986-desafio-universidad-argentina": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1986-dictamen-reforma-constitucional": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1986-does-consent-override": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1986-escepticismo-etico-justificacion": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1986-exposicion-coordinador": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1986-hechos-morales-concepcion": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1986-informe-practica-constitucional": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1986-justificacion-democracia-entre": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1986-paradoja-irrelevancia-moral": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1986-participacion-remedio-crisis": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1986-racionalismo-fundamentacion-etica": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1986-reforma-constitucional-dictamen": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1987-begriff-rechtfertigung": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1987-concept-moral-person": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1987-concepto-persona-valdivia": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1987-cuatrilema-consecuencialismo": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1987-defensa-democracia-convergencia": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1987-derecho-constitucional-frente": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1987-introduccion-filosofia-accion": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1987-prologo-nudelman": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1987-reforma-constitucional-segundo": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1987-sistemas-electorales": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1987-speedy-trials-argentina": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1987-voto-obligatorio": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1988-liberalismo-comunitarismo": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1988-man-his-rights": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1988-politica-derechos-humanos": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1988-presidencialismo-vs-parlamentarismo": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1988-presidencialismo-vs-parlamentarismo-articulo": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1988-radiodifusion": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1988-relacion-entre-derecho": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1989-communitarian-challenge-liberal": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1989-conciencia-crisis": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1989-consolidating-democracy": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1989-constructivismo-epistemologico": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1989-constructivismo-etico": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1989-democracy-criminal-law": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1989-derivacion-principios-responsabilidad": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1989-etica-derechos-humanos": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1989-filosofia-control-judicial": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1989-hechos-morales": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1989-hombre-sus-derechos": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1989-indultos-conciencia-moral": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1989-justicia-conciencia": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1989-justificacion-democracia-obligacion": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1989-moral-discourse": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1989-paradoja-irrelevancia": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1989-presentacion": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1989-racionalismo-fundamentacion": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1989-transition-democracy-corporatism": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1990-autonomia-necesidades-basicas": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1990-constitucion-como-convencion": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1990-discurso-blando-sobre": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1990-entrevista-genaro-carrio": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1990-giustificazione-martino": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1990-liberalismo-conservador-sistema": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1990-paradoja-irrilevanza-martino": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1990-paradoja-vigo": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1990-practica-derechos-fundamentales": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1990-presidencialismo-justificacion-estabilidad": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1990-sobre-derechos-morales": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1991-consideraciones-alternativas": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1991-duty-punish-abuses": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1991-epistemological-moral-relevance": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1991-ethics-human-rights": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1991-fundamentos-alcances-control": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1991-fundamentos-control-judicial": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1991-huida-frente-penas": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1991-liberalismo-conservador-liberal": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1991-presidencialismo-estabilidad-democratica": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1991-presidencialismo-justificacion-estabilidad-incollection": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1992-autonomia-constitucional": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1992-autonomia-personal-investigacion": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1992-communitarian-challenge-reprint": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1992-consecuencialismo-debate-etico": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1992-deliberative-democracy-complexity": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1992-etica-analitica-actualidad": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1992-foundations-deliberative-conception": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1992-fundamentos-derecho-constitucional": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1992-hiperpresidencialismo-argentino": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1992-introduction-rights": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1992-pais-margen-ley": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1992-presentacion-fundamentos": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1992-presidencialismo-puesto-aprueba": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1992-que-reforma-constitucional": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1992-racionalismo-schuster": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1992-replica-maria-ines": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1992-rights": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1992-some-thoughts-abortion": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1993-breve-nota-sulla": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1993-ciclo-conferencias": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1993-consensual-theory-duff": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1993-constitution-deliberative-manuscript": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1993-debate-constitutional-reform": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1993-derecho-moral-politica": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1993-derechos-sociales-derecho-sociedad": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1993-difficulties-transition-process": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1993-diritto-morale-politica": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1993-exercise-judicial-review": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1993-philosophical-reconstruction-judicial": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1993-preocupaciones-metafilosoficas": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1993-presidencialismo-reforma-constitucional": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1993-radical-evil-manuscript": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1993-respuesta-moreso-navarro": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1993-se-acabo-debate": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1993-social-rights": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1993-transition-democracy-presidentialism": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1993-when-just-punishment": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1994-derecho-moral-politica": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1994-philosophical-reconstruction-rosenfeld": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1994-positivism-communitarianism-human": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1994-reforma-menemista-signo": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1995-concepto-responsabilidad": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1995-consensual-theory-simmons": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1995-debatte-uber-verfassungsreform": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1995-duty-punish-kritz": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1995-etica-derechos-humanos": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1996-constitution-deliberative-democracy": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1996-hyperpresidentialism-constitutional-reform": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1996-introduzione-all-analisi": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1996-justicia-garzon-valdes": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1996-kant-versus-hegel": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1996-kant-versus-hegel-la-politica": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1996-positivism-alston": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1996-radical-evil-trial": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1997-constitucion-democracia-deliberativa": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1997-juicio-mal-absoluto": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1998-confusions-kelsen-abridged": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1998-objecion-conciencia-libertad": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1999-diritto-come-morale": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-1999-subjetivismo-objetivismo-derecho": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2000-sobre-derechos-sociales": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2000-tenencia-drogas-de-greiff": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2001-utilitarismo": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-autonomia-necesidades-basicas": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-breve-nota-sobre": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-concepcion-alf-ross": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-concepciones-fundamentales-liberalismo": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-concepto-derecho-hart": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-concepto-persona-moral": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-concepto-validez-problema": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-consecuencialismo-debate": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-cuatrilema-consecuencialismo": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-democracia-epistemica-puesta": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-democracia-verdad-moral": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-derecho-moral-politica": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-derecho-moral-politica-articulo": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-derecho-moral-politicaa": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-discurso-moral-derechos": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-efectos-ilicito-civil": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-escepticismo-etico": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-etica-analitica-actualidad": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-etica-derechos-humanos": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-etica-legal-entre": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-interpretacion-ley-ross": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-justicia": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-justicia-reprint": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-justificacion-democracia": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-liberalismo-conservador": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-libertad-igualdad-causalidad": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-limitaciones-teoria-hart": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-positivismo-comunitarismo": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-que-es-democracia": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-racional-irracional-dogmatica": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-razones-prescripciones": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-relacion-derecho-justicia": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-relevancia-moral-epistemica": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-replica-pazos": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-respuesta-bayon": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-respuesta-moreso-navarro": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-sobre-derechos-morales": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-sobre-derechos-sociales": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2007-utilitarismo": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2008-concurso-continuacion-delitos": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2008-definicion-delito": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2008-derecho-penal-democracia": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2008-derivacion-principios": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2008-fundamentacion-legitima-defensa": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2008-huida-frente-penas": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2008-lesiones-retorica": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2008-libre-albedrio": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2008-limites-aplicacion-moral": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2008-mismo-omitir-que": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2008-pena-muerte-consentimiento": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2008-pequena-historia-dolo": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2008-puede-consentimiento-anular": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2008-replica-zaffaroni": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2008-respuesta-malamud-goti": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2008-review-norberto-eduardo": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2008-sobre-que-nos": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2008-subjetivismo-objetivismo": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2008-teoria-consensual-pena": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2013-fundamentos-derecho-constitucional": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2013-ocho-lecciones-etica": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-2013-teoria-justicia-democracia": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nino-democracia-epistemica-puesta": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "nozick-1981-why-there-something": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "oppenheim-1980-lineamientos-analisis-logico": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
+    }
+  ],
+  "paez-2015-intuitions-gone-astray": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "paez-2015-refusing-help-inflicting": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "palmer-2015-view-that-we": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
     }
   ],
   "parfit-1962-photograph-of-comtesse": [
@@ -1959,12 +4655,20 @@
     {
       "slug": "derek-parfit-a-bibliography",
       "title": "Derek Parfit: a bibliography"
+    },
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
     }
   ],
   "parfit-1992-puzzle-reality-why": [
     {
       "slug": "derek-parfit-a-bibliography",
       "title": "Derek Parfit: a bibliography"
+    },
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
     }
   ],
   "parfit-1992-who-you-think": [
@@ -2019,12 +4723,20 @@
     {
       "slug": "derek-parfit-a-bibliography",
       "title": "Derek Parfit: a bibliography"
+    },
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
     }
   ],
   "parfit-1998-why-anything-why-2": [
     {
       "slug": "derek-parfit-a-bibliography",
       "title": "Derek Parfit: a bibliography"
+    },
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
     }
   ],
   "parfit-1999-experiences-subjects-conceptual": [
@@ -2147,28 +4859,316 @@
       "title": "Derek Parfit: a bibliography"
     }
   ],
+  "parfit-2021-improving-scanlon-s": [
+    {
+      "slug": "derek-parfit-a-bibliography",
+      "title": "Derek Parfit: a bibliography"
+    }
+  ],
+  "pearce-2015-welfare-state-elephants": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "penalva-2015-que-ganar-para": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "post-1991-why-does-anything": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "raterman-2008-environmentalist-lament-predation": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "redwood-2012-flat-margin-effect": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "regan-2004-case-animal-rights": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "rescher-1984-riddle-existence-essay": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "rescher-2000-optimalism-axiological-metaphysics": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "richards-2011-media-advertising-ballot": [
+    {
+      "slug": "california-proposition-2-a-bibliography",
+      "title": "California Proposition 2: a bibliography"
+    }
+  ],
+  "rollin-1981-animal-rights-human": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "rolston-1992-disvalues-nature": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "rundle-2004-why-there-something": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "sagoff-1984-animal-liberation-environmental": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "salam-2013-rise-singerians": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
   "sandberg-2008-whole-brain-emulation": [
     {
       "slug": "crucial-considerations-and-wise-philanthropy-by-nick-bostrom",
       "title": "'Crucial Considerations and Wise Philanthropy', by Nick Bostrom"
     }
   ],
-  "thaler-1988-anomalies-winner-curse": [
+  "sapontzis-1984-predation": [
     {
-      "slug": "evaluative-selection-effect",
-      "title": "evaluative selection effect"
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
     }
   ],
-  "trammell-2018-which-world-gets": [
+  "sapontzis-1987-morals-reason-animals": [
     {
-      "slug": "evaluative-selection-effect",
-      "title": "evaluative selection effect"
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "sarkar-1993-something-nothing-explanation": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "schlesinger-1998-enigma-existence": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "schuppe-2013-warum-uberhaupt-etwas": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "shulman-2012-entrepreneurship-game-poker": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "shulman-2012-salary-startup-how": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "shulman-2012-software-engineering-britain": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "silver-2015-better-way-to": [
+    {
+      "slug": "minimizing-jet-lag",
+      "title": "Minimizing jet lag"
+    }
+  ],
+  "simmons-2009-animals-predators-right": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "singer-1973-food-thought-reply": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "sinick-2013-earning-give-altruistic": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "sittler-adamczewski-2016-consistent-vegetarianism-suffering": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "smith-1997-simplicity-why-universe": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "smith-1999-reason-universe-exists": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "sozmen-2013-harm-wild-facing": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "sozmen-2015-relations-moral-obligations": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "sumner-2010-economics-regulations-hen": [
+    {
+      "slug": "california-proposition-2-a-bibliography",
+      "title": "California Proposition 2: a bibliography"
+    }
+  ],
+  "thapar-2011-taking-live-stock": [
+    {
+      "slug": "california-proposition-2-a-bibliography",
+      "title": "California Proposition 2: a bibliography"
+    }
+  ],
+  "thornhill-2006-animal-liberationist-responses": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "todd-2013-comparison-medical-research": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "todd-2013-show-me-harm": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "todd-2014-how-much-people": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "tomasik-2006-why-activists-should": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "tomasik-2015-importance-of-wild": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "torres-2015-case-intervention-nature": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "unger-1984-minimizing-arbitrariness-metaphysics": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "van-inwagen-1996-why-there-anything": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "verbitsky-1987-civiles-militares": [
+    {
+      "slug": "carlos-santiago-nino-a-bibliography",
+      "title": "Carlos Santiago Nino: a bibliography"
     }
   ],
   "walmsley-2022-cdbroad": [
     {
       "slug": "c-d-broad-a-bibliography",
       "title": "C. D. Broad: a bibliography"
+    }
+  ],
+  "wippel-2011-ultimate-why-question": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "wiseman-2014-night-school-hidden": [
+    {
+      "slug": "minimizing-jet-lag",
+      "title": "Minimizing jet lag"
+    }
+  ],
+  "witherall-2001-fundamental-question": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "witherall-2002-problem-existence": [
+    {
+      "slug": "why-does-the-world-exist-a-bibliography",
+      "title": "Why does the world exist? — A bibliography"
+    }
+  ],
+  "xodarap-2014-political-skills-which": [
+    {
+      "slug": "earning-to-give-an-annotated-bibliography",
+      "title": "Earning to give: an annotated bibliography"
+    }
+  ],
+  "young-2006-status-vermin": [
+    {
+      "slug": "wild-animal-welfare-a-bibliography",
+      "title": "Wild animal welfare: a bibliography"
     }
   ]
 }

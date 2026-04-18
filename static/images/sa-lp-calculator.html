@@ -16,6 +16,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
   font-size: 14px; background: #fff; color: #333; }
 .controls input { width: 140px; }
 .meta { font-size: 12px; color: #888; margin-bottom: 12px; }
+.muted { color: #888; font-size: 11px; }
+.table-scroll { width: 100%; overflow-x: auto; overflow-y: hidden;
+                -webkit-overflow-scrolling: touch; }
 table { width: 100%; border-collapse: collapse; font-size: 13px;
          font-variant-numeric: tabular-nums; }
 th { text-align: left; padding: 6px 10px; border-bottom: 2px solid #ddd;
@@ -23,6 +26,12 @@ th { text-align: left; padding: 6px 10px; border-bottom: 2px solid #ddd;
       letter-spacing: 0.03em; color: #666; }
 th.r, td.r { text-align: right; }
 td { padding: 5px 10px; border-bottom: 1px solid #eee; }
+th, td { white-space: nowrap; }
+body.option-mode table { font-size: 12px; }
+body.option-mode th { padding-left: 6px; padding-right: 6px;
+                      font-size: 11px; letter-spacing: 0.02em; }
+body.option-mode td { padding-left: 6px; padding-right: 6px; }
+.cost-col { min-width: 66px; }
 tr:hover td { background: rgba(0,0,0,0.02); }
 .tag { display: inline-block; padding: 1px 6px; border-radius: 3px;
         font-size: 11px; font-weight: 600; }
@@ -56,26 +65,31 @@ body.dark .summary span { color: #888; }
   <input type="number" id="bankroll" value="10000" min="0" step="100">
   <label for="mode">Mode</label>
   <select id="mode">
-    <option value="equity_only">Equity only</option>
-    <option value="full" selected>Full portfolio</option>
+    <option value="equity_only" selected>Equity proxy</option>
+    <option value="full">Option proxy</option>
   </select>
   <label for="cutoff">Cutoff (%)</label>
   <input type="number" id="cutoff" value="0" min="0" max="100" step="0.5" style="width:80px">
 </div>
 <div id="mode-desc" class="meta" style="font-style:italic"></div>
 <div class="meta">
-  Q4 2025 filing (filed 2026-02-11) &middot; prices as of 2026-03-13
+  Q4 2025 filing (filed 2026-02-11) &middot; underlying prices as of 2026-04-17
 </div>
 <div id="output"></div>
 <script>
 
 var DATA = {
-  equity_only: [{"ticker": "BE", "type": "long", "weight": 0.223706, "price": 154.46}, {"ticker": "LITE", "type": "long", "weight": 0.122284, "price": 622.5}, {"ticker": "CRWV", "type": "long", "weight": 0.111593, "price": 81.11}, {"ticker": "CORZ", "type": "long", "weight": 0.106983, "price": 16.49}, {"ticker": "IREN", "type": "long", "weight": 0.083968, "price": 41.58}, {"ticker": "APLD", "type": "long", "weight": 0.071042, "price": 27.05}, {"ticker": "SNDK", "type": "long", "weight": 0.063942, "price": 661.62}, {"ticker": "CIFR", "type": "long", "weight": 0.039483, "price": 14.08}, {"ticker": "EQT", "type": "long", "weight": 0.033996, "price": 64.38}, {"ticker": "COHR", "type": "long", "weight": 0.022651, "price": 242.84}, {"ticker": "SEI", "type": "long", "weight": 0.021924, "price": 51.99}, {"ticker": "TSEM", "type": "long", "weight": 0.021692, "price": 124.71}, {"ticker": "RIOT", "type": "long", "weight": 0.019967, "price": 14.04}, {"ticker": "KRC", "type": "long", "weight": 0.012678, "price": 28.49}, {"ticker": "HUT", "type": "long", "weight": 0.010097, "price": 48.32}, {"ticker": "WYFI", "type": "long", "weight": 0.007096, "price": 15.75}, {"ticker": "PSIX", "type": "long", "weight": 0.006312, "price": 56.74}, {"ticker": "BTDR", "type": "long", "weight": 0.005121, "price": 7.5}, {"ticker": "CLSK", "type": "long", "weight": 0.004242, "price": 9.76}, {"ticker": "BITF", "type": "long", "weight": 0.004141, "price": 2.24}, {"ticker": "LBRT", "type": "long", "weight": 0.002675, "price": 30.22}, {"ticker": "PUMP", "type": "long", "weight": 0.002212, "price": 14.35}, {"ticker": "BW", "type": "long", "weight": 0.002193, "price": 10.51}, {"ticker": "INTC", "type": "long", "weight": 0.0, "price": 45.77}],
-  full: [{"ticker": "BE", "type": "long", "weight": 0.158699, "price": 154.46}, {"ticker": "CRWV", "type": "call", "weight": 0.140377, "price": 81.11, "strike": 270.0, "expiry": "2026-09-18"}, {"ticker": "INTC", "type": "call", "weight": 0.135362, "price": 45.77, "strike": 70.0, "expiry": "2026-12-18"}, {"ticker": "LITE", "type": "long", "weight": 0.08675, "price": 622.5}, {"ticker": "CRWV", "type": "long", "weight": 0.079165, "price": 81.11}, {"ticker": "CORZ", "type": "long", "weight": 0.075895, "price": 16.49}, {"ticker": "IREN", "type": "long", "weight": 0.059568, "price": 41.58}, {"ticker": "APLD", "type": "long", "weight": 0.050398, "price": 27.05}, {"ticker": "SNDK", "type": "long", "weight": 0.045361, "price": 661.62}, {"ticker": "CIFR", "type": "long", "weight": 0.02801, "price": 14.08}, {"ticker": "EQT", "type": "long", "weight": 0.024117, "price": 64.38}, {"ticker": "COHR", "type": "long", "weight": 0.016069, "price": 242.84}, {"ticker": "SEI", "type": "long", "weight": 0.015553, "price": 51.99}, {"ticker": "TSEM", "type": "long", "weight": 0.015389, "price": 124.71}, {"ticker": "RIOT", "type": "long", "weight": 0.014165, "price": 14.04}, {"ticker": "KRC", "type": "long", "weight": 0.008994, "price": 28.49}, {"ticker": "HUT", "type": "long", "weight": 0.007163, "price": 48.32}, {"ticker": "EQT", "type": "call", "weight": 0.006801, "price": 64.38, "strike": 90.0, "expiry": "2026-12-18"}, {"ticker": "BE", "type": "call", "weight": 0.006434, "price": 154.46, "strike": 220.0, "expiry": "2026-08-21"}, {"ticker": "WYFI", "type": "long", "weight": 0.005034, "price": 15.75}, {"ticker": "PSIX", "type": "long", "weight": 0.004478, "price": 56.74}, {"ticker": "BTDR", "type": "long", "weight": 0.003633, "price": 7.5}, {"ticker": "CLSK", "type": "long", "weight": 0.003009, "price": 9.76}, {"ticker": "BITF", "type": "long", "weight": 0.002938, "price": 2.24}, {"ticker": "LBRT", "type": "long", "weight": 0.001898, "price": 30.22}, {"ticker": "INFY", "type": "put", "weight": 0.001615, "price": 13.29, "strike": 25.0, "expiry": "2027-01-15"}, {"ticker": "PUMP", "type": "long", "weight": 0.001569, "price": 14.35}, {"ticker": "BW", "type": "long", "weight": 0.001556, "price": 10.51}, {"ticker": "INTC", "type": "long", "weight": 0.0, "price": 45.77}]
+  equity_only: [{"ticker": "BE", "type": "long", "reported_value": 875505552, "instrument": "stock", "price": 205.07, "underlying_price": 205.07, "multiplier": 1, "direction": "long", "capital_basis": 875505552, "weight": 0.158699}, {"ticker": "CRWV", "type": "call", "reported_value": 774426345, "instrument": "stock", "price": 116.6, "underlying_price": 116.6, "multiplier": 1, "direction": "long", "capital_basis": 774426345, "weight": 0.140377}, {"ticker": "INTC", "type": "call", "reported_value": 746760060, "instrument": "stock", "price": 69.84, "underlying_price": 69.84, "multiplier": 1, "direction": "long", "capital_basis": 746760060, "weight": 0.135362}, {"ticker": "LITE", "type": "long", "reported_value": 478577256, "instrument": "stock", "price": 881.51, "underlying_price": 881.51, "multiplier": 1, "direction": "long", "capital_basis": 478577256, "weight": 0.08675}, {"ticker": "CRWV", "type": "long", "reported_value": 436735927, "instrument": "stock", "price": 116.6, "underlying_price": 116.6, "multiplier": 1, "direction": "long", "capital_basis": 436735927, "weight": 0.079165}, {"ticker": "CORZ", "type": "long", "reported_value": 418694320, "instrument": "stock", "price": 19.88, "underlying_price": 19.88, "multiplier": 1, "direction": "long", "capital_basis": 418694320, "weight": 0.075895}, {"ticker": "IREN", "type": "long", "reported_value": 328622455, "instrument": "stock", "price": 47.82, "underlying_price": 47.82, "multiplier": 1, "direction": "long", "capital_basis": 328622455, "weight": 0.059568}, {"ticker": "APLD", "type": "long", "reported_value": 278033751, "instrument": "stock", "price": 30.9, "underlying_price": 30.9, "multiplier": 1, "direction": "long", "capital_basis": 278033751, "weight": 0.050398}, {"ticker": "SNDK", "type": "long", "reported_value": 250245996, "instrument": "stock", "price": 909.88, "underlying_price": 909.88, "multiplier": 1, "direction": "long", "capital_basis": 250245996, "weight": 0.045361}, {"ticker": "CIFR", "type": "long", "reported_value": 154523813, "instrument": "stock", "price": 17.44, "underlying_price": 17.44, "multiplier": 1, "direction": "long", "capital_basis": 154523813, "weight": 0.02801}, {"ticker": "EQT", "type": "long", "reported_value": 133047260, "instrument": "stock", "price": 56.49, "underlying_price": 56.49, "multiplier": 1, "direction": "long", "capital_basis": 133047260, "weight": 0.024117}, {"ticker": "COHR", "type": "long", "reported_value": 88648971, "instrument": "stock", "price": 338.52, "underlying_price": 338.52, "multiplier": 1, "direction": "long", "capital_basis": 88648971, "weight": 0.016069}, {"ticker": "SEI", "type": "long", "reported_value": 85803005, "instrument": "stock", "price": 64.33, "underlying_price": 64.33, "multiplier": 1, "direction": "long", "capital_basis": 85803005, "weight": 0.015553}, {"ticker": "TSEM", "type": "long", "reported_value": 84895130, "instrument": "stock", "price": 220.8, "underlying_price": 220.8, "multiplier": 1, "direction": "long", "capital_basis": 84895130, "weight": 0.015389}, {"ticker": "RIOT", "type": "long", "reported_value": 78144759, "instrument": "stock", "price": 17.97, "underlying_price": 17.97, "multiplier": 1, "direction": "long", "capital_basis": 78144759, "weight": 0.014165}, {"ticker": "KRC", "type": "long", "reported_value": 49616149, "instrument": "stock", "price": 31.46, "underlying_price": 31.46, "multiplier": 1, "direction": "long", "capital_basis": 49616149, "weight": 0.008994}, {"ticker": "HUT", "type": "long", "reported_value": 39517588, "instrument": "stock", "price": 73.16, "underlying_price": 73.16, "multiplier": 1, "direction": "long", "capital_basis": 39517588, "weight": 0.007163}, {"ticker": "EQT", "type": "call", "reported_value": 37520000, "instrument": "stock", "price": 56.49, "underlying_price": 56.49, "multiplier": 1, "direction": "long", "capital_basis": 37520000, "weight": 0.006801}, {"ticker": "BE", "type": "call", "reported_value": 35494565, "instrument": "stock", "price": 205.07, "underlying_price": 205.07, "multiplier": 1, "direction": "long", "capital_basis": 35494565, "weight": 0.006434}, {"ticker": "WYFI", "type": "long", "reported_value": 27770080, "instrument": "stock", "price": 16.67, "underlying_price": 16.67, "multiplier": 1, "direction": "long", "capital_basis": 27770080, "weight": 0.005034}, {"ticker": "PSIX", "type": "long", "reported_value": 24701622, "instrument": "stock", "price": 81.46, "underlying_price": 81.46, "multiplier": 1, "direction": "long", "capital_basis": 24701622, "weight": 0.004478}, {"ticker": "BTDR", "type": "long", "reported_value": 20043480, "instrument": "stock", "price": 13.07, "underlying_price": 13.07, "multiplier": 1, "direction": "long", "capital_basis": 20043480, "weight": 0.003633}, {"ticker": "CLSK", "type": "long", "reported_value": 16600848, "instrument": "stock", "price": 12.14, "underlying_price": 12.14, "multiplier": 1, "direction": "long", "capital_basis": 16600848, "weight": 0.003009}, {"ticker": "BITF", "type": "long", "reported_value": 16208185, "instrument": "stock", "price": 2.74, "underlying_price": 2.74, "multiplier": 1, "direction": "long", "capital_basis": 16208185, "weight": 0.002938}, {"ticker": "LBRT", "type": "long", "reported_value": 10470512, "instrument": "stock", "price": 26.33, "underlying_price": 26.33, "multiplier": 1, "direction": "long", "capital_basis": 10470512, "weight": 0.001898}, {"ticker": "INFY", "type": "put", "reported_value": 8910000, "instrument": "stock", "price": 14.56, "underlying_price": 14.56, "multiplier": 1, "direction": "short", "capital_basis": 8910000, "weight": 0.001615}, {"ticker": "PUMP", "type": "long", "reported_value": 8656953, "instrument": "stock", "price": 14.0, "underlying_price": 14.0, "multiplier": 1, "direction": "long", "capital_basis": 8656953, "weight": 0.001569}, {"ticker": "BW", "type": "long", "reported_value": 8583726, "instrument": "stock", "price": 18.15, "underlying_price": 18.15, "multiplier": 1, "direction": "long", "capital_basis": 8583726, "weight": 0.001556}, {"ticker": "INTC", "type": "long", "reported_value": 37, "instrument": "stock", "price": 69.84, "underlying_price": 69.84, "multiplier": 1, "direction": "long", "capital_basis": 37, "weight": 0.0}],
+  full: [{"ticker": "BE", "type": "long", "reported_value": 875505552, "instrument": "stock", "price": 205.07, "underlying_price": 205.07, "multiplier": 1, "direction": "long", "capital_basis": 875505552, "weight": 0.214557}, {"ticker": "CRWV", "type": "call", "reported_value": 774426345, "instrument": "option", "price": 6.72, "underlying_price": 116.6, "multiplier": 100, "direction": "long", "strike": 280.0, "expiry": "2027-01-15", "price_as_of": "2026-04-16", "capital_basis": 44632461.735849, "weight": 0.010938}, {"ticker": "INTC", "type": "call", "reported_value": 746760060, "instrument": "option", "price": 10.52, "underlying_price": 69.84, "multiplier": 100, "direction": "long", "strike": 80.0, "expiry": "2026-11-20", "price_as_of": "2026-04-16", "capital_basis": 112484476.391753, "weight": 0.027566}, {"ticker": "LITE", "type": "long", "reported_value": 478577256, "instrument": "stock", "price": 881.51, "underlying_price": 881.51, "multiplier": 1, "direction": "long", "capital_basis": 478577256, "weight": 0.117283}, {"ticker": "CRWV", "type": "long", "reported_value": 436735927, "instrument": "stock", "price": 116.6, "underlying_price": 116.6, "multiplier": 1, "direction": "long", "capital_basis": 436735927, "weight": 0.10703}, {"ticker": "CORZ", "type": "long", "reported_value": 418694320, "instrument": "stock", "price": 19.88, "underlying_price": 19.88, "multiplier": 1, "direction": "long", "capital_basis": 418694320, "weight": 0.102608}, {"ticker": "IREN", "type": "long", "reported_value": 328622455, "instrument": "stock", "price": 47.82, "underlying_price": 47.82, "multiplier": 1, "direction": "long", "capital_basis": 328622455, "weight": 0.080534}, {"ticker": "APLD", "type": "long", "reported_value": 278033751, "instrument": "stock", "price": 30.9, "underlying_price": 30.9, "multiplier": 1, "direction": "long", "capital_basis": 278033751, "weight": 0.068137}, {"ticker": "SNDK", "type": "long", "reported_value": 250245996, "instrument": "stock", "price": 909.88, "underlying_price": 909.88, "multiplier": 1, "direction": "long", "capital_basis": 250245996, "weight": 0.061327}, {"ticker": "CIFR", "type": "long", "reported_value": 154523813, "instrument": "stock", "price": 17.44, "underlying_price": 17.44, "multiplier": 1, "direction": "long", "capital_basis": 154523813, "weight": 0.037869}, {"ticker": "EQT", "type": "long", "reported_value": 133047260, "instrument": "stock", "price": 56.49, "underlying_price": 56.49, "multiplier": 1, "direction": "long", "capital_basis": 133047260, "weight": 0.032605}, {"ticker": "COHR", "type": "long", "reported_value": 88648971, "instrument": "stock", "price": 338.52, "underlying_price": 338.52, "multiplier": 1, "direction": "long", "capital_basis": 88648971, "weight": 0.021725}, {"ticker": "SEI", "type": "long", "reported_value": 85803005, "instrument": "stock", "price": 64.33, "underlying_price": 64.33, "multiplier": 1, "direction": "long", "capital_basis": 85803005, "weight": 0.021027}, {"ticker": "TSEM", "type": "long", "reported_value": 84895130, "instrument": "stock", "price": 220.8, "underlying_price": 220.8, "multiplier": 1, "direction": "long", "capital_basis": 84895130, "weight": 0.020805}, {"ticker": "RIOT", "type": "long", "reported_value": 78144759, "instrument": "stock", "price": 17.97, "underlying_price": 17.97, "multiplier": 1, "direction": "long", "capital_basis": 78144759, "weight": 0.019151}, {"ticker": "KRC", "type": "long", "reported_value": 49616149, "instrument": "stock", "price": 31.46, "underlying_price": 31.46, "multiplier": 1, "direction": "long", "capital_basis": 49616149, "weight": 0.012159}, {"ticker": "HUT", "type": "long", "reported_value": 39517588, "instrument": "stock", "price": 73.16, "underlying_price": 73.16, "multiplier": 1, "direction": "long", "capital_basis": 39517588, "weight": 0.009684}, {"ticker": "EQT", "type": "call", "reported_value": 37520000, "instrument": "option", "price": 0.78, "underlying_price": 56.49, "multiplier": 100, "direction": "long", "strike": 90.0, "expiry": "2026-12-18", "price_as_of": "2026-04-16", "capital_basis": 518066.914498, "weight": 0.000127}, {"ticker": "BE", "type": "call", "reported_value": 35494565, "instrument": "option", "price": 50.25, "underlying_price": 205.07, "multiplier": 100, "direction": "long", "strike": 260.0, "expiry": "2026-11-20", "price_as_of": "2026-04-16", "capital_basis": 8697527.143171, "weight": 0.002131}, {"ticker": "WYFI", "type": "long", "reported_value": 27770080, "instrument": "stock", "price": 16.67, "underlying_price": 16.67, "multiplier": 1, "direction": "long", "capital_basis": 27770080, "weight": 0.006806}, {"ticker": "PSIX", "type": "long", "reported_value": 24701622, "instrument": "stock", "price": 81.46, "underlying_price": 81.46, "multiplier": 1, "direction": "long", "capital_basis": 24701622, "weight": 0.006054}, {"ticker": "BTDR", "type": "long", "reported_value": 20043480, "instrument": "stock", "price": 13.07, "underlying_price": 13.07, "multiplier": 1, "direction": "long", "capital_basis": 20043480, "weight": 0.004912}, {"ticker": "CLSK", "type": "long", "reported_value": 16600848, "instrument": "stock", "price": 12.14, "underlying_price": 12.14, "multiplier": 1, "direction": "long", "capital_basis": 16600848, "weight": 0.004068}, {"ticker": "BITF", "type": "long", "reported_value": 16208185, "instrument": "stock", "price": 2.74, "underlying_price": 2.74, "multiplier": 1, "direction": "long", "capital_basis": 16208185, "weight": 0.003972}, {"ticker": "LBRT", "type": "long", "reported_value": 10470512, "instrument": "stock", "price": 26.33, "underlying_price": 26.33, "multiplier": 1, "direction": "long", "capital_basis": 10470512, "weight": 0.002566}, {"ticker": "INFY", "type": "put", "reported_value": 8910000, "instrument": "option", "price": 0.88, "underlying_price": 14.56, "multiplier": 100, "direction": "long", "strike": 10.0, "expiry": "2027-01-15", "price_as_of": "2026-04-16", "capital_basis": 538516.483516, "weight": 0.000132}, {"ticker": "PUMP", "type": "long", "reported_value": 8656953, "instrument": "stock", "price": 14.0, "underlying_price": 14.0, "multiplier": 1, "direction": "long", "capital_basis": 8656953, "weight": 0.002122}, {"ticker": "BW", "type": "long", "reported_value": 8583726, "instrument": "stock", "price": 18.15, "underlying_price": 18.15, "multiplier": 1, "direction": "long", "capital_basis": 8583726, "weight": 0.002104}, {"ticker": "INTC", "type": "long", "reported_value": 37, "instrument": "stock", "price": 69.84, "underlying_price": 69.84, "multiplier": 1, "direction": "long", "capital_basis": 37, "weight": 0.0}]
 };
 
 var excluded = {};
 function posKey(r) { return r.ticker + '_' + r.type; }
+function validBasis(r) {
+  return typeof r.capital_basis === 'number' &&
+         isFinite(r.capital_basis) &&
+         r.capital_basis > 0;
+}
 
 function syncCutoff() {
   var cutoff = (parseFloat(document.getElementById('cutoff').value) || 0) / 100;
@@ -91,53 +105,87 @@ function render() {
   var bankroll = parseFloat(document.getElementById('bankroll').value) || 0;
   var mode = document.getElementById('mode').value;
   var rows = DATA[mode];
-  var showType = mode === 'full';
+  var showOptionDetails = mode === 'full';
+  document.body.classList.toggle('option-mode', showOptionDetails);
 
   // Show mode description
   var descEl = document.getElementById('mode-desc');
   if (mode === 'equity_only') {
-    descEl.textContent = 'Long equity positions only. Options are excluded.';
+    descEl.textContent = 'Uses shares only; calls become long underlying and puts become short underlying.';
   } else {
-    descEl.textContent = 'Includes all positions (equity + options).';
+    descEl.textContent = 'Uses deployed capital; option rows target 13F underlying notional and spend estimated premium.';
   }
 
   // All rows shown; excluded rows are greyed out
-  var active = rows.filter(function(r) { return !excluded[posKey(r)]; });
-  var totalWeight = active.reduce(function(s, r) { return s + r.weight; }, 0);
+  var active = rows.filter(function(r) {
+    return !excluded[posKey(r)] && validBasis(r);
+  });
+  var totalBasis = active.reduce(function(s, r) {
+    return s + r.capital_basis;
+  }, 0);
 
   var allocated = 0;
+  var unsizedCapital = 0;
   var computed = rows.map(function(r) {
     var key = posKey(r);
     var isExcl = !!excluded[key];
-    var adjWeight = (!isExcl && totalWeight > 0) ? r.weight / totalWeight : 0;
-    if (!r.price || isExcl) return { ticker: r.ticker, type: r.type, weight: r.weight,
-                            adjWeight: adjWeight, excluded: isExcl, key: key,
+    var hasBasis = validBasis(r);
+    var adjWeight = (!isExcl && hasBasis && totalBasis > 0) ?
+                    r.capital_basis / totalBasis : 0;
+    var scale = (!isExcl && hasBasis && totalBasis > 0) ?
+                bankroll / totalBasis : 0;
+    var target = (!isExcl && hasBasis) ? r.reported_value * scale : null;
+    var capitalTarget = (!isExcl && hasBasis) ?
+                        r.capital_basis * scale : 0;
+    var multiplier = r.multiplier || 1;
+    var isOption = r.instrument === 'option';
+    var direction = r.direction || 'long';
+    var sizingPrice = isOption ? r.underlying_price : r.price;
+    if (!sizingPrice || !r.price || isExcl || !hasBasis) {
+      if (!isExcl && hasBasis) unsizedCapital += capitalTarget;
+      return { ticker: r.ticker, type: r.type, weight: r.weight,
+                            adjWeight: adjWeight, target: target,
+                            excluded: isExcl, key: key,
+                            instrument: r.instrument || 'stock',
                             strike: r.strike || null, expiry: r.expiry || null,
-                            price: r.price, shares: null, cost: null };
-    var dollarAlloc = bankroll * adjWeight;
-    var shares = Math.floor(dollarAlloc / r.price);
-    var cost = shares * r.price;
+                            underlyingPrice: r.underlying_price || null,
+                            priceAsOf: r.price_as_of || null,
+                            direction: direction,
+                            price: r.price, units: null, cost: null };
+    }
+    var units = Math.floor(target / (sizingPrice * multiplier));
+    var signedUnits = direction === 'short' ? -units : units;
+    var cost = units * r.price * multiplier;
     allocated += cost;
     return { ticker: r.ticker, type: r.type, weight: r.weight,
-              adjWeight: adjWeight, excluded: isExcl, key: key,
+              adjWeight: adjWeight, target: target,
+              excluded: isExcl, key: key, instrument: r.instrument || 'stock',
               strike: r.strike || null, expiry: r.expiry || null,
-              price: r.price, shares: shares, cost: cost };
+              underlyingPrice: r.underlying_price || null,
+              priceAsOf: r.price_as_of || null,
+              direction: direction,
+              price: r.price, units: signedUnits, cost: cost };
   });
 
-  var html = '<table><thead><tr>';
+  var html = '<div class="table-scroll"><table><thead><tr>';
   html += '<th></th><th>Ticker</th>';
-  if (showType) html += '<th>Type</th><th class="r">Strike</th><th class="r">Expiry</th>';
+  html += '<th>Type</th>';
+  if (showOptionDetails) html += '<th class="r">Strike</th><th class="r">Expiry</th>';
   html += '<th class="r">Weight</th>';
+  html += '<th class="r">Target</th>';
   html += '<th class="r">Price</th>';
-  html += '<th class="r">Shares</th><th class="r">Cost</th></tr></thead><tbody>';
+  html += '<th class="r">Units</th><th class="r cost-col">Cost</th></tr></thead><tbody>';
 
   computed.forEach(function(c) {
     html += '<tr' + (c.excluded ? ' class="excluded"' : '') + '>';
     html += '<td class="cb"><input type="checkbox" data-key="' + c.key + '"' + (c.excluded ? '' : ' checked') + '></td>';
     html += '<td><strong>' + c.ticker + '</strong></td>';
-    if (showType) {
-      var cls = c.type === 'put' ? 'tag-put' : c.type === 'call' ? 'tag-call' : 'tag-long';
-      html += '<td><span class="tag ' + cls + '">' + c.type + '</span></td>';
+    var cls = c.type === 'put' ? 'tag-put' : c.type === 'call' ? 'tag-call' : 'tag-long';
+    var typeText = c.type;
+    if (mode === 'equity_only' && c.type === 'call') typeText = 'call as long';
+    if (mode === 'equity_only' && c.type === 'put') typeText = 'put as short';
+    html += '<td><span class="tag ' + cls + '">' + typeText + '</span></td>';
+    if (showOptionDetails) {
       if (c.strike) {
         html += '<td class="r">$' + c.strike.toFixed(0) + '</td>';
         html += '<td class="r">' + (c.expiry || '\u2014') + '</td>';
@@ -146,16 +194,22 @@ function render() {
       }
     }
     html += '<td class="r">' + (c.excluded ? '0.0' : (c.adjWeight * 100).toFixed(1)) + '%</td>';
-    html += '<td class="r">' + (c.price != null ? '$' + c.price.toFixed(2) : 'N/A') + '</td>';
-    html += '<td class="r">' + (c.shares != null ? c.shares.toLocaleString() : 'N/A') + '</td>';
-    html += '<td class="r">' + (c.cost != null ? '$' + c.cost.toFixed(2) : 'N/A') + '</td>';
+    html += '<td class="r">' + (c.excluded ? '$0.00' : (c.target == null ? 'N/A' : '$' + c.target.toFixed(2))) + '</td>';
+    var priceText = c.price != null ? '$' + c.price.toFixed(2) : 'N/A';
+    if (showOptionDetails && c.instrument === 'option' && c.priceAsOf) {
+      priceText += '<br><span class="muted">' + c.priceAsOf + '</span>';
+    }
+    html += '<td class="r">' + priceText + '</td>';
+    html += '<td class="r">' + (c.units != null ? c.units.toLocaleString() : 'N/A') + '</td>';
+    html += '<td class="r cost-col">' + (c.cost != null ? '$' + c.cost.toFixed(2) : 'N/A') + '</td>';
     html += '</tr>';
   });
 
-  html += '</tbody></table>';
+  html += '</tbody></table></div>';
   html += '<div class="summary">';
-  html += '<div><span>Allocated:</span> $' + allocated.toFixed(2) + '</div>';
-  html += '<div><span>Unallocated:</span> $' + (bankroll - allocated).toFixed(2) + '</div>';
+  html += '<div><span>' + (mode === 'full' ? 'Allocated' : 'Gross exposure') + ':</span> $' + allocated.toFixed(2) + '</div>';
+  html += '<div><span>Unsized capital:</span> $' + unsizedCapital.toFixed(2) + '</div>';
+  html += '<div><span>Residual:</span> $' + (bankroll - allocated - unsizedCapital).toFixed(2) + '</div>';
   html += '</div>';
 
   document.getElementById('output').innerHTML = html;
