@@ -1,26 +1,18 @@
-# Dev-only config overlay: excludes heavy static directories (pdfs,
-# pdf-thumbnails, pagefind) from Hugo's static mounts to speed up
-# server startup.  Without this, Hugo processes 59K+ files on every
-# start, taking ~2 minutes.
+# Dev-only config overlay for the common note-editing workflow.
+#
+# It deliberately mounts only notes, quotes, posts, and the root/search pages from
+# content/.  Mounting the full content tree makes `hugo server` load ~25K work
+# pages into its object graph; even if those pages are configured with
+# build.render = "link", the server still opens tens of thousands of files and
+# can wedge while browser requests wait forever.
+#
+# Full deploys still use hugo.deploy.toml and render the complete site.
 #
 # PDFs and thumbnails are still served via symlinks created by
 # start-dev-server.sh.  Search is unavailable during dev; run
 # `npm run reindex` if needed.
 #
 # Used by scripts/start-dev-server.sh via --config flag.
-
-# Skip rendering individual work pages in dev mode — 24K pages take
-# 4+ minutes even on SSD, and are rarely the focus during development.
-# Work pages are still queryable (e.g. cite shortcodes resolve), they
-# just don't get their own HTML output.  The /works/ list page still
-# renders normally.
-[[cascade]]
-  [cascade.build]
-    render = "link"
-    list = "always"
-  [cascade._target]
-    path = "/works/**"
-    kind = "page"
 
 [module]
   # Override static mounts to include only lightweight directories.
@@ -40,11 +32,25 @@
     source = "static/ltximg"
     target = "static/ltximg"
 
-  # Content, data, layouts, etc. still use default mounts (Hugo merges
-  # mount types independently, so only "static" is affected here).
+  # Content is intentionally narrowed for local preview.  The full work-page
+  # corpus is omitted from the default dev server because it dominates startup
+  # time and file descriptor usage. Quotes remain mounted because the home page
+  # includes a recent-quotes section.
   [[module.mounts]]
-    source = "content"
-    target = "content"
+    source = "content/_index.md"
+    target = "content/_index.md"
+  [[module.mounts]]
+    source = "content/search.md"
+    target = "content/search.md"
+  [[module.mounts]]
+    source = "content/notes"
+    target = "content/notes"
+  [[module.mounts]]
+    source = "content/quotes"
+    target = "content/quotes"
+  [[module.mounts]]
+    source = "content/posts"
+    target = "content/posts"
   [[module.mounts]]
     source = "data"
     target = "data"
