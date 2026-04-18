@@ -208,11 +208,22 @@
     window.removeEventListener('scroll', onScrollFallback);
     clearTimeout(scrollFallbackTimer);
   }
+  var article = document.querySelector('article');
   var SCROLL_FALLBACK_DEBOUNCE_MS = 100;
   function onScrollFallback() {
     clearTimeout(scrollFallbackTimer);
     scrollFallbackTimer = setTimeout(function () {
       var triggerY = window.scrollY + window.innerHeight / 3;
+      // Backlinks and anything else after </article> are not part of the note.
+      // Clear the TOC highlight once the article's bottom edge has passed the
+      // tripwire so the reader isn't told they're still inside the last section.
+      if (article) {
+        var articleBottom = article.getBoundingClientRect().bottom + window.scrollY;
+        if (articleBottom < triggerY) {
+          clearActive();
+          return;
+        }
+      }
       var bestIndex = -1;
       headings.forEach(function (h, i) {
         var top = h.el.getBoundingClientRect().top + window.scrollY;
