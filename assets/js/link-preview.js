@@ -9,6 +9,19 @@
   var timer = null;
   var activeLink = null;
 
+  // Paths whose pages are notes (i.e. have a .note-body to preview).  /notes/
+  // covers most notes; /about/ and /contact/ are notes whose URLs are
+  // overridden via EXPORT_HUGO_URL to live at the site root.
+  var PREVIEWABLE_PREFIXES = ['/notes/', '/about/', '/contact/'];
+
+  function isPreviewableHref(href) {
+    if (!href) return false;
+    for (var i = 0; i < PREVIEWABLE_PREFIXES.length; i++) {
+      if (href.startsWith(PREVIEWABLE_PREFIXES[i])) return true;
+    }
+    return false;
+  }
+
   function createPopup() {
     var el = document.createElement('div');
     el.className = 'link-preview';
@@ -19,8 +32,7 @@
 
   function showPreview(link) {
     var href = link.getAttribute('href');
-    // Link previews only apply to notes (other sections don't have prose content to preview)
-    if (!href || !href.startsWith('/notes/')) return;
+    if (!isPreviewableHref(href)) return;
 
     activeLink = link;
 
@@ -84,14 +96,14 @@
   document.addEventListener('pointerenter', function (e) {
     var el = e.target.nodeType === Node.ELEMENT_NODE ? e.target : e.target.parentElement;
     if (!el) return;
-    var link = el.closest('a[href^="/notes/"]');
+    var link = el.closest('a[href^="/notes/"], a[href^="/about/"], a[href^="/contact/"]');
     if (link) showPreview(link);
   }, true);
 
   document.addEventListener('pointerleave', function (e) {
     var el = e.target.nodeType === Node.ELEMENT_NODE ? e.target : e.target.parentElement;
     if (!el) return;
-    var link = el.closest('a[href^="/notes/"]');
+    var link = el.closest('a[href^="/notes/"], a[href^="/about/"], a[href^="/contact/"]');
     if (link && (!e.relatedTarget || !link.contains(e.relatedTarget))) {
       hidePreview();
     }
