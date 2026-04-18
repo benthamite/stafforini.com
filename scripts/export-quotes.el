@@ -44,16 +44,19 @@
 ;; Some topic/person notes may lack EXPORT_FILE_NAME, so ox-hugo silently
 ;; drops the entire link element.
 ;; We look up the org ID in export-id-slug-map and emit a markdown link
-;; when found; otherwise fall back to plain text description.
+;; when found; otherwise fall back to plain text description.  Notes with
+;; :EXPORT_HUGO_URL: overrides (e.g. /about/, /contact/) are resolved via
+;; export-id-url-overrides so the emitted URL matches the rendered page.
 (org-link-set-parameters
  "id"
  :export (lambda (path desc _backend _info)
-           ;; Upcase to match org-roam's convention for stored IDs
            (let* ((id (upcase path))
-                  (slug (gethash id export-id-slug-map)))
+                  (slug (gethash id export-id-slug-map))
+                  (url (and slug
+                            (or (gethash id export-id-url-overrides)
+                                (format "/notes/%s/" slug)))))
              (if slug
-                 ;; All topic stubs live under /notes/ regardless of their source directory
-                 (format "[%s](/notes/%s/)" (or desc slug) slug)
+                 (format "[%s](%s)" (or desc slug) url)
                (or desc "")))))
 
 ;; Track stats

@@ -98,7 +98,7 @@
     <h2>Notes citing this work</h2>
     <ul>
       {{ range . }}
-      <li><a href="/notes/{{ .slug }}/">{{ .title }}</a></li>
+      <li><a href="{{ partial "note-url.html" .slug }}">{{ .title }}</a></li>
       {{ end }}
     </ul>
   </section>

@@ -1,0 +1,16 @@
+{{- /* Return the canonical Hugo URL for a note slug.
+
+       The default URL for a note is /notes/<slug>/, but notes may override
+       their URL via :EXPORT_HUGO_URL: in the org source (e.g. /about/ or
+       /contact/).  scripts/generate-id-slug-map.py writes those overrides to
+       data/slug-url-overrides.json; this partial looks them up.
+
+       Call as: {{ partial "note-url.html" "<slug>" }}
+    */ -}}
+{{- $slug := . -}}
+{{- $overrides := index (hugo.Data | default dict) "slug-url-overrides" | default dict -}}
+{{- with index $overrides $slug -}}
+{{- . -}}
+{{- else -}}
+/notes/{{ $slug }}/
+{{- end -}}
