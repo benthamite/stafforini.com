@@ -1,0 +1,42 @@
+name: SA-LP 13F watcher
+
+on:
+  schedule:
+    # Daily at 22:17 UTC (~5pm ET), after US business hours so we catch
+    # same-day SEC filings. Not on the :00 minute to avoid the cron thundering
+    # herd. Cron expressions are always evaluated in UTC on GitHub Actions.
+    - cron: '17 22 * * *'
+  workflow_dispatch:  # Allow manual runs from the Actions tab.
+
+concurrency:
+  group: sa-lp-13f-check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Needed to commit state + feed updates back to the repo.
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run poller
+        env:
+          BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
+        run: python3 scripts/sa-lp-13f-check.py
+
+      - name: Commit state + feed if changed
+        run: |
+          if [[ -z "$(git status --porcelain data/sa-lp-13f-state.json static/feed/sa-lp-13f.xml)" ]]; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add data/sa-lp-13f-state.json static/feed/sa-lp-13f.xml
+          git commit -m "sa-lp-13f: record new filing"
+          git push

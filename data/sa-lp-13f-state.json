@@ -1,0 +1,5 @@
+{
+  "last_accession": "0002045724-26-000002",
+  "last_notified": "2026-04-18T00:00:00+00:00",
+  "_comment": "Seeded with current latest so the first poller run is a no-op. Auto-updated by scripts/sa-lp-13f-check.py."
+}
