@@ -353,7 +353,7 @@ def main():
     print("=" * 60)
 
     if args.file:
-        process_single_file(Path(args.file))
+        process_single_file(Path(args.file), dry_run=args.dry_run)
         return
 
     print("\n  Building work author map...")
@@ -394,7 +394,7 @@ def main():
     print("\nDone.")
 
 
-def process_single_file(md_path: Path):
+def process_single_file(md_path: Path, dry_run: bool = False):
     """Process a single markdown file (used by --file mode)."""
     if not md_path.exists():
         print(f"Error: {md_path} not found")
@@ -428,8 +428,11 @@ def process_single_file(md_path: Path):
         print(f"  Tags already up to date for {slug}")
         return
 
-    atomic_write_text(md_path, new_text)
-    print(f"  [TAG] {md_path.name} -> {tags}")
+    if dry_run:
+        print(f"  [TAG] {md_path.name} -> would set {tags}")
+    else:
+        atomic_write_text(md_path, new_text)
+        print(f"  [TAG] {md_path.name} -> {tags}")
 
 
 if __name__ == "__main__":
