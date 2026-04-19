@@ -110,10 +110,10 @@ clean_dir() {
   fi
 }
 
-# Delete Hugo-generated content from public/, preserving heavy static
-# assets (pdfs, pdf-thumbnails, pagefind) that persist across builds.
-# This is MUCH faster than clean_dir for the deploy workflow because
-# Hugo doesn't need to re-copy ~50 GB of PDFs and thumbnails.
+# Delete Hugo-generated content from public/, preserving the pagefind
+# index (lives at public/pagefind via a symlink to static/pagefind, so
+# re-indexing only touches changed fragments instead of regenerating the
+# whole index on every deploy).
 clean_hugo_output() {
   local dir="$1"
   if [ ! -d "$dir" ]; then
@@ -128,43 +128,42 @@ clean_hugo_output() {
   shopt -s nullglob
   for entry in "$dir"/*; do
     case "$(basename "$entry")" in
-      pdfs|pdf-thumbnails|pagefind) continue ;;
+      pagefind) continue ;;
       *) find "$entry" -depth -delete 2>/dev/null ;;
     esac
   done
   eval "$old_nullglob"
 }
 
-# Create symlinks for heavy static directories (pdfs, pdf-thumbnails,
-# pagefind) in public/ so Hugo doesn't need to copy them.  If an entry
-# already exists as a real directory (e.g. from an earlier Hugo run that
-# copied files instead of symlinking), rename it aside and replace with
-# the symlink -- otherwise new files in static/ never reach the deploy.
+# Ensure public/pagefind is a symlink to static/pagefind so the pagefind
+# index persists across builds.  If the target already exists as a real
+# directory (from an older Hugo run that copied files), rename it aside
+# and recreate the symlink -- otherwise new index fragments never reach
+# the deploy.
 ensure_static_symlinks() {
   mkdir -p public
-  for dir in pdfs pdf-thumbnails pagefind; do
-    [ -d "static/$dir" ] || continue
-    local target="$REPO_ROOT/static/$dir"
-    local link="public/$dir"
+  local dir="pagefind"
+  [ -d "static/$dir" ] || return 0
+  local target="$REPO_ROOT/static/$dir"
+  local link="public/$dir"
 
-    if [ -L "$link" ]; then
-      local current
-      current="$(readlink "$link")"
-      if [ "$current" != "$target" ]; then
-        rm "$link"
-        ln -s "$target" "$link"
-      fi
-      continue
+  if [ -L "$link" ]; then
+    local current
+    current="$(readlink "$link")"
+    if [ "$current" != "$target" ]; then
+      rm "$link"
+      ln -s "$target" "$link"
     fi
+    return 0
+  fi
 
-    if [ -e "$link" ]; then
-      local stale_name="$link.stale-$(date +%Y%m%d-%H%M%S)"
-      echo "Warning: $link is a real directory, not a symlink." >&2
-      echo "  Renaming to $stale_name and recreating the symlink." >&2
-      echo "  Delete the stale directory once you've confirmed the deploy is good." >&2
-      mv "$link" "$stale_name"
-    fi
+  if [ -e "$link" ]; then
+    local stale_name="$link.stale-$(date +%Y%m%d-%H%M%S)"
+    echo "Warning: $link is a real directory, not a symlink." >&2
+    echo "  Renaming to $stale_name and recreating the symlink." >&2
+    echo "  Delete the stale directory once you've confirmed the deploy is good." >&2
+    mv "$link" "$stale_name"
+  fi
 
-    ln -s "$target" "$link"
-  done
+  ln -s "$target" "$link"
 }

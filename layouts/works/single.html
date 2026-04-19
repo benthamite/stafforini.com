@@ -75,13 +75,17 @@
     </div>
   {{ end }}
 
-  {{ $thumbPath := printf "pdf-thumbnails/%s.png" $workSlug }}
-  {{ $pdfPath := printf "pdfs/%s.pdf" $workSlug }}
-  {{ if fileExists (printf "static/%s" $thumbPath) }}
+  {{ $pdfBase := site.Params.pdfBaseURL | default "/pdfs" }}
+  {{ $thumbBase := site.Params.thumbBaseURL | default "/pdf-thumbnails" }}
+  {{ $pdfHref := printf "%s/%s.pdf" $pdfBase $workSlug }}
+  {{ $thumbSrc := printf "%s/%s.png" $thumbBase $workSlug }}
+  {{/* fileExists still probes the local static/ tree -- that's how we know
+       a PDF was generated for this work, regardless of where it's served. */}}
+  {{ if fileExists (printf "static/pdf-thumbnails/%s.png" $workSlug) }}
   <section class="pdf-preview" aria-label="PDF preview">
     <h2>PDF</h2>
-    <a href="/{{ $pdfPath }}" class="pdf-preview-link" target="_blank" rel="noopener">
-      <img src="/{{ $thumbPath }}" alt="First page of PDF" loading="lazy" width="600">
+    <a href="{{ $pdfHref }}" class="pdf-preview-link" target="_blank" rel="noopener">
+      <img src="{{ $thumbSrc }}" alt="First page of PDF" loading="lazy" width="600">
     </a>
   </section>
   {{ end }}

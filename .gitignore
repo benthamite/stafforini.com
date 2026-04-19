@@ -24,8 +24,8 @@ static/ltximg/
 # Local Netlify folder
 .netlify
 
-# Marker written by scripts/deploy.sh after a successful PDF-including deploy
-.last-pdf-deploy
+# Local R2 credentials (never committed)
+scripts/r2.env.sh
 
 # WordPress migration artifacts
 scripts/wp-quotes-*.json

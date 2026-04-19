@@ -32,3 +32,25 @@ The two book takedowns were for books that broke his own guidelines, which he ac
 ## Caveats
 
 This is Gwern's personal risk assessment, not legal advice. His low takedown rate may partly reflect his site's specific context (academic audience, niche topics). Our risk profile may differ.
+
+## Hosting architecture
+
+PDFs and thumbnails are served from **Cloudflare R2** (S3-compatible object storage with zero egress fees).  The Netlify deploy never carries the PDF tree.
+
+Components:
+
+- `static/pdfs/` and `static/pdf-thumbnails/`: local source of truth, populated by `scripts/process-pdfs.py`.
+- R2 bucket (default: `stafforini-pdfs`) with two top-level prefixes: `pdfs/` and `pdf-thumbnails/`.
+- `scripts/upload-pdfs.sh`: incremental `aws s3 sync` from static/ to R2.  Runs automatically on full deploys.
+- `hugo.toml` / `hugo.deploy.toml`: `params.pdfBaseURL` and `params.thumbBaseURL` point local builds at `/pdfs` and production at the R2 URL.
+
+### One-time R2 setup
+
+1. **Create the bucket.** Cloudflare dashboard → R2 → *Create bucket* → name `stafforini-pdfs` (or whatever you prefer).  Pick a location hint closest to your readers.
+2. **Expose it publicly.** The bucket's *Settings* tab has two options:
+   - **Public dev URL** (quickest): enable "R2.dev subdomain" to get `https://pub-<hash>.r2.dev`.  Cloudflare throttles and brands these URLs; fine for testing but not production.
+   - **Custom domain** (recommended): click *Connect Domain* and add something like `pdfs.stafforini.com`.  Requires the apex domain to be on a Cloudflare-managed DNS zone or a CNAME from wherever DNS lives.
+3. **Create an API token.**  R2 → *Manage R2 API Tokens* → *Create API token* → *Object Read & Write* scoped to the bucket.  Copy the access key id and secret -- they are shown only once.
+4. **Fill in config.** Copy `scripts/r2.env.sh.example` → `scripts/r2.env.sh` and either paste the values or use 1Password `op://` references + `op run`.  Update `params.pdfBaseURL` and `params.thumbBaseURL` in `hugo.deploy.toml` with the public URL from step 2, pointed at the `pdfs/` and `pdf-thumbnails/` prefixes respectively.
+5. **Initial upload.**  Source the env file and run `bash scripts/upload-pdfs.sh` once.  Expect a long upload on first run (~53 GB); subsequent runs are near-instant because `aws s3 sync` compares hashes.
+6. **Deploy.**  `stafforini-deploy` (or `bash scripts/deploy.sh`) from here on pushes HTML-only to Netlify and deltas to R2.
