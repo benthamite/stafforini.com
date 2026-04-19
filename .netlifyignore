@@ -1,6 +1,7 @@
 # Heavy PDF assets are skipped by default to keep Netlify CLI deploys
 # from scanning/uploading ~50 GB of rarely changing files.
-# To publish changed PDFs or thumbnails, run:
-#   bash scripts/deploy.sh --include-pdfs
+# scripts/deploy.sh auto-disables this file (and re-enables it on exit)
+# when it detects new/changed files under static/pdfs or static/pdf-thumbnails
+# since the last PDF-including deploy, so new PDFs ship without manual flags.
 pdfs/
 pdf-thumbnails/
