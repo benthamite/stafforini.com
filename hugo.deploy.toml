@@ -13,8 +13,8 @@
 # Production PDF URLs.  Update both values after provisioning the R2
 # bucket's public URL (see docs/pdf-hosting-policy.md for the setup).
 # The bucket has two top-level prefixes: pdfs/ and pdf-thumbnails/.
-pdfBaseURL = "https://pub-42af4982dbbc403e9c5f3f7fd170c3f4.r2.dev/pdfs"
-thumbBaseURL = "https://pub-42af4982dbbc403e9c5f3f7fd170c3f4.r2.dev/pdf-thumbnails"
+pdfBaseURL = "https://pdfs.stafforini.com/pdfs"
+thumbBaseURL = "https://pdfs.stafforini.com/pdf-thumbnails"
 
 [module]
   # Override static mounts to include only lightweight directories.
