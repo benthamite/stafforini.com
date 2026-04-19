@@ -7,10 +7,8 @@
   - Quotes → `~/My Drive/bibliographic-notes/*.org` (`:public:` subtrees)
   - Works → `.bib` files (see `SPEC.md` for paths)
 - **Never run `hugo` directly with `--no-build`** -- it skips the clean step and produces stale output. Use `scripts/deploy.sh` or `stafforini-deploy`.
-- **Never byte-compile Elisp for the interactive Emacs via `emacs --batch`.** Always use `emacsclient -e '(byte-compile-file ...)'` in the running session. `elpaca-rebuild` can also miscompile if dependencies aren't yet loaded.
 - **Never add template-level fallbacks for the note title.** Title must be present in TOML front matter. See `docs/ox-hugo-title-bug.md` for the bug this protects against.
 - **Use `npm test` or `bash scripts/test.sh`, not the global `pytest`** -- the repo-local wrapper avoids the stale Homebrew `pytest` shim and nosync `.pytest_cache` writes.
-- **Use the `~/.config/emacs-profiles/active` symlink, not a hardcoded profile version.** Check the symlink target if unsure it's current.
 - **When telling the user to run a script, always mention the corresponding `stafforini.el` command** (see mapping below).
 
 ## Project shape
@@ -30,6 +28,8 @@ Two content sections plus auto-generated work pages:
 
 **Nosync symlinks:** `public/`, `static/pagefind/`, `static/pdfs/`, `static/pdf-thumbnails/` are symlinks to `~/.drive-nosync/repos/stafforini.com/...` so Google Drive doesn't sync build artifacts. Scripts use the `clean_dir` helper from `common.sh` which passes `-H` to `find` (required on macOS).
 
+**PDF hosting:** PDFs and thumbnails live in Cloudflare R2, not Netlify. `static/pdfs/` / `static/pdf-thumbnails/` are the local source of truth; `scripts/upload-pdfs.sh` syncs them to the bucket on each full deploy. Production HTML references the R2 URL via `params.pdfBaseURL` in `hugo.deploy.toml`. Local dev uses the `/pdfs` default. See `docs/pdf-hosting-policy.md` for setup.
+
 ## Publishing pipeline
 
 `org` → ox-hugo → `content/*.md` → hugo → `public/`.
@@ -46,11 +46,12 @@ Key pipeline files: `scripts/export-notes.el`, `scripts/export-org.py`, `scripts
 
 `scripts/deploy.sh` builds locally and pushes to Netlify via CLI. There is no CI/CD from git pushes.
 
-| Mode  | Invocation                 | Time   | Notes                                         |
-|-------|----------------------------|--------|-----------------------------------------------|
-| Full  | `D` in menu                | ~4 min | Full export + data + PDFs + build + deploy    |
-| Quick | `C-u D` or `--quick`       | ~1 min | Skips export/data/PDFs; templates/styles only |
-| PDFs  | `--include-pdfs` (shell)   | varies | Disables `.netlifyignore`; after PDF changes  |
+| Mode  | Invocation           | Time   | Notes                                                    |
+|-------|----------------------|--------|----------------------------------------------------------|
+| Full  | `D` in menu          | ~1 min | Export + PDF process + R2 sync + build + Netlify deploy  |
+| Quick | `C-u D` or `--quick` | <1 min | Skips export, PDF processing, and R2 upload              |
+
+PDFs are served from R2, so full deploys no longer carry GB of assets through Netlify. `scripts/upload-pdfs.sh` uses `aws s3 sync` to upload only changed files. R2 credentials live in `scripts/r2.env.sh` (gitignored); see `docs/pdf-hosting-policy.md`.
 
 Export and deploy runs call `scripts/verify-site.py` -- a rendered-output smoke test (fails if visible sections like recent notes or quotes disappear).
 
@@ -60,8 +61,8 @@ Companion package: `~/.config/emacs-profiles/active/elpaca/sources/stafforini/st
 
 | Script                           | Emacs command                      | Key |
 |----------------------------------|------------------------------------|-----|
-| `export-notes.sh`                | `stafforini-export-all-notes`      | `n` |
-| `export-quotes.sh`               | `stafforini-export-all-quotes`     | `q` |
+| `export-notes.sh`                | `stafforini-export-all-notes`      | `N` |
+| `export-quotes.sh`               | `stafforini-export-all-quotes`     | `Q` |
 | `generate-work-pages.py`         | `stafforini-update-works`          | `w` |
 | `generate-backlinks.py`          | `stafforini-update-backlinks`      | `b` |
 | `process-pdfs.py`                | `stafforini-process-pdfs`          | `d` |
@@ -73,14 +74,14 @@ Companion package: `~/.config/emacs-profiles/active/elpaca/sources/stafforini/st
 | Full pipeline                    | `stafforini-full-rebuild`          | `R` |
 | Search index                     | `stafforini-rebuild-search-index`  | `i` |
 | Dev server start / stop          | `stafforini-start-server` / `-stop-server` | `s` / `k` |
-| Publish note (per-file)          | `stafforini-publish-note`          | `p` |
-| Publish quote (per-heading)      | `stafforini-publish-quote`         | `P` |
+| Publish note (per-file)          | `stafforini-publish-note`          | `n` |
+| Publish quote (per-heading)      | `stafforini-publish-quote`         | `q` |
 | Set hugo property (per-heading)  | `stafforini-set-hugo-property`     | `F` |
 | Insert image / topics            | `stafforini-insert-image` / `-insert-topics` | `I` / `T` |
 
 ## References
 
-- Product spec and design goals: `SPEC.md` (read on demand; not auto-imported)
+- Product spec and design goals: `SPEC.md`
 - Publishing workflow -- prerequisites, interactive/batch flows, configuration: `PUBLISHING.md`
 - ox-hugo dropped-title bug -- root cause, protection layers, post-profile-migration recovery: `docs/ox-hugo-title-bug.md`
 - PDF hosting policy: `docs/pdf-hosting-policy.md`

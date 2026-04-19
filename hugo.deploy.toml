@@ -1,11 +1,20 @@
-# Deploy config overlay: excludes heavy static directories (pdfs,
-# pdf-thumbnails, pagefind) from Hugo's static mounts.  These are
-# served via symlinks created by ensure_static_symlinks in common.sh.
-#
-# Without this, Hugo copies ~50 GB of PDFs from static/ to public/
-# on every build, making deploys extremely slow.
+# Deploy config overlay:
+#   1. Excludes heavy static directories (pdfs, pdf-thumbnails) from
+#      Hugo's static mounts -- they are served directly from Cloudflare
+#      R2 in production (see params.pdfBaseURL below).
+#   2. Excludes static/pagefind too; the search index is built into
+#      public/pagefind after Hugo runs and persists via the symlink from
+#      ensure_static_symlinks.
+#   3. Overrides the PDF URL params so rendered HTML points at R2.
 #
 # Used by scripts/deploy.sh via --config flag.
+
+[params]
+# Production PDF URLs.  Update both values after provisioning the R2
+# bucket's public URL (see docs/pdf-hosting-policy.md for the setup).
+# The bucket has two top-level prefixes: pdfs/ and pdf-thumbnails/.
+pdfBaseURL = "https://pub-42af4982dbbc403e9c5f3f7fd170c3f4.r2.dev/pdfs"
+thumbBaseURL = "https://pub-42af4982dbbc403e9c5f3f7fd170c3f4.r2.dev/pdf-thumbnails"
 
 [module]
   # Override static mounts to include only lightweight directories.

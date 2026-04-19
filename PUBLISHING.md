@@ -185,16 +185,19 @@ Use `scripts/deploy.sh --quick` only after a recent full export when changing
 templates, styles, or configuration. Quick deploy skips content export and data
 regeneration.
 
-PDFs and PDF thumbnails are processed during full deploys, but they are skipped
-during the Netlify upload by default via `.netlifyignore`; otherwise the CLI has
-to scan/upload roughly 50 GB of rarely changing assets.  `scripts/deploy.sh`
-auto-detects PDF changes: it records each successful PDF-including deploy in
-`.last-pdf-deploy` (at the repo root, gitignored) and re-disables `.netlifyignore`
-for the next deploy whenever a non-hidden file under `static/pdfs/` or
-`static/pdf-thumbnails/` is newer than that marker.  No flag needed.
+PDFs and PDF thumbnails are served directly from Cloudflare R2, not Netlify.
+On each full deploy, `scripts/upload-pdfs.sh` runs `aws s3 sync` against the
+R2 bucket so new and changed files are uploaded incrementally.  The Netlify
+upload only carries HTML/CSS/JS -- tens of MB, not tens of GB -- so deploys
+are fast and there's nothing to skip or gate.
 
-To force a PDF re-upload (e.g. to recover from a skipped or interrupted deploy),
-delete `.last-pdf-deploy` before running `scripts/deploy.sh`.
+Production HTML references PDFs via `params.pdfBaseURL` in `hugo.deploy.toml`,
+which points at the R2 public URL.  Local `hugo server` uses the `/pdfs` and
+`/pdf-thumbnails` defaults in `hugo.toml`, so development still works offline
+against `static/pdfs/`.
+
+R2 credentials live in `scripts/r2.env.sh` (gitignored).  See
+`docs/pdf-hosting-policy.md` for the one-time setup.
 
 The export scripts also run `scripts/verify-site.py --build dev` before
 returning success. This is a rendered-output smoke test, not just a syntax
