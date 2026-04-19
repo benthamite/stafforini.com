@@ -158,7 +158,6 @@ Or from the shell:
 
 ```bash
 bash scripts/deploy.sh                       # export content, process PDFs, build, index, deploy
-bash scripts/deploy.sh --include-pdfs        # also publish changed PDFs/thumbnails
 
 # Or, to regenerate content without deploying:
 bash scripts/export-notes.sh                 # export notes + lastmod, backlinks, citing-notes
@@ -188,9 +187,14 @@ regeneration.
 
 PDFs and PDF thumbnails are processed during full deploys, but they are skipped
 during the Netlify upload by default via `.netlifyignore`; otherwise the CLI has
-to scan/upload roughly 50 GB of rarely changing assets. When adding or changing
-PDF files, run `scripts/deploy.sh --include-pdfs` from the shell so the script
-temporarily disables `.netlifyignore` for that deploy.
+to scan/upload roughly 50 GB of rarely changing assets.  `scripts/deploy.sh`
+auto-detects PDF changes: it records each successful PDF-including deploy in
+`.last-pdf-deploy` (at the repo root, gitignored) and re-disables `.netlifyignore`
+for the next deploy whenever a non-hidden file under `static/pdfs/` or
+`static/pdf-thumbnails/` is newer than that marker.  No flag needed.
+
+To force a PDF re-upload (e.g. to recover from a skipped or interrupted deploy),
+delete `.last-pdf-deploy` before running `scripts/deploy.sh`.
 
 The export scripts also run `scripts/verify-site.py --build dev` before
 returning success. This is a rendered-output smoke test, not just a syntax
