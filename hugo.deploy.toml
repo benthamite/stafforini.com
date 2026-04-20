@@ -36,6 +36,9 @@ thumbBaseURL = "https://pdf.stafforini.com"
     source = "static/_redirects"
     target = "static/_redirects"
   [[module.mounts]]
+    source = "static/robots.txt"
+    target = "static/robots.txt"
+  [[module.mounts]]
     source = "static/tango"
     target = "static/tango"
   [[module.mounts]]
