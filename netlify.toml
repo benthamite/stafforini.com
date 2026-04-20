@@ -26,8 +26,9 @@ for = "/*"
   #                cdn.jsdelivr.net — KaTeX CSS
   #   font-src    'self'          — only local fonts (Source Serif 4)
   #   img-src     'self' data:    — data: URIs used by KaTeX for rendering
+  #                pdf.stafforini.com — PDF first-page thumbnails served from R2
   #   connect-src 'self'          — Pagefind search fetches index fragments via fetch()
-  Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://cdn.jsdelivr.net https://cdn.plot.ly; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src 'self'; img-src 'self' data:; media-src 'self'; connect-src 'self'"
+  Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://cdn.jsdelivr.net https://cdn.plot.ly; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src 'self'; img-src 'self' data: https://pdf.stafforini.com; media-src 'self'; connect-src 'self'"
 
 [[headers]]
 for = "/fonts/*"
