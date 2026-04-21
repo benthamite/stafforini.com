@@ -15,7 +15,12 @@
 {{- $work := .work -}}
 {{- $type := .type -}}
 {{- $locator := .locator | default "" | replaceRE `^[, ]+` "" -}}
+{{/* Takedown blocklist: entries in data/excluded-works.json are flagged
+     with `excluded = true` in works.json.  Force link=false so the citation
+     text still renders but without a hyperlink to the (non-existent) work
+     page or external URL. */}}
 {{- $link := .link -}}
+{{- if $work.Params.excluded -}}{{- $link = false -}}{{- end -}}
 {{- if or (eq $type "incollection") (eq $type "inbook") (eq $type "inproceedings") -}}
   {{/* Chapter/section in a book: Author, Title, in Editor (ed.) *BookTitle*, Place, Year */}}
   {{- $work.Params.author }},

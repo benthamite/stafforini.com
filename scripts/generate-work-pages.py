@@ -23,6 +23,7 @@ from lib import (
     atomic_write_text,
     cite_key_to_slug,
     escape_yaml_string,
+    load_excluded_works,
     parse_bib_entries,
     safe_remove,
 )
@@ -186,13 +187,31 @@ def strip_citation_from_content(text: str) -> str:
     return "\n".join(result_lines) + "\n"
 
 
+def _work_slug_from_front_matter(front_matter: str) -> str:
+    """Extract the ``work`` slug from a quote markdown file's front matter."""
+    m = re.search(r'^work\s*[=:]\s*"([^"]+)"', front_matter, re.MULTILINE)
+    return m.group(1) if m else ""
+
+
 def postprocess_quotes(dry_run: bool = False) -> dict:
-    """Strip citation placeholders from all exported quote markdown files."""
-    stats = {"processed": 0, "modified": 0, "skipped_no_blockquote": 0, "already_clean": 0}
+    """Strip citation placeholders and remove takedown-blocked quotes.
+
+    Also removes any quote markdown whose ``work`` front matter points at
+    a slug in the takedown blocklist.  This runs regardless of which pipeline
+    generated the quote (diary export vs. non-diary extraction), so adding a
+    cite key to ``data/excluded-works.json`` and re-running this script is
+    enough to pull the quotes offline even without a full re-export.
+    """
+    stats = {
+        "processed": 0, "modified": 0, "skipped_no_blockquote": 0,
+        "already_clean": 0, "excluded_removed": 0,
+    }
 
     if not QUOTES_DIR.exists():
         print(f"  WARNING: {QUOTES_DIR} does not exist")
         return stats
+
+    excluded_slugs = {cite_key_to_slug(k) for k in load_excluded_works().keys()}
 
     md_files = sorted(QUOTES_DIR.glob("*.md"))
     for md_file in md_files:
@@ -212,6 +231,16 @@ def postprocess_quotes(dry_run: bool = False) -> dict:
             continue
         front_matter = fm_match.group(1)
         body = fm_match.group(2)
+
+        # Takedown: drop any quote whose work is excluded.
+        work_slug = _work_slug_from_front_matter(front_matter)
+        if work_slug and work_slug in excluded_slugs:
+            stats["excluded_removed"] += 1
+            if dry_run:
+                print(f"  [EXCLUDE] {md_file.name} (work={work_slug})")
+            else:
+                safe_remove(md_file)
+            continue
 
         # Check if body has a blockquote
         if ">" not in body:
@@ -254,8 +283,14 @@ def clean_work_field(value: str) -> str:
     return re.sub(r'(?<!\w)/([^/\n]{2,})/(?!\w)', r'<em>\1</em>', value)
 
 
-def work_metadata(entry: dict) -> dict:
-    """Return template-facing metadata for a BibTeX entry."""
+def work_metadata(entry: dict, *, excluded: bool = False,
+                  excluded_reason: str = "") -> dict:
+    """Return template-facing metadata for a BibTeX entry.
+
+    When *excluded* is True, sets ``excluded = true`` in the output so
+    Hugo templates can render the citation text without a hyperlink.
+    ``external_url`` is suppressed for excluded entries (no off-site link either).
+    """
     title = clean_work_field(entry["title"])
     shorttitle = clean_work_field(entry.get("shorttitle", ""))
     if not shorttitle and title and ":" in title:
@@ -266,7 +301,9 @@ def work_metadata(entry: dict) -> dict:
     raw_date = entry.get("date", "")
     pub_date = raw_date[:10] if re.match(r"\d{4}-\d{2}-\d{2}", raw_date) else ""
 
-    return {
+    external_url = "" if excluded else entry.get("url", "").replace("{", "").replace("}", "")
+
+    meta = {
         "title": title,
         "author": bib_author_to_display(author_raw),
         "entry_type": entry.get("entry_type", "book"),
@@ -279,9 +316,14 @@ def work_metadata(entry: dict) -> dict:
         "number": clean_work_field(entry.get("number", "")),
         "pages": clean_work_field(entry.get("pages", "")),
         "editor": bib_author_to_display(editor_raw) if editor_raw else "",
-        "external_url": entry.get("url", "").replace("{", "").replace("}", ""),
+        "external_url": external_url,
         "pub_date": pub_date,
     }
+    if excluded:
+        meta["excluded"] = True
+        if excluded_reason:
+            meta["excluded_reason"] = excluded_reason
+    return meta
 
 
 def generate_work_page(entry: dict) -> str:
@@ -423,15 +465,35 @@ def build_work_entry_map(bib_by_key: dict) -> tuple[dict[str, dict], dict[str, l
 
 
 def generate_work_pages(bib_by_key: dict, dry_run: bool = False, limit: int = 0) -> dict:
-    """Generate or update work pages for every bib entry."""
-    stats = {"created": 0, "updated": 0, "unchanged": 0}
+    """Generate or update work pages for every bib entry.
+
+    Cite keys listed in ``data/excluded-works.json`` are treated as under
+    takedown: their work pages are never written (and any existing page is
+    removed), though their metadata is still emitted to ``data/works.json``
+    with ``excluded = true`` so citation templates can render the reference
+    text without a hyperlink.
+    """
+    stats = {"created": 0, "updated": 0, "unchanged": 0, "excluded_removed": 0}
 
     if not WORKS_DIR.exists():
         WORKS_DIR.mkdir(parents=True, exist_ok=True)
 
+    excluded = load_excluded_works()
+    excluded_slug_to_entry = {
+        cite_key_to_slug(key): {"cite_key": key, "reason": info.get("reason", "")}
+        for key, info in excluded.items()
+    }
+
     slug_to_entry, collisions = build_work_entry_map(bib_by_key)
+    excluded_slugs_present = {
+        slug for slug in slug_to_entry
+        if slug_to_entry[slug]["cite_key"] in excluded
+    }
     all_slugs = set(slug_to_entry.keys())
+    publishable_slugs = sorted(all_slugs - excluded_slugs_present)
     print(f"  {len(all_slugs)} unique slugs from bib files")
+    if excluded_slugs_present:
+        print(f"  {len(excluded_slugs_present)} slug(s) withheld by takedown blocklist")
     if collisions:
         print(f"  Resolved {len(collisions)} slug collision(s) via canonical entry selection")
         for slug, keys in list(collisions.items())[:10]:
@@ -440,10 +502,15 @@ def generate_work_pages(bib_by_key: dict, dry_run: bool = False, limit: int = 0)
             print(f"    {slug}: {chosen}" + (f" (aliases: {aliases})" if aliases else ""))
 
     if not limit:
-        metadata = {
-            slug: work_metadata(entry)
-            for slug, entry in sorted(slug_to_entry.items())
-        }
+        metadata = {}
+        for slug, entry in sorted(slug_to_entry.items()):
+            is_excluded = slug in excluded_slugs_present
+            reason = (
+                excluded_slug_to_entry.get(slug, {}).get("reason", "")
+                if is_excluded else ""
+            )
+            metadata[slug] = work_metadata(entry, excluded=is_excluded,
+                                           excluded_reason=reason)
         if dry_run:
             print(f"  [DRY RUN] Would write {len(metadata)} work metadata entries")
         else:
@@ -452,7 +519,7 @@ def generate_work_pages(bib_by_key: dict, dry_run: bool = False, limit: int = 0)
             print(f"  Wrote {len(metadata)} work metadata entries to data/works.json")
 
     processed = 0
-    for slug in sorted(all_slugs):
+    for slug in publishable_slugs:
         if limit and processed >= limit:
             break
 
@@ -482,6 +549,18 @@ def generate_work_pages(bib_by_key: dict, dry_run: bool = False, limit: int = 0)
 
         if processed % 2000 == 0:
             print(f"  ... {processed} work pages processed")
+
+    # Remove any existing work page for a newly-excluded slug.  Runs under
+    # --limit too so takedowns always take effect on the next run.
+    if WORKS_DIR.exists():
+        for slug in sorted(excluded_slugs_present):
+            work_path = WORKS_DIR / f"{slug}.md"
+            if work_path.exists():
+                stats["excluded_removed"] += 1
+                if dry_run:
+                    print(f"  [EXCLUDE] {slug}.md (takedown)")
+                else:
+                    safe_remove(work_path)
 
     # Remove stale work pages with no matching bib entry
     stats["removed"] = 0
@@ -520,10 +599,11 @@ def main():
         print("STEP 1: Post-processing quote markdown files")
         print("=" * 60)
         pp_stats = postprocess_quotes(dry_run=args.dry_run)
-        print(f"  Files processed: {pp_stats['processed']}")
-        print(f"  Files modified:  {pp_stats['modified']}")
-        print(f"  Already clean:   {pp_stats['already_clean']}")
-        print(f"  No blockquote:   {pp_stats['skipped_no_blockquote']}")
+        print(f"  Files processed:  {pp_stats['processed']}")
+        print(f"  Files modified:   {pp_stats['modified']}")
+        print(f"  Already clean:    {pp_stats['already_clean']}")
+        print(f"  No blockquote:    {pp_stats['skipped_no_blockquote']}")
+        print(f"  Takedown removed: {pp_stats['excluded_removed']}")
         if args.dry_run:
             print("  *** DRY RUN — no files modified ***")
         print()
@@ -557,6 +637,7 @@ def main():
         print(f"  Work pages updated:    {wp_stats['updated']}")
         print(f"  Unchanged:             {wp_stats['unchanged']}")
         print(f"  Stale pages removed:   {wp_stats['removed']}")
+        print(f"  Takedown pages removed:{wp_stats['excluded_removed']}")
         if args.dry_run:
             print("  *** DRY RUN — no files created ***")
 

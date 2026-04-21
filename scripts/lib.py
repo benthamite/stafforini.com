@@ -660,3 +660,35 @@ def load_id_slug_map(repo_root):
               file=sys.stderr)
         sys.exit(1)
     return json.loads(path.read_text())
+
+
+# === Excluded works (takedown blocklist) ===
+
+EXCLUDED_WORKS_PATH = REPO_ROOT / "data" / "excluded-works.json"
+
+
+def load_excluded_works() -> dict:
+    """Load the takedown blocklist from data/excluded-works.json.
+
+    Returns a dict keyed by cite key, with each value containing at least a
+    ``reason`` string and an ``added`` date.  Returns ``{}`` if the file is
+    missing or empty.  Callers should treat the result as authoritative: any
+    key that appears here must never be published in any form.
+    """
+    if not EXCLUDED_WORKS_PATH.exists():
+        return {}
+    raw = EXCLUDED_WORKS_PATH.read_text().strip()
+    if not raw:
+        return {}
+    data = json.loads(raw)
+    return data if isinstance(data, dict) else {}
+
+
+def excluded_cite_keys() -> frozenset[str]:
+    """Return the set of cite keys in the takedown blocklist."""
+    return frozenset(load_excluded_works().keys())
+
+
+def excluded_work_slugs() -> frozenset[str]:
+    """Return the set of work slugs (kebab-case) in the takedown blocklist."""
+    return frozenset(cite_key_to_slug(k) for k in load_excluded_works().keys())

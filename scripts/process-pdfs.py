@@ -35,6 +35,7 @@ from lib import (
     build_unique_slug_map,
     cite_key_to_slug,
     extract_pdf_path,
+    load_excluded_works,
     load_json_manifest,
     parse_bib_entries,
     safe_remove,
@@ -293,11 +294,18 @@ def collect_entries() -> list[dict]:
 
     # Step 3: Filter for entries with a file field and build output list.
     # Exclude book-like entries published in 2000+ (copyright policy).
+    # Also exclude cite keys in the takedown blocklist.
+    excluded_takedown_keys = set(load_excluded_works().keys())
     entries = []
     excluded_books = 0
+    excluded_takedown = 0
     for entry in entries_by_key.values():
         file_field = entry.get("file", "")
         if not file_field:
+            continue
+
+        if entry["cite_key"] in excluded_takedown_keys:
+            excluded_takedown += 1
             continue
 
         if _is_excluded_book(entry):
@@ -316,6 +324,8 @@ def collect_entries() -> list[dict]:
 
     if excluded_books:
         print(f"  Excluded {excluded_books} book-like PDFs (published {BOOK_YEAR_CUTOFF}+)")
+    if excluded_takedown:
+        print(f"  Excluded {excluded_takedown} PDFs via takedown blocklist")
 
     return entries
 
