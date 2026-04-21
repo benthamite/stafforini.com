@@ -24,6 +24,7 @@ from lib import (
     extract_roam_refs,
     find_ancestor_with_export,
     is_dataless,
+    load_excluded_works,
     make_non_diary_slug,
     parse_org_headings,
     safe_remove,
@@ -130,15 +131,22 @@ def make_slug(work_slug: str, heading_id: str, quote_text: str) -> str:
 # === Main extraction logic ===
 
 
-def process_org_file(org_path: Path) -> list[dict]:
+def process_org_file(org_path: Path, excluded_cite_keys: set) -> list[dict]:
     """Process a single org file and return extracted non-diary quotes.
 
-    Each returned dict has: slug, title, work_slug, locator, quote_md
+    Each returned dict has: slug, title, work_slug, locator, quote_md.
+
+    Files whose cite key appears in *excluded_cite_keys* are skipped entirely
+    — their quotes are left out of the generated set so the stale-cleanup pass
+    removes any existing content/quotes/*.md for the excluded work.
     """
     text = org_path.read_text(errors="replace")
 
     cite_key = extract_roam_refs(text)
     if not cite_key:
+        return []
+
+    if cite_key in excluded_cite_keys:
         return []
 
     work_slug = cite_key_to_slug(cite_key)
@@ -246,6 +254,10 @@ def main():
     stats = {"files_scanned": 0, "files_skipped_dataless": 0,
              "quotes_extracted": 0, "files_written": 0}
 
+    excluded_cite_keys = set(load_excluded_works().keys())
+    if excluded_cite_keys:
+        print(f"  Takedown blocklist: {len(excluded_cite_keys)} cite key(s) excluded")
+
     # Collect all slugs we generate to track which files are ours
     generated_slugs = set()
 
@@ -256,7 +268,7 @@ def main():
             stats["files_skipped_dataless"] += 1
             continue
 
-        quotes = process_org_file(org_path)
+        quotes = process_org_file(org_path, excluded_cite_keys)
 
         for q in quotes:
             stats["quotes_extracted"] += 1

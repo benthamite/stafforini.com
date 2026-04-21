@@ -37,7 +37,28 @@ sync_tree() {
     --only-show-errors
 }
 
+# Explicitly remove takedown-blocked PDFs/thumbnails from R2.  `aws s3 sync`
+# without --delete does not remove remote objects when their local source
+# goes away, so we delete them by slug.  Idempotent: `aws s3 rm` succeeds
+# whether the object exists or not.
+remove_excluded_from_r2() {
+  local slugs
+  slugs="$(python3 "$SCRIPT_DIR/list-excluded-slugs.py")"
+  if [ -z "$slugs" ]; then
+    return 0
+  fi
+  echo "Purging takedown-blocked assets from R2..."
+  while IFS= read -r slug; do
+    [ -z "$slug" ] && continue
+    aws s3 rm "s3://$R2_BUCKET/pdfs/$slug.pdf" \
+      --endpoint-url "$R2_ENDPOINT" --only-show-errors || true
+    aws s3 rm "s3://$R2_BUCKET/pdf-thumbnails/$slug.png" \
+      --endpoint-url "$R2_ENDPOINT" --only-show-errors || true
+  done <<< "$slugs"
+}
+
 sync_tree "$REPO_ROOT/static/pdfs" "pdfs"
 sync_tree "$REPO_ROOT/static/pdf-thumbnails" "pdf-thumbnails"
+remove_excluded_from_r2
 
 echo "R2 sync complete."

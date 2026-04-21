@@ -18,7 +18,7 @@ import tomllib
 from datetime import date, datetime
 from pathlib import Path
 
-from lib import REPO_ROOT
+from lib import REPO_ROOT, cite_key_to_slug, load_excluded_works
 
 
 def read_toml_front_matter(path: Path) -> dict:
@@ -67,11 +67,77 @@ def expected_recent_quote_labels(limit: int = 5) -> list[str]:
     return [label for label in labels if label]
 
 
-def verify_built_site(site_dir: Path) -> list[str]:
+def verify_excluded_works() -> list[str]:
+    """Enforce the takedown blocklist across sources and rendered static assets.
+
+    This runs before the rendered-site check so that a leaked work is caught
+    even if no Hugo build happened (e.g. during an incremental export).  Each
+    excluded cite key is resolved to its kebab-case slug and we fail if the
+    corresponding source or asset still exists:
+
+      - content/works/{slug}.md               (work page)
+      - content/quotes/*.md with work={slug}  (any quote citing the work)
+      - static/pdfs/{slug}.pdf                (local source for R2 upload)
+      - static/pdf-thumbnails/{slug}.png      (local source for R2 upload)
+
+    The generators themselves remove these when the blocklist is consulted,
+    but this gate protects against bugs or manual edits that bypass them.
+    """
     errors: list[str] = []
+    excluded = load_excluded_works()
+    if not excluded:
+        return errors
+
+    excluded_slugs = {cite_key_to_slug(k) for k in excluded.keys()}
+
+    for slug in sorted(excluded_slugs):
+        work_md = REPO_ROOT / "content" / "works" / f"{slug}.md"
+        if work_md.exists():
+            errors.append(f"takedown-blocked work still in source: {work_md}")
+        pdf = REPO_ROOT / "static" / "pdfs" / f"{slug}.pdf"
+        if pdf.exists():
+            errors.append(f"takedown-blocked PDF still in source: {pdf}")
+        thumb = REPO_ROOT / "static" / "pdf-thumbnails" / f"{slug}.png"
+        if thumb.exists():
+            errors.append(f"takedown-blocked thumbnail still in source: {thumb}")
+
+    quotes_dir = REPO_ROOT / "content" / "quotes"
+    if quotes_dir.exists():
+        work_re = re.compile(r'^work\s*[=:]\s*"([^"]+)"', re.MULTILINE)
+        for md_file in quotes_dir.glob("*.md"):
+            if md_file.name == "_index.md":
+                continue
+            head = md_file.read_text(errors="replace")[:2000]
+            match = work_re.search(head)
+            if match and match.group(1) in excluded_slugs:
+                errors.append(
+                    f"takedown-blocked quote still in source: {md_file} "
+                    f"(work={match.group(1)})"
+                )
+
+    return errors
+
+
+def verify_excluded_works_rendered(site_dir: Path) -> list[str]:
+    """Belt-and-suspenders check on the rendered public/ tree."""
+    errors: list[str] = []
+    excluded = load_excluded_works()
+    if not excluded:
+        return errors
+    excluded_slugs = {cite_key_to_slug(k) for k in excluded.keys()}
+    for slug in sorted(excluded_slugs):
+        work_page = site_dir / "works" / slug / "index.html"
+        if work_page.exists():
+            errors.append(f"takedown-blocked work rendered: {work_page}")
+    return errors
+
+
+def verify_built_site(site_dir: Path) -> list[str]:
+    errors: list[str] = list(verify_excluded_works_rendered(site_dir))
     index_path = site_dir / "index.html"
     if not index_path.exists():
-        return [f"missing rendered homepage: {index_path}"]
+        errors.append(f"missing rendered homepage: {index_path}")
+        return errors
 
     index = html.unescape(index_path.read_text(errors="replace"))
 
@@ -123,14 +189,16 @@ def main() -> None:
     group.add_argument("--build", choices=["dev"], help="Build and verify a site profile")
     args = parser.parse_args()
 
+    source_errors = verify_excluded_works()
+
     if args.dir:
         site_dir = args.dir
-        errors = verify_built_site(site_dir)
+        errors = source_errors + verify_built_site(site_dir)
     else:
         with tempfile.TemporaryDirectory(prefix="stafforini-site-") as tmp:
             site_dir = Path(tmp)
             build_dev_site(site_dir)
-            errors = verify_built_site(site_dir)
+            errors = source_errors + verify_built_site(site_dir)
 
     if errors:
         print("Rendered site verification failed:", file=sys.stderr)

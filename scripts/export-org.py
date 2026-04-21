@@ -28,11 +28,29 @@ from lib import (
     NOTES_DIR,
     REPO_ROOT,
     extract_export_file_names,
+    extract_roam_refs,
     is_dataless,
+    load_excluded_works,
     safe_remove,
 )
 
 SCRIPT_DIR = REPO_ROOT / "scripts"
+
+
+def _excluded_biblio_file(path: Path, excluded_cite_keys: set) -> bool:
+    """Return True if *path*'s :ROAM_REFS: cite key is in the takedown blocklist.
+
+    Only meaningful for files under BIBLIO_NOTES_DIR; each such file is tied
+    to exactly one work by its top-level ``:ROAM_REFS:`` property.
+    """
+    if not excluded_cite_keys:
+        return False
+    try:
+        text = path.read_text(errors="replace")
+    except OSError:
+        return False
+    cite_key = extract_roam_refs(text)
+    return bool(cite_key) and cite_key in excluded_cite_keys
 
 
 SECTIONS = {
@@ -45,6 +63,10 @@ SECTIONS = {
         # cleaned by that script.  The ox-hugo quote export should not move
         # them to Trash on every full diary-quote export.
         "preserve_output": lambda path: "-q-" in path.stem,
+        # Skip whole source files whose work is in the takedown blocklist.
+        # The stale-cleanup pass then removes any previously-exported diary
+        # quotes for the excluded work.
+        "skip_file_fn": lambda p, excl: _excluded_biblio_file(p, excl),
     },
     "notes": {
         "source_dirs": [NOTES_DIR],
@@ -54,6 +76,7 @@ SECTIONS = {
         # exportable note.
         "skip_files": {"pablos-miscellany.org"},
         "preserve_output": lambda _path: False,
+        "skip_file_fn": lambda _p, _excl: False,
     },
 }
 
@@ -77,13 +100,20 @@ def resolve_relpath(relpath: str, source_dirs: list[Path]) -> Path:
     return source_dirs[0] / relpath
 
 
-def scan_source_files(cfg: dict) -> tuple[dict[str, list[str]], list[Path]]:
-    """Return exportable files as {relpath: outputs}, plus skipped dataless files."""
+def scan_source_files(cfg: dict) -> tuple[dict[str, list[str]], list[Path], int]:
+    """Return exportable files as {relpath: outputs}, plus diagnostics.
+
+    The third tuple element is the count of files excluded by the section's
+    takedown blocklist (``skip_file_fn``).
+    """
     source_dirs = cfg["source_dirs"]
     skip_files = cfg["skip_files"]
+    skip_file_fn = cfg.get("skip_file_fn", lambda _p, _excl: False)
+    excluded_cite_keys = set(load_excluded_works().keys())
 
     result: dict[str, list[str]] = {}
     skipped_dataless: list[Path] = []
+    excluded_count = 0
     org_files: list[Path] = []
     for source_dir in source_dirs:
         org_files.extend(sorted(
@@ -101,6 +131,9 @@ def scan_source_files(cfg: dict) -> tuple[dict[str, list[str]], list[Path]]:
         if is_dataless(org_file):
             skipped_dataless.append(org_file)
             continue
+        if skip_file_fn(org_file, excluded_cite_keys):
+            excluded_count += 1
+            continue
 
         try:
             outputs = extract_export_file_names(org_file)
@@ -111,7 +144,7 @@ def scan_source_files(cfg: dict) -> tuple[dict[str, list[str]], list[Path]]:
         if outputs:
             result[relpath_for(org_file, source_dirs)] = outputs
 
-    return result, skipped_dataless
+    return result, skipped_dataless, excluded_count
 
 
 def warn_dataless_files(files: list[Path]) -> None:
@@ -194,9 +227,11 @@ def run_export(section: str) -> None:
 
     print(f"Full export for {section}")
     print(f"Scanning {', '.join(str(d) for d in source_dirs)} ...")
-    current_files, skipped_dataless = scan_source_files(cfg)
+    current_files, skipped_dataless, excluded_count = scan_source_files(cfg)
     warn_dataless_files(skipped_dataless)
 
+    if excluded_count:
+        print(f"Skipped {excluded_count} file(s) whose work is in the takedown blocklist.")
     print(f"Found {len(current_files)} exportable org file(s).")
     if not current_files:
         print("ERROR: no exportable files found; refusing to prune outputs.", file=sys.stderr)

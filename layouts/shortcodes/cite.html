@@ -36,15 +36,23 @@
 
 {{- $work := partial "work-ref.html" $slug -}}
 {{- if $work -}}
+  {{- $excluded := $work.Params.excluded -}}
   {{- if $short -}}
     {{/* Short citation: title linked to work page.
          Italicize only standalone types (book, collection, proceedings) —
          articles, chapters, and online posts get plain text, matching
-         citation-format.html conventions. */}}
+         citation-format.html conventions.  For works on the takedown
+         blocklist, render the title without a hyperlink. */}}
     {{- $type := $work.Params.entry_type | default "book" -}}
     {{- $displayTitle := $work.Params.shorttitle | default $work.Title -}}
     {{- $standalone := partial "standalone-type.html" $type -}}
-    {{- if $standalone -}}
+    {{- if $excluded -}}
+      {{- if $standalone -}}
+        <em>{{ $displayTitle | safeHTML }}</em>
+      {{- else -}}
+        {{ $displayTitle | safeHTML }}
+      {{- end -}}
+    {{- else if $standalone -}}
       <a href="{{ $work.RelPermalink }}"><em>{{ $displayTitle | safeHTML }}</em></a>
     {{- else -}}
       <a href="{{ $work.RelPermalink }}">{{ $displayTitle | safeHTML }}</a>
