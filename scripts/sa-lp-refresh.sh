@@ -79,9 +79,8 @@ commit_if_changed "$NOTES_REPO" \
   "situational-awareness-lp.org" ".sa-lp-option-cache"
 
 commit_if_changed "$STAFFORINI_REPO" \
-  "sa-lp: refresh returns/chart/calculator HTML + regenerated markdown" \
+  "sa-lp: refresh returns/chart/calculator HTML" \
   "static/images/sa-lp-returns.html" \
-  "static/images/sa-lp-calculator.html" \
-  "content/notes/situational-awareness-lp.md"
+  "static/images/sa-lp-calculator.html"
 
 echo "=== [$(date '+%Y-%m-%d %H:%M:%S')] sa-lp refresh done ==="
