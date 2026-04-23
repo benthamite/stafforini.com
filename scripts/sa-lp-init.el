@@ -60,5 +60,10 @@ Exponential: 5s, 15s, 45s, …, capped at 60s."
     (kill-buffer buf)))
 
 (defun sa-lp-had-babel-error-p ()
-  "Return non-nil if `org-babel-eval' wrote to an error buffer."
-  (and (get-buffer "*Org-Babel Error Output*") t))
+  "Return non-nil if the babel subprocess exited with non-zero status."
+  (when-let ((buf (get-buffer "*Org-Babel Error Output*")))
+    (with-current-buffer buf
+      (save-excursion
+        (goto-char (point-min))
+        (and (re-search-forward "exited with code \\([0-9]+\\)" nil t)
+             (not (string= "0" (match-string 1))))))))
