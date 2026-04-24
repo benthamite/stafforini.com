@@ -2,13 +2,6 @@ baseURL = "https://stafforini.com/"
 languageCode = "en"
 title = "Pablo Stafforini"
 
-[params]
-# Base URLs for PDF assets.  Local dev serves from static/ via hugo server.
-# Production overrides in hugo.deploy.toml with the R2 public URL so deploys
-# don't carry the 50 GB PDF tree through Netlify.
-pdfBaseURL = "/pdfs"
-thumbBaseURL = "/pdf-thumbnails"
-
 # Preserve the natural case of taxonomy terms, section titles, etc.
 # With the default "ap" style, Hugo rewrites "Effective altruism" as
 # "Effective Altruism" on tag pages, which we don't want.
@@ -18,6 +11,13 @@ titleCaseStyle = "none"
 # The custom ID link handler in export-notes.el resolves most ID links, but
 # this safety net prevents build failures if any relref slips through.
 refLinksErrorLevel = "WARNING"
+
+[params]
+# Base URLs for PDF assets.  Local dev serves from static/ via hugo server.
+# Production overrides in hugo.deploy.toml with the R2 public URL so deploys
+# don't carry the 50 GB PDF tree through Netlify.
+pdfBaseURL = "/pdfs"
+thumbBaseURL = "/pdf-thumbnails"
 
 # Markup settings
 [markup]
