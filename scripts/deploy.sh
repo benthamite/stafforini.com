@@ -78,6 +78,27 @@ run_step "Verifying built site" python3 "$SCRIPT_DIR/verify-site.py" --dir publi
 # directory (CLI does not follow symlinks), and extend the default 20-min
 # timeout since per-file upload latency adds up.
 DEPLOY_DIR="$(cd public && pwd -P)"
+
+# public/pagefind is also a symlink (to static/pagefind, so the index
+# persists across builds), and Netlify CLI does not follow it either --
+# leaving /pagefind/* 404 in production and breaking site search.  Replace
+# the symlink with a real copy of the index for the deploy, then restore
+# it on exit so the next build's index lands in static/pagefind again.
+PAGEFIND_LINK="$DEPLOY_DIR/pagefind"
+PAGEFIND_TARGET=""
+restore_pagefind_symlink() {
+  if [ -n "$PAGEFIND_TARGET" ]; then
+    rm -rf "$PAGEFIND_LINK"
+    ln -s "$PAGEFIND_TARGET" "$PAGEFIND_LINK"
+  fi
+}
+if [ -L "$PAGEFIND_LINK" ]; then
+  PAGEFIND_TARGET="$(readlink "$PAGEFIND_LINK")"
+  trap restore_pagefind_symlink EXIT
+  rm "$PAGEFIND_LINK"
+  cp -R "$PAGEFIND_TARGET" "$PAGEFIND_LINK"
+fi
+
 run_step "Deploying to Netlify" npx --yes netlify deploy --prod --dir="$DEPLOY_DIR" --no-build --timeout 3600
 
 echo "Done."
