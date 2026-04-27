@@ -664,13 +664,27 @@ def build_entry(cite_key: str, posts: list[dict],
             orig_author_norm = normalize_word(orig_author)
             if orig_author and orig_author_norm not in new_author_norm:
                 fields["editor"] = orig_author
+        # If the original's publisher is recognisably OCLC junk, the rest
+        # of its enrichment (ISBN, edition, etc.) usually points at the
+        # same junk record and shouldn't be preserved either.
+        original_publisher = get_field(original, "publisher")
+        publisher_is_junk = _is_junk_publisher(original_publisher)
         for preserve in ("editor", "translator", "doi", "isbn", "url",
-                         "urldate", "file"):
+                         "urldate", "publisher", "location", "file", "issn",
+                         "date"):
             existing_val = get_field(original, preserve)
             if existing_val and preserve not in fields:
                 if preserve == "url" and _is_junk_url(existing_val):
                     continue
+                if publisher_is_junk and preserve in ("isbn", "publisher",
+                                                      "location"):
+                    continue
+                if preserve == "location" and _is_junk_location(existing_val):
+                    continue
                 fields[preserve] = existing_val
+        # urldate without url is meaningless — strip it.
+        if "urldate" in fields and "url" not in fields:
+            del fields["urldate"]
 
     # Strip any author names that leaked into the editor field (the work's
     # author is never their own editor in practice).
@@ -694,36 +708,107 @@ def _strip_names_overlapping_author(editor: str, author: str) -> str:
     return " and ".join(kept)
 
 
-def _original_describes_same_work(original: str, wp_posts: list[dict]) -> bool:
-    """True when the original entry's title sufficiently overlaps the WP
-    work_title (the *book*-level title, not the article title).
+def _original_describes_same_work(original: str, wp_posts: list[dict],
+                                  cite_key: str = "") -> str:
+    """Return ``"work"`` / ``"article"`` / ``""`` based on what the original
+    entry's title overlaps.
 
-    Used to detect interview / edited-collection cases where the original
-    has the book's *editor* in the ``author`` field — those people belong
-    on the rebuilt entry as ``editor``, not as discarded data.
+    - ``"work"``    – original title overlaps the WP work_title (book/journal
+      container). The original is structurally the same book; its editor /
+      ISBN / publisher are still useful.
+    - ``"article"`` – original title overlaps the WP article_title. The
+      original was a link to this specific article; its URL is still useful.
+    - ``""``        – no meaningful overlap; original is for a different
+      work and its enrichment fields should be discarded.
     """
     orig_title = (get_field(original, "title") + " "
                   + get_field(original, "shorttitle"))
     if not orig_title.strip():
-        return False
+        return ""
     orig_words = {normalize_word(w) for w in re.findall(r"\w+", orig_title)
                   if len(w) >= 4}
     orig_words.discard("")
     if not orig_words:
-        return False
-    # Only compare against work_title (the container), since article_title
-    # is the chapter and would never overlap a separately-titled book.
-    wp_words: set[str] = set()
+        return ""
+
+    def _words(field):
+        out = set()
+        for p in wp_posts:
+            for w in re.findall(r"\w+", p.get(field, "") or ""):
+                if len(w) >= 4:
+                    out.add(normalize_word(w))
+        return out
+
+    work_words = _words("work_title")
+    if work_words:
+        overlap = orig_words & work_words
+        if len(overlap) >= 2 or overlap == work_words:
+            return "work"
+    article_words = _words("article_title")
+    if article_words:
+        overlap = orig_words & article_words
+        if len(overlap) >= 2 or overlap == article_words:
+            return "article"
+    # WP often truncates article_title at apostrophes; fall back to the
+    # full attribution text, which contains the complete article title
+    # somewhere inside. Use ≥4-char content words and require ≥3 overlap
+    # to avoid common-word false positives.
+    attribution_words: set[str] = set()
     for p in wp_posts:
-        for w in re.findall(r"\w+", p.get("work_title", "") or ""):
+        for w in re.findall(r"\w+", p.get("attribution_text", "") or ""):
             if len(w) >= 4:
-                wp_words.add(normalize_word(w))
-    if not wp_words:
+                attribution_words.add(normalize_word(w))
+    if attribution_words:
+        overlap = orig_words & attribution_words
+        if len(overlap) >= 3:
+            return "article"
+    # Final fallback: cite-key title fragment overlap. If the original
+    # entry's title shares ≥1 distinctive word with the cite key's title
+    # fragment, it's plausibly the same work — sparse online entries
+    # rarely share even one specific word with an unrelated cite key.
+    if cite_key:
+        key_title = set(cite_key_title_words(cite_key))
+        # Drop very short words that match too readily
+        key_title = {w for w in key_title if len(w) >= 4}
+        if key_title:
+            overlap = orig_words & key_title
+            if len(overlap) >= 1:
+                return "article"
+    return ""
+
+
+def _is_junk_location(location: str) -> bool:
+    """Detect placeholder location fields."""
+    if not location:
         return False
-    overlap = orig_words & wp_words
-    # Same-work threshold: at least 2 shared content words, OR all
-    # work_title content words appear in the original.
-    return len(overlap) >= 2 or overlap == wp_words
+    p = location.lower()
+    return ("not identified" in p or "[s.l.]" in p or p.strip("{} ") == "s.l."
+            or "publication not identified" in p)
+
+
+def _is_junk_publisher(publisher: str) -> bool:
+    """Detect publisher fields that are OCLC garbage rather than real imprints."""
+    if not publisher:
+        return False
+    p = publisher.strip("{} ")
+    junk_substrings = (
+        "EISENBRAUNS", "Eisenbrauns",
+        "PRINT-ON-DEMAND", "Print-on-Demand",
+        "REPRINT SERVICES", "Reprint Services",
+        "Place of publication not identified",
+        "PLACE OF PUBLICATION NOT IDENTIFIED",
+        "Publisher not identified",
+        "PUBLISHER NOT IDENTIFIED",
+        "[s.n.]", "[S.n.]", "s.l.",
+    )
+    if any(j in p for j in junk_substrings):
+        return True
+    # All-caps publisher names are LaTeX-escaped OCLC garbage like
+    # "{SIMON} \\& {SCHUSTER}" — never a legitimate imprint format.
+    stripped = re.sub(r"[\\{}&\s.]", "", p)
+    if stripped and stripped.isupper() and len(stripped) > 4:
+        return True
+    return False
 
 
 def _is_junk_url(url: str) -> bool:
@@ -792,7 +877,13 @@ def main() -> int:
             if why.startswith("title mismatch") or why.startswith("placeholder"):
                 preserve_from = existing
             elif why.startswith("author mismatch"):
-                if _original_describes_same_work(existing, posts):
+                if _original_describes_same_work(existing, posts, key):
+                    preserve_from = existing
+            elif why.startswith("all-caps"):
+                # All-caps titles are OCLC garbage but accidentally-correct
+                # publisher / ISBN data is still salvageable when the title
+                # itself describes the right work.
+                if _original_describes_same_work(existing, posts, key):
                     preserve_from = existing
         entry, note = build_entry(key, posts, original=preserve_from)
         if entry:
