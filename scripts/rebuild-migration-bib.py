@@ -23,6 +23,7 @@ so the diff can be reviewed before anything is moved into ``new.bib``.
 import json
 import re
 import sys
+import unicodedata
 from collections import Counter, defaultdict
 from pathlib import Path
 
@@ -64,18 +65,33 @@ def keys_per_bib() -> dict[str, set[str]]:
     return out
 
 
+_EDITOR_SUFFIX_RE = re.compile(
+    r"\s*\((?:ed\.?|eds\.?|editor|editors|trans\.?|translator|hrsg\.?)\)\s*",
+    re.IGNORECASE,
+)
+_EDITOR_PREFIX_RE = re.compile(
+    r"^\s*\((?:ed\.?|eds\.?|editor|editors|trans\.?|translator|hrsg\.?)\)[,\s]*",
+    re.IGNORECASE,
+)
+
+
 def split_authors(raw: str) -> list[str]:
     """Parse ``First Last & Other Person`` → ``['Last, First', 'Person, Other']``."""
     if not raw:
         return []
-    # Split on ' & ', ' and ', or commas-followed-by-name (multiple authors)
+    # Strip trailing/leading "(ed.)" annotations before splitting
+    raw = _EDITOR_SUFFIX_RE.sub(" ", raw)
+    raw = _EDITOR_PREFIX_RE.sub("", raw)
     parts = re.split(r"\s+(?:&|and)\s+", raw)
     flat = []
     for p in parts:
-        # Some attributions use commas to separate multiple authors:
-        # "Mark Williams, John Teasdale, Zindel Seagal & Jon Kabat-Zinn"
         flat.extend(s.strip() for s in p.split(",") if s.strip())
-    return [flip_name(n) for n in flat if n]
+    cleaned = []
+    for name in flat:
+        name = _EDITOR_SUFFIX_RE.sub("", name).strip()
+        if name:
+            cleaned.append(flip_name(name))
+    return cleaned
 
 
 # Compound surnames (Spanish/Portuguese/Italian double-barreled, particled
@@ -83,31 +99,32 @@ def split_authors(raw: str) -> list[str]:
 COMPOUND_SURNAMES = {
     "Bioy Casares", "García Márquez", "Vargas Llosa", "Lloyd Wright",
     "Conan Doyle", "Lévi-Strauss", "Stephens-Davidowitz",
+    "Cervantes Saavedra", "Halperín Donghi", "Pérez Reverte",
+    "Ortega y Gasset", "García Lorca", "Pérez Galdós",
 }
-NAME_PARTICLES = {"de", "del", "della", "di", "du", "la", "las", "le", "los",
-                  "van", "von", "der", "den", "ten", "ter", "af", "av", "zu",
-                  "zur", "y"}
 
 
 def flip_name(name: str) -> str:
-    """``First Middle Last`` → ``Last, First Middle``."""
-    name = name.strip()
+    """``First Middle Last`` → ``Last, First Middle``.
+
+    Particles (``de``, ``van``, ``von``, ``del``...) are kept with the given
+    name in BibTeX convention: ``Miguel de Cervantes`` → ``Cervantes, Miguel
+    de``. We do *not* try to attach particles to the surname; we only honour
+    the explicit compound-surname allowlist above for cases where particle
+    placement is genuinely ambiguous.
+    """
+    name = name.strip().rstrip(",")
     if not name or "," in name:
         return name
     parts = name.split()
     if len(parts) == 1:
         return parts[0]
-    # Compound surname allowlist
     for compound in COMPOUND_SURNAMES:
         toks = compound.split()
         n = len(toks)
         if len(parts) >= n + 1 and parts[-n:] == toks:
             given = " ".join(parts[:-n])
             return f"{compound}, {given}"
-    # Particles like "von", "de", "van" stay attached to the surname when
-    # they immediately precede the last token.
-    if len(parts) >= 3 and parts[-2].lower() in NAME_PARTICLES:
-        return f"{parts[-2]} {parts[-1]}, {' '.join(parts[:-2])}"
     return f"{parts[-1]}, {' '.join(parts[:-1])}"
 
 
@@ -117,29 +134,47 @@ def cite_key_surname(cite_key: str) -> str:
     ``Alexander2014ControlGroupOut`` → ``Alexander``
     ``BioyCasares2002AdPorcos``      → ``BioyCasares``
     ``Stephens-Davidowitz2017...``   → ``Stephens-Davidowitz``
+    ``CiceroAmicitia``               → ``Cicero``  (no year — first CamelCase chunk)
     """
-    m = re.match(r"^([A-Za-z][\w-]*?)(?=\d|$)", cite_key)
+    # Year-bounded keys: surname is everything up to the year
+    m = re.match(r"^(.+?)(?=\d{4})", cite_key)
+    if m:
+        return m.group(1)
+    # No year — surname is the first CamelCase chunk (capital + lowercase)
+    m = re.match(r"^([A-Z][a-z]+)", cite_key)
     return m.group(1) if m else ""
 
 
 def cite_key_title_words(cite_key: str) -> list[str]:
-    """Extract the CamelCase title fragment after the year, lowercased."""
+    """Extract the CamelCase title fragment, lowercased.
+
+    With year: title is everything after ``\\d{4}``.
+    Without year: title is everything after the first CamelCase chunk.
+    """
     m = re.search(r"\d{4}([A-Z][\w-]*)$", cite_key)
-    if not m:
-        return []
-    tail = m.group(1)
-    # Split CamelCase: AdPorcos -> Ad, Porcos
+    if m:
+        tail = m.group(1)
+    else:
+        m = re.match(r"^[A-Z][a-z]+([A-Z][\w-]*)$", cite_key)
+        if not m:
+            return []
+        tail = m.group(1)
     words = re.findall(r"[A-Z][a-z]+|[A-Z]+(?=[A-Z]|$)", tail)
     return [w.lower() for w in words]
 
 
 def get_field(entry: str, field: str) -> str:
-    """Pull a single BibTeX field value from a raw entry string."""
+    """Pull a single BibTeX field value from a raw entry string.
+
+    NFC-normalizes the result so that decomposed combining marks (common in
+    auto-generated bib output) don't break downstream `\\w+` matching.
+    """
     m = re.search(rf"^\s*{field}\s*=\s*\{{(.*?)\}},?\s*$", entry,
                   re.MULTILINE | re.DOTALL)
     if not m:
         return ""
-    return re.sub(r"\s+", " ", m.group(1)).strip()
+    raw = re.sub(r"\s+", " ", m.group(1)).strip()
+    return unicodedata.normalize("NFC", raw)
 
 
 # Title noise we strip before fuzzy matching
@@ -147,20 +182,32 @@ _NORMALIZE_RE = re.compile(r"[^a-z0-9]+")
 
 
 def normalize_word(s: str) -> str:
-    return _NORMALIZE_RE.sub("", s.lower())
+    """Lowercase + fold accents to ASCII + strip non-alphanumeric.
+
+    Critical that accents fold rather than drop: cite keys typically strip
+    accents (``Bernardez``) but bib entries preserve them (``Bernárdez``).
+    """
+    decomposed = unicodedata.normalize("NFKD", s)
+    ascii_only = decomposed.encode("ascii", "ignore").decode("ascii")
+    return _NORMALIZE_RE.sub("", ascii_only.lower())
 
 
 def migration_entry_is_plausible(entry: str, cite_key: str,
                                  wp_posts: list[dict]) -> tuple[bool, str]:
     """Decide whether the existing migration entry matches the cite key.
 
-    Returns (is_plausible, reason). Plausible entries are preserved as-is,
-    keeping any later enrichment (URLs, ISBNs, file paths). Implausible ones
-    are replaced with the WP-derived rebuild.
+    Returns (is_plausible, reason). The reason string starts with one of:
+      - "plausible"
+      - "author mismatch:" — entry's author is for a different work
+      - "title mismatch:"  — author overlaps but title fields don't match
+      - "all-caps title"   — raw OCLC migration record never enriched
+      - "placeholder location" — "Place of publication not identified"
+    Callers can branch on the prefix to decide whether to preserve any
+    enrichment fields (URL, ISBN, DOI, editor) from the original.
     """
     surname_key = cite_key_surname(cite_key)
     if not surname_key:
-        return True, "no surname in key"
+        return True, "plausible (no surname in key)"
 
     author = get_field(entry, "author") + " " + get_field(entry, "editor")
     title = (get_field(entry, "title") + " "
@@ -168,28 +215,20 @@ def migration_entry_is_plausible(entry: str, cite_key: str,
              + get_field(entry, "booktitle") + " "
              + get_field(entry, "journaltitle"))
 
-    # Check 1: cite key surname must appear in author/editor (handles
-    # "Bioy Casares, Adolfo" matching key prefix "BioyCasares").
     surname_norm = normalize_word(surname_key)
     author_norm = normalize_word(author)
     surname_present = surname_norm and surname_norm in author_norm
     if not surname_present:
-        # Cross-check WP author too — if WP also disagrees with the
-        # migration author, that confirms migration is wrong.
         wp_authors = {normalize_word(p.get("author", "")) for p in wp_posts}
         if wp_authors and not any(a and a in author_norm for a in wp_authors):
             return False, f"author mismatch: key={surname_key!r} entry author={author!r}"
 
-    # Check 2: title overlap. Cite key's title words should appear in the
-    # entry title or in the WP work_title.
     key_words = set(cite_key_title_words(cite_key))
     if key_words:
         title_words = {normalize_word(w) for w in re.findall(r"\w+", title)}
         title_words.discard("")
         overlap = {w for w in key_words if w in title_words}
         if not overlap:
-            # If the WP work_title shares words with the cite key but the
-            # migration title doesn't, migration is suspicious.
             wp_title_words = set()
             for p in wp_posts:
                 for src in (p.get("work_title", ""), p.get("article_title", "")):
@@ -200,13 +239,10 @@ def migration_entry_is_plausible(entry: str, cite_key: str,
                 return False, (f"title mismatch: key words={sorted(key_words)} "
                                f"absent from entry title={title!r}")
 
-    # Check 3: ALL CAPS title indicates a raw migration record that wasn't
-    # later enriched.
     raw_title = get_field(entry, "title")
     if raw_title and raw_title.isupper():
         return False, "all-caps title (unenriched migration)"
 
-    # Check 4: "Place of publication not identified" is a placeholder.
     location = get_field(entry, "location")
     if "not identified" in location.lower():
         return False, "placeholder location"
@@ -214,27 +250,53 @@ def migration_entry_is_plausible(entry: str, cite_key: str,
     return True, "plausible"
 
 
+def extract_editors_from_attribution(attribution: str) -> str:
+    """Pull editor names from ``"X (ed.)"`` / ``"X and Y (eds.)"`` patterns.
+
+    The WP attribution often labels the book editor explicitly:
+      ``Speaker, in Ray Carney (ed.), Title, ...``
+      ``Speaker, quoted in Paul Edwards (ed.), Author, Title, ...``
+    """
+    if not attribution:
+        return ""
+    m = re.search(
+        r"(?:in|by)\s+([A-ZÁÉÍÓÚÑÜ][^,()]*?(?:\s+(?:&|and)\s+[^,()]+)*?)\s*"
+        r"\((?:ed\.?|eds\.?|editor|editors)\)",
+        attribution, re.IGNORECASE)
+    if not m:
+        return ""
+    return " and ".join(split_authors(m.group(1).strip()))
+
+
 def extract_authors_from_attribution(attribution: str, fallback: str) -> str:
     """Return the BibTeX-formatted author list.
 
-    For single-author posts the WP ``author`` field is reliable. For multi-
-    author works it usually carries only the primary author; pull the full
-    list from the head of ``attribution_text`` instead. For "quoted in"
-    attributions, the work's author appears after the phrase, not before.
+    Patterns handled:
+      ``Speaker, quoted in Author, Title, ...``         → author = Author
+      ``Speaker, quoted in Editor (ed.), Author, ...``  → author = Author
+      ``Speaker, in Editor (ed.), Title, ...``          → author = Speaker
+      ``Author1 & Author2, Title, ...``                 → author = both
+      ``Author, 'Article', ...``                        → author = Author
     """
     if not attribution:
         return " and ".join(split_authors(fallback))
-    # "X, quoted in Y, Title, ..." → use Y as author, not X (the speaker).
-    qm = re.search(r"\bquoted in\s+([^,]+(?:\s+&\s+[^,]+)*)", attribution,
-                   re.IGNORECASE)
+    # "X, quoted in Y (ed.), Z, Title, ..." → author = Z (the work's author)
+    qm = re.search(
+        r"\bquoted in\s+[^,()]+\s*\((?:ed\.?|eds\.?|editor|editors)\)\s*,\s*"
+        r"([^,]+(?:\s+(?:&|and)\s+[^,]+)*)",
+        attribution, re.IGNORECASE)
     if qm:
-        candidate = qm.group(1).strip()
-        return " and ".join(split_authors(candidate))
+        return " and ".join(split_authors(qm.group(1).strip()))
+    # "X, quoted in Y, Title, ..." → author = Y
+    qm = re.search(r"\bquoted in\s+([^,]+(?:\s+(?:&|and)\s+[^,]+)*)",
+                   attribution, re.IGNORECASE)
+    if qm:
+        return " and ".join(split_authors(qm.group(1).strip()))
+    # Default: head of attribution up to the title (quoted segment)
     m = re.match(r"^(.+?)\s*[,]\s*(?:'|\")", attribution)
     candidate = m.group(1) if m else None
     if not candidate:
-        head = attribution.split(",", 1)[0]
-        candidate = head
+        candidate = attribution.split(",", 1)[0]
     if "&" in candidate or re.search(r"\sand\s", candidate):
         return " and ".join(split_authors(candidate))
     if fallback:
@@ -323,33 +385,72 @@ def parse_locator_pages(locator: str) -> str:
     return m.group(1) if m else locator.strip()
 
 
-def is_journalish(work_title: str, attribution: str) -> bool:
-    """Detect periodical / journal containers, not single-volume collections."""
-    if re.search(r"\bvol\.\s*\d+", attribution):
-        return True
-    if re.search(r"\bno\.\s*\w+", attribution):
-        return True
-    if not work_title:
-        return False
-    # Multi-volume reference works (dictionaries, encyclopedias, companions)
-    # are *not* journals even though their titles contain "Philosophy" etc.
-    book_markers = ("Dictionary", "Encyclopedia", "Encyclopaedia",
-                    "Companion", "Handbook", "Guide", "Reader",
-                    "Anthology", "Collected Works", "Selected Works")
-    if any(m in work_title for m in book_markers):
-        return False
-    journal_words = ("Review", "Journal", "Quarterly", "Magazine",
-                     "Times", "Inquiry", "Mind", "Analysis", "Studies")
-    return any(w in work_title.split() for w in journal_words)
+_NEWSPAPER_WORDS = (
+    "Times", "Post", "Tribune", "Globe", "Herald", "Gazette", "Guardian",
+    "Independent", "Observer", "Telegraph", "Standard", "Statesman",
+    "Mail", "Chronicle", "Express", "Sun", "Mirror", "Daily", "Weekly",
+    "Newspaper", "News",
+    "Nación", "Nacion", "Clarín", "Clarin", "País", "Pais", "Mundo",
+    "Crónica", "Cronica", "Página", "Pagina",
+)
+_JOURNAL_WORDS = (
+    "Review", "Journal", "Quarterly", "Magazine", "Inquiry", "Mind",
+    "Analysis", "Studies", "Bulletin", "Notes", "Annals", "Transactions",
+    "Proceedings",
+)
+_ONLINE_DOMAINS_RE = re.compile(r"\b\w+\.(?:org|com|net|info|blog|io)\b",
+                                re.IGNORECASE)
+_KNOWN_BLOGS = {
+    "Slate Star Codex", "LessWrong", "Less Wrong", "Astral Codex Ten",
+    "Overcoming Bias", "Marginal Revolution", "Shtetl-Optimized",
+    "Paul Graham", "Eliezer Yudkowsky", "ZNet", "Edge", "Edge.org",
+    "edge.org", "Wikiquote", "Wikipedia",
+}
+_BOOK_MARKERS = (
+    "Dictionary", "Encyclopedia", "Encyclopaedia", "Companion",
+    "Handbook", "Guide", "Reader", "Anthology", "Collected Works",
+    "Selected Works", "Essays", "Lectures",
+)
 
 
-def is_blog_or_online(work_title: str, attribution: str) -> bool:
+def container_kind(work_title: str, attribution: str) -> str:
+    """Classify the container: 'journal', 'newspaper', 'online', or 'collection'.
+
+    Drives entry-type selection. Collections become @incollection (with
+    booktitle), journals/newspapers become @article (with journaltitle),
+    online sources become @online.
+    """
     if not work_title:
-        return True  # bare 'Title', date pattern → online
-    blog_names = ("Slate Star Codex", "LessWrong", "Less Wrong",
-                  "Astral Codex Ten", "Overcoming Bias", "Marginal Revolution",
-                  "Paul Graham", "Eliezer Yudkowsky")
-    return work_title in blog_names
+        return "online"
+    # Explicit periodical markers in attribution: vol/no
+    if re.search(r"\bvol\.\s*\d+|\bno\.\s*\w+", attribution):
+        return "journal"
+    # Reference works (Penguin Dictionary etc.) are collections
+    if any(m in work_title for m in _BOOK_MARKERS):
+        return "collection"
+    if work_title in _KNOWN_BLOGS:
+        return "online"
+    if _ONLINE_DOMAINS_RE.search(work_title):
+        return "online"
+    title_words = work_title.split()
+    if any(w in title_words for w in _NEWSPAPER_WORDS):
+        return "newspaper"
+    if any(w in title_words for w in _JOURNAL_WORDS):
+        return "journal"
+    # Short, no location in attribution → likely periodical/online not a book
+    if len(title_words) <= 3 and not _attribution_has_location(attribution):
+        return "online"
+    return "collection"
+
+
+def _attribution_has_location(attribution: str) -> bool:
+    """Detect whether attribution_text carries a publisher-place segment.
+
+    Pattern is ``..., Place, YYYY, p. X``. We look for any ``,
+    <KnownLocation>, <year>`` triple.
+    """
+    return bool(re.search(
+        r",\s*([A-Z][A-Za-zÀ-ÿ\s.]+?)\s*,\s*\d{4}\b", attribution))
 
 
 def escape_bib(value: str) -> str:
@@ -380,6 +481,28 @@ def render_entry(entry_type: str, key: str, fields: dict[str, str]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def recover_full_quoted_title(attribution: str, truncated: str) -> str:
+    """Recover an article title that WP's parser truncated at an apostrophe.
+
+    The upstream WP migration parsed ``article_title`` by splitting on the
+    first ``'``, so titles like ``"One Man's View"`` ended up as
+    ``"One man"``. The full title still lives in attribution_text inside a
+    matched pair of quotes. We pull the longest quoted span that *starts
+    with* the truncated text.
+    """
+    if not attribution or not truncated:
+        return ""
+    # Match anything between a leading single quote and a closing quote that
+    # is followed by a comma, period, or end-of-string (so internal
+    # apostrophes are skipped).
+    cand = ""
+    for m in re.finditer(r"'(.+?)'(?=[,.]|\s+in\s+|$)", attribution):
+        text = m.group(1).strip()
+        if text.lower().startswith(truncated.lower()) and len(text) > len(cand):
+            cand = text
+    return cand
+
+
 def select_primary_post(cite_key: str, posts: list[dict]) -> dict:
     """For a cite key collapsed across multiple posts, pick the one whose
     article_title best matches the cite key's title fragment. This recovers
@@ -403,15 +526,31 @@ def select_primary_post(cite_key: str, posts: list[dict]) -> dict:
     return best
 
 
-def build_entry(cite_key: str, posts: list[dict]) -> tuple[str | None, str]:
-    """Return (rendered BibTeX entry, status note)."""
+def build_entry(cite_key: str, posts: list[dict],
+                original: str = "") -> tuple[str | None, str]:
+    """Return (rendered BibTeX entry, status note).
+
+    ``original`` is the raw text of the existing migration entry, if any.
+    Editor / translator / URL / DOI / ISBN values are preserved from it
+    when present, since the WP attribution rarely carries that information.
+    """
     if not posts:
         return None, "no WP posts"
 
-    authors = list({p.get("author", "") for p in posts if p.get("author")})
-    work_titles = list({p.get("work_title", "") for p in posts if p.get("work_title")})
-    years = list({p.get("year", "") for p in posts if p.get("year")})
-    article_titles = list({p.get("article_title", "") for p in posts if p.get("article_title")})
+    # Case-insensitive deduplication so trivial differences like
+    # "Borges Verbal" vs "Borges verbal" don't trigger spurious conflicts.
+    def dedup_ci(values):
+        seen = {}
+        for v in values:
+            k = v.lower().strip()
+            if k and k not in seen:
+                seen[k] = v
+        return list(seen.values())
+
+    authors = dedup_ci([p.get("author", "") for p in posts])
+    work_titles = dedup_ci([p.get("work_title", "") for p in posts])
+    years = dedup_ci([p.get("year", "") for p in posts])
+    article_titles = dedup_ci([p.get("article_title", "") for p in posts])
 
     multi_post = len(posts) > 1
     article_conflict = multi_post and len(article_titles) > 1
@@ -447,38 +586,62 @@ def build_entry(cite_key: str, posts: list[dict]) -> tuple[str | None, str]:
     fields: dict[str, str] = {}
     if author_field:
         fields["author"] = author_field
+    editor_field = extract_editors_from_attribution(attribution)
+    # Avoid editor == author duplication
+    if editor_field and normalize_word(editor_field) != normalize_word(author_field):
+        fields["editor"] = editor_field
     if year:
         fields["date"] = year
 
+    # Recover full article title if WP truncated it at an apostrophe
+    if article_title:
+        recovered = recover_full_quoted_title(attribution, article_title)
+        if recovered:
+            article_title = recovered
+    elif not article_title and attribution:
+        # WP sometimes drops article_title entirely. Look for a single
+        # quoted segment immediately followed by ", in <Editor> (ed.)".
+        # Tolerate a missing closing quote after a terminal '?' or '!'
+        # (some WP attributions have ?, instead of ?', a typo carried over
+        # from the original WordPress posts).
+        m = re.search(
+            r"'([^']{4,80}?(?:[?!]|[^?!]))'?\s*,?\s*in\s+[^,]+?\s*"
+            r"\((?:ed\.?|eds\.?|editor|editors)\)",
+            attribution)
+        if m:
+            cand = m.group(1).strip()
+            # Reject obvious garbage: leading punctuation, embedded comma
+            if not cand.startswith((",", ".", ";")) and "," not in cand[:60]:
+                article_title = cand
+
     # Decide entry type
-    if article_title and is_journalish(work_title, attribution):
-        entry_type = "article"
-        fields["title"] = article_title
-        if work_title:
-            fields["journaltitle"] = work_title
-        vol, num, idate = extract_volume_issue(attribution)
-        if vol:
-            fields["volume"] = vol
-        if num:
-            fields["number"] = num
-        if idate and idate != year:
-            fields["issue"] = idate
-    elif article_title and is_blog_or_online(work_title, attribution):
-        entry_type = "online"
-        fields["title"] = article_title
-        if work_title:
-            fields["journaltitle"] = work_title
-    elif article_title and work_title:
-        entry_type = "incollection"
-        fields["title"] = article_title
-        fields["booktitle"] = work_title
-        loc = extract_location(attribution, year)
-        if loc:
-            fields["location"] = loc
-    elif article_title and not work_title:
-        entry_type = "online"
-        fields["title"] = article_title
-    elif work_title and not article_title:
+    if article_title:
+        kind = container_kind(work_title, attribution)
+        if kind == "journal" or kind == "newspaper":
+            entry_type = "article"
+            fields["title"] = article_title
+            if work_title:
+                fields["journaltitle"] = work_title
+            vol, num, idate = extract_volume_issue(attribution)
+            if vol:
+                fields["volume"] = vol
+            if num:
+                fields["number"] = num
+            if idate and idate != year:
+                fields["issue"] = idate
+        elif kind == "online":
+            entry_type = "online"
+            fields["title"] = article_title
+            if work_title:
+                fields["journaltitle"] = work_title
+        else:  # collection
+            entry_type = "incollection"
+            fields["title"] = article_title
+            fields["booktitle"] = work_title
+            loc = extract_location(attribution, year)
+            if loc:
+                fields["location"] = loc
+    elif work_title:
         entry_type = "book"
         fields["title"] = work_title
         loc = extract_location(attribution, year)
@@ -487,7 +650,95 @@ def build_entry(cite_key: str, posts: list[dict]) -> tuple[str | None, str]:
     else:
         return None, "no title information"
 
+    # Preserve safe enrichment fields from the existing migration entry
+    # (editor, translator, DOI, ISBN, URL/urldate, PDF file path). These
+    # rarely come from WP attribution and would otherwise be lost.
+    if original:
+        # When rebuilding to @incollection from an original whose `author`
+        # is structurally an editor (cite key surname differs but the
+        # original describes the same book), promote the original author
+        # to `editor` on the rebuilt entry.
+        if entry_type == "incollection" and not get_field(original, "editor"):
+            orig_author = get_field(original, "author")
+            new_author_norm = normalize_word(fields.get("author", ""))
+            orig_author_norm = normalize_word(orig_author)
+            if orig_author and orig_author_norm not in new_author_norm:
+                fields["editor"] = orig_author
+        for preserve in ("editor", "translator", "doi", "isbn", "url",
+                         "urldate", "file"):
+            existing_val = get_field(original, preserve)
+            if existing_val and preserve not in fields:
+                if preserve == "url" and _is_junk_url(existing_val):
+                    continue
+                fields[preserve] = existing_val
+
+    # Strip any author names that leaked into the editor field (the work's
+    # author is never their own editor in practice).
+    if fields.get("editor") and fields.get("author"):
+        fields["editor"] = _strip_names_overlapping_author(
+            fields["editor"], fields["author"])
+        if not fields["editor"]:
+            del fields["editor"]
+
     return render_entry(entry_type, cite_key, fields), "ok"
+
+
+def _strip_names_overlapping_author(editor: str, author: str) -> str:
+    """Return ``editor`` with any name segments that match ``author`` removed."""
+    author_norms = {normalize_word(a) for a in author.split(" and ")}
+    kept = []
+    for name in editor.split(" and "):
+        if normalize_word(name) in author_norms:
+            continue
+        kept.append(name)
+    return " and ".join(kept)
+
+
+def _original_describes_same_work(original: str, wp_posts: list[dict]) -> bool:
+    """True when the original entry's title sufficiently overlaps the WP
+    work_title (the *book*-level title, not the article title).
+
+    Used to detect interview / edited-collection cases where the original
+    has the book's *editor* in the ``author`` field — those people belong
+    on the rebuilt entry as ``editor``, not as discarded data.
+    """
+    orig_title = (get_field(original, "title") + " "
+                  + get_field(original, "shorttitle"))
+    if not orig_title.strip():
+        return False
+    orig_words = {normalize_word(w) for w in re.findall(r"\w+", orig_title)
+                  if len(w) >= 4}
+    orig_words.discard("")
+    if not orig_words:
+        return False
+    # Only compare against work_title (the container), since article_title
+    # is the chapter and would never overlap a separately-titled book.
+    wp_words: set[str] = set()
+    for p in wp_posts:
+        for w in re.findall(r"\w+", p.get("work_title", "") or ""):
+            if len(w) >= 4:
+                wp_words.add(normalize_word(w))
+    if not wp_words:
+        return False
+    overlap = orig_words & wp_words
+    # Same-work threshold: at least 2 shared content words, OR all
+    # work_title content words appear in the original.
+    return len(overlap) >= 2 or overlap == wp_words
+
+
+def _is_junk_url(url: str) -> bool:
+    """Drop URLs that clearly point at search-result / disambiguation pages."""
+    junk_substrings = (
+        "abebooks.com/book-search",
+        "casadellibro.com",
+        "wikiquote.org",
+        "stafforini.com/quotes/?",
+        "stafforini.com/quotes/?tag=",
+        "lanacion.com.ar/autor/",
+        "/search?",
+        "altchaNotVerified",
+    )
+    return any(s in url for s in junk_substrings)
 
 
 def main() -> int:
@@ -523,13 +774,27 @@ def main() -> int:
             statuses["no WP coverage"] += 1
             continue
         existing = migration_entries.get(key, "")
+        preserve_from = ""
         if existing:
             ok, why = migration_entry_is_plausible(existing, key, posts)
             if ok:
                 statuses["kept (plausible existing)"] += 1
                 plausible_kept.append((key, why))
                 continue
-        entry, note = build_entry(key, posts)
+            # Decide whether to preserve enrichment fields:
+            #  - Title mismatch / placeholder location: original is the same
+            #    work, just structured wrong → preserve everything.
+            #  - Author mismatch: usually means the original is a totally
+            #    different work, BUT if the original's title matches the WP
+            #    work_title, the original is actually the same work with the
+            #    book's editor stored in `author`. Preserve in that case so
+            #    we can promote that author to `editor`.
+            if why.startswith("title mismatch") or why.startswith("placeholder"):
+                preserve_from = existing
+            elif why.startswith("author mismatch"):
+                if _original_describes_same_work(existing, posts):
+                    preserve_from = existing
+        entry, note = build_entry(key, posts, original=preserve_from)
         if entry:
             rebuilt[key] = entry
             statuses["rebuilt"] += 1
