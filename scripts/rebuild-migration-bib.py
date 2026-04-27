@@ -669,6 +669,21 @@ def build_entry(cite_key: str, posts: list[dict],
         # same junk record and shouldn't be preserved either.
         original_publisher = get_field(original, "publisher")
         publisher_is_junk = _is_junk_publisher(original_publisher)
+
+        # When the original describes the same work and carries a longer
+        # title that contains the WP-derived title as a substring, prefer
+        # it (WP often abbreviates: "Bustle" → "Life in a bustle: advice
+        # to youth"). Only do this for the *book* title — article titles
+        # from WP are specific and shouldn't be replaced.
+        if entry_type == "book":
+            orig_title = get_field(original, "title")
+            current_title = fields.get("title", "")
+            if (orig_title and current_title
+                    and len(orig_title) > len(current_title) + 5
+                    and normalize_word(current_title) in normalize_word(orig_title)
+                    and not orig_title.isupper()
+                    and not _title_has_junk_markers(orig_title)):
+                fields["title"] = orig_title
         for preserve in ("editor", "translator", "doi", "isbn", "url",
                          "urldate", "publisher", "location", "file", "issn",
                          "date"):
@@ -706,6 +721,37 @@ def _strip_names_overlapping_author(editor: str, author: str) -> str:
             continue
         kept.append(name)
     return " and ".join(kept)
+
+
+def _original_author_appears_in_wp(original: str, wp_posts: list[dict],
+                                   cite_key: str) -> bool:
+    """Sanity check: original entry's author/editor surname must appear
+    somewhere in the WP attribution text or match the cite key surname.
+
+    Catches the Ameghino-Caponi pattern where the original entry is
+    actually for a *different* work (a meta-paper about the cite-key
+    subject) that happens to share a title word.
+    """
+    surnames = []
+    for field in ("author", "editor"):
+        for name in get_field(original, field).split(" and "):
+            name = name.strip()
+            if not name:
+                continue
+            # Surname is everything before the first comma (BibTeX convention)
+            surname = name.split(",", 1)[0].strip()
+            surnames.append(normalize_word(surname))
+    if not surnames:
+        return True  # nothing to check — don't block preservation
+    cite_surname = normalize_word(cite_key_surname(cite_key))
+    if cite_surname and any(s == cite_surname or s in cite_surname
+                            or cite_surname in s for s in surnames):
+        return True
+    for p in wp_posts:
+        attribution_norm = normalize_word(p.get("attribution_text", ""))
+        if any(s and s in attribution_norm for s in surnames):
+            return True
+    return False
 
 
 def _original_describes_same_work(original: str, wp_posts: list[dict],
@@ -775,6 +821,17 @@ def _original_describes_same_work(original: str, wp_posts: list[dict],
             if len(overlap) >= 1:
                 return "article"
     return ""
+
+
+def _title_has_junk_markers(title: str) -> bool:
+    """Detect titles harvested from search-result/disambiguation pages."""
+    junk_markers = (
+        "AbeBooks", "Casa del Libro", "Wikiquote", "Wikisource",
+        "Online Library of Liberty", "Logos Virtual Library",
+        "Edge.org", "OverDrive", "Google Books",
+        "notatu dignum", "Vérification de sécurité", "Client Challenge",
+    )
+    return any(m in title for m in junk_markers)
 
 
 def _is_junk_location(location: str) -> bool:
@@ -877,13 +934,15 @@ def main() -> int:
             if why.startswith("title mismatch") or why.startswith("placeholder"):
                 preserve_from = existing
             elif why.startswith("author mismatch"):
-                if _original_describes_same_work(existing, posts, key):
+                if (_original_describes_same_work(existing, posts, key)
+                        and _original_author_appears_in_wp(existing, posts, key)):
                     preserve_from = existing
             elif why.startswith("all-caps"):
                 # All-caps titles are OCLC garbage but accidentally-correct
                 # publisher / ISBN data is still salvageable when the title
                 # itself describes the right work.
-                if _original_describes_same_work(existing, posts, key):
+                if (_original_describes_same_work(existing, posts, key)
+                        and _original_author_appears_in_wp(existing, posts, key)):
                     preserve_from = existing
         entry, note = build_entry(key, posts, original=preserve_from)
         if entry:
