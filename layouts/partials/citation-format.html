@@ -30,7 +30,11 @@
   {{- else -}}
     {{ $work.Title | safeHTML }},
   {{- end }}
-  {{- with $work.Params.editor }} in {{ . }} {{ partial "editor-abbrev.html" . }}{{ end }} <em>{{ $work.Params.booktitle | default $work.Title | safeHTML }}</em>
+  {{- if and $work.Params.bookauthor (ne $work.Params.bookauthor $work.Params.author) -}}
+    {{- " " }}in {{ $work.Params.bookauthor }}, <em>{{ $work.Params.booktitle | default $work.Title | safeHTML }}</em>
+  {{- else -}}
+    {{- with $work.Params.editor }} in {{ . }} {{ partial "editor-abbrev.html" . }}{{ end }} <em>{{ $work.Params.booktitle | default $work.Title | safeHTML }}</em>
+  {{- end -}}
   {{- with $work.Params.location }}, {{ . }}{{ end -}}
   {{- with $work.Params.year }}, {{ . }}{{ end -}}
   {{- with $work.Params.pages }}, pp. {{ replace (replace . "---" "—") "--" "–" }}{{ end -}}
