@@ -32,7 +32,11 @@
          this block and layouts/partials/citation-format.html. */}}
     <p class="work-details">
       {{- if or (eq $type "incollection") (eq $type "inbook") (eq $type "inproceedings") -}}
-        {{- with .Params.editor }}In {{ . }} {{ partial "editor-abbrev.html" . }}{{ end }} <em>{{ .Params.booktitle | default .Title | safeHTML }}</em>
+        {{- if and .Params.bookauthor (ne .Params.bookauthor .Params.author) -}}
+          In {{ .Params.bookauthor }}, <em>{{ .Params.booktitle | default .Title | safeHTML }}</em>
+        {{- else -}}
+          {{- with .Params.editor }}In {{ . }} {{ partial "editor-abbrev.html" . }}{{ end }} <em>{{ .Params.booktitle | default .Title | safeHTML }}</em>
+        {{- end -}}
         {{- with .Params.location }}, {{ . }}{{ end -}}
         {{- with .Params.year }}, {{ . }}{{ end -}}
         {{- with .Params.pages }}, pp. {{ . }}{{ end -}}

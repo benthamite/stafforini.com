@@ -91,6 +91,20 @@ def resolve_crossrefs(bib_by_key: dict) -> None:
             if not entry.get("editor") and parent.get("editor") and entry.get("author"):
                 entry["editor"] = parent["editor"]
                 changed = True
+            # Capture parent's author as bookauthor for chapter-like entries
+            # whose parent is the containing book (e.g. an inbook with its own
+            # author, crossref'd to the @book). Only kicks in when the parent
+            # has a different author -- if they match, the bookauthor is
+            # redundant with the section author.
+            if (
+                entry.get("entry_type") in ("inbook", "incollection", "inproceedings")
+                and entry.get("author")
+                and not entry.get("bookauthor")
+                and parent.get("author")
+                and parent["author"] != entry["author"]
+            ):
+                entry["bookauthor"] = parent["author"]
+                changed = True
 
 
 # === Author formatting ===
@@ -303,6 +317,7 @@ def work_metadata(entry: dict, *, excluded: bool = False,
 
     external_url = "" if excluded else entry.get("url", "").replace("{", "").replace("}", "")
 
+    bookauthor_raw = entry.get("bookauthor", "")
     meta = {
         "title": title,
         "author": bib_author_to_display(author_raw),
@@ -316,6 +331,7 @@ def work_metadata(entry: dict, *, excluded: bool = False,
         "number": clean_work_field(entry.get("number", "")),
         "pages": clean_work_field(entry.get("pages", "")),
         "editor": bib_author_to_display(editor_raw) if editor_raw else "",
+        "bookauthor": bib_author_to_display(bookauthor_raw) if bookauthor_raw else "",
         "external_url": external_url,
         "pub_date": pub_date,
     }
@@ -346,6 +362,8 @@ def generate_work_page(entry: dict) -> str:
     pages = clean_work_field(entry.get("pages", ""))
     editor_raw = entry.get("editor", "")
     editor = bib_author_to_display(editor_raw) if editor_raw else ""
+    bookauthor_raw = entry.get("bookauthor", "")
+    bookauthor = bib_author_to_display(bookauthor_raw) if bookauthor_raw else ""
     url = entry.get("url", "").replace("{", "").replace("}", "")
     # Extract full date (YYYY-MM-DD) for rich formatting; year-only handled by 'year'
     raw_date = entry.get("date", "")
@@ -377,6 +395,8 @@ def generate_work_page(entry: dict) -> str:
         lines.append(f'pages: "{escape_yaml_string(pages)}"')
     if editor:
         lines.append(f'editor: "{escape_yaml_string(editor)}"')
+    if bookauthor:
+        lines.append(f'bookauthor: "{escape_yaml_string(bookauthor)}"')
     if url:
         lines.append(f'external_url: "{escape_yaml_string(url)}"')
     if pub_date:
