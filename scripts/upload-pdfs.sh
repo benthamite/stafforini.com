@@ -24,15 +24,16 @@ source "$(dirname "$0")/common.sh"
 # R2 requires an explicit region string; "auto" is Cloudflare's convention.
 export AWS_REGION="auto"
 
+# All objects live at the bucket root: pdf.stafforini.com/<slug>.{pdf,png}.
+# The pdfs/ and pdf-thumbnails/ prefixes were retired in commit cf8ddce.
 sync_tree() {
   local src="$1"
-  local prefix="$2"
   if [ ! -d "$src" ]; then
     echo "Skipping $src (not found)"
     return 0
   fi
-  echo "Syncing $(basename "$src")/ -> s3://$R2_BUCKET/$prefix/"
-  aws s3 sync "$src/" "s3://$R2_BUCKET/$prefix/" \
+  echo "Syncing $(basename "$src")/ -> s3://$R2_BUCKET/"
+  aws s3 sync "$src/" "s3://$R2_BUCKET/" \
     --endpoint-url "$R2_ENDPOINT" \
     --only-show-errors
 }
@@ -50,15 +51,15 @@ remove_excluded_from_r2() {
   echo "Purging takedown-blocked assets from R2..."
   while IFS= read -r slug; do
     [ -z "$slug" ] && continue
-    aws s3 rm "s3://$R2_BUCKET/pdfs/$slug.pdf" \
+    aws s3 rm "s3://$R2_BUCKET/$slug.pdf" \
       --endpoint-url "$R2_ENDPOINT" --only-show-errors || true
-    aws s3 rm "s3://$R2_BUCKET/pdf-thumbnails/$slug.png" \
+    aws s3 rm "s3://$R2_BUCKET/$slug.png" \
       --endpoint-url "$R2_ENDPOINT" --only-show-errors || true
   done <<< "$slugs"
 }
 
-sync_tree "$REPO_ROOT/static/pdfs" "pdfs"
-sync_tree "$REPO_ROOT/static/pdf-thumbnails" "pdf-thumbnails"
+sync_tree "$REPO_ROOT/static/pdfs"
+sync_tree "$REPO_ROOT/static/pdf-thumbnails"
 remove_excluded_from_r2
 
 echo "R2 sync complete."
