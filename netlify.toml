@@ -98,6 +98,29 @@ to = "/quotes/index.xml"
 status = 301
 force = true
 
+# WordPress per-post artifacts that don't survive the migration:
+# strip the suffix and send the reader to the migrated post.
+# Must come before the catch-all /blog/* rule.
+[[redirects]]
+from = "/blog/:slug/feed/"
+to = "/notes/:slug/"
+status = 301
+
+[[redirects]]
+from = "/blog/:slug/feed"
+to = "/notes/:slug/"
+status = 301
+
+[[redirects]]
+from = "/blog/:slug/comment-page-:n/"
+to = "/notes/:slug/"
+status = 301
+
+[[redirects]]
+from = "/blog/:slug/comment-page-:n"
+to = "/notes/:slug/"
+status = 301
+
 # General blog → notes redirect
 [[redirects]]
 from = "/blog/*"
