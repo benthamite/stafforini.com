@@ -4,7 +4,7 @@
 {{/* 160 chars is the typical max Google shows in search result snippets */}}
 <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Summary | plainify | truncate 160 }}{{ end }}">
 {{ if ne .Kind "404" }}<link rel="canonical" href="{{ .Permalink }}">{{ end }}
-{{ if or .Params.unlisted (eq .Layout "search") (eq .Kind "404") }}<meta name="robots" content="noindex, nofollow">{{ end }}
+{{ if or .Params.unlisted (eq .Layout "search") (eq .Kind "404") (and .IsPage (eq .Section "quotes") (not .Params.diary)) }}<meta name="robots" content="noindex, nofollow">{{ end }}
 
 {{/* Open Graph */}}
 <meta property="og:title" content="{{ .Title | markdownify | plainify }}">
