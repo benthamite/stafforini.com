@@ -111,13 +111,31 @@ from = "/blog/:slug/feed"
 to = "/notes/:slug/"
 status = 301
 
+# Comment-page pagination: Netlify placeholders only match full path
+# segments, so :n inside `comment-page-:n` doesn't resolve. Enumerate the
+# page numbers we've seen.
 [[redirects]]
-from = "/blog/:slug/comment-page-:n/"
+from = "/blog/:slug/comment-page-1/"
 to = "/notes/:slug/"
 status = 301
 
 [[redirects]]
-from = "/blog/:slug/comment-page-:n"
+from = "/blog/:slug/comment-page-2/"
+to = "/notes/:slug/"
+status = 301
+
+[[redirects]]
+from = "/blog/:slug/comment-page-3/"
+to = "/notes/:slug/"
+status = 301
+
+[[redirects]]
+from = "/blog/:slug/comment-page-4/"
+to = "/notes/:slug/"
+status = 301
+
+[[redirects]]
+from = "/blog/:slug/comment-page-5/"
 to = "/notes/:slug/"
 status = 301
 
