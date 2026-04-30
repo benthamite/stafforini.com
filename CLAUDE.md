@@ -85,3 +85,13 @@ Companion package: `~/.config/emacs-profiles/active/elpaca/sources/stafforini/st
 - Publishing workflow -- prerequisites, interactive/batch flows, configuration: `PUBLISHING.md`
 - ox-hugo dropped-title bug -- root cause, protection layers, post-profile-migration recovery: `docs/ox-hugo-title-bug.md`
 - PDF hosting policy: `docs/pdf-hosting-policy.md`
+
+## Decision records
+
+@decisions-summary.md
+
+## Latest session
+
+Cleaned up `migration.bib` and adjacent bib hygiene: built `scripts/rebuild-migration-bib.py` (12+ heuristic iterations to fix accent normalization, no-year cite keys, particle handling, NFC decomposition bug, newspaper detection, "X (ed.)" patterns, cross-work field leakage) and `scripts/merge-rebuilt-bib.py` to promote 70 reconstructed entries from `migration.bib` to `new.bib`. Then renamed 31 cite keys with non-ASCII characters (accents, periods, underscores, semicolons) via the new `scripts/rename-cite-keys.py`, applied the short-story-with-crossref convention to four cases (Borges1949Teologos, Borges1936TiempoCircular, Borges1932AvataresDeTortuga retag, BioyCasares2002AdPorcos), and fixed three more entries with completely-wrong OCLC content (Alexander, Wright, Wagner). Net: `new.bib` 688 → 760 keys; `migration.bib` 748 → 676; cite keys are now ASCII-only.
+
+Full details: logs/2026-04-30.md
