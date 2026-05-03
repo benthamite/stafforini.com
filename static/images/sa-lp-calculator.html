@@ -83,6 +83,14 @@ function validBasis(r) {
          isFinite(r.capital_basis) &&
          r.capital_basis > 0;
 }
+function esc(value) {
+  return String(value == null ? '' : value).replace(/[&<>"']/g, function(ch) {
+    return {
+      '&': '&amp;', '<': '&lt;', '>': '&gt;',
+      '"': '&quot;', "'": '&#39;'
+    }[ch];
+  });
+}
 
 function syncCutoff() {
   var cutoff = (parseFloat(document.getElementById('cutoff').value) || 0) / 100;
@@ -170,17 +178,17 @@ function render() {
 
   computed.forEach(function(c) {
     html += '<tr' + (c.excluded ? ' class="excluded"' : '') + '>';
-    html += '<td class="cb"><input type="checkbox" data-key="' + c.key + '"' + (c.excluded ? '' : ' checked') + '></td>';
-    html += '<td><strong>' + c.ticker + '</strong></td>';
+    html += '<td class="cb"><input type="checkbox" data-key="' + esc(c.key) + '"' + (c.excluded ? '' : ' checked') + '></td>';
+    html += '<td><strong>' + esc(c.ticker) + '</strong></td>';
     var cls = c.type === 'put' ? 'tag-put' : c.type === 'call' ? 'tag-call' : 'tag-long';
     var typeText = c.type;
     if (mode === 'equity_only' && c.type === 'call') typeText = 'call as long';
     if (mode === 'equity_only' && c.type === 'put') typeText = 'put as short';
-    html += '<td><span class="tag ' + cls + '">' + typeText + '</span></td>';
+    html += '<td><span class="tag ' + cls + '">' + esc(typeText) + '</span></td>';
     if (showOptionDetails) {
       if (c.strike) {
         html += '<td class="r">$' + c.strike.toFixed(0) + '</td>';
-        html += '<td class="r">' + (c.expiry || '\u2014') + '</td>';
+        html += '<td class="r">' + esc(c.expiry || '\u2014') + '</td>';
       } else {
         html += '<td class="r">\u2014</td><td class="r">\u2014</td>';
       }
@@ -189,7 +197,7 @@ function render() {
     html += '<td class="r">' + (c.excluded ? '$0.00' : (c.target == null ? 'N/A' : '$' + c.target.toFixed(2))) + '</td>';
     var priceText = c.price != null ? '$' + c.price.toFixed(2) : 'N/A';
     if (showOptionDetails && c.instrument === 'option' && c.priceAsOf) {
-      priceText += '<br><span class="muted">' + c.priceAsOf + '</span>';
+      priceText += '<br><span class="muted">' + esc(c.priceAsOf) + '</span>';
     }
     html += '<td class="r">' + priceText + '</td>';
     html += '<td class="r">' + (c.units != null ? c.units.toLocaleString() : 'N/A') + '</td>';
