@@ -1,0 +1,1 @@
+{{- return (not (or .Params.unlisted (eq .Layout "search") (eq .Kind "404") (and .IsPage (eq .Section "quotes") (not .Params.diary)))) -}}

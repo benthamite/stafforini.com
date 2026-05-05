@@ -1,0 +1,14 @@
+{{- $url := . -}}
+{{- $url = replace $url "http://www.stafforini.com/" "https://stafforini.com/" -}}
+{{- $url = replace $url "https://www.stafforini.com/" "https://stafforini.com/" -}}
+{{- $url = replace $url "http://stafforini.com/" "https://stafforini.com/" -}}
+{{- $legacy := dict
+  "https://stafforini.com/blog/" "/notes/courses-on-longtermism/"
+  "https://stafforini.com/blog/bostrom/" "/notes/crucial-considerations-and-wise-philanthropy-by-nick-bostrom/"
+  "https://stafforini.com/blog/wild/" "/notes/wild-animal-welfare-a-bibliography/"
+  "https://stafforini.com/blog/writings-on-earning-to-give-an-annotated-bibliography/" "/notes/earning-to-give-an-annotated-bibliography/"
+-}}
+{{- with index $legacy $url -}}
+  {{- $url = . -}}
+{{- end -}}
+{{- return $url -}}
