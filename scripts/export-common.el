@@ -201,17 +201,19 @@ only the export buffer and never writes expanded includes back to disk."
 ;;;; Babel result visibility
 
 (defun export--example-result-at-point ()
-  "Return metadata for a named #+RESULTS example block at point.
-Point must be on the #+RESULTS line.  The return value is a plist
-containing line and block bounds, the example block text, and the
-example body."
+  "Return metadata for a named #+RESULTS example at point.
+Point must be on the #+RESULTS line.  Recognizes both explicit
+#+begin_example blocks and colon-prefixed Org example results.  The
+return value is a plist containing line and block bounds, example text,
+and example body."
   (let ((result-start (line-beginning-position))
         (result-line-end (save-excursion
                            (forward-line 1)
                            (point))))
     (save-excursion
       (forward-line 1)
-      (when (looking-at "^[ \t]*#\\+begin_example\\b")
+      (cond
+       ((looking-at "^[ \t]*#\\+begin_example\\b")
         (let ((example-start (point))
               body-start body-end example-end)
           (forward-line 1)
@@ -227,7 +229,23 @@ example body."
                   :example-text
                   (buffer-substring-no-properties example-start example-end)
                   :body
-                  (buffer-substring-no-properties body-start body-end))))))))
+                  (buffer-substring-no-properties body-start body-end)))))
+       ((looking-at "^[ \t]*:")
+        (let ((example-start (point))
+              (lines nil)
+              example-end body)
+          (while (looking-at "^[ \t]*:\\(?:[ \t]?\\(.*\\)\\)?$")
+            (push (or (match-string-no-properties 1) "") lines)
+            (forward-line 1))
+          (setq example-end (point))
+          (setq body (concat (string-join (nreverse lines) "\n") "\n"))
+          (list :result-start result-start
+                :result-line-end result-line-end
+                :example-start example-start
+                :example-end example-end
+                :example-text
+                (concat "#+begin_example\n" body "#+end_example\n")
+                :body body)))))))
 
 (defun export--human-readable-result-p (name body)
   "Return non-nil when named result NAME with BODY should render as content.
@@ -298,7 +316,9 @@ details block so the code remains collapsed while the result stays readable."
               (goto-char details-end)
               (insert "\n" example-text)
               (delete-region result-start example-end))
-          (delete-region result-start result-line-end))))))
+          (goto-char result-start)
+          (delete-region result-start example-end)
+          (insert example-text))))))
 
 ;; In batch mode, load org-transclusion ourselves; interactive Emacs has it already.
 (when noninteractive
