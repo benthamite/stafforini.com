@@ -110,10 +110,9 @@ clean_dir() {
   fi
 }
 
-# Delete Hugo-generated content from public/, preserving the pagefind
-# index (lives at public/pagefind via a symlink to static/pagefind, so
-# re-indexing only touches changed fragments instead of regenerating the
-# whole index on every deploy).
+# Delete Hugo-generated content from public/, preserving the pagefind symlink.
+# The index lives at public/pagefind via a symlink to static/pagefind and is
+# rebuilt separately by deploy/search scripts.
 clean_hugo_output() {
   local dir="$1"
   if [ ! -d "$dir" ]; then

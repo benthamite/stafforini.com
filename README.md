@@ -124,7 +124,7 @@ Org files → ox-hugo export → content/*.md → Hugo build → Pagefind index 
 | `generate-work-pages.py` | Creates work pages from BibTeX data |
 | `process-pdfs.py` | Strips annotations, generates first-page thumbnails |
 | `verify-site.py` | Builds/checks rendered output for homepage smoke tests |
-| `deploy.sh` | Full export/build + Netlify deploy |
+| `deploy.sh` | Full export/build + Netlify deploy; `--fast-note` deploys minor already-exported note body edits |
 | `start-dev-server.sh` | Starts the Hugo dev server |
 | `build-search-index.sh` | Builds Hugo + runs Pagefind |
 | `test.sh` | Runs the Python test suite with a working pytest invocation |
@@ -159,6 +159,7 @@ Deploys are manual — there is no CI/CD from git pushes. The deploy script expo
 
 ```bash
 bash scripts/deploy.sh
+bash scripts/deploy.sh --fast-note  # minor already-exported note body edits only
 ```
 
 ## Companion Emacs package
