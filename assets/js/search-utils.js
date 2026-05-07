@@ -82,7 +82,7 @@ function createKeyboardNav(resultsEl, input) {
   var items = [];
 
   function collectItems() {
-    items = Array.from(resultsEl.querySelectorAll('.search-section-list a, a.search-more'));
+    items = Array.from(resultsEl.querySelectorAll('.search-section-list a, .search-more'));
     activeIndex = -1;
   }
 
