@@ -355,19 +355,24 @@ def main() -> None:
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--dir", type=Path, help="Verify an existing rendered site")
     group.add_argument("--build", choices=["dev"], help="Build and verify a site profile")
+    parser.add_argument(
+        "--profile",
+        choices=["full", "fast-note"],
+        default="full",
+        help="Verification depth for an existing rendered site",
+    )
     args = parser.parse_args()
 
     source_errors = verify_excluded_works()
 
     if args.dir:
         site_dir = args.dir
-        errors = (
-            source_errors
-            + verify_built_site(site_dir)
-            + verify_sitemap(site_dir)
-            + verify_internal_links(site_dir)
-        )
+        errors = source_errors + verify_built_site(site_dir)
+        if args.profile == "full":
+            errors += verify_sitemap(site_dir) + verify_internal_links(site_dir)
     else:
+        if args.profile != "full":
+            parser.error("--profile can only be used with --dir")
         with tempfile.TemporaryDirectory(prefix="stafforini-site-") as tmp:
             site_dir = Path(tmp)
             build_dev_site(site_dir)

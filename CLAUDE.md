@@ -50,6 +50,7 @@ Key pipeline files: `scripts/export-notes.el`, `scripts/export-org.py`, `scripts
 |-------|----------------------|--------|----------------------------------------------------------|
 | Full  | `D` in menu          | ~1 min | Export + PDF process + R2 sync + build + Netlify deploy  |
 | Quick | `C-u D` or `--quick` | <1 min | Skips export, PDF processing, and R2 upload              |
+| Fast note | `f` in menu or `--fast-note` | seconds + Netlify | Already-exported minor note body edits only; preserves existing `public/` and search |
 
 PDFs are served from R2, so full deploys no longer carry GB of assets through Netlify. `scripts/upload-pdfs.sh` uses `aws s3 sync` to upload only changed files. R2 credentials live in `scripts/r2.env.sh` (gitignored); see `docs/pdf-hosting-policy.md`.
 
@@ -70,7 +71,7 @@ Companion package: `~/.config/emacs-profiles/active/elpaca/sources/stafforini/st
 | `generate-citing-notes.py`       | `stafforini-generate-citing-notes` | `c` |
 | `inject-lastmod.py`              | `stafforini-inject-lastmod`        | `l` |
 | `inject-tags.py`                 | `stafforini-inject-tags`           | `g` |
-| `deploy.sh`                      | `stafforini-deploy`                | `D` (`C-u` for quick) |
+| `deploy.sh`                      | `stafforini-deploy` / `stafforini-deploy-fast-note` | `D` (`C-u` for quick) / `f` |
 | Full pipeline                    | `stafforini-full-rebuild`          | `R` |
 | Search index                     | `stafforini-rebuild-search-index`  | `i` |
 | Dev server start / stop          | `stafforini-start-server` / `-stop-server` | `s` / `k` |

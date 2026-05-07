@@ -158,6 +158,7 @@ Or from the shell:
 
 ```bash
 bash scripts/deploy.sh                       # export content, process PDFs, build, index, deploy
+bash scripts/deploy.sh --fast-note           # deploy an already-exported minor note body edit
 
 # Or, to regenerate content without deploying:
 bash scripts/export-notes.sh                 # export notes + lastmod, backlinks, citing-notes
@@ -167,8 +168,10 @@ bash scripts/export-quotes.sh                # id-slug map + export quotes + wor
 ## Deployment
 
 Run `scripts/deploy.sh` from the project root, or `M-x stafforini-deploy`
-from `stafforini-menu` (`D`, with `C-u` for quick deploy). There is no CI/CD
-from git pushes — all deploys are triggered manually by running the script.
+from `stafforini-menu` (`D`, with `C-u` for quick deploy). For the fast note
+path, run `scripts/deploy.sh --fast-note` or `M-x stafforini-deploy-fast-note`
+(`f` in `stafforini-menu`). There is no CI/CD from git pushes — all deploys
+are triggered manually by running the script.
 
 In full mode, the deploy script:
 
@@ -185,11 +188,19 @@ Use `scripts/deploy.sh --quick` only after a recent full export when changing
 templates, styles, or configuration. Quick deploy skips content export and data
 regeneration.
 
+Use `scripts/deploy.sh --fast-note` only for minor already-exported note body
+edits. It preserves the existing `public/` snapshot, renders only the
+note-oriented Hugo segment into it, preserves the existing Pagefind index, runs
+a fast rendered-output smoke test, and deploys to Netlify. Do not use it for
+slug/date/tag/citation/link/template changes, new notes, deleted notes, quote
+changes, work-page changes, PDF changes, or anything that should update search
+immediately; use full deploy (`stafforini-deploy`) or quick deploy
+(`C-u stafforini-deploy`) instead.
+
 PDFs and PDF thumbnails are served directly from Cloudflare R2, not Netlify.
 On each full deploy, `scripts/upload-pdfs.sh` runs `aws s3 sync` against the
 R2 bucket so new and changed files are uploaded incrementally.  The Netlify
-upload only carries HTML/CSS/JS -- tens of MB, not tens of GB -- so deploys
-are fast and there's nothing to skip or gate.
+upload carries the rendered site and search index, not the multi-GB PDF tree.
 
 Production HTML references PDFs via `params.pdfBaseURL` in `hugo.deploy.toml`,
 which points at the R2 public URL.  Local `hugo server` uses the `/pdfs` and

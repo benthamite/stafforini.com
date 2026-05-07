@@ -67,3 +67,15 @@ thumbBaseURL = "https://pdf.stafforini.com"
   [[module.mounts]]
     source = "archetypes"
     target = "archetypes"
+
+[segments]
+  # Fast production deploys for minor already-exported note body edits. The
+  # deploy script preserves the existing public/ snapshot and renders this
+  # subset into it, so omitted pages remain from the previous full build.
+  [segments.fast_note]
+    [[segments.fast_note.includes]]
+      kind = "home"
+    [[segments.fast_note.includes]]
+      kind = "{taxonomy,term}"
+    [[segments.fast_note.includes]]
+      path = "{/notes,/notes/**,/posts,/posts/**,/search}"
