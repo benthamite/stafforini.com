@@ -15,8 +15,11 @@
 
   input.focus();
 
+  var batchSize = window._searchCore ? window._searchCore.DEFAULT_FULL_PAGE_RESULTS_PER_SECTION : 25;
   var instance = window.createSearchInstance(input, resultsEl, {
-    maxResultsPerSection: 0
+    maxResultsPerSection: batchSize,
+    showCounts: true,
+    showMoreButtons: true
   });
   if (!instance) {
     resultsEl.innerHTML = '<p class="search-no-results">Search is temporarily unavailable.</p>';
