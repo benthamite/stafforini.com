@@ -13,6 +13,8 @@ For each markdown file in content/notes/:
          save-hook on interactive content edits).
      (b) Last git commit touching the org file.
      (c) Filesystem mtime (last-resort fallback).
+   For wrapper notes that use `#+INCLUDE:`, included org files are treated
+   as dependencies and can advance the effective `lastmod`.
 
 Usage:
     python scripts/inject-lastmod.py            # Full run
@@ -46,6 +48,10 @@ ORG_DIR = NOTES_DIR
 
 # Matches file-level #+keyword: value lines at the top of org files.
 _ORG_KEYWORD_RE = re.compile(r"^#\+(\w+):\s*(.*)$")
+_ORG_INCLUDE_RE = re.compile(
+    r"^\s*#\+include:\s+(?:\"([^\"]+)\"|(\S+))",
+    re.IGNORECASE | re.MULTILINE,
+)
 
 
 # === Helpers ===
@@ -78,6 +84,94 @@ def _org_keyword(org_file: Path, keyword: str) -> str | None:
     """Return the value of #+keyword: in *org_file*, or None if absent/empty."""
     value = _read_org_keywords(str(org_file)).get(keyword.lower())
     return value or None
+
+
+def _org_include_paths(org_file: Path) -> list[Path]:
+    """Return existing file paths referenced by top-level `#+INCLUDE:` lines."""
+    if is_dataless(org_file):
+        return []
+    try:
+        text = org_file.read_text(errors="replace")
+    except OSError:
+        return []
+
+    paths = []
+    for match in _ORG_INCLUDE_RE.finditer(text):
+        target = match.group(1) or match.group(2)
+        if not target:
+            continue
+        if target.startswith("file:"):
+            target = target.removeprefix("file:")
+        # Org include targets can append a search spec, e.g. README.org::*API.
+        target = target.split("::", 1)[0]
+        path = Path(os.path.expandvars(os.path.expanduser(target)))
+        if not path.is_absolute():
+            path = org_file.parent / path
+        try:
+            path = path.resolve()
+        except OSError:
+            path = path.absolute()
+        if path.exists() and not is_dataless(path):
+            paths.append(path)
+    return paths
+
+
+@functools.lru_cache(maxsize=None)
+def _get_file_git_date(path_str: str) -> str | None:
+    """Return the latest git commit date touching PATH, or None."""
+    path = Path(path_str)
+    try:
+        result = subprocess.run(
+            [
+                "git", "-C", str(path.parent),
+                "log", "-1", "--format=%ad",
+                "--date=format:%Y-%m-%dT%H:%M:%S",
+                "--", path.name,
+            ],
+            capture_output=True, text=True, check=True,
+        )
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return None
+    date = result.stdout.strip()
+    return date or None
+
+
+def _get_file_mtime(path: Path) -> str | None:
+    """Return PATH's filesystem modification time as an ISO-like local date."""
+    try:
+        mtime = os.path.getmtime(path)
+    except OSError:
+        return None
+    return datetime.fromtimestamp(mtime).strftime("%Y-%m-%dT%H:%M:%S")
+
+
+def _parse_date(value: str) -> datetime | None:
+    """Parse a lastmod/date value for ordering; return None if unknown."""
+    try:
+        parsed = datetime.fromisoformat(value.removesuffix("Z"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is not None:
+        parsed = parsed.astimezone().replace(tzinfo=None)
+    return parsed
+
+
+def _latest_date(dates: list[str | None]) -> str | None:
+    """Return the newest parseable date string from DATES."""
+    parsed = [(date, _parse_date(date)) for date in dates if date]
+    parsed = [(date, value) for date, value in parsed if value is not None]
+    if not parsed:
+        return None
+    return max(parsed, key=lambda item: item[1])[0]
+
+
+def _get_dependency_mtime(path: Path) -> str | None:
+    """Return the effective modification date for an included dependency."""
+    if path.suffix.lower() == ".org":
+        keyword = _org_keyword(path, "lastmod")
+        if keyword:
+            return keyword
+    return _get_file_git_date(str(path)) or _get_file_mtime(path)
 
 
 def _build_git_dates() -> tuple[dict[Path, str], dict[Path, str]]:
@@ -215,25 +309,33 @@ def get_org_mtime(slug, output_map=None):
 
     Resolution order:
       1. `#+lastmod:` keyword in the org file (written by the Elisp
-         save-hook only on interactive content edits — the authoritative
-         source when present).
+         save-hook only on interactive content edits).
       2. Last git commit touching the org file. Bulk/mechanical commits
          (property migrations, cache refreshes) perturb this, which is
          why the keyword takes precedence.
       3. Filesystem mtime — clobbered by bulk operations and cloud sync,
          used only as a last resort.
+
+    For org files with `#+INCLUDE:` dependencies, returns the newest date
+    among the wrapper file and the included files. This keeps package manual
+    pages current when their README.org changes without touching the wrapper.
     """
     org_file = find_org_file(slug, output_map)
     if not org_file:
         return None
+    dates = []
     keyword = _org_keyword(org_file, "lastmod")
     if keyword:
-        return keyword
-    git_dates = _get_git_dates()
-    if org_file in git_dates:
-        return git_dates[org_file]
-    mtime = os.path.getmtime(org_file)
-    return datetime.fromtimestamp(mtime).strftime("%Y-%m-%dT%H:%M:%S")
+        dates.append(keyword)
+    else:
+        git_dates = _get_git_dates()
+        if org_file in git_dates:
+            dates.append(git_dates[org_file])
+        else:
+            dates.append(_get_file_mtime(org_file))
+
+    dates.extend(_get_dependency_mtime(path) for path in _org_include_paths(org_file))
+    return _latest_date(dates)
 
 
 def get_org_creation_date(slug, output_map=None):
@@ -403,13 +505,16 @@ def process_single_file(md_path, dry_run=False):
         print(f"Warning: no org source found for {slug}")
         return
 
-    lastmod = _org_keyword(org_file, "lastmod")
-    if not lastmod:
-        lastmod = _get_single_file_git_date(org_file)
-    if not lastmod:
-        # Fallback to filesystem mtime
-        mtime = os.path.getmtime(org_file)
-        lastmod = datetime.fromtimestamp(mtime).strftime("%Y-%m-%dT%H:%M:%S")
+    source_lastmod = (
+        _org_keyword(org_file, "lastmod")
+        or _get_single_file_git_date(org_file)
+        or _get_file_mtime(org_file)
+    )
+    dependency_dates = [
+        _get_dependency_mtime(path)
+        for path in _org_include_paths(org_file)
+    ]
+    lastmod = _latest_date([source_lastmod, *dependency_dates])
 
     creation = _get_single_file_first_date(org_file) or lastmod
 

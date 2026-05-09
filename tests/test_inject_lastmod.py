@@ -26,6 +26,7 @@ load_output_to_source_map = _mod.load_output_to_source_map
 get_org_mtime = _mod.get_org_mtime
 _org_keyword = _mod._org_keyword
 _read_org_keywords = _mod._read_org_keywords
+_org_include_paths = _mod._org_include_paths
 
 
 # ---------------------------------------------------------------------------
@@ -261,6 +262,50 @@ class TestOrgKeywords:
         )
         _read_org_keywords.cache_clear()
         assert _org_keyword(org, "lastmod") is None
+
+
+class TestOrgIncludes:
+    def test_resolves_quoted_include_with_heading_search(self, tmp_path):
+        included = tmp_path / "README.org"
+        included.write_text("* Overview\n")
+        org = tmp_path / "wrapper.org"
+        org.write_text('#+INCLUDE: "README.org::*Overview" :minlevel 2\n')
+
+        assert _org_include_paths(org) == [included.resolve()]
+
+    def test_include_newer_than_wrapper_keyword_wins(self, tmp_path):
+        wrapper = tmp_path / "wrapper.org"
+        included = tmp_path / "README.org"
+        wrapper.write_text(
+            "#+title: Wrapper\n"
+            "#+lastmod: 2024-01-01T00:00:00\n"
+            "\n* Wrapper\n"
+            '#+INCLUDE: "README.org::*Overview" :minlevel 2\n'
+        )
+        included.write_text("* Overview\n")
+        _read_org_keywords.cache_clear()
+
+        output_map = {"wrapper.md": wrapper}
+        with patch.object(_mod, "ORG_DIR", tmp_path), \
+             patch.object(_mod, "_get_file_git_date", return_value="2024-06-01T12:00:00"):
+            assert get_org_mtime("wrapper", output_map) == "2024-06-01T12:00:00"
+
+    def test_wrapper_keyword_wins_when_include_is_older(self, tmp_path):
+        wrapper = tmp_path / "wrapper.org"
+        included = tmp_path / "README.org"
+        wrapper.write_text(
+            "#+title: Wrapper\n"
+            "#+lastmod: 2024-06-01T12:00:00\n"
+            "\n* Wrapper\n"
+            '#+INCLUDE: "README.org::*Overview" :minlevel 2\n'
+        )
+        included.write_text("* Overview\n")
+        _read_org_keywords.cache_clear()
+
+        output_map = {"wrapper.md": wrapper}
+        with patch.object(_mod, "ORG_DIR", tmp_path), \
+             patch.object(_mod, "_get_file_git_date", return_value="2024-01-01T00:00:00"):
+            assert get_org_mtime("wrapper", output_map) == "2024-06-01T12:00:00"
 
 
 class TestGetOrgMtimePriority:
