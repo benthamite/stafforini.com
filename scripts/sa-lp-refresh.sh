@@ -51,6 +51,14 @@ INIT_FILE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/sa-lp-init.el"
 emacs -Q --batch --load "$INIT_FILE" \
   --eval "(sa-lp-refresh \"$ORG_FILE\")"
 
+# The Emacs save-hook that maintains "#+lastmod:" doesn't fire in batch
+# mode, so the keyword stays stale across programmatic refreshes. Update
+# it here so inject-lastmod.py (which prefers the keyword over git mtime)
+# sees a fresh timestamp.
+echo "--- Updating #+lastmod: keyword ---"
+LASTMOD_TS="$(date +"%Y-%m-%dT%H:%M:%S")"
+sed -i '' "s|^#+lastmod: .*|#+lastmod: ${LASTMOD_TS}|" "$ORG_FILE"
+
 echo "--- Re-exporting notes to Hugo ---"
 bash "$STAFFORINI_REPO/scripts/export-notes.sh"
 
