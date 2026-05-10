@@ -76,6 +76,8 @@ if [ ! -d content ]; then
   exit 1
 fi
 
+acquire_public_tree_lock
+
 # Recreate the pagefind symlink if it was lost.
 ensure_static_symlinks
 
@@ -129,7 +131,7 @@ restore_pagefind_symlink() {
 }
 if [ -L "$PAGEFIND_LINK" ]; then
   PAGEFIND_TARGET="$(readlink "$PAGEFIND_LINK")"
-  trap restore_pagefind_symlink EXIT
+  trap 'restore_pagefind_symlink; release_public_tree_lock' EXIT
   rm "$PAGEFIND_LINK"
   cp -cR "$PAGEFIND_TARGET" "$PAGEFIND_LINK" 2>/dev/null \
     || cp -R "$PAGEFIND_TARGET" "$PAGEFIND_LINK"
