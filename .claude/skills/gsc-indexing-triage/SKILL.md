@@ -17,6 +17,10 @@ Classify the request before mutating anything:
 
 If authorization is missing, stop after local verification and report the exact deploy, validation, and archive steps left undone.
 
+Search Console browser inspection is read-only triage. Do not skip it merely
+because deploy/validation/archive actions are not authorized; only the
+validation click itself is an external action.
+
 ## When not to use
 
 Do not use this skill for Search Console performance reports, Core Web Vitals, ownership verification, analytics, generic sitemap questions, or properties other than `stafforini.com` unless the user explicitly asks to adapt the workflow.
@@ -109,13 +113,13 @@ When telling the user to deploy manually, mention the Emacs command too: `staffo
 
 After deploy, confirm the live site reflects the fix before Search Console validation. At minimum, fetch `https://stafforini.com/sitemap.xml` and spot-check representative example URLs.
 
-## Browser validation
+## Browser inspection and validation
 
 Use the browser surface available in the current agent:
 
-- Codex: use the Browser Use skill/plugin when exposed. If the Node REPL browser tool is unavailable, say so explicitly before falling back.
+- Codex: use the Browser Use skill/plugin when exposed. If the Node REPL browser tool is unavailable, say so explicitly before falling back to another browser-control path.
 - Claude: use the configured Chrome/browser tool when available.
-- If using the user's existing Chrome via AppleScript, only do so when already logged in and the user has authorized validation. Do not handle passwords, OTP, CAPTCHA, or account recovery.
+- If using the user's existing Chrome via AppleScript, only do so when already logged in and the user has authorized browser inspection or validation as applicable. Do not handle passwords, OTP, CAPTCHA, or account recovery.
 
 Known account hint: `pablo@stafforini.com` has had access to the domain property as `authuser=1`; `pablo.stafforini@gmail.com` may not.
 
@@ -124,8 +128,8 @@ For each issue:
 1. Open the issue detail URL from the email or Search Console.
 2. If validation details show a previous failure, open "SEE DETAILS".
 3. Confirm visible examples are no longer broken on the live site.
-4. Click "START NEW VALIDATION" or "VALIDATE FIX".
-5. Record the resulting status and counts, such as `Validation started`, `Started: DATE`, `PENDING`, and `FAILED`.
+4. If validation is explicitly authorized and representative examples pass, click "START NEW VALIDATION" or "VALIDATE FIX".
+5. Record the resulting status and counts, such as `Validation started`, `Started: DATE`, `PENDING`, and `FAILED`; if validation was not authorized, record browser inspection findings and `validation not authorized`.
 
 Do not start validation if representative examples still fail live checks.
 
