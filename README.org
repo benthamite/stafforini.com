@@ -12,3 +12,10 @@ affected URLs locally or live.
 Deployment, clicking Search Console validation buttons, and archiving Gmail
 messages remain externally visible actions and require explicit authorization
 in the current invocation.
+
+* Note Export
+
+The note exporter resolves =id:= links through the generated ID maps.
+Links to unpublished targets become plain text, links to published
+notes become =/notes/slug/= URLs, and links to headings inside the
+same note become local fragment links such as =#copycat-delays=.
