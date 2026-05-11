@@ -39,3 +39,34 @@ Persistent record for recurring Google Search Console Page indexing triage on `s
   - Not archived in this session.
 - Follow-up:
   - Watch for completion/failure emails from Google and use `$gsc-indexing-triage` for the next cycle.
+
+## 2026-05-11 - GSC indexing triage
+
+- Messages:
+  - Current personal Gmail Search Console alerts could not be read because the Gmail API token refresh failed for `--account personal` with `invalid_grant` / token expired or revoked.
+  - Default Gmail account query for recent Search Console/Page indexing messages returned no matches.
+- Issues:
+  - No new issue labels or Search Console issue URLs could be collected from Gmail in this session.
+- Examples checked:
+  - `https://www.stafforini.com/quotes/?cat=1409` -> `https://stafforini.com/search/?q=Ian%20Eslick&section=quotes`, 200.
+  - `https://stafforini.com/tango/category/dancers/oscar-casas/feed/` -> `https://stafforini.com/tango/`, 200.
+  - `https://www.stafforini.com/blog/bostrom/` -> `https://stafforini.com/notes/crucial-considerations-and-wise-philanthropy-by-nick-bostrom/`, 200.
+  - `https://www.stafforini.com/nino/Nino%20-%20La%20constituci%C3%B3n%20de%20la%20democracia%20deliberativa.pdf` -> `https://stafforini.com/search/?q=Nino&section=works`, 200.
+  - `https://stafforini.com/sitemap.xml` -> 28,035 `<url>` entries; `/search/` and `/tango/` were absent.
+- Root cause:
+  - Triage blocked at alert collection by expired/revoked personal Gmail OAuth token; previously logged representative live URL families still resolve successfully.
+- Changes:
+  - Appended this log entry only.
+- Verification:
+  - `python3 ".../gmail.py" query 'from:(sc-noreply@google.com) ("Page indexing" OR "Search Console") newer_than:45d' --account personal --max 20` failed with `invalid_grant`.
+  - Same query against the default account returned no matches.
+  - `curl -Ls https://stafforini.com/sitemap.xml | python3 -c ...` reported 28,035 URLs and no `/search/` or `/tango/`.
+  - `curl -IL` checks above reached 200 final responses.
+- Deploy:
+  - Not authorized in this invocation; no local fix was made.
+- Browser validation:
+  - Not authorized in this invocation and no current issue URL was available.
+- Archived:
+  - Not authorized in this invocation; no messages were archived.
+- Follow-up:
+  - Refresh or reauthorize the personal Gmail token, then rerun `$gsc-indexing-triage` to collect current Search Console messages and issue URLs.
