@@ -70,3 +70,41 @@ Persistent record for recurring Google Search Console Page indexing triage on `s
   - Not authorized in this invocation; no messages were archived.
 - Follow-up:
   - Refresh or reauthorize the personal Gmail token, then rerun `$gsc-indexing-triage` to collect current Search Console messages and issue URLs.
+
+## 2026-05-11 - GSC indexing triage follow-up
+
+- Messages:
+  - `19e14c7ca2451b05` - Some fixes failed for Page indexing issues for site stafforini.com
+  - `19e14c7bdc0c2aef` - Some fixes failed for Page indexing issues for site stafforini.com
+- Issues:
+  - `Page with redirect` - `https://search.google.com/search-console/index/drilldown?resource_id=sc-domain:stafforini.com&item_key=CAMYCyAC&utm_source=wnc_10031170&utm_medium=gamma&utm_campaign=wnc_10031170&utm_content=msg_100059089&hl=en-GB`
+  - `Not found (404)` - `https://search.google.com/search-console/index/drilldown?resource_id=sc-domain:stafforini.com&item_key=CAMYDSAC&utm_source=wnc_10031170&utm_medium=gamma&utm_campaign=wnc_10031170&utm_content=msg_100059089&hl=en-GB`
+- Examples checked:
+  - Google examples were not available from the email body. No callable authenticated browser/Search Console surface was available in this session to inspect the issue-detail examples.
+  - `https://www.stafforini.com/quotes/?cat=1409` -> `https://stafforini.com/search/?q=Ian%20Eslick&section=quotes`, 200.
+  - `https://stafforini.com/tango/category/dancers/oscar-casas/feed/` -> `https://stafforini.com/tango/`, 200.
+  - `https://www.stafforini.com/blog/bostrom/` -> `https://stafforini.com/notes/crucial-considerations-and-wise-philanthropy-by-nick-bostrom/`, 200.
+  - `https://www.stafforini.com/nino/Nino%20-%20La%20constituci%C3%B3n%20de%20la%20democracia%20deliberativa.pdf` -> `https://stafforini.com/search/?q=Nino&section=works`, 200.
+  - `https://stafforini.com/sitemap.xml` -> 28,035 `<url>` entries; `/search/` and `/tango/` were absent.
+- Root cause:
+  - Personal Gmail access was blocked by an expired/revoked `GOOGLE_WORKSPACE_REFRESH_TOKEN_PERSONAL`; OAuth reauthorization repaired alert access.
+  - No local site-side root cause was identified from rendered-output verification or representative live checks. The remaining GSC validation failures may be historical discovered URLs that still redirect/404, but the current failed examples must be inspected in Search Console before deciding whether a site change is warranted.
+- Changes:
+  - Refreshed `GOOGLE_WORKSPACE_REFRESH_TOKEN_PERSONAL` in `/Users/pablostafforini/My Drive/dotfiles/shell/.zshenv-secrets` using the no-print OAuth flow.
+  - Appended this log entry only.
+- Verification:
+  - Removed stale `/tmp/gworkspace-access-token-personal.json`; the old token still failed with `invalid_grant`.
+  - OAuth regeneration completed and `gmail.py --account personal` successfully listed current Search Console emails.
+  - Extracted the two issue-detail URLs above with `scripts/extract-gsc-links.py`.
+  - `npm test` passed with 193 tests.
+  - Production-profile Hugo render passed.
+  - `python3 scripts/verify-site.py --dir <tmp>` passed with `Rendered site verification OK.`
+  - Representative `curl -IL` checks above reached 200 final responses.
+- Deploy:
+  - Not authorized in this invocation; no local site fix was made.
+- Browser validation:
+  - Not authorized in this invocation, and no callable browser/Search Console example inspection surface was available.
+- Archived:
+  - Not authorized in this invocation; no messages were archived.
+- Follow-up:
+  - Open the two Search Console issue URLs in an authenticated browser, inspect failed examples, and only then decide whether to make a targeted source/redirect fix or treat the examples as intentionally non-actionable historical URLs.
