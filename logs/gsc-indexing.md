@@ -108,3 +108,42 @@ Persistent record for recurring Google Search Console Page indexing triage on `s
   - Not authorized in this invocation; no messages were archived.
 - Follow-up:
   - Open the two Search Console issue URLs in an authenticated browser, inspect failed examples, and only then decide whether to make a targeted source/redirect fix or treat the examples as intentionally non-actionable historical URLs.
+
+## 2026-05-11 - GSC browser inspection follow-up
+
+- Messages:
+  - `19e14c7ca2451b05` - Some fixes failed for Page indexing issues for site stafforini.com
+  - `19e14c7bdc0c2aef` - Some fixes failed for Page indexing issues for site stafforini.com
+- Issues:
+  - `Not found (404)` - inspected through URL-prefix property `https://www.stafforini.com/`; Search Console showed `Affected pages 136`, `Last update: 07/05/2026`.
+  - `Page with redirect` - inspected through URL-prefix property `https://www.stafforini.com/`; Search Console showed `Affected pages 783`, `Last update: 07/05/2026`.
+- Examples checked:
+  - `https://www.stafforini.com/docs/Pascal - Judgment day.pdf` -> `https://stafforini.com/docs/Pascal%20-%20Judgment%20day.pdf`, 404. Existing redirect covers `Judgement`, not `Judgment`.
+  - `https://www.stafforini.com/docs/soames_-_philosophical_analysis_in_the_twentieth_century.pdf` -> `https://stafforini.com/docs/soames_-_philosophical_analysis_in_the_twentieth_century.pdf`, 404. Existing redirect covers the title-cased `/docs/Soames - Philosophical analysis in the twentieth century.pdf` variant.
+  - `https://www.stafforini.com/blog/wp-content/uploads/ETHICSOC-155-Syllabus-3-21-18.pdf` -> `https://stafforini.com/notes/wp-content/uploads/ETHICSOC-155-Syllabus-3-21-18.pdf`, 404 via the general `/blog/*` redirect.
+  - `https://www.stafforini.com/docs/Johansson-Stenman - Are most people consequentialists.pdf` -> `https://stafforini.com/docs/Johansson-Stenman%20-%20Are%20most%20people%20consequentialists.pdf`, 404. Existing redirect covers the title with a question mark.
+  - `https://www.stafforini.com/docs/strawson_-_freedom_and_resentment.pdf` -> `https://stafforini.com/docs/strawson_-_freedom_and_resentment.pdf`, 404. Existing redirect covers the title-cased spaced variant.
+  - `https://www.stafforini.com/blog/bostrom/` -> `https://stafforini.com/notes/crucial-considerations-and-wise-philanthropy-by-nick-bostrom/`, 200.
+  - `https://www.stafforini.com/broad/Broad - Critical notice of von Mises's Wahrscheinlichkeit, Statistik, und Wahrheit.pdf` -> `https://stafforini.com/search/?q=Broad&section=works`, 200.
+  - `https://www.stafforini.com/broad/Broad - Reality.pdf` -> `https://stafforini.com/search/?q=Broad&section=works`, 200.
+  - `https://www.stafforini.com/quotes/?tag=anchoring` -> `https://stafforini.com/quotes/?tag=anchoring`, 200 after host canonicalization.
+  - `https://www.stafforini.com/docs/Parfit - The unimportance of identity.pdf` -> `https://stafforini.com/works/parfit-1995-unimportance-identity/`, 200.
+  - `https://www.stafforini.com/yoga/Halasana.htm` -> `https://stafforini.com/`, 200.
+- Root cause:
+  - Browser inspection had to use the `https://www.stafforini.com/` URL-prefix property in the Search property dropdown; the domain-property access warning for `stafforini.com` was misleading in this Chrome account.
+  - `Page with redirect` examples are largely expected legacy/canonical redirects and do not indicate missing live content.
+  - `Not found (404)` still includes real missing historical URL variants, mainly old `/docs/*.pdf` spelling/case/underscore variants and old WordPress upload PDFs that fall through the generic `/blog/*` -> `/notes/*` redirect.
+- Changes:
+  - No site redirect/content fix was made in this entry.
+  - Skill clarification was committed separately as `9bffb9b`.
+- Verification:
+  - Browser inspection via Chrome confirmed issue counts and example URLs.
+  - Representative `curl -IL` checks above confirmed a mix of current 404s and healthy 301 -> 200 chains.
+- Deploy:
+  - Not authorized in this invocation; no local site fix was made.
+- Browser validation:
+  - Browser inspection completed; validation click not authorized in this invocation.
+- Archived:
+  - Not authorized in this invocation; no messages were archived.
+- Follow-up:
+  - Decide whether to add targeted redirects for the still-404 historical `/docs/*.pdf` variants and old `/blog/wp-content/uploads/*` files. Do not revalidate `Page with redirect` as a fixed issue unless the intention is to remove or stop surfacing those legacy redirects.
