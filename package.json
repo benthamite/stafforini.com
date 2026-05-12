@@ -9,6 +9,7 @@
     "index": "npx pagefind --site public"
   },
   "devDependencies": {
+    "netlify": "26.0.1",
     "pagefind": "^1.4.0"
   }
 }
