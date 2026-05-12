@@ -137,6 +137,8 @@ if [ -L "$PAGEFIND_LINK" ]; then
     || cp -R "$PAGEFIND_TARGET" "$PAGEFIND_LINK"
 fi
 
-run_step "Deploying to Netlify" npx --yes netlify deploy --prod --dir="$DEPLOY_DIR" --no-build --timeout 3600
+run_step "Deploying to Netlify" \
+  python3 "$SCRIPT_DIR/netlify_deploy.py" --repo-root "$REPO_ROOT" -- \
+    deploy --prod --dir="$DEPLOY_DIR" --no-build --timeout 3600
 
 echo "Done."
