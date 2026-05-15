@@ -58,10 +58,6 @@ thumbBaseURL = "/pdf-thumbnails"
     pageRef = "/quotes/"
     weight = 2
   [[menus.main]]
-    name = "Emacs"
-    pageRef = "/notes/my-emacs-packages/"
-    weight = 3
-  [[menus.main]]
     name = "About"
     pageRef = "/notes/about/"
     weight = 4
