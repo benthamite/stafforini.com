@@ -57,6 +57,12 @@
       "title": "My Emacs packages"
     }
   ],
+  "how-i-keep-claude-code-and-codex-in-sync": [
+    {
+      "slug": "stopping-myself-from-mistreating-ai-models",
+      "title": "Stopping myself from mistreating likely insentient models"
+    }
+  ],
   "johnson": [
     {
       "slug": "my-emacs-packages",

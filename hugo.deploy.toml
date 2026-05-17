@@ -33,10 +33,10 @@ thumbBaseURL = "https://pdf.stafforini.com"
     source = "static/ltximg"
     target = "static/ltximg"
   [[module.mounts]]
-    source = "../../notes/pablos-miscellany/anki-decks-from-the-lesswrong-community"
+    source = "../../notes/public/anki-decks-from-the-lesswrong-community"
     target = "static/anki-decks-from-the-lesswrong-community"
   [[module.mounts]]
-    source = "../../notes/pablos-miscellany/summary-of-time-management-by-randy-pausch"
+    source = "../../notes/public/summary-of-time-management-by-randy-pausch"
     target = "static/summary-of-time-management-by-randy-pausch"
   [[module.mounts]]
     source = "static/_redirects"
