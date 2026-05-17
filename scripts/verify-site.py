@@ -15,10 +15,49 @@ import subprocess
 import sys
 import tempfile
 import tomllib
+import xml.etree.ElementTree as ET
+from collections import defaultdict
 from datetime import date, datetime
+from html.parser import HTMLParser
 from pathlib import Path
+from urllib.parse import unquote, urldefrag, urljoin, urlparse
 
 from lib import REPO_ROOT, cite_key_to_slug, load_excluded_works
+
+
+SITE_HOSTS = {"stafforini.com", "www.stafforini.com"}
+
+
+class RenderedPageParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.links: list[str] = []
+        self.canonical: str | None = None
+        self.noindex = False
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        attr = {key.lower(): value or "" for key, value in attrs}
+        tag = tag.lower()
+
+        if tag == "meta" and attr.get("name", "").lower() == "robots":
+            if "noindex" in attr.get("content", "").lower():
+                self.noindex = True
+
+        if tag == "link" and attr.get("rel", "").lower() == "canonical":
+            self.canonical = attr.get("href") or None
+
+        for key in ("href", "src"):
+            value = attr.get(key)
+            if value:
+                self.links.append(value)
+
+        if tag == "source":
+            srcset = attr.get("srcset")
+            if srcset:
+                for part in srcset.split(","):
+                    candidate = part.strip().split()
+                    if candidate:
+                        self.links.append(candidate[0])
 
 
 def read_toml_front_matter(path: Path) -> dict:
@@ -132,6 +171,135 @@ def verify_excluded_works_rendered(site_dir: Path) -> list[str]:
     return errors
 
 
+def rendered_file_for_path(site_dir: Path, url_path: str) -> Path | None:
+    path = unquote(url_path) or "/"
+    candidates: list[Path] = []
+    if path.endswith("/"):
+        candidates.append(site_dir / path.lstrip("/") / "index.html")
+    else:
+        candidates.append(site_dir / path.lstrip("/"))
+        candidates.append(site_dir / path.lstrip("/") / "index.html")
+    return next((path for path in candidates if path.exists()), None)
+
+
+def page_url_for_file(site_dir: Path, html_file: Path) -> str:
+    rel = html_file.relative_to(site_dir)
+    if rel.name == "index.html":
+        rel_parent = str(rel.parent).strip("/")
+        path = f"/{rel_parent}/" if rel_parent else "/"
+    else:
+        path = f"/{rel}"
+    return f"https://stafforini.com{path}"
+
+
+def parse_rendered_html(path: Path) -> RenderedPageParser:
+    parser = RenderedPageParser()
+    parser.feed(path.read_text(errors="replace"))
+    return parser
+
+
+def summarize_url_sources(items: dict[str, list[str]], limit: int = 5) -> str:
+    samples = []
+    for target, sources in sorted(items.items())[:limit]:
+        samples.append(f"{target} from {', '.join(sources[:3])}")
+    return "; ".join(samples)
+
+
+def verify_sitemap(site_dir: Path) -> list[str]:
+    errors: list[str] = []
+    sitemap = site_dir / "sitemap.xml"
+    if not sitemap.exists():
+        return [f"missing sitemap: {sitemap}"]
+
+    root = ET.parse(sitemap).getroot()
+    locs = [el.text for el in root.findall(".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc")]
+    locs = [loc for loc in locs if loc]
+
+    missing: list[str] = []
+    noindex: list[str] = []
+    canonical_mismatches: list[tuple[str, str]] = []
+
+    for loc in locs:
+        parsed = urlparse(loc)
+        if parsed.netloc != "stafforini.com":
+            errors.append(f"sitemap URL not on canonical host: {loc}")
+            continue
+
+        rendered = rendered_file_for_path(site_dir, parsed.path)
+        if not rendered:
+            missing.append(loc)
+            continue
+        if rendered.suffix.lower() != ".html":
+            continue
+
+        page = parse_rendered_html(rendered)
+        if page.noindex:
+            noindex.append(loc)
+        if page.canonical and page.canonical != loc:
+            canonical_mismatches.append((loc, page.canonical))
+
+    if missing:
+        errors.append(
+            f"sitemap contains {len(missing)} URL(s) with no rendered file: "
+            f"{', '.join(missing[:5])}"
+        )
+    if noindex:
+        errors.append(
+            f"sitemap contains {len(noindex)} noindex URL(s): "
+            f"{', '.join(noindex[:5])}"
+        )
+    if canonical_mismatches:
+        samples = "; ".join(
+            f"{loc} -> {canonical}" for loc, canonical in canonical_mismatches[:5]
+        )
+        errors.append(
+            f"sitemap contains {len(canonical_mismatches)} canonical mismatch(es): "
+            f"{samples}"
+        )
+
+    return errors
+
+
+def verify_internal_links(site_dir: Path) -> list[str]:
+    missing: dict[str, list[str]] = defaultdict(list)
+    redirecting_hosts: dict[str, list[str]] = defaultdict(list)
+
+    for html_file in site_dir.rglob("*.html"):
+        rel = html_file.relative_to(site_dir)
+        if rel.parts and rel.parts[0] == "tango":
+            continue
+
+        source_url = page_url_for_file(site_dir, html_file)
+        source_path = urlparse(source_url).path
+        page = parse_rendered_html(html_file)
+
+        for raw_url in page.links:
+            if raw_url.startswith(("mailto:", "tel:", "javascript:", "#", "data:")):
+                continue
+            url = urldefrag(urljoin(source_url, raw_url))[0]
+            parsed = urlparse(url)
+            if parsed.scheme not in ("http", "https") or parsed.netloc not in SITE_HOSTS:
+                continue
+            if parsed.netloc == "www.stafforini.com":
+                redirecting_hosts[url].append(source_path)
+                continue
+            if not rendered_file_for_path(site_dir, parsed.path or "/"):
+                missing[parsed.path or "/"].append(source_path)
+
+    errors: list[str] = []
+    if missing:
+        errors.append(
+            f"rendered pages contain {len(missing)} broken same-site link target(s): "
+            f"{summarize_url_sources(missing)}"
+        )
+    if redirecting_hosts:
+        errors.append(
+            f"rendered pages contain {len(redirecting_hosts)} www same-site link target(s): "
+            f"{summarize_url_sources(redirecting_hosts)}"
+        )
+    return errors
+
+
 def verify_built_site(site_dir: Path) -> list[str]:
     errors: list[str] = list(verify_excluded_works_rendered(site_dir))
     index_path = site_dir / "index.html"
@@ -187,6 +355,12 @@ def main() -> None:
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--dir", type=Path, help="Verify an existing rendered site")
     group.add_argument("--build", choices=["dev"], help="Build and verify a site profile")
+    parser.add_argument(
+        "--profile",
+        choices=["full", "fast-note"],
+        default="full",
+        help="Verification depth for an existing rendered site",
+    )
     args = parser.parse_args()
 
     source_errors = verify_excluded_works()
@@ -194,11 +368,15 @@ def main() -> None:
     if args.dir:
         site_dir = args.dir
         errors = source_errors + verify_built_site(site_dir)
+        if args.profile == "full":
+            errors += verify_sitemap(site_dir) + verify_internal_links(site_dir)
     else:
+        if args.profile != "full":
+            parser.error("--profile can only be used with --dir")
         with tempfile.TemporaryDirectory(prefix="stafforini-site-") as tmp:
             site_dir = Path(tmp)
             build_dev_site(site_dir)
-            errors = source_errors + verify_built_site(site_dir)
+            errors = source_errors + verify_built_site(site_dir) + verify_sitemap(site_dir)
 
     if errors:
         print("Rendered site verification failed:", file=sys.stderr)

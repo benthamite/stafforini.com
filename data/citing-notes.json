@@ -41,6 +41,12 @@
       "title": "Wild animal welfare: a bibliography"
     }
   ],
+  "bergmann-2021-controllable-and-decomposable": [
+    {
+      "slug": "how-i-keep-claude-code-and-codex-in-sync",
+      "title": "How I keep Claude Code and Codex in sync"
+    }
+  ],
   "blackburn-2009-philosophy": [
     {
       "slug": "why-does-the-world-exist-a-bibliography",
@@ -2227,6 +2233,12 @@
       "title": "Wild animal welfare: a bibliography"
     }
   ],
+  "knapp-2016-multi-view-consistency": [
+    {
+      "slug": "how-i-keep-claude-code-and-codex-in-sync",
+      "title": "How I keep Claude Code and Codex in sync"
+    }
+  ],
   "knight-1956-why-not-nothing": [
     {
       "slug": "why-does-the-world-exist-a-bibliography",
@@ -2397,6 +2409,12 @@
     {
       "slug": "wild-animal-welfare-a-bibliography",
       "title": "Wild animal welfare: a bibliography"
+    }
+  ],
+  "matsuda-2018-applicative-bidirectional-programming": [
+    {
+      "slug": "how-i-keep-claude-code-and-codex-in-sync",
+      "title": "How I keep Claude Code and Codex in sync"
     }
   ],
   "matthews-2013-join-wall-street": [

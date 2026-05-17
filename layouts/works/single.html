@@ -7,7 +7,8 @@
   <div class="work-header">
     {{ $italic := partial "standalone-type.html" $type }}
     {{ $url := .Params.external_url }}
-    {{ if and (eq $type "online") $url (or (hasPrefix $url "https://") (hasPrefix $url "http://")) }}
+    {{ with $url }}{{ $url = partial "canonical-link-url.html" . }}{{ end }}
+    {{ if and (eq $type "online") $url (or (hasPrefix $url "https://") (hasPrefix $url "http://") (hasPrefix $url "/")) }}
     <h1 data-pagefind-weight="10"><a href="{{ $url }}">{{ .Title | safeHTML }}</a></h1>
     {{ else if $italic }}
     <h1 data-pagefind-weight="10"><em>{{ .Title | safeHTML }}</em></h1>

@@ -33,6 +33,12 @@ thumbBaseURL = "https://pdf.stafforini.com"
     source = "static/ltximg"
     target = "static/ltximg"
   [[module.mounts]]
+    source = "../../notes/pablos-miscellany/anki-decks-from-the-lesswrong-community"
+    target = "static/anki-decks-from-the-lesswrong-community"
+  [[module.mounts]]
+    source = "../../notes/pablos-miscellany/summary-of-time-management-by-randy-pausch"
+    target = "static/summary-of-time-management-by-randy-pausch"
+  [[module.mounts]]
     source = "static/_redirects"
     target = "static/_redirects"
   [[module.mounts]]
@@ -61,3 +67,15 @@ thumbBaseURL = "https://pdf.stafforini.com"
   [[module.mounts]]
     source = "archetypes"
     target = "archetypes"
+
+[segments]
+  # Fast production deploys for minor already-exported note body edits. The
+  # deploy script preserves the existing public/ snapshot and renders this
+  # subset into it, so omitted pages remain from the previous full build.
+  [segments.fast_note]
+    [[segments.fast_note.includes]]
+      kind = "home"
+    [[segments.fast_note.includes]]
+      kind = "{taxonomy,term}"
+    [[segments.fast_note.includes]]
+      path = "{/notes,/notes/**,/posts,/posts/**,/search}"

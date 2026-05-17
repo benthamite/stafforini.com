@@ -2,8 +2,8 @@
 # Export content, build the Hugo site, upload PDFs to R2, and deploy to Netlify.
 #
 # PDFs and thumbnails are served from Cloudflare R2, not Netlify, so the
-# Netlify deploy only carries HTML/CSS/JS (small, fast).  On each full
-# deploy, scripts/upload-pdfs.sh incrementally syncs static/pdfs/ and
+# Netlify deploy does not carry the PDF tree.  On each full deploy,
+# scripts/upload-pdfs.sh incrementally syncs static/pdfs/ and
 # static/pdf-thumbnails/ to the R2 bucket using `aws s3 sync`.
 #
 # Required before the first deploy:
@@ -11,30 +11,46 @@
 #   - Copy scripts/r2.env.sh.example -> scripts/r2.env.sh and fill in
 #   - Update hugo.deploy.toml params.pdfBaseURL / thumbBaseURL
 #
-# Usage: bash scripts/deploy.sh [--quick]
+# Usage: bash scripts/deploy.sh [--quick|--fast-note]
 # --quick: skip content export, PDF processing, and R2 upload (just clean,
 #          build, index, deploy).  Use when only templates/styles changed
 #          since the last full deploy.
+# --fast-note: skip export, clean, and search indexing; render only the
+#              note-oriented Hugo segment into the existing public/ snapshot,
+#              then deploy. Use only for minor already-exported note body edits.
 source "$(dirname "$0")/common.sh"
 
 quick=false
+fast_note=false
 
 usage() {
-  sed -n '2,17p' "$0" | sed 's/^# \{0,1\}//'
+  sed -n '2,20p' "$0" | sed 's/^# \{0,1\}//'
 }
 
 for arg in "$@"; do
   case "$arg" in
     --quick) quick=true ;;
+    --fast-note) quick=true; fast_note=true ;;
     -h|--help) usage; exit 0 ;;
     *) echo "Error: unknown flag '$arg'" >&2; exit 1 ;;
   esac
 done
 
-# Quick deploy skips export, so it needs generated content to already exist.
+# Quick and fast-note deploys skip export, so generated content must exist.
 if $quick && [ ! -d content ]; then
-  echo "Error: content/ not found. Run a full deploy/export before --quick." >&2
+  echo "Error: content/ not found. Run a full deploy/export before this deploy mode." >&2
   exit 1
+fi
+
+if $fast_note; then
+  if [ ! -f public/index.html ]; then
+    echo "Error: --fast-note requires an existing public/ build. Run a full deploy first." >&2
+    exit 1
+  fi
+  if [ ! -f static/pagefind/pagefind.js ]; then
+    echo "Error: --fast-note requires an existing search index. Run a full deploy first." >&2
+    exit 1
+  fi
 fi
 
 if ! $quick; then
@@ -60,19 +76,40 @@ if [ ! -d content ]; then
   exit 1
 fi
 
-# Clean stale Hugo output but preserve the pagefind index (it lives in
-# public/pagefind via a symlink created by ensure_static_symlinks).
-echo "Cleaning previous build..."
-clean_hugo_output public
+acquire_public_tree_lock
 
 # Recreate the pagefind symlink if it was lost.
 ensure_static_symlinks
 
-# Build with the deploy overlay (excludes heavy static dirs from mounts
-# and points PDF URLs at R2 via params.pdfBaseURL).
-run_step "Building site" hugo --minify --config hugo.toml,hugo.deploy.toml
-run_step "Building search index" npx --yes pagefind --site public
-run_step "Verifying built site" python3 "$SCRIPT_DIR/verify-site.py" --dir public
+if $fast_note; then
+  echo "Preserving existing public/ snapshot for fast note deploy..."
+  # Build with the deploy overlay (excludes heavy static dirs from mounts
+  # and points PDF URLs at R2 via params.pdfBaseURL), but render only the
+  # pages most likely to change after a minor note body edit.
+  run_step "Building fast note segment" \
+    hugo --minify --config hugo.toml,hugo.deploy.toml --renderSegments fast_note
+  echo "Preserving existing search index for fast note deploy."
+else
+  # Clean stale Hugo output but preserve the pagefind symlink (it points to
+  # static/pagefind, which is rebuilt below).
+  echo "Cleaning previous build..."
+  clean_hugo_output public
+  ensure_static_symlinks
+
+  # Build with the deploy overlay (excludes heavy static dirs from mounts
+  # and points PDF URLs at R2 via params.pdfBaseURL).
+  run_step "Building site" hugo --minify --config hugo.toml,hugo.deploy.toml
+  echo "Cleaning previous search index..."
+  clean_dir static/pagefind
+  run_step "Building search index" npx --yes pagefind --site public
+fi
+
+if $fast_note; then
+  run_step "Verifying fast note deploy" \
+    python3 "$SCRIPT_DIR/verify-site.py" --dir public --profile fast-note
+else
+  run_step "Verifying built site" python3 "$SCRIPT_DIR/verify-site.py" --dir public
+fi
 
 # Deploy -- resolve the public/ symlink so Netlify CLI reads the real
 # directory (CLI does not follow symlinks), and extend the default 20-min
@@ -94,11 +131,14 @@ restore_pagefind_symlink() {
 }
 if [ -L "$PAGEFIND_LINK" ]; then
   PAGEFIND_TARGET="$(readlink "$PAGEFIND_LINK")"
-  trap restore_pagefind_symlink EXIT
+  trap 'restore_pagefind_symlink; release_public_tree_lock' EXIT
   rm "$PAGEFIND_LINK"
-  cp -R "$PAGEFIND_TARGET" "$PAGEFIND_LINK"
+  cp -cR "$PAGEFIND_TARGET" "$PAGEFIND_LINK" 2>/dev/null \
+    || cp -R "$PAGEFIND_TARGET" "$PAGEFIND_LINK"
 fi
 
-run_step "Deploying to Netlify" npx --yes netlify deploy --prod --dir="$DEPLOY_DIR" --no-build --timeout 3600
+run_step "Deploying to Netlify" \
+  python3 "$SCRIPT_DIR/netlify_deploy.py" --repo-root "$REPO_ROOT" -- \
+    deploy --prod --dir="$DEPLOY_DIR" --no-build --timeout 3600
 
 echo "Done."

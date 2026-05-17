@@ -12,22 +12,33 @@ if [ ! -d content ]; then
   exit 0
 fi
 
+acquire_public_tree_lock
+
 run_step "Generating citing-notes data" python3 "$SCRIPT_DIR/generate-citing-notes.py"
 
 # Clean stale build output (Hugo doesn't remove deleted/renamed pages)
-clean_dir public
+clean_hugo_output public
+ensure_static_symlinks
 
-run_step "Building site for search indexing" hugo --quiet
-run_step "Building search index" npx --yes pagefind --site public
+run_step "Building site for search indexing" hugo --quiet --config hugo.toml,hugo.deploy.toml
 
-# Replace index contents in-place to preserve the static/pagefind symlink (nosync)
+tmp_index="static/pagefind.tmp.$$"
+rm -rf "$tmp_index"
+trap 'rm -rf "$tmp_index"; release_public_tree_lock' EXIT
+run_step "Building search index" npx --yes pagefind --site public --output-path "$tmp_index"
+
+# Replace index contents in-place to preserve the public/pagefind symlink
+# (nosync) while avoiding public/pagefind as Pagefind's output directory.
 echo "Copying search index to static/..."
 clean_dir static/pagefind
-cp -R public/pagefind/. static/pagefind/
+mkdir -p static/pagefind
+cp -R "$tmp_index"/. static/pagefind/
+rm -rf "$tmp_index"
 
-# Restore dev-server symlinks if the server is running (cleaning public/ removed them)
-if [ -n "$(find_hugo_servers)" ]; then
-  ensure_static_symlinks
-fi
+# Restore the dev-server symlink even when no server is running.  The plain
+# Hugo build above copies static/pagefind into public/pagefind as a real
+# directory; leaving that behind makes the next server startup rotate it as
+# stale output.
+ensure_static_symlinks
 
 echo "Search index ready."

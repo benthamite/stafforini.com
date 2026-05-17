@@ -219,6 +219,7 @@
       var sn = sidenotes[i];
       var visibleHeight = sn.visibleHeight !== null ? sn.visibleHeight : sn.fullHeight;
       var snBottom = sn.top + visibleHeight;
+      var snFullBottom = sn.top + sn.fullHeight;
 
       for (var p = 0; p < codeBlockTops.length; p++) {
         var cbTop = codeBlockTops[p];
@@ -231,11 +232,14 @@
           var newVisible = lines * lineHeight;
           if (newVisible > 0 && (sn.visibleHeight === null || newVisible < sn.visibleHeight)) {
             sn.visibleHeight = newVisible;
-            sn.codeBlocksToMask = [wideCodeBlocks[p]];
           }
           break;
         }
       }
+
+      sn.codeBlocksToMask = wideCodeBlocks.filter(function (block) {
+        return block.bottom > sn.top && block.top < snFullBottom;
+      });
     }
   }
 

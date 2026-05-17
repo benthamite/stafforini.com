@@ -98,6 +98,79 @@ to = "/quotes/index.xml"
 status = 301
 force = true
 
+# Archived downloads that were once linked through page-relative or legacy
+# WordPress paths.
+[[redirects]]
+from = "/notes/anki-decks-from-the-lesswrong-community/anki-decks-from-the-lesswrong-community/*"
+to = "/anki-decks-from-the-lesswrong-community/:splat"
+status = 301
+
+[[redirects]]
+from = "/notes/summary-of-time-management-by-randy-pausch/summary-of-time-management-by-randy-pausch/*"
+to = "/summary-of-time-management-by-randy-pausch/:splat"
+status = 301
+
+[[redirects]]
+from = "/anki/German_cases.apkg"
+to = "/anki-decks-from-the-lesswrong-community/German_cases.apkg"
+status = 301
+
+[[redirects]]
+from = "/anki/Notes_of_the_chromatic_scale.apkg"
+to = "/anki-decks-from-the-lesswrong-community/Notes_of_the_chromatic_scale.apkg"
+status = 301
+
+[[redirects]]
+from = "/blog/bostrom/"
+to = "/notes/crucial-considerations-and-wise-philanthropy-by-nick-bostrom/"
+status = 301
+
+[[redirects]]
+from = "/blog/bostrom/feed/"
+to = "/notes/crucial-considerations-and-wise-philanthropy-by-nick-bostrom/"
+status = 301
+
+# WordPress per-post artifacts that don't survive the migration:
+# strip the suffix and send the reader to the migrated post.
+# Must come before the catch-all /blog/* rule.
+[[redirects]]
+from = "/blog/:slug/feed/"
+to = "/notes/:slug/"
+status = 301
+
+[[redirects]]
+from = "/blog/:slug/feed"
+to = "/notes/:slug/"
+status = 301
+
+# Comment-page pagination: Netlify placeholders only match full path
+# segments, so :n inside `comment-page-:n` doesn't resolve. Enumerate the
+# page numbers we've seen.
+[[redirects]]
+from = "/blog/:slug/comment-page-1/"
+to = "/notes/:slug/"
+status = 301
+
+[[redirects]]
+from = "/blog/:slug/comment-page-2/"
+to = "/notes/:slug/"
+status = 301
+
+[[redirects]]
+from = "/blog/:slug/comment-page-3/"
+to = "/notes/:slug/"
+status = 301
+
+[[redirects]]
+from = "/blog/:slug/comment-page-4/"
+to = "/notes/:slug/"
+status = 301
+
+[[redirects]]
+from = "/blog/:slug/comment-page-5/"
+to = "/notes/:slug/"
+status = 301
+
 # General blog → notes redirect
 [[redirects]]
 from = "/blog/*"

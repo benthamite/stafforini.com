@@ -118,7 +118,7 @@
   background: rgba(0, 0, 0, 0.06);
 }
 
-a.search-more.is-active {
+.search-more.is-active {
   background: rgba(0, 0, 0, 0.06);
   border-radius: 4px;
   padding: 0.125rem 0.25rem;
@@ -157,6 +157,12 @@ a.search-more.is-active {
 .search-more:hover {
   color: var(--color-link-hover);
   text-decoration: underline;
+}
+
+.search-more:disabled {
+  color: var(--color-text-secondary);
+  cursor: wait;
+  text-decoration: none;
 }
 
 .search-no-results {
