@@ -17,6 +17,29 @@ run_step() {
   fi
 }
 
+PUBLIC_TREE_LOCK="$REPO_ROOT/.public-tree.lock"
+
+release_public_tree_lock() {
+  rm -rf "$PUBLIC_TREE_LOCK"
+}
+
+acquire_public_tree_lock() {
+  while ! mkdir "$PUBLIC_TREE_LOCK" 2>/dev/null; do
+    if [ -f "$PUBLIC_TREE_LOCK/pid" ]; then
+      local pid
+      pid="$(cat "$PUBLIC_TREE_LOCK/pid" 2>/dev/null || true)"
+      if [ -n "$pid" ] && ! kill -0 "$pid" 2>/dev/null; then
+        rm -rf "$PUBLIC_TREE_LOCK"
+        continue
+      fi
+    fi
+    echo "Waiting for another public/ build or deploy to finish..."
+    sleep 2
+  done
+  printf '%s\n' "$$" > "$PUBLIC_TREE_LOCK/pid"
+  trap release_public_tree_lock EXIT
+}
+
 # Return PIDs of running Hugo dev servers for this repo owned by the current
 # user, or empty string if none.  Prefer pgrep for command-line matching, but
 # fall back to lsof because macOS privacy/sandbox contexts can make pgrep fail.
@@ -110,10 +133,9 @@ clean_dir() {
   fi
 }
 
-# Delete Hugo-generated content from public/, preserving the pagefind
-# index (lives at public/pagefind via a symlink to static/pagefind, so
-# re-indexing only touches changed fragments instead of regenerating the
-# whole index on every deploy).
+# Delete Hugo-generated content from public/, preserving the pagefind symlink.
+# The index lives at public/pagefind via a symlink to static/pagefind and is
+# rebuilt separately by deploy/search scripts.
 clean_hugo_output() {
   local dir="$1"
   if [ ! -d "$dir" ]; then

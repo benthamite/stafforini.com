@@ -9,6 +9,12 @@
     "index": "npx pagefind --site public"
   },
   "devDependencies": {
+    "netlify": "26.0.1",
     "pagefind": "^1.4.0"
+  },
+  "overrides": {
+    "@typescript-eslint/visitor-keys": {
+      "eslint-visitor-keys": "4.2.1"
+    }
   }
 }

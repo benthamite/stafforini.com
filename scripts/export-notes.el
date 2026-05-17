@@ -42,6 +42,22 @@ notes with custom URLs resolve to the real page."
   (or (gethash id export-id-url-overrides)
       (export-notes--slug-url slug)))
 
+(defun export-notes--local-id-anchor (id)
+  "Return the local heading anchor for ID in the current buffer."
+  (save-excursion
+    (save-restriction
+      (widen)
+      (goto-char (point-min))
+      (let ((case-fold-search t))
+        (when (re-search-forward
+               (format "^\\s-*:ID:\\s-*%s\\s-*$" (regexp-quote id))
+               nil t)
+          (org-back-to-heading t)
+          (unless (org-entry-get nil "EXPORT_FILE_NAME")
+            (or (org-entry-get nil "CUSTOM_ID")
+                (org-hugo-slug (org-get-heading t t t t)
+                               :allow-double-hyphens))))))))
+
 (define-advice org-hugo-link (:around (orig-fn link contents info) resolve-links)
   "For id:/file: links, resolve via slug map; for others, catch broken links."
   (let ((type (org-element-property :type link))
@@ -50,10 +66,15 @@ notes with custom URLs resolve to the real page."
      ;; ID links: look up in the id-slug-map
      ((string= type "id")
       (let* ((id (upcase path))
-             (slug (gethash id export-id-slug-map)))
-        (if slug
-            (format "[%s](%s)" (or contents slug) (export-notes--id-url id slug))
-          (or contents ""))))
+             (slug (gethash id export-id-slug-map))
+             (anchor (export-notes--local-id-anchor id)))
+        (cond
+         (anchor
+          (format "[%s](#%s)" (or contents anchor) anchor))
+         (slug
+          (format "[%s](%s)" (or contents slug) (export-notes--id-url id slug)))
+         (t
+          (or contents "")))))
      ;; file: links to .org files: check if the target slug is published
      ((and (string= type "file")
            (string-suffix-p ".org" path))
