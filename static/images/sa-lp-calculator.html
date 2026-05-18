@@ -197,9 +197,6 @@ function render() {
     html += '<td class="r">' + (c.excluded ? '0.0' : (c.adjWeight * 100).toFixed(1)) + '%</td>';
     html += '<td class="r">' + (c.excluded ? '$0.00' : (c.target == null ? 'N/A' : '$' + c.target.toFixed(2))) + '</td>';
     var priceText = c.price != null ? '$' + c.price.toFixed(2) : 'N/A';
-    if (showOptionDetails && c.instrument === 'option' && c.priceAsOf) {
-      priceText += ' <span class="muted">' + esc(c.priceAsOf) + '</span>';
-    }
     html += '<td class="r">' + priceText + '</td>';
     html += '<td class="r">' + (c.units != null ? c.units.toLocaleString() : 'N/A') + '</td>';
     html += '<td class="r">' + (c.cost != null ? '$' + c.cost.toFixed(2) : 'N/A') + '</td>';
