@@ -186,12 +186,17 @@ In full mode, the deploy script:
 
 Use `scripts/deploy.sh --quick` only after a recent full export when changing
 templates, styles, or configuration. Quick deploy skips content export and data
-regeneration.
+regeneration, but it still cleans and rebuilds the whole Hugo site, regenerates
+Pagefind, and asks Netlify to publish the full atomic deploy tree. It is not the
+right path for small already-exported note updates.
 
 Use `scripts/deploy.sh --fast-note` only for minor already-exported note body
 edits. It preserves the existing `public/` snapshot, renders only the
-note-oriented Hugo segment into it, preserves the existing Pagefind index, runs
-a fast rendered-output smoke test, and deploys to Netlify. Do not use it for
+note-oriented Hugo segment into it, copies lightweight static assets, preserves
+the existing Pagefind index, runs a fast rendered-output smoke test, and deploys
+to Netlify. This is the right path for already-exported generated note-local
+assets such as `/images/sa-lp-calculator.html`, as long as stale search results
+are acceptable until the next full/quick deploy. Do not use it for
 slug/date/tag/citation/link/template changes, new notes, deleted notes, quote
 changes, work-page changes, PDF changes, or anything that should update search
 immediately; use full deploy (`stafforini-deploy`) or quick deploy

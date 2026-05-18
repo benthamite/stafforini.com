@@ -91,7 +91,7 @@ commit_if_changed "$STAFFORINI_REPO" \
   "static/images/sa-lp-returns.html" \
   "static/images/sa-lp-calculator.html"
 
-echo "--- Deploying to Netlify (quick, no re-export) ---"
-bash "$STAFFORINI_REPO/scripts/deploy.sh" --quick
+echo "--- Deploying to Netlify (fast note/static asset path) ---"
+bash "$STAFFORINI_REPO/scripts/deploy.sh" --fast-note
 
 echo "=== [$(date '+%Y-%m-%d %H:%M:%S')] sa-lp refresh done ==="
