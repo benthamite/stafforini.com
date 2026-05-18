@@ -12,12 +12,15 @@
 #   - Update hugo.deploy.toml params.pdfBaseURL / thumbBaseURL
 #
 # Usage: bash scripts/deploy.sh [--quick|--fast-note]
-# --quick: skip content export, PDF processing, and R2 upload (just clean,
-#          build, index, deploy).  Use when only templates/styles changed
-#          since the last full deploy.
+# --quick: skip content export, PDF processing, and R2 upload, but still clean,
+#          rebuild the whole site, regenerate Pagefind, and deploy the full
+#          atomic tree.  Use when templates/styles/config changed since the
+#          last full deploy.
 # --fast-note: skip export, clean, and search indexing; render only the
 #              note-oriented Hugo segment into the existing public/ snapshot,
-#              then deploy. Use only for minor already-exported note body edits.
+#              copy lightweight static assets, then deploy. Use for
+#              already-exported note body edits and generated note-local assets
+#              such as /images/sa-lp-calculator.html.
 source "$(dirname "$0")/common.sh"
 
 quick=false
