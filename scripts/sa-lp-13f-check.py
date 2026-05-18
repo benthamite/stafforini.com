@@ -4,16 +4,15 @@
 On each run:
   1. Fetch the latest 13F-HR accession number from SEC EDGAR.
   2. Compare against ``data/sa-lp-13f-state.json``.
-  3. If it differs, send an email via the Buttondown API and prepend
-     an entry to ``static/feed/sa-lp-13f.xml``.
-  4. Update the state file.
+  3. If it differs, send a private notification to Pablo.
+  4. Update the state file so the private notification is not repeated.
 
 Designed to run idempotently from GitHub Actions. Exits non-zero on
 unrecoverable errors so the workflow run is flagged.
 
 Usage:
-    BUTTONDOWN_API_KEY=... python3 scripts/sa-lp-13f-check.py
-    python3 scripts/sa-lp-13f-check.py --dry-run    # no API call, no writes
+    TELEGRAM_BOT_TOKEN=... TELEGRAM_CHAT_ID=... python3 scripts/sa-lp-13f-check.py
+    python3 scripts/sa-lp-13f-check.py --dry-run    # no notification, no writes
 """
 
 from __future__ import annotations
@@ -21,11 +20,12 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import smtplib
 import sys
 import urllib.error
 import urllib.request
-import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
+from email.message import EmailMessage
 from pathlib import Path
 
 CIK_PAD = "0002045724"
@@ -35,11 +35,8 @@ UA = "SA-LP 13F watcher (Pablo Stafforini pablo@stafforini.com)"
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 STATE_FILE = REPO_ROOT / "data" / "sa-lp-13f-state.json"
-FEED_FILE = REPO_ROOT / "static" / "feed" / "sa-lp-13f.xml"
-FEED_URL = "https://stafforini.com/feed/sa-lp-13f.xml"
 POST_URL = "https://stafforini.com/notes/situational-awareness-lp/"
-BUTTONDOWN_API = "https://api.buttondown.com/v1/emails"
-ATOM_NS = "http://www.w3.org/2005/Atom"
+TELEGRAM_API = "https://api.telegram.org"
 
 
 def http_get_json(url: str) -> dict:
@@ -77,7 +74,111 @@ def filing_url(accession: str) -> str:
     )
 
 
-def send_email(api_key: str, filing: dict) -> None:
+def notification_subject(filing: dict) -> str:
+    return (
+        f"Situational Awareness LP filed a new {filing['form']} "
+        f"(period {filing['period']})"
+    )
+
+
+def notification_body(filing: dict) -> str:
+    return (
+        f"A new {filing['form']} has been filed with the SEC by "
+        f"Situational Awareness LP.\n\n"
+        f"- Period: {filing['period']}\n"
+        f"- Filed:  {filing['filed']}\n"
+        f"- Accession: {filing['accession']}\n\n"
+        f"SEC filing index:\n{filing_url(filing['accession'])}\n\n"
+        f"Next steps:\n"
+        f"1. Update the Situational Awareness LP note and calculator.\n"
+        f"2. Review the updated post.\n"
+        f"3. Send the newsletter message manually.\n\n"
+        f"Post:\n{POST_URL}\n"
+    )
+
+
+def send_telegram(bot_token: str, chat_id: str, filing: dict) -> None:
+    payload = json.dumps(
+        {
+            "chat_id": chat_id,
+            "text": f"{notification_subject(filing)}\n\n{notification_body(filing)}",
+            "disable_web_page_preview": True,
+        }
+    ).encode()
+    req = urllib.request.Request(
+        f"{TELEGRAM_API}/bot{bot_token}/sendMessage",
+        data=payload,
+        headers={
+            "Content-Type": "application/json",
+            "User-Agent": UA,
+        },
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            resp.read()
+    except urllib.error.HTTPError as err:
+        raise RuntimeError(
+            f"Telegram API returned HTTP {err.code}: {err.read()!r}"
+        ) from err
+    print("Telegram notification sent.")
+
+
+def send_smtp_email(filing: dict) -> None:
+    host = os.environ.get("SMTP_HOST")
+    username = os.environ.get("SMTP_USERNAME")
+    password = os.environ.get("SMTP_PASSWORD")
+    sender = os.environ.get("NOTIFY_EMAIL_FROM") or username
+    recipient = os.environ.get("NOTIFY_EMAIL_TO")
+    if not all([host, username, password, sender, recipient]):
+        raise RuntimeError(
+            "SMTP notification requires SMTP_HOST, SMTP_USERNAME, "
+            "SMTP_PASSWORD, NOTIFY_EMAIL_FROM or SMTP_USERNAME, and "
+            "NOTIFY_EMAIL_TO."
+        )
+
+    port = int(os.environ.get("SMTP_PORT", "587"))
+    msg = EmailMessage()
+    msg["Subject"] = notification_subject(filing)
+    msg["From"] = sender
+    msg["To"] = recipient
+    msg.set_content(notification_body(filing))
+
+    with smtplib.SMTP(host, port, timeout=30) as smtp:
+        smtp.starttls()
+        smtp.login(username, password)
+        smtp.send_message(msg)
+    print("SMTP email notification sent.")
+
+
+def send_private_notifications(filing: dict) -> None:
+    sent = False
+
+    bot_token = os.environ.get("TELEGRAM_BOT_TOKEN")
+    chat_id = os.environ.get("TELEGRAM_CHAT_ID")
+    if bot_token or chat_id:
+        if not (bot_token and chat_id):
+            raise RuntimeError(
+                "Telegram notification requires both TELEGRAM_BOT_TOKEN "
+                "and TELEGRAM_CHAT_ID."
+            )
+        send_telegram(bot_token, chat_id, filing)
+        sent = True
+
+    if os.environ.get("SMTP_HOST") or os.environ.get("NOTIFY_EMAIL_TO"):
+        send_smtp_email(filing)
+        sent = True
+
+    if not sent:
+        raise RuntimeError(
+            "No private notification channel configured. Set "
+            "TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID, or configure SMTP_HOST, "
+            "SMTP_USERNAME, SMTP_PASSWORD, and NOTIFY_EMAIL_TO."
+        )
+
+
+def build_legacy_buttondown_email(filing: dict) -> tuple[str, str]:
+    """Return the old public-newsletter message for manual reuse if needed."""
     subject = (
         f"Situational Awareness LP filed a new {filing['form']} "
         f"(period {filing['period']})"
@@ -91,25 +192,7 @@ def send_email(api_key: str, filing: dict) -> None:
         f"SEC filing index:\n{filing_url(filing['accession'])}\n\n"
         f"Portfolio calculator and strategy context:\n{POST_URL}\n"
     )
-    payload = json.dumps({"subject": subject, "body": body}).encode()
-    req = urllib.request.Request(
-        BUTTONDOWN_API,
-        data=payload,
-        headers={
-            "Authorization": f"Token {api_key}",
-            "Content-Type": "application/json",
-            "User-Agent": UA,
-        },
-        method="POST",
-    )
-    try:
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            resp_body = resp.read().decode()
-    except urllib.error.HTTPError as err:
-        raise RuntimeError(
-            f"Buttondown API returned HTTP {err.code}: {err.read()!r}"
-        ) from err
-    print(f"Buttondown accepted the email: {resp_body[:200]}")
+    return subject, body
 
 
 def load_state() -> dict:
@@ -127,79 +210,12 @@ def save_state(accession: str) -> None:
     STATE_FILE.write_text(json.dumps(state, indent=2) + "\n")
 
 
-def _new_feed() -> ET.Element:
-    ET.register_namespace("", ATOM_NS)
-    feed = ET.Element(f"{{{ATOM_NS}}}feed")
-    ET.SubElement(feed, f"{{{ATOM_NS}}}id").text = FEED_URL
-    ET.SubElement(feed, f"{{{ATOM_NS}}}title").text = (
-        "Situational Awareness LP — 13F filings"
-    )
-    ET.SubElement(feed, f"{{{ATOM_NS}}}subtitle").text = (
-        "New SEC 13F-HR filings by Situational Awareness LP."
-    )
-    self_link = ET.SubElement(feed, f"{{{ATOM_NS}}}link")
-    self_link.set("href", FEED_URL)
-    self_link.set("rel", "self")
-    site_link = ET.SubElement(feed, f"{{{ATOM_NS}}}link")
-    site_link.set("href", POST_URL)
-    ET.SubElement(feed, f"{{{ATOM_NS}}}updated").text = (
-        datetime.now(timezone.utc).isoformat(timespec="seconds")
-    )
-    return feed
-
-
-def prepend_entry(filing: dict) -> None:
-    ET.register_namespace("", ATOM_NS)
-    if FEED_FILE.exists():
-        tree = ET.parse(FEED_FILE)
-        feed = tree.getroot()
-    else:
-        feed = _new_feed()
-
-    now_iso = datetime.now(timezone.utc).isoformat(timespec="seconds")
-    filed_iso = f"{filing['filed']}T12:00:00+00:00"
-
-    entry = ET.Element(f"{{{ATOM_NS}}}entry")
-    ET.SubElement(entry, f"{{{ATOM_NS}}}id").text = (
-        f"urn:sec:accession:{filing['accession']}"
-    )
-    ET.SubElement(entry, f"{{{ATOM_NS}}}title").text = (
-        f"{filing['form']} — period {filing['period']}"
-    )
-    link = ET.SubElement(entry, f"{{{ATOM_NS}}}link")
-    link.set("href", filing_url(filing["accession"]))
-    ET.SubElement(entry, f"{{{ATOM_NS}}}updated").text = filed_iso
-    ET.SubElement(entry, f"{{{ATOM_NS}}}published").text = filed_iso
-    ET.SubElement(entry, f"{{{ATOM_NS}}}summary").text = (
-        f"Situational Awareness LP filed {filing['form']} for period "
-        f"{filing['period']} on {filing['filed']}."
-    )
-
-    entry_tag = f"{{{ATOM_NS}}}entry"
-    insert_at = len(list(feed))
-    for i, child in enumerate(feed):
-        if child.tag == entry_tag:
-            insert_at = i
-            break
-    feed.insert(insert_at, entry)
-
-    for child in feed:
-        if child.tag == f"{{{ATOM_NS}}}updated":
-            child.text = now_iso
-            break
-
-    FEED_FILE.parent.mkdir(parents=True, exist_ok=True)
-    tree = ET.ElementTree(feed)
-    ET.indent(tree, space="  ")
-    tree.write(FEED_FILE, encoding="utf-8", xml_declaration=True)
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Print what would happen; do not call Buttondown or write files.",
+        help="Print what would happen; do not send notifications or write files.",
     )
     args = parser.parse_args()
 
@@ -223,18 +239,15 @@ def main() -> int:
     )
 
     if args.dry_run:
-        print("--dry-run: skipping Buttondown send and file writes.")
+        print(notification_subject(filing))
+        print()
+        print(notification_body(filing))
+        print("--dry-run: skipping private notification and file writes.")
         return 0
 
-    api_key = os.environ.get("BUTTONDOWN_API_KEY")
-    if not api_key:
-        print("BUTTONDOWN_API_KEY is not set.", file=sys.stderr)
-        return 1
-
-    send_email(api_key, filing)
-    prepend_entry(filing)
+    send_private_notifications(filing)
     save_state(filing["accession"])
-    print("Email sent, feed updated, state saved.")
+    print("Private notification sent and state saved.")
     return 0
 
 
