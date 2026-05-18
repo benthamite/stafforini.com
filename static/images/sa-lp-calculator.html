@@ -109,7 +109,9 @@ function syncCutoff() {
   var rows = DATA[mode];
   excluded = {};
   rows.forEach(function(r) {
-    if (r.weight < cutoff) excluded[posKey(r)] = true;
+    if (r.weight < cutoff && (mode !== 'full' || r.instrument !== 'option')) {
+      excluded[posKey(r)] = true;
+    }
   });
 }
 
@@ -126,7 +128,7 @@ function render() {
     descEl.textContent = 'Uses shares only; weight and cutoff are gross underlying exposure.';
     cutoffLabel.textContent = 'Cutoff (%)';
   } else {
-    descEl.textContent = 'Uses deployed capital; weight and cutoff are premium allocation, while notional target shows 13F underlying exposure.';
+    descEl.textContent = 'Uses deployed capital; cutoff hides small stock rows only, while option rows stay included unless unchecked.';
     cutoffLabel.textContent = 'Cutoff (%)';
   }
 
