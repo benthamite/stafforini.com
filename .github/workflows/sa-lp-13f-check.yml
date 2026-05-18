@@ -26,17 +26,24 @@ jobs:
 
       - name: Run poller
         env:
-          BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.SA_LP_TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.SA_LP_TELEGRAM_CHAT_ID }}
+          SMTP_HOST: ${{ secrets.SA_LP_SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SA_LP_SMTP_PORT }}
+          SMTP_USERNAME: ${{ secrets.SA_LP_SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SA_LP_SMTP_PASSWORD }}
+          NOTIFY_EMAIL_FROM: ${{ secrets.SA_LP_NOTIFY_EMAIL_FROM }}
+          NOTIFY_EMAIL_TO: ${{ secrets.SA_LP_NOTIFY_EMAIL_TO }}
         run: python3 scripts/sa-lp-13f-check.py
 
-      - name: Commit state + feed if changed
+      - name: Commit state if changed
         run: |
-          if [[ -z "$(git status --porcelain data/sa-lp-13f-state.json static/feed/sa-lp-13f.xml)" ]]; then
+          if [[ -z "$(git status --porcelain data/sa-lp-13f-state.json)" ]]; then
             echo "No changes to commit."
             exit 0
           fi
           git config user.name  'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          git add data/sa-lp-13f-state.json static/feed/sa-lp-13f.xml
+          git add data/sa-lp-13f-state.json
           git commit -m "sa-lp-13f: record new filing"
           git push
