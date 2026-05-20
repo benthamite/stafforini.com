@@ -2,6 +2,7 @@
 ;;; Avoids the user's full init, whose autoload chain breaks under --batch.
 
 (require 'org)
+(require 'subr-x)
 (org-babel-do-load-languages 'org-babel-load-languages '((python . t)))
 (setq org-confirm-babel-evaluate nil)
 (setq python-shell-interpreter "/Users/pablostafforini/.pyenv/shims/python3")
@@ -38,6 +39,7 @@ block still fails after `sa-lp-max-attempts' tries."
             (org-babel-goto-named-src-block name)
             (org-babel-execute-src-block)
             (when (sa-lp-had-babel-error-p)
+              (sa-lp-log-babel-error-output)
               (error "Babel subprocess reported an error"))
             (setq success t))
         (error
@@ -67,3 +69,9 @@ Exponential: 5s, 15s, 45s, …, capped at 60s."
         (goto-char (point-min))
         (and (re-search-forward "exited with code \\([0-9]+\\)" nil t)
              (not (string= "0" (match-string 1))))))))
+
+(defun sa-lp-log-babel-error-output ()
+  "Write the current Org Babel error buffer to batch stderr/stdout."
+  (when-let ((buf (get-buffer "*Org-Babel Error Output*")))
+    (with-current-buffer buf
+      (message "%s" (string-trim-right (buffer-string))))))

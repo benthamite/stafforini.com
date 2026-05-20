@@ -15,9 +15,27 @@ set -euo pipefail
 # launchd runs with a minimal PATH; make sure Homebrew + pyenv are findable.
 export PATH="/opt/homebrew/bin:$HOME/.pyenv/shims:$PATH"
 
-ORG_FILE="$HOME/My Drive/notes/situational-awareness-lp.org"
+ORG_FILE="$HOME/My Drive/notes/public/situational-awareness-lp.org"
 NOTES_REPO="$HOME/My Drive/notes"
 STAFFORINI_REPO="$HOME/My Drive/repos/stafforini.com"
+NOTES_ORG_PATH="public/situational-awareness-lp.org"
+LOG_PATH="$HOME/.cache/sa-lp-refresh.log"
+
+notify_failure() {
+  local exit_code="$1"
+  /usr/bin/osascript -e \
+    "display notification \"Exit ${exit_code}; see ${LOG_PATH}\" with title \"SA LP refresh failed\"" \
+    >/dev/null 2>&1 || true
+}
+
+on_exit() {
+  local status="$?"
+  if [[ "$status" -ne 0 ]]; then
+    notify_failure "$status"
+  fi
+}
+
+trap on_exit EXIT
 
 # Fetch the MarketData token from pass. If gpg-agent doesn't have the
 # passphrase cached, this will fail and the job exits cleanly — the next
@@ -32,6 +50,18 @@ export SEC_USER_AGENT="stafforini.com situational-awareness-lp research; Pablo S
 BLOCKS=(sa-data sa-perf sa-chart sa-sensitivity sa-delay sa-calc)
 
 echo "=== [$(date '+%Y-%m-%d %H:%M:%S')] sa-lp refresh starting ==="
+
+if [[ ! -f "$ORG_FILE" ]]; then
+  echo "Error: org file not found: $ORG_FILE" >&2
+  exit 1
+fi
+
+for block in "${BLOCKS[@]}"; do
+  if ! grep -Fqx "#+name: $block" "$ORG_FILE"; then
+    echo "Error: expected Babel block '$block' not found in $ORG_FILE" >&2
+    exit 1
+  fi
+done
 
 # Bail out if the user is actively editing the file in an Emacs session —
 # Emacs writes a .#<filename> lockfile for buffers with unsaved changes.
@@ -58,6 +88,10 @@ emacs -Q --batch --load "$INIT_FILE" \
 echo "--- Updating #+lastmod: keyword ---"
 LASTMOD_TS="$(date +"%Y-%m-%dT%H:%M:%S")"
 sed -i '' "s|^#+lastmod: .*|#+lastmod: ${LASTMOD_TS}|" "$ORG_FILE"
+if ! grep -Fqx "#+lastmod: ${LASTMOD_TS}" "$ORG_FILE"; then
+  echo "Error: failed to verify refreshed #+lastmod keyword in $ORG_FILE" >&2
+  exit 1
+fi
 
 echo "--- Re-exporting notes to Hugo ---"
 bash "$STAFFORINI_REPO/scripts/export-notes.sh"
@@ -84,7 +118,7 @@ commit_if_changed() {
 
 commit_if_changed "$NOTES_REPO" \
   "sa-lp: refresh returns/chart/sensitivity/delays/calculator (auto-eval)" \
-  "situational-awareness-lp.org" ".sa-lp-option-cache"
+  "$NOTES_ORG_PATH" ".sa-lp-option-cache"
 
 commit_if_changed "$STAFFORINI_REPO" \
   "sa-lp: refresh returns/chart/calculator HTML" \
@@ -92,6 +126,10 @@ commit_if_changed "$STAFFORINI_REPO" \
   "static/images/sa-lp-calculator.html"
 
 echo "--- Deploying to Netlify (fast note/static asset path) ---"
-bash "$STAFFORINI_REPO/scripts/deploy.sh" --fast-note
+if [[ "${DRY_RUN:-0}" == "1" ]]; then
+  echo "$STAFFORINI_REPO: [dry-run] would deploy with --fast-note."
+else
+  bash "$STAFFORINI_REPO/scripts/deploy.sh" --fast-note
+fi
 
 echo "=== [$(date '+%Y-%m-%d %H:%M:%S')] sa-lp refresh done ==="
