@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Daily auto-evaluation of the SA-LP org file's dynamic blocks.
 #
-# Executes sa-data, sa-perf, sa-chart, sa-sensitivity, sa-delay, and sa-calc
+# Executes sa-data, sa-perf, sa-chart, sa-chart-ais, sa-sensitivity, sa-delay, and sa-calc
 # in situational-awareness-lp.org, regenerating the returns table, returns
 # chart, sensitivity table, copycat-delays table, and portfolio calculator
 # HTML. Then re-exports the note to Hugo and commits + pushes any changes
@@ -47,7 +47,7 @@ fi
 export MARKETDATA_KEY
 export SEC_USER_AGENT="stafforini.com situational-awareness-lp research; Pablo Stafforini <pablo@stafforini.com>"
 
-BLOCKS=(sa-data sa-perf sa-chart sa-sensitivity sa-delay sa-calc)
+BLOCKS=(sa-data sa-perf sa-chart sa-chart-ais sa-sensitivity sa-delay sa-calc)
 
 echo "=== [$(date '+%Y-%m-%d %H:%M:%S')] sa-lp refresh starting ==="
 
@@ -123,6 +123,7 @@ commit_if_changed "$NOTES_REPO" \
 commit_if_changed "$STAFFORINI_REPO" \
   "sa-lp: refresh returns/chart/calculator HTML" \
   "static/images/sa-lp-returns.html" \
+  "static/images/sa-lp-returns-ais.html" \
   "static/images/sa-lp-calculator.html"
 
 echo "--- Deploying to Netlify (fast note/static asset path) ---"

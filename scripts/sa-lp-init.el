@@ -10,7 +10,7 @@
 (setq shell-command-switch "-c")
 
 (defconst sa-lp-blocks
-  '("sa-data" "sa-perf" "sa-chart" "sa-sensitivity" "sa-delay" "sa-calc")
+  '("sa-data" "sa-perf" "sa-chart" "sa-chart-ais" "sa-sensitivity" "sa-delay" "sa-calc")
   "Named src blocks in situational-awareness-lp.org to refresh.")
 
 (defconst sa-lp-max-attempts 3
