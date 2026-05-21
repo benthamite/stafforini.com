@@ -11,8 +11,14 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
+        "npm:netlify@26.0.1",
         "npm:pagefind@^1.4.0"
-      ]
+      ],
+      "overrides": {
+        "@typescript-eslint/visitor-keys": {
+          "eslint-visitor-keys": "4.2.1"
+        }
+      }
     }
   }
 }
