@@ -74,10 +74,6 @@ body.dark .summary span { color: #888; }
     <label id="cutoff-label" for="cutoff">Cutoff (%)</label>
     <input type="number" id="cutoff" value="0" min="0" max="100" step="0.5">
   </div>
-  <div class="control-field" id="include-options-field" style="display:none">
-    <label for="include-options">Cutoff includes options</label>
-    <input type="checkbox" id="include-options" checked>
-  </div>
 </div>
 <div id="mode-desc" class="meta" style="font-style:italic"></div>
 <div class="meta">
@@ -111,14 +107,8 @@ function syncCutoff() {
   var cutoff = (parseFloat(document.getElementById('cutoff').value) || 0) / 100;
   var mode = document.getElementById('mode').value;
   var rows = DATA[mode];
-  var includeOptionsEl = document.getElementById('include-options');
-  var includeOptions = mode !== 'full' || includeOptionsEl.checked;
   excluded = {};
   rows.forEach(function(r) {
-    if (mode === 'full' && r.instrument === 'option' && !includeOptions) {
-      excluded[posKey(r)] = true;
-      return;
-    }
     var cutoffWeight = typeof r.cutoff_weight === 'number' ?
                        r.cutoff_weight : r.weight;
     if (cutoffWeight < cutoff) {
@@ -136,15 +126,12 @@ function render() {
   // Show mode description
   var descEl = document.getElementById('mode-desc');
   var cutoffLabel = document.getElementById('cutoff-label');
-  var includeOptionsField = document.getElementById('include-options-field');
   if (mode === 'equity_only') {
     descEl.textContent = 'Uses shares only; weight and cutoff are gross underlying exposure.';
     cutoffLabel.textContent = 'Cutoff (%)';
-    includeOptionsField.style.display = 'none';
   } else {
     descEl.textContent = 'Uses deployed capital; cutoff filters stocks by notional and options by delta-adjusted notional.';
     cutoffLabel.textContent = 'Cutoff (%)';
-    includeOptionsField.style.display = 'flex';
   }
 
   // All rows shown; excluded rows are greyed out
@@ -217,10 +204,8 @@ function render() {
   html += '<th class="r">Units</th><th class="r">Cost</th></tr></thead><tbody>';
 
   computed.forEach(function(c) {
-    var disabled = mode === 'full' && c.instrument === 'option' &&
-                   !document.getElementById('include-options').checked;
     html += '<tr' + (c.excluded ? ' class="excluded"' : '') + '>';
-    html += '<td class="cb"><input type="checkbox" data-key="' + esc(c.key) + '"' + (c.excluded ? '' : ' checked') + (disabled ? ' disabled' : '') + '></td>';
+    html += '<td class="cb"><input type="checkbox" data-key="' + esc(c.key) + '"' + (c.excluded ? '' : ' checked') + '></td>';
     html += '<td><strong>' + esc(c.ticker) + '</strong></td>';
     var cls = c.type === 'put' ? 'tag-put' : c.type === 'call' ? 'tag-call' : 'tag-long';
     var typeText = c.type;
@@ -267,7 +252,6 @@ function render() {
 document.getElementById('bankroll').addEventListener('input', render);
 document.getElementById('mode').addEventListener('change', function() { syncCutoff(); render(); });
 document.getElementById('cutoff').addEventListener('input', function() { syncCutoff(); render(); });
-document.getElementById('include-options').addEventListener('change', function() { syncCutoff(); render(); });
 document.getElementById('output').addEventListener('change', function(e) {
   if (e.target.type === 'checkbox' && e.target.dataset.key) {
     if (e.target.checked) {
