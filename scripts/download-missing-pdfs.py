@@ -18,8 +18,7 @@ Options:
     --dry-run           Search and rank results but don't download
     --limit N           Process at most N books (for testing)
     --resume            Skip books already in the progress file
-    --key KEY           Anna's Archive secret key (default: from
-                        ~/.claude.json MCP config)
+    --key KEY           Anna's Archive secret key (default: from pass)
     --base-url URL      Anna's Archive base URL
                         (default: https://annas-archive.gl/)
     --delay SECS        Delay between searches (default: 3)
@@ -36,6 +35,7 @@ import argparse
 import json
 import os
 import re
+import subprocess
 import sys
 import time
 import urllib.error
@@ -649,20 +649,19 @@ def update_bib_file(bib_path: Path, progress: dict) -> int:
 
 
 def get_secret_key() -> str:
-    """Read the Anna's Archive secret key from ~/.claude.json."""
-    claude_json = Path.home() / ".claude.json"
-    if not claude_json.exists():
-        return ""
+    """Read the Anna's Archive secret key from pass."""
     try:
-        data = json.loads(claude_json.read_text())
-        return (
-            data.get("mcpServers", {})
-            .get("annas-archive", {})
-            .get("env", {})
-            .get("ANNAS_SECRET_KEY", "")
+        result = subprocess.run(
+            ["pass", "show", "tlon/core/annas-archive"],
+            capture_output=True,
+            check=False,
+            text=True,
         )
-    except (json.JSONDecodeError, KeyError):
+    except FileNotFoundError:
         return ""
+    if result.returncode != 0:
+        return ""
+    return result.stdout.splitlines()[0] if result.stdout else ""
 
 
 def main() -> None:
@@ -713,7 +712,7 @@ def main() -> None:
     secret_key = args.key or os.environ.get("ANNAS_SECRET_KEY", "") or get_secret_key()
     if not secret_key and not args.dry_run:
         print("Error: no secret key. Set --key, ANNAS_SECRET_KEY env var, "
-              "or configure in ~/.claude.json", file=sys.stderr)
+              "or pass entry tlon/core/annas-archive", file=sys.stderr)
         sys.exit(1)
 
     # Handle --retry-not-found / --retry-errors: clear lists so they get retried
