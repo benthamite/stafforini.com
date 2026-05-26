@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #333;
+      background: transparent;
+    }
+    .notice {
+      box-sizing: border-box;
+      min-height: 500px;
+      padding: 28px;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      line-height: 1.45;
+    }
+    h2 {
+      margin: 0 0 12px;
+      font-size: 20px;
+      font-weight: 650;
+    }
+    p {
+      margin: 0 0 10px;
+      font-size: 15px;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.92em;
+    }
+  </style>
+</head>
+<body>
+  <div class="notice">
+    <h2>VARA return chart unavailable</h2>
+    <p>The chart was not generated because MarketData returned <code>402 Payment Required</code> when fetching historical option-chain data needed for the option-proxy backtest.</p>
+    <p>The missing endpoint was the historical <code>ALAB</code> call chain for 2024-08-09. The code block above remains the source of truth for regenerating this chart with an account that has the required MarketData access.</p>
+  </div>
+</body>
+</html>
