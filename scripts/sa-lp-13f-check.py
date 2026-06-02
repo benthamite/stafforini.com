@@ -123,7 +123,10 @@ def search_recent_13g_filings() -> list[dict]:
     seen: set[str] = set()
     filings: list[dict] = []
 
-    for form in ("SCHEDULE 13G", "SCHEDULE 13G/A"):
+    # SEC's full-text API treats this as the Schedule 13G root form, covering
+    # both original and amended Schedule 13G filings while avoiding flaky
+    # separate SCHEDULE 13G/A queries.
+    for form in ("SCHEDULE 13G",):
         for name in SEARCH_13G_NAMES:
             query = {
                 "q": f'"{name}"',
