@@ -5,7 +5,16 @@ on:
     # Every five minutes. GitHub Actions may delay scheduled runs under load,
     # but five minutes is the shortest supported interval.
     - cron: '*/5 * * * *'
-  workflow_dispatch:  # Allow manual runs from the Actions tab.
+  workflow_dispatch:
+    inputs:
+      test_alert:
+        description: Send a clearly labeled test notification instead of polling SEC.
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
 
 concurrency:
   group: sa-lp-filing-check
@@ -33,7 +42,12 @@ jobs:
           SMTP_PASSWORD: ${{ secrets.SA_LP_SMTP_PASSWORD }}
           NOTIFY_EMAIL_FROM: ${{ secrets.SA_LP_NOTIFY_EMAIL_FROM }}
           NOTIFY_EMAIL_TO: ${{ secrets.SA_LP_NOTIFY_EMAIL_TO }}
-        run: python3 scripts/sa-lp-13f-check.py
+        run: |
+          if [[ "${{ inputs.test_alert }}" == "true" ]]; then
+            python3 scripts/sa-lp-13f-check.py --test-alert
+          else
+            python3 scripts/sa-lp-13f-check.py
+          fi
 
       - name: Commit state if changed
         run: |

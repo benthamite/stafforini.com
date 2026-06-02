@@ -126,3 +126,31 @@ def test_legacy_last_accession_marks_older_13fs_as_notified():
         "0002045724-25-000002",
         "0002045724-26-000008",
     }
+
+
+def test_test_alert_is_labeled_and_uses_post_url():
+    filing = _mod.build_test_alert()
+
+    assert filing["kind"] == "TEST"
+    assert filing["form"] == "TEST ALERT"
+    assert filing["url"] == _mod.POST_URL
+    assert _mod.notification_subject(filing).startswith("TEST: ")
+    assert "This is a test alert" in _mod.notification_body(filing)
+    assert _mod.POST_URL in _mod.notification_body(filing)
+
+
+def test_test_alert_mode_sends_without_polling_or_writing(monkeypatch):
+    sent = []
+
+    monkeypatch.setattr(_mod, "recent_watched_filings", lambda: (_ for _ in ()).throw(
+        AssertionError("test alert should not poll SEC")
+    ))
+    monkeypatch.setattr(_mod, "save_state", lambda _filings: (_ for _ in ()).throw(
+        AssertionError("test alert should not write state")
+    ))
+    monkeypatch.setattr(_mod, "send_private_notifications", sent.append)
+    monkeypatch.setattr(_mod.sys, "argv", ["sa-lp-13f-check.py", "--test-alert"])
+
+    assert _mod.main() == 0
+    assert len(sent) == 1
+    assert sent[0]["kind"] == "TEST"

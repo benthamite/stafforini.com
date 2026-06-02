@@ -187,14 +187,20 @@ def recent_watched_filings() -> list[dict]:
 
 
 def notification_subject(filing: dict) -> str:
+    prefix = "TEST: " if filing.get("kind") == "TEST" else ""
     return (
-        f"Situational Awareness LP filed a new {filing['form']} "
+        f"{prefix}Situational Awareness LP filed a new {filing['form']} "
         f"(period {filing['period']})"
     )
 
 
 def notification_body(filing: dict) -> str:
+    filing_link = filing.get("url") or filing_url(filing["accession"])
+    test_note = ""
+    if filing.get("kind") == "TEST":
+        test_note = "This is a test alert; no SEC filing was detected.\n\n"
     return (
+        f"{test_note}"
         f"A new {filing['form']} involving Situational Awareness LP has "
         f"been filed with the SEC.\n\n"
         f"- Kind: {filing['kind']}\n"
@@ -202,13 +208,26 @@ def notification_body(filing: dict) -> str:
         f"- Period: {filing['period']}\n"
         f"- Filed:  {filing['filed']}\n"
         f"- Accession: {filing['accession']}\n\n"
-        f"SEC filing index:\n{filing_url(filing['accession'])}\n\n"
+        f"SEC filing index:\n{filing_link}\n\n"
         f"Next steps:\n"
         f"1. Inspect the filing and update the Situational Awareness LP note.\n"
         f"2. Review the updated post.\n"
         f"3. Send the newsletter message manually.\n\n"
         f"Post:\n{POST_URL}\n"
     )
+
+
+def build_test_alert() -> dict:
+    now = datetime.now(timezone.utc)
+    return {
+        "kind": "TEST",
+        "form": "TEST ALERT",
+        "filed": now.date().isoformat(),
+        "period": now.date().isoformat(),
+        "accession": f"test-alert-{now.strftime('%Y%m%d%H%M%S')}",
+        "issuer": "Situational Awareness LP watcher",
+        "url": POST_URL,
+    }
 
 
 def send_telegram(bot_token: str, chat_id: str, filing: dict) -> None:
@@ -355,7 +374,17 @@ def main() -> int:
         action="store_true",
         help="Print what would happen; do not send notifications or write files.",
     )
+    parser.add_argument(
+        "--test-alert",
+        action="store_true",
+        help="Send a clearly labeled test notification and do not poll SEC.",
+    )
     args = parser.parse_args()
+
+    if args.test_alert:
+        send_private_notifications(build_test_alert())
+        print("Test notification sent.")
+        return 0
 
     filings = recent_watched_filings()
     if not filings:
