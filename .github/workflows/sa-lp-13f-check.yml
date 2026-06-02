@@ -1,15 +1,14 @@
-name: SA-LP 13F watcher
+name: SA-LP filing watcher
 
 on:
   schedule:
-    # Daily at 22:17 UTC (~5pm ET), after US business hours so we catch
-    # same-day SEC filings. Not on the :00 minute to avoid the cron thundering
-    # herd. Cron expressions are always evaluated in UTC on GitHub Actions.
-    - cron: '17 22 * * *'
+    # Every five minutes. GitHub Actions may delay scheduled runs under load,
+    # but five minutes is the shortest supported interval.
+    - cron: '*/5 * * * *'
   workflow_dispatch:  # Allow manual runs from the Actions tab.
 
 concurrency:
-  group: sa-lp-13f-check
+  group: sa-lp-filing-check
   cancel-in-progress: false
 
 jobs:
@@ -45,5 +44,5 @@ jobs:
           git config user.name  'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           git add data/sa-lp-13f-state.json
-          git commit -m "sa-lp-13f: record new filing"
+          git commit -m "sa-lp: record new filing"
           git push
