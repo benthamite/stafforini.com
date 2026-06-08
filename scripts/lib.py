@@ -14,6 +14,7 @@ import re
 import subprocess
 import unicodedata
 from pathlib import Path
+import tomllib
 
 
 # === Constants ===
@@ -144,6 +145,23 @@ def atomic_write_text(path, text):
         except OSError:
             pass
         raise
+
+
+def toml_front_matter(content: str) -> dict:
+    """Return TOML front matter from generated Hugo Markdown content."""
+    if not content.startswith("+++\n"):
+        return {}
+    try:
+        _, front_matter, _ = content.split("+++\n", 2)
+    except ValueError:
+        return {}
+    return tomllib.loads(front_matter)
+
+
+def markdown_page_is_unlisted(path: Path) -> bool:
+    """Return whether a generated Markdown page has unlisted=true."""
+    metadata = toml_front_matter(path.read_text(encoding="utf-8"))
+    return metadata.get("unlisted") is True
 
 
 def strip_elisp_quotes(value):

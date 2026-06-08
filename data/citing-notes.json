@@ -41,12 +41,6 @@
       "title": "Wild animal welfare: a bibliography"
     }
   ],
-  "bergmann-2021-controllable-and-decomposable": [
-    {
-      "slug": "how-i-keep-claude-code-and-codex-in-sync",
-      "title": "How I keep Claude Code and Codex in sync"
-    }
-  ],
   "blackburn-2009-philosophy": [
     {
       "slug": "why-does-the-world-exist-a-bibliography",
@@ -1815,12 +1809,6 @@
       "title": "Why does the world exist? — A bibliography"
     }
   ],
-  "burton-1638-anatomy-melancholy": [
-    {
-      "slug": "contact",
-      "title": "Contact"
-    }
-  ],
   "carlson-2001-presumption-nothingness": [
     {
       "slug": "why-does-the-world-exist-a-bibliography",
@@ -2233,12 +2221,6 @@
       "title": "Wild animal welfare: a bibliography"
     }
   ],
-  "knapp-2016-multi-view-consistency": [
-    {
-      "slug": "how-i-keep-claude-code-and-codex-in-sync",
-      "title": "How I keep Claude Code and Codex in sync"
-    }
-  ],
   "knight-1956-why-not-nothing": [
     {
       "slug": "why-does-the-world-exist-a-bibliography",
@@ -2323,12 +2305,6 @@
       "title": "Why does the world exist? — A bibliography"
     }
   ],
-  "lewis-2020-use-resilience-instead": [
-    {
-      "slug": "stopping-myself-from-mistreating-ai-models",
-      "title": "Stopping myself from mistreating AI models"
-    }
-  ],
   "lovvorn-2008-california-proposition-watershed": [
     {
       "slug": "california-proposition-2-a-bibliography",
@@ -2373,10 +2349,6 @@
   ],
   "mac-askill-2015-doing-good-better": [
     {
-      "slug": "about",
-      "title": "About"
-    },
-    {
       "slug": "how-can-doctors-do-the-most-good-an-interview-with-dr-gregory-lewis",
       "title": "How can doctors do the most good? An interview with Gregory Lewis"
     }
@@ -2415,12 +2387,6 @@
     {
       "slug": "wild-animal-welfare-a-bibliography",
       "title": "Wild animal welfare: a bibliography"
-    }
-  ],
-  "matsuda-2018-applicative-bidirectional-programming": [
-    {
-      "slug": "how-i-keep-claude-code-and-codex-in-sync",
-      "title": "How I keep Claude Code and Codex in sync"
     }
   ],
   "matthews-2013-join-wall-street": [
@@ -4947,12 +4913,6 @@
       "title": "California Proposition 2: a bibliography"
     }
   ],
-  "rodriguez-2026-robert-long-how": [
-    {
-      "slug": "stopping-myself-from-mistreating-ai-models",
-      "title": "Stopping myself from mistreating AI models"
-    }
-  ],
   "rollin-1981-animal-rights-human": [
     {
       "slug": "wild-animal-welfare-a-bibliography",
@@ -5017,12 +4977,6 @@
     {
       "slug": "why-does-the-world-exist-a-bibliography",
       "title": "Why does the world exist? — A bibliography"
-    }
-  ],
-  "sebo-2025-moral-circle-who": [
-    {
-      "slug": "stopping-myself-from-mistreating-ai-models",
-      "title": "Stopping myself from mistreating AI models"
     }
   ],
   "shulman-2012-entrepreneurship-game-poker": [

@@ -18,6 +18,7 @@ from lib import (
     atomic_write_json,
     cite_key_to_slug,
     slug_title_sets_to_sorted_json,
+    toml_front_matter,
 )
 
 NOTES_DIR = REPO_ROOT / "content" / "notes"
@@ -25,6 +26,34 @@ OUTPUT_PATH = REPO_ROOT / "data" / "citing-notes.json"
 
 # Matches {{< cite "SomeKey" >}} or {{< cite "SomeKey" "pp. 1-2" >}}
 CITE_RE = re.compile(r'\{\{<\s*cite\s+"([^"]+)"')
+
+
+def collect_citing_notes(notes_dir):
+    """Return work_slug -> set of (note_slug, note_title) for listed notes."""
+    citing = {}
+
+    for filepath in notes_dir.iterdir():
+        if filepath.suffix != ".md" or filepath.name.startswith("_"):
+            continue
+
+        note_slug = filepath.stem
+        content = filepath.read_text(encoding="utf-8")
+        metadata = toml_front_matter(content)
+        if metadata.get("unlisted") is True:
+            continue
+
+        note_title = metadata.get("title", note_slug)
+
+        # Find all cite shortcode invocations
+        for match in CITE_RE.finditer(content):
+            cite_key = match.group(1)
+            work_slug = cite_key_to_slug(cite_key)
+
+            if work_slug not in citing:
+                citing[work_slug] = set()
+            citing[work_slug].add((note_slug, note_title))
+
+    return citing
 
 
 def main():
@@ -35,30 +64,7 @@ def main():
         atomic_write_json(OUTPUT_PATH, {})
         return
 
-    # work_slug -> set of (note_slug, note_title)
-    citing = {}
-
-    for filepath in NOTES_DIR.iterdir():
-        if filepath.suffix != ".md" or filepath.name.startswith("_"):
-            continue
-
-        note_slug = filepath.stem
-        content = filepath.read_text(encoding="utf-8")
-
-        # Extract title from TOML or YAML front matter
-        note_title = note_slug  # fallback
-        title_match = re.search(r'^title\s*[=:]\s*"(.+)"', content, re.MULTILINE)
-        if title_match:
-            note_title = title_match.group(1)
-
-        # Find all cite shortcode invocations
-        for match in CITE_RE.finditer(content):
-            cite_key = match.group(1)
-            work_slug = cite_key_to_slug(cite_key)
-
-            if work_slug not in citing:
-                citing[work_slug] = set()
-            citing[work_slug].add((note_slug, note_title))
+    citing = collect_citing_notes(NOTES_DIR)
 
     # Convert sets to sorted lists of dicts
     result = slug_title_sets_to_sorted_json(citing)

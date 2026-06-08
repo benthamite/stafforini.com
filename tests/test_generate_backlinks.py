@@ -18,6 +18,7 @@ _spec.loader.exec_module(_mod)
 
 strip_elisp_quotes = _mod.strip_elisp_quotes
 file_to_slug = _mod.file_to_slug
+discover_exported_slugs = _mod.discover_exported_slugs
 
 
 # ---------------------------------------------------------------------------
@@ -68,3 +69,26 @@ class TestFileToSlug:
 
     def test_path_with_spaces(self):
         assert file_to_slug("/path to/notes/my note.org") == "my note"
+
+
+# ---------------------------------------------------------------------------
+# exported page discovery
+# ---------------------------------------------------------------------------
+
+class TestDiscoverExportedSlugs:
+    def test_unlisted_pages_are_not_listed_sources(self, tmp_path):
+        notes_dir = tmp_path / "notes"
+        notes_dir.mkdir()
+        (notes_dir / "listed.md").write_text(
+            '+++\ntitle = "Listed"\n+++\n\nBody\n',
+            encoding="utf-8",
+        )
+        (notes_dir / "unlisted.md").write_text(
+            '+++\ntitle = "Unlisted"\nunlisted = true\n+++\n\nBody\n',
+            encoding="utf-8",
+        )
+
+        exported_slugs, listed_source_slugs = discover_exported_slugs([notes_dir])
+
+        assert exported_slugs == {"listed", "unlisted"}
+        assert listed_source_slugs == {"listed"}

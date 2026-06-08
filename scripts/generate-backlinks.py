@@ -16,6 +16,7 @@ from lib import (
     ORGROAM_DB_PATH,
     REPO_ROOT,
     atomic_write_json,
+    markdown_page_is_unlisted,
     slug_title_sets_to_sorted_json,
     strip_elisp_quotes,
 )
@@ -37,18 +38,27 @@ def file_to_slug(filepath):
     return Path(filepath).stem
 
 
+def discover_exported_slugs(content_dirs):
+    """Return (exported_slugs, listed_source_slugs) for generated pages."""
+    exported_slugs = set()
+    listed_source_slugs = set()
+    for d in content_dirs:
+        if d.is_dir():
+            for f in d.iterdir():
+                if f.suffix == ".md" and f.name != "_index.md":
+                    exported_slugs.add(f.stem)
+                    if not markdown_page_is_unlisted(f):
+                        listed_source_slugs.add(f.stem)
+    return exported_slugs, listed_source_slugs
+
+
 def main():
     if not ORGROAM_DB_PATH.exists():
         print(f"Error: org-roam database not found at {ORGROAM_DB_PATH}", file=sys.stderr)
         sys.exit(1)
 
-    # Build set of exported slugs from Hugo content directories.
-    exported_slugs = set()
-    for d in CONTENT_DIRS:
-        if d.is_dir():
-            for f in d.iterdir():
-                if f.suffix == ".md" and f.name != "_index.md":
-                    exported_slugs.add(f.stem)
+    # Build sets of exported slugs from Hugo content directories.
+    exported_slugs, listed_source_slugs = discover_exported_slugs(CONTENT_DIRS)
 
     if not exported_slugs:
         print("WARNING: no exported pages found in content directories", file=sys.stderr)
@@ -141,13 +151,15 @@ def main():
 
     conn.close()
 
-    # Only keep backlinks where BOTH source and destination have exported pages.
+    # Only keep backlinks where the destination has an exported page and the
+    # source is a listed page.  Unlisted notes remain directly accessible, but
+    # relationship indexes must not expose them as source entries.
     for dest_slug in list(backlinks):
         if dest_slug not in exported_slugs:
             del backlinks[dest_slug]
             continue
         backlinks[dest_slug] = {
-            (s, t) for s, t in backlinks[dest_slug] if s in exported_slugs
+            (s, t) for s, t in backlinks[dest_slug] if s in listed_source_slugs
         }
         if not backlinks[dest_slug]:
             del backlinks[dest_slug]

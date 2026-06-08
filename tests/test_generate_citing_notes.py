@@ -6,13 +6,20 @@ Covers: CITE_RE regex pattern and cite_key_to_slug integration.
 import re
 import sys
 from pathlib import Path
+import importlib.util
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from lib import cite_key_to_slug
 
+_SCRIPT = Path(__file__).parent.parent / "scripts" / "generate-citing-notes.py"
+_spec = importlib.util.spec_from_file_location("generate_citing_notes", _SCRIPT)
+_mod = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_mod)
+
 # Reproduce the regex from generate-citing-notes.py
 CITE_RE = re.compile(r'\{\{<\s*cite\s+"([^"]+)"')
+collect_citing_notes = _mod.collect_citing_notes
 
 
 # ---------------------------------------------------------------------------
@@ -60,3 +67,26 @@ class TestCiteRegex:
         text = '{{< cite "Singer1972FamineAffluence" >}}'
         key = CITE_RE.findall(text)[0]
         assert cite_key_to_slug(key) == "singer-1972-famine-affluence"
+
+
+# ---------------------------------------------------------------------------
+# citing note collection
+# ---------------------------------------------------------------------------
+
+class TestCollectCitingNotes:
+    def test_unlisted_notes_are_excluded(self, tmp_path):
+        (tmp_path / "listed.md").write_text(
+            '+++\ntitle = "Listed note"\n+++\n\n{{< cite "Singer1972FamineAffluence" >}}\n',
+            encoding="utf-8",
+        )
+        (tmp_path / "unlisted.md").write_text(
+            '+++\ntitle = "Unlisted note"\nunlisted = true\n+++\n\n'
+            '{{< cite "Singer1972FamineAffluence" >}}\n',
+            encoding="utf-8",
+        )
+
+        citing_notes = collect_citing_notes(tmp_path)
+
+        assert citing_notes == {
+            "singer-1972-famine-affluence": {("listed", "Listed note")}
+        }

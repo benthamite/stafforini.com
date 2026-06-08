@@ -31,10 +31,6 @@
   ],
   "contact": [
     {
-      "slug": "about",
-      "title": "About"
-    },
-    {
       "slug": "situational-awareness-lp",
       "title": "Footnotes"
     }
@@ -57,12 +53,6 @@
       "title": "My Emacs packages"
     }
   ],
-  "how-i-keep-claude-code-and-codex-in-sync": [
-    {
-      "slug": "stopping-myself-from-mistreating-ai-models",
-      "title": "Stopping myself from mistreating AI models"
-    }
-  ],
   "johnson": [
     {
       "slug": "my-emacs-packages",
@@ -83,22 +73,8 @@
   ],
   "my-emacs-config": [
     {
-      "slug": "about",
-      "title": "About"
-    },
-    {
-      "slug": "contact",
-      "title": "Contact"
-    },
-    {
       "slug": "my-emacs-packages",
       "title": "My Emacs packages"
-    }
-  ],
-  "my-emacs-packages": [
-    {
-      "slug": "about",
-      "title": "About"
     }
   ],
   "org-indent-pixel": [
@@ -135,12 +111,6 @@
     {
       "slug": "my-emacs-packages",
       "title": "My Emacs packages"
-    }
-  ],
-  "stafforini": [
-    {
-      "slug": "about",
-      "title": "About"
     }
   ],
   "trx": [
