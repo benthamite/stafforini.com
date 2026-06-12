@@ -34,3 +34,8 @@ scripts/wp-quotes-*.json
 scripts/*-progress.json
 scripts/*-report.txt
 scripts/download-missing-pdfs-cron.log
+/logs/
+/session-logs/
+/docs/logs/
+/CLAUDE.md
+/AGENTS.md
