@@ -19,8 +19,8 @@ Options:
     --limit N           Process at most N books (for testing)
     --resume            Skip books already in the progress file
     --key KEY           Anna's Archive secret key (default: from pass)
-    --base-url URL      Anna's Archive base URL
-                        (default: https://annas-archive.gl/)
+    --base-url URL      Anna's Archive base URL (default: auto-resolve
+                        from Wikipedia, since the domain rotates)
     --delay SECS        Delay between searches (default: 3)
     --include-broken    Also re-download books whose file field
                         points to a non-existent path
@@ -89,9 +89,7 @@ def parse_bib_books(bib_path: Path) -> list[dict]:
     return books
 
 
-def books_missing_pdf(
-    books: list[dict], *, include_broken: bool = False
-) -> list[dict]:
+def books_missing_pdf(books: list[dict], *, include_broken: bool = False) -> list[dict]:
     """Filter to books that need a PDF download."""
     missing = []
     for b in books:
@@ -128,6 +126,116 @@ def build_search_query(book: dict) -> str:
         return ""
     first_isbn = re.split(r"[\s;,]+", isbn)[0]
     return re.sub(r"-", "", first_isbn)
+
+
+# Anna's Archive rotates its domain frequently; the canonical current URL is
+# tracked in the infobox of its Wikipedia article, so auto-discovering it from
+# there keeps this script working across domain changes. Ported from
+# annas-archive.el (`annas-archive--wikipedia-home-url`).
+WIKIPEDIA_ANNAS_API_URL = (
+    "https://en.wikipedia.org/w/api.php?action=query&prop=revisions"
+    "&titles=Anna%27s_Archive&rvprop=content&rvslots=main"
+    "&format=json&formatversion=2"
+)
+
+
+def _annas_url_from_wikitext(wikitext: str) -> str:
+    """Extract the Anna's Archive home URL from Wikipedia article wikitext.
+
+    Looks for the infobox ``| url = {{URL|https://annas-archive.XX/}}`` field
+    and returns the normalized URL (with trailing slash), or "" if not found.
+    Pure (no I/O) so it can be unit-tested.
+    """
+    m_url = re.search(r"\|\s*url\s*=", wikitext)
+    if not m_url:
+        return ""
+    m = re.search(
+        r"\{\{URL\s*\|\s*(https://annas-archive\.[^\]\[|{}\s]+/?)",
+        wikitext[m_url.end() :],
+    )
+    if not m:
+        return ""
+    url = m.group(1)
+    if not re.fullmatch(r"https://annas-archive\.[A-Za-z0-9-]+/?", url):
+        return ""
+    return url if url.endswith("/") else url + "/"
+
+
+def resolve_annas_home_url(*, verbose: bool = False) -> str:
+    """Resolve the current Anna's Archive home URL from Wikipedia.
+
+    Returns a normalized URL with a trailing slash, or "" on failure (the
+    caller should fall back to an explicit ``--base-url`` or a hardcoded
+    default). Ported from annas-archive.el.
+    """
+    try:
+        raw = _fetch_url(WIKIPEDIA_ANNAS_API_URL)
+        data = json.loads(raw)
+        content = data["query"]["pages"][0]["revisions"][0]["slots"]["main"]["content"]
+    except Exception as e:  # network / JSON / shape errors → caller falls back
+        if verbose:
+            print(f"    Wikipedia URL resolution failed: {e}", file=sys.stderr)
+        return ""
+    return _annas_url_from_wikitext(content)
+
+
+def fetch_scidb_md5s(doi: str, base_url: str, *, verbose: bool = False) -> list[str]:
+    """Return md5 hashes listed on the Anna's Archive SciDB page for a DOI.
+
+    Ported from annas-archive.el (``…/scidb/<doi>`` → md5). Returns hashes in
+    page order (deduplicated), or [] if none are found — e.g. the DOI isn't in
+    Anna's, or a DDoS-Guard challenge page was served instead of content (in
+    which case a real browser is needed, as the elisp uses eww).
+    """
+    url = f"{base_url}scidb/{doi}"
+    if verbose:
+        print(f"    SciDB URL: {url}", file=sys.stderr)
+    try:
+        html = _fetch_url(url)
+    except Exception as e:
+        print(f"    SciDB fetch failed: {e}", file=sys.stderr)
+        return []
+    if (
+        "ddos-guard" in html.lower()
+        or "Just a moment" in html
+        or "captcha" in html.lower()
+    ):
+        print(
+            "    SciDB returned a bot-challenge page, not content "
+            "(needs a real browser, as annas-archive.el uses eww)",
+            file=sys.stderr,
+        )
+        return []
+    return list(dict.fromkeys(re.findall(r"/md5/([0-9a-f]{32})", html)))
+
+
+def download_article_by_doi(
+    doi: str,
+    secret_key: str,
+    base_url: str,
+    dest_dir: Path,
+    *,
+    verbose: bool = False,
+) -> "Path | None":
+    """Download a paper by DOI via the SciDB page → fast-download API.
+
+    Resolves the DOI to an md5 on its SciDB page, then downloads that md5 with
+    the fast-download API. Returns the saved path, or None if the DOI couldn't
+    be resolved or the download failed.
+    """
+    md5s = fetch_scidb_md5s(doi, base_url, verbose=verbose)
+    if not md5s:
+        print(f"    No Anna's Archive record found for DOI {doi}", file=sys.stderr)
+        return None
+    md5 = md5s[0]
+    if verbose:
+        print(f"    Resolved DOI {doi} → md5 {md5}", file=sys.stderr)
+    safe = re.sub(r"[^A-Za-z0-9._-]", "_", doi)
+    dest = dest_dir / f"{safe}.pdf"
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    if download_via_fast_api(md5, secret_key, base_url, dest, verbose=verbose):
+        return dest
+    return None
 
 
 def search_annas_archive(
@@ -186,9 +294,7 @@ def _parse_search_results(html: str) -> list[dict]:
             md5_positions.append((h, m.start()))
 
     for i, (md5, pos) in enumerate(md5_positions):
-        next_pos = (
-            md5_positions[i + 1][1] if i + 1 < len(md5_positions) else pos + 5000
-        )
+        next_pos = md5_positions[i + 1][1] if i + 1 < len(md5_positions) else pos + 5000
         block = html[pos:next_pos]
 
         # Strip HTML tags to extract text lines
@@ -238,10 +344,16 @@ def _parse_search_results(html: str) -> list[dict]:
         for ln in lines:
             if ln.startswith("href="):
                 continue
-            if "/" in ln and (ln.endswith(".pdf") or ln.endswith(".epub")
-                            or ln.endswith(".djvu") or ln.endswith(".mobi")
-                            or ln.endswith(".azw3") or ln.endswith(".fb2")
-                            or ln.endswith(".cbr") or ln.endswith(".txt")):
+            if "/" in ln and (
+                ln.endswith(".pdf")
+                or ln.endswith(".epub")
+                or ln.endswith(".djvu")
+                or ln.endswith(".mobi")
+                or ln.endswith(".azw3")
+                or ln.endswith(".fb2")
+                or ln.endswith(".cbr")
+                or ln.endswith(".txt")
+            ):
                 filename = ln
                 break
             # Also match filenames without directory path
@@ -253,7 +365,8 @@ def _parse_search_results(html: str) -> list[dict]:
         title = ""
         authors = ""
         meaningful = [
-            ln for ln in lines
+            ln
+            for ln in lines
             if not ln.startswith("href=")
             and "·" not in ln
             and not ln.startswith("window.")
@@ -336,7 +449,9 @@ def _normalize_text(s: str) -> str:
 
 def _significant_words(text: str) -> set[str]:
     """Return the set of non-stop words from normalized text."""
-    return {w for w in _normalize_text(text).split() if w not in STOP_WORDS and len(w) > 1}
+    return {
+        w for w in _normalize_text(text).split() if w not in STOP_WORDS and len(w) > 1
+    }
 
 
 def title_similarity(target_title: str, result_title: str) -> float:
@@ -356,7 +471,11 @@ def author_matches(target_author: str, result_authors: str) -> bool:
     if not target_author:
         return True  # Can't verify — give benefit of the doubt
     first_author = re.split(r"\s+and\s+", target_author)[0].strip()
-    surname = first_author.split(",")[0].strip() if "," in first_author else first_author.split()[-1]
+    surname = (
+        first_author.split(",")[0].strip()
+        if "," in first_author
+        else first_author.split()[-1]
+    )
     surname = surname.replace("{", "").replace("}", "")
     norm_surname = _normalize_text(surname)
     norm_result = _normalize_text(result_authors)
@@ -373,15 +492,27 @@ MIN_TITLE_SIMILARITY = 0.25
 
 # Size thresholds (bytes)
 MIN_PHYSICAL_PDF_SIZE = 2 * 1024 * 1024  # 2 MB — below this, likely ebook-derived
-MAX_REASONABLE_SIZE = 500 * 1024 * 1024   # 500 MB — too large, skip
+MAX_REASONABLE_SIZE = 500 * 1024 * 1024  # 500 MB — too large, skip
 
 
 def is_ebook_derived(result: dict) -> bool:
     """Heuristic: return True if the PDF is likely an ebook conversion."""
     fn = (result.get("filename") or "").lower()
     # Filename contains ebook conversion artifacts
-    if any(kw in fn for kw in ["epub", "mobi", "azw", "ebook", "e-book",
-                                "calibre", "fb2", "kindle", "nook"]):
+    if any(
+        kw in fn
+        for kw in [
+            "epub",
+            "mobi",
+            "azw",
+            "ebook",
+            "e-book",
+            "calibre",
+            "fb2",
+            "kindle",
+            "nook",
+        ]
+    ):
         return True
     return False
 
@@ -410,7 +541,9 @@ def score_result(result: dict, target_book: dict | None = None) -> tuple:
     if target_book:
         target_title = target_book.get("title", "").strip()
         sim = title_similarity(target_title, result.get("title", ""))
-        auth_ok = author_matches(target_book.get("author", ""), result.get("authors", ""))
+        auth_ok = author_matches(
+            target_book.get("author", ""), result.get("authors", "")
+        )
         has_author = bool(target_book.get("author", "").strip())
         has_title = bool(target_title)
 
@@ -471,8 +604,13 @@ _QUOTA_EXHAUSTION_THRESHOLD = 3  # 3 consecutive books failing = daily limit hit
 
 
 def download_via_fast_api(
-    md5: str, secret_key: str, base_url: str, dest_path: Path,
-    *, verbose: bool = False, max_retries: int = 3
+    md5: str,
+    secret_key: str,
+    base_url: str,
+    dest_path: Path,
+    *,
+    verbose: bool = False,
+    max_retries: int = 3,
 ) -> bool:
     """Download a file using Anna's Archive fast download API.
 
@@ -484,8 +622,9 @@ def download_via_fast_api(
 
     for attempt in range(max_retries + 1):
         try:
-            result = _download_once(md5, secret_key, base_url, dest_path,
-                                    verbose=verbose)
+            result = _download_once(
+                md5, secret_key, base_url, dest_path, verbose=verbose
+            )
             _consecutive_429s = 0  # reset on success
             return result
         except RateLimitError:
@@ -494,20 +633,24 @@ def download_via_fast_api(
                 if _consecutive_429s >= _QUOTA_EXHAUSTION_THRESHOLD:
                     raise QuotaExhaustedError(
                         f"Daily download quota appears exhausted "
-                        f"({_consecutive_429s} consecutive 429 failures)")
-                print("    Rate-limited: retries exhausted for this book",
-                      file=sys.stderr)
+                        f"({_consecutive_429s} consecutive 429 failures)"
+                    )
+                print(
+                    "    Rate-limited: retries exhausted for this book", file=sys.stderr
+                )
                 return False
-            wait = 30 * (2 ** attempt)  # 30s, 60s, 120s
-            print(f"    Rate-limited (429). Waiting {wait}s before retry "
-                  f"{attempt + 2}/{max_retries + 1}...", file=sys.stderr)
+            wait = 30 * (2**attempt)  # 30s, 60s, 120s
+            print(
+                f"    Rate-limited (429). Waiting {wait}s before retry "
+                f"{attempt + 2}/{max_retries + 1}...",
+                file=sys.stderr,
+            )
             time.sleep(wait)
     return False
 
 
 def _download_once(
-    md5: str, secret_key: str, base_url: str, dest_path: Path,
-    *, verbose: bool = False
+    md5: str, secret_key: str, base_url: str, dest_path: Path, *, verbose: bool = False
 ) -> bool:
     """Single download attempt.  Raises RateLimitError on 429."""
     api_url = (
@@ -668,30 +811,57 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Download missing book PDFs from Anna's Archive"
     )
-    parser.add_argument("--dry-run", action="store_true",
-                        help="Search and rank but don't download")
-    parser.add_argument("--limit", type=int, default=0,
-                        help="Process at most N books")
-    parser.add_argument("--resume", action="store_true",
-                        help="Skip books already in the progress file")
-    parser.add_argument("--key", default="",
-                        help="Anna's Archive secret key")
-    parser.add_argument("--base-url", default="https://annas-archive.gl/",
-                        help="Anna's Archive base URL")
-    parser.add_argument("--delay", type=float, default=5.0,
-                        help="Seconds between searches (default: 5)")
-    parser.add_argument("--include-broken", action="store_true",
-                        help="Also process books with broken file refs")
-    parser.add_argument("--only", default="",
-                        help="Process only this citekey")
-    parser.add_argument("--update-bib", action="store_true",
-                        help="Add file fields to old.bib for downloaded PDFs")
-    parser.add_argument("--retry-not-found", action="store_true",
-                        help="Retry books previously marked as not found")
-    parser.add_argument("--retry-errors", action="store_true",
-                        help="Retry books that failed due to download errors")
-    parser.add_argument("--verbose", action="store_true",
-                        help="Extra debug output")
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Search and rank but don't download"
+    )
+    parser.add_argument("--limit", type=int, default=0, help="Process at most N books")
+    parser.add_argument(
+        "--resume", action="store_true", help="Skip books already in the progress file"
+    )
+    parser.add_argument("--key", default="", help="Anna's Archive secret key")
+    parser.add_argument(
+        "--base-url",
+        default="",
+        help="Anna's Archive base URL (default: auto-resolve from Wikipedia)",
+    )
+    parser.add_argument(
+        "--delay", type=float, default=5.0, help="Seconds between searches (default: 5)"
+    )
+    parser.add_argument(
+        "--include-broken",
+        action="store_true",
+        help="Also process books with broken file refs",
+    )
+    parser.add_argument("--only", default="", help="Process only this citekey")
+    parser.add_argument(
+        "--update-bib",
+        action="store_true",
+        help="Add file fields to old.bib for downloaded PDFs",
+    )
+    parser.add_argument(
+        "--retry-not-found",
+        action="store_true",
+        help="Retry books previously marked as not found",
+    )
+    parser.add_argument(
+        "--retry-errors",
+        action="store_true",
+        help="Retry books that failed due to download errors",
+    )
+    parser.add_argument("--verbose", action="store_true", help="Extra debug output")
+    parser.add_argument(
+        "--article-doi",
+        action="append",
+        default=[],
+        metavar="DOI",
+        help="Download a paper by DOI via SciDB (repeatable); skips the book batch",
+    )
+    parser.add_argument(
+        "--out",
+        default="",
+        metavar="DIR",
+        help="Destination directory for --article-doi downloads (default: cwd)",
+    )
     args = parser.parse_args()
 
     # Handle --update-bib separately
@@ -704,16 +874,56 @@ def main() -> None:
         print(f"Updated {n} entries in {BIB_FILE.name}")
         sys.exit(0)
 
-    # Ensure base URL ends with /
-    if not args.base_url.endswith("/"):
-        args.base_url += "/"
+    # Resolve the Anna's Archive base URL. Anna's rotates its domain often, so
+    # prefer auto-discovery from Wikipedia; an explicit --base-url overrides it,
+    # and we fall back to a known mirror if discovery fails. (We deliberately do
+    # NOT read ANNAS_BASE_URL — that is annas-mcp's env var and is often left
+    # pinned to a stale domain, which would defeat auto-discovery.)
+    base_url = args.base_url
+    source = "override"
+    if not base_url:
+        base_url = resolve_annas_home_url(verbose=args.verbose)
+        source = "Wikipedia"
+    if not base_url:
+        base_url = "https://annas-archive.gl/"
+        source = "fallback"
+    # Normalize: ensure scheme + trailing slash.
+    if not re.match(r"https?://", base_url):
+        base_url = "https://" + base_url
+    if not base_url.endswith("/"):
+        base_url += "/"
+    args.base_url = base_url
+    if args.verbose:
+        print(f"    Anna's base URL ({source}): {base_url}", file=sys.stderr)
 
     # Resolve secret key
     secret_key = args.key or os.environ.get("ANNAS_SECRET_KEY", "") or get_secret_key()
     if not secret_key and not args.dry_run:
-        print("Error: no secret key. Set --key, ANNAS_SECRET_KEY env var, "
-              "or pass entry tlon/core/annas-archive", file=sys.stderr)
+        print(
+            "Error: no secret key. Set --key, ANNAS_SECRET_KEY env var, "
+            "or pass entry tlon/core/annas-archive",
+            file=sys.stderr,
+        )
         sys.exit(1)
+
+    # Article-by-DOI mode: download the given DOIs via SciDB → fast-download,
+    # then exit (independent of the book-batch flow).
+    if args.article_doi:
+        out_dir = Path(args.out).expanduser() if args.out else Path.cwd()
+        ok = 0
+        for doi in args.article_doi:
+            doi = doi.strip()
+            print(f"DOI {doi} ...", file=sys.stderr)
+            path = download_article_by_doi(
+                doi, secret_key, args.base_url, out_dir, verbose=args.verbose
+            )
+            if path:
+                print(f"  ✓ {path}")
+                ok += 1
+            else:
+                print(f"  ✗ failed: {doi}")
+        print(f"Downloaded {ok}/{len(args.article_doi)} articles to {out_dir}")
+        sys.exit(0 if ok == len(args.article_doi) else 1)
 
     # Handle --retry-not-found / --retry-errors: clear lists so they get retried
     if args.retry_not_found or args.retry_errors:
@@ -745,9 +955,11 @@ def main() -> None:
             sys.exit(1)
 
     # Load progress
-    progress = load_progress(PROGRESS_FILE) if args.resume else {
-        "downloaded": {}, "not_found": [], "errors": [], "skipped": []
-    }
+    progress = (
+        load_progress(PROGRESS_FILE)
+        if args.resume
+        else {"downloaded": {}, "not_found": [], "errors": [], "skipped": []}
+    )
 
     # Process books
     to_process = missing
@@ -841,8 +1053,7 @@ def main() -> None:
         print(f"  Downloading to {dest.name}...")
         try:
             ok = download_via_fast_api(
-                best["md5"], secret_key, args.base_url, dest,
-                verbose=args.verbose
+                best["md5"], secret_key, args.base_url, dest, verbose=args.verbose
             )
         except QuotaExhaustedError as e:
             print(f"\n  {e}")
@@ -854,7 +1065,7 @@ def main() -> None:
 
         if ok:
             file_size = dest.stat().st_size
-            print(f"  OK ({file_size / (1024*1024):.1f} MB)")
+            print(f"  OK ({file_size / (1024 * 1024):.1f} MB)")
             progress["downloaded"][key] = {
                 "md5": best["md5"],
                 "size": file_size,
@@ -863,7 +1074,7 @@ def main() -> None:
             downloaded_count += 1
             # Update bib entry inline
             if update_bib_entry(BIB_FILE, key):
-                print(f"  Updated bib entry")
+                print("  Updated bib entry")
         else:
             print("  FAILED")
             if key not in progress["errors"]:
@@ -876,13 +1087,15 @@ def main() -> None:
             time.sleep(args.delay)
 
     # Summary
-    print(f"\n{'='*60}")
-    print(f"Done. Downloaded: {downloaded_count}, Not found: {not_found_count}, "
-          f"Errors: {error_count}, Skipped: {skipped_count}")
+    print(f"\n{'=' * 60}")
+    print(
+        f"Done. Downloaded: {downloaded_count}, Not found: {not_found_count}, "
+        f"Errors: {error_count}, Skipped: {skipped_count}"
+    )
     print(f"Progress saved to: {PROGRESS_FILE}")
 
     if progress["downloaded"]:
-        print(f"\nTo add file fields to old.bib, run:")
+        print("\nTo add file fields to old.bib, run:")
         print(f"  python3 {Path(__file__).name} --update-bib")
         print(f"\nDownloaded PDFs are in: {LIBRARY_DIR}/")
 
