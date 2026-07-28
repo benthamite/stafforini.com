@@ -18,6 +18,20 @@ Academic papers carry much lower copyright risk than books. Gwern hosts many pos
 - ~~Block search engine indexing of hosted PDFs.~~ Gwern does *not* actually block PDF indexing — his `robots.txt` only blocks source files, metadata, and private directories. PDFs are fully crawlable and appear in Google results. We follow the same approach.
 - The pre-2000 book exclusion is enforced automatically by `scripts/process-pdfs.py`, which filters out book-like entry types (`book`, `collection`, `reference` and their multi-volume variants) published in 2000 or later. This also blocks crossref inheritance from excluded parents.
 
+### Expected Search Console side effect
+
+Because the PDFs stay crawlable, most of them duplicate the text of their own work page. Google resolves that by picking the work page and filing the PDF under **"Duplicate without user-selected canonical"** in the Page indexing report. As of 2026-07-27 that bucket held 373 URLs, the majority of them `pdf.stafforini.com/*.pdf`.
+
+This is the intended consequence of the policy above, not a defect, and it should not be "fixed" by disallowing the PDF host. `pdf.stafforini.com/robots.txt` is Cloudflare Managed Content and currently sends `User-agent: * / Allow: /`.
+
+If you ever want the duplicate signals consolidated onto the work page while keeping the PDFs crawlable, the way to do it is a Cloudflare Transform Rule on the `pdf.stafforini.com` hostname that adds a response header:
+
+```
+Link: <https://stafforini.com/works/{slug}/>; rel="canonical"
+```
+
+where `{slug}` is the request path minus its `.pdf` suffix, which matches the bucket layout (all objects live at the bucket root as `<slug>.pdf`). This cannot be done from this repo: R2 serves only a fixed set of object headers, and `scripts/upload-pdfs.sh` holds S3 credentials that cannot alter edge configuration. It needs the Cloudflare dashboard.
+
 ## Gwern's track record
 
 Over ~9 years hosting ~4,090 files, Gwern received only 4 takedown orders:

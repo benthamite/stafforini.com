@@ -48,6 +48,18 @@ for = "/js/*"
   [headers.values]
   Cache-Control = "public, max-age=0, must-revalidate"
 
+# Chart fragments embedded via <iframe> on the situational-awareness
+# landing page. They are standalone HTML documents, so Google crawls and
+# indexes them in their own right, and scripts/sa-lp-refresh.sh appends a
+# fresh cache-busting query string on every run — each refresh minted
+# another near-identical URL. Search Console counted these under
+# "Duplicate without user-selected canonical". They are presentation
+# fragments with no standalone value, so keep them out of the index.
+[[headers]]
+for = "/images/*.html"
+  [headers.values]
+  X-Robots-Tag = "noindex"
+
 # Permissive CSP for the archived WordPress tango blog under /tango/*.
 # The mirrored pages embed YouTube/Spotify iframes, Facebook widgets, and
 # Google Docs references that the site-wide CSP would block.  This override
@@ -87,6 +99,30 @@ status = 301
 [[redirects]]
 from = "/tango/feed"
 to = "/notes/index.xml"
+status = 301
+
+# Per-page feeds in the archived tango blog. The pages themselves are all
+# still served; only the WordPress /feed/ suffix is gone. Netlify splats
+# match a trailing segment only, so enumerate the nesting depths in use:
+# /tango/<post>/, /tango/<section>/<post>/, /tango/category/<kind>/<name>/.
+[[redirects]]
+from = "/tango/:a/feed/"
+to = "/tango/:a/"
+status = 301
+
+[[redirects]]
+from = "/tango/:a/:b/feed/"
+to = "/tango/:a/:b/"
+status = 301
+
+[[redirects]]
+from = "/tango/:a/:b/:c/feed/"
+to = "/tango/:a/:b/:c/"
+status = 301
+
+[[redirects]]
+from = "/tango/:a/:b/:c/:d/feed/"
+to = "/tango/:a/:b/:c/:d/"
 status = 301
 
 # force = true is required because /quotes/ exists as a static page;
@@ -169,6 +205,37 @@ status = 301
 [[redirects]]
 from = "/blog/:slug/comment-page-5/"
 to = "/notes/:slug/"
+status = 301
+
+# WordPress attachment pages for the Rialta post: every photo and floor
+# plan had its own page. Send them all to the post itself.
+[[redirects]]
+from = "/blog/rialta/*"
+to = "/notes/my-1996-winnebago-rialta-is-for-sale/"
+status = 301
+
+# Old WordPress media library. The files are gone and there is nothing to
+# redirect to, so answer directly rather than sending the crawler through
+# a 301 into a 404.
+[[redirects]]
+from = "/blog/wp-content/*"
+to = "/404.html"
+status = 404
+
+# Category feeds. The categories themselves are enumerated in
+# static/_redirects; only the /feed/ suffix needs handling here.
+[[redirects]]
+from = "/blog/category/:slug/feed/"
+to = "/tags/:slug/"
+status = 301
+
+# WordPress date archives (/blog/2017/08/). Hugo has no month archive, so
+# send them to the notes index. This must sit after every other
+# three-segment /blog/ rule above, since Netlify placeholders cannot be
+# constrained to digits and would otherwise swallow those paths.
+[[redirects]]
+from = "/blog/:year/:month/"
+to = "/notes/"
 status = 301
 
 # General blog → notes redirect
