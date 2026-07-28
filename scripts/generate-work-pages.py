@@ -283,8 +283,42 @@ def postprocess_quotes(dry_run: bool = False) -> dict:
 # === Work page generation ===
 
 
+# LaTeX text-symbol commands that BibTeX exporters emit for characters
+# which would otherwise be markup. Stripping braces alone leaves the
+# command name itself in the prose, so these are resolved first — before
+# brace removal, while the `{}` argument marker is still there to absorb.
+LATEX_TEXT_COMMANDS = {
+    "textbackslash": "\\",
+    "textasciitilde": "~",
+    "textasciicircum": "^",
+    "textquotedblleft": "“",
+    "textquotedblright": "”",
+    "textquotesingle": "'",
+    "textellipsis": "…",
+    "textemdash": "—",
+    "textendash": "–",
+    "textgreater": ">",
+    "textless": "<",
+    "textbullet": "•",
+    "textdegree": "°",
+    "textbar": "|",
+}
+# Longest first so no command name is a prefix of another at substitution time.
+_LATEX_TEXT_RE = [
+    (re.compile(r"\\" + name + r"(?:\{\})?"), char)
+    for name, char in sorted(LATEX_TEXT_COMMANDS.items(), key=lambda kv: -len(kv[0]))
+]
+
+
 def clean_work_field(value: str) -> str:
     """Strip BibTeX braces, unescape special chars, and convert org italic."""
+    for pattern, char in _LATEX_TEXT_RE:
+        # A lambda, not the bare string: some replacements are a single
+        # backslash, which re would read as a template escape.
+        value = pattern.sub(lambda _m, c=char: c, value)
+    # Zero-width characters picked up when an abstract was scraped from a
+    # web page. Invisible in the rendering but they break search matching.
+    value = value.translate({0x200B: None, 0x200C: None, 0x200D: None, 0xFEFF: None})
     value = value.replace("{", "").replace("}", "")
     # Convert BibTeX escape sequences to plain characters
     value = value.replace("\\&", "&")
