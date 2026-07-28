@@ -465,3 +465,108 @@ class TestWorkSlugCollisions:
         assert work_path.exists()
         assert "Using the Wisdom of Your Body and Mind" in work_path.read_text()
         assert (_mod.WORK_METADATA_PATH == original_metadata)
+
+
+# ---------------------------------------------------------------------------
+# clean_work_field: LaTeX text commands and invisible characters
+# ---------------------------------------------------------------------------
+
+clean_work_field = _mod.clean_work_field
+
+
+class TestCleanWorkFieldLatex:
+    def test_resolves_textbar_with_brace_argument(self):
+        assert clean_work_field(r"1h 2m \textbar{} TV-MA.") == "1h 2m | TV-MA."
+
+    def test_resolves_command_touching_following_text(self):
+        assert clean_work_field(r"up by \textasciitilde9\%") == "up by ~9%"
+
+    def test_resolves_backslash_command(self):
+        # The replacement is itself a backslash, which must not be read as
+        # a regex template escape.
+        assert clean_work_field(r"a \textbackslash{} b") == "a \\ b"
+
+    def test_resolves_angle_bracket_commands(self):
+        assert clean_work_field(r"x \textgreater y, p \textless 0.05") == (
+            "x > y, p < 0.05")
+
+    def test_longer_command_name_wins_over_shorter_prefix(self):
+        assert clean_work_field(r"\textasciicircum{}2") == "^2"
+
+    def test_leaves_ordinary_text_alone(self):
+        assert clean_work_field("plain text & stuff") == "plain text & stuff"
+
+    def test_still_strips_braces_and_unescapes(self):
+        assert clean_work_field(r"{The} 50\% case") == "The 50% case"
+
+    def test_strips_zero_width_characters(self):
+        assert clean_work_field("a​b‌‍c﻿d") == "abcd"
+
+
+# ---------------------------------------------------------------------------
+# Duplicate work pages: canonical assignment
+# ---------------------------------------------------------------------------
+
+_duplicate_primary_slug = _mod._duplicate_primary_slug
+assign_duplicate_canonicals = _mod.assign_duplicate_canonicals
+
+
+class TestDuplicatePrimarySlug:
+    def test_prefers_slug_without_disambiguator_letter(self):
+        assert _duplicate_primary_slug(
+            ["guzey-2022-theses-sleep", "guzey-2022-theses-sleepb"]
+        ) == "guzey-2022-theses-sleep"
+
+    def test_handles_disambiguator_separated_by_hyphen(self):
+        assert _duplicate_primary_slug(
+            ["evans-2022-extropias-children-7", "evans-2022-extropias-children-7-b"]
+        ) == "evans-2022-extropias-children-7"
+
+    def test_prefers_more_descriptive_slug_when_neither_is_decorated(self):
+        assert _duplicate_primary_slug(
+            ["godwin-1793", "godwin-1793-enquiry-concerning-political"]
+        ) == "godwin-1793-enquiry-concerning-political"
+
+    def test_is_deterministic_when_both_are_decorated(self):
+        group = ["leffler-2010-cambridge-history-coldb",
+                 "leffler-2010-cambridge-history-colda"]
+        assert (_duplicate_primary_slug(group)
+                == _duplicate_primary_slug(list(reversed(group)))
+                == "leffler-2010-cambridge-history-colda")
+
+
+def _entry(cite_key, title, abstract=""):
+    return {
+        "cite_key": cite_key, "entry_type": "online", "author": "Doe, Jane",
+        "editor": "", "title": title, "year": "2022", "shorttitle": "",
+        "location": "", "booktitle": "", "journaltitle": "", "volume": "",
+        "number": "", "pages": "", "url": "", "date": "", "abstract": abstract,
+        "_source_index": 0,
+    }
+
+
+class TestAssignDuplicateCanonicals:
+    def test_identical_pages_get_a_canonical(self):
+        slug_to_entry = {
+            "doe-2022-thing": _entry("Doe2022Thing", "A thing"),
+            "doe-2022-thingb": _entry("Doe2022Thingb", "A thing"),
+        }
+        assert assign_duplicate_canonicals(
+            list(slug_to_entry), slug_to_entry
+        ) == {"doe-2022-thingb": "doe-2022-thing"}
+
+    def test_pages_that_differ_are_left_alone(self):
+        slug_to_entry = {
+            "doe-2022-thing": _entry("Doe2022Thing", "A thing"),
+            "doe-2022-other": _entry("Doe2022Other", "Another thing"),
+        }
+        assert assign_duplicate_canonicals(list(slug_to_entry), slug_to_entry) == {}
+
+    def test_canonical_is_emitted_in_front_matter(self):
+        page = generate_work_page(_entry("Doe2022Thing", "A thing"),
+                                  "doe-2022-thing")
+        assert 'canonical: "/works/doe-2022-thing/"' in page
+
+    def test_no_canonical_key_when_page_is_its_own_canonical(self):
+        assert "canonical:" not in generate_work_page(
+            _entry("Doe2022Thing", "A thing"))

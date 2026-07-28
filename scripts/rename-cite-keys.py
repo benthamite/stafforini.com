@@ -95,21 +95,47 @@ def encode_work_path(slug: str) -> str:
     return "/works/" + urllib.parse.quote(slug, safe="!$&'()*+,;=:@") + "/"
 
 
+def _split_rule(line: str) -> tuple[str, str] | None:
+    """Return (source, target) for a redirect rule line, else None."""
+    if not line.strip() or line.lstrip().startswith("#"):
+        return None
+    parts = line.split()
+    if len(parts) < 2:
+        return None
+    return parts[0], parts[1]
+
+
 def rename_redirects(text: str, old_slug: str, new_slug: str) -> tuple[str, int, bool]:
     """Update existing redirect targets and add an old→new redirect."""
-    count = 0
     new_path = encode_work_path(new_slug)
-    # Existing rules may spell the old slug either raw or percent-encoded,
-    # depending on when they were written. Rewrite both spellings.
-    for spelling in dict.fromkeys([f"/works/{old_slug}/", encode_work_path(old_slug)]):
-        new_text, n = re.subn(re.escape(spelling), new_path, text)
-        text = new_text
-        count += n
-    new_text = text
-    # Add a fresh slug-rename redirect if not already present
-    rename_line = f"{encode_work_path(old_slug)}  {new_path}  301"
+    # Rules may spell the old slug either raw or percent-encoded, depending
+    # on when they were written.
+    old_paths = {f"/works/{old_slug}/", encode_work_path(old_slug)}
+
+    count = 0
+    already_present = False
+    lines = text.split("\n")
+    for i, line in enumerate(lines):
+        rule = _split_rule(line)
+        if rule is None:
+            continue
+        source, target = rule
+        if source in old_paths and target == new_path:
+            already_present = True
+            continue
+        if target not in old_paths:
+            continue
+        # Rewrite the target column only. Substituting across the whole
+        # line would also rewrite a source that happens to be the old
+        # slug, turning that rule into a self-redirect.
+        start = line.index(target, line.index(source) + len(source))
+        lines[i] = line[:start] + new_path + line[start + len(target):]
+        count += 1
+
+    new_text = "\n".join(lines)
     added = False
-    if rename_line not in new_text:
+    if not already_present:
+        rename_line = f"{encode_work_path(old_slug)}  {new_path}  301"
         new_text = new_text.rstrip() + "\n" + rename_line + "\n"
         added = True
     return new_text, count, added
