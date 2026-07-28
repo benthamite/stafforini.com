@@ -24,6 +24,7 @@ Slugs are derived from cite keys via the same rule as
 import re
 import shutil
 import sys
+import urllib.parse
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
@@ -78,13 +79,35 @@ def rename_quote_md(text: str, old_slug: str, new_slug: str) -> tuple[str, int]:
     return pat.subn(f'work = "{new_slug}"', text)
 
 
+def encode_work_path(slug: str) -> str:
+    """Return the ``/works/<slug>/`` path as Netlify will see it.
+
+    Netlify matches ``_redirects`` rules against the percent-encoded
+    request path, so a rule written with raw UTF-8 in the source column
+    never fires. Googlebot requests ``/works/j%C3%B8rgensen-.../``, which
+    does not match a literal ``/works/jørgensen-.../`` rule. Encoding here
+    keeps generated rules matchable; ASCII slugs pass through unchanged.
+
+    ``safe`` keeps the RFC 3986 sub-delimiters raw, because that is how a
+    browser sends them. Encoding ``;`` to ``%3B`` here would break rules
+    for cite keys with multiple semicolon-separated authors.
+    """
+    return "/works/" + urllib.parse.quote(slug, safe="!$&'()*+,;=:@") + "/"
+
+
 def rename_redirects(text: str, old_slug: str, new_slug: str) -> tuple[str, int, bool]:
     """Update existing redirect targets and add an old→new redirect."""
     count = 0
-    new_text, n = re.subn(rf"/works/{re.escape(old_slug)}/", f"/works/{new_slug}/", text)
-    count += n
+    new_path = encode_work_path(new_slug)
+    # Existing rules may spell the old slug either raw or percent-encoded,
+    # depending on when they were written. Rewrite both spellings.
+    for spelling in dict.fromkeys([f"/works/{old_slug}/", encode_work_path(old_slug)]):
+        new_text, n = re.subn(re.escape(spelling), new_path, text)
+        text = new_text
+        count += n
+    new_text = text
     # Add a fresh slug-rename redirect if not already present
-    rename_line = f"/works/{old_slug}/  /works/{new_slug}/  301"
+    rename_line = f"{encode_work_path(old_slug)}  {new_path}  301"
     added = False
     if rename_line not in new_text:
         new_text = new_text.rstrip() + "\n" + rename_line + "\n"
