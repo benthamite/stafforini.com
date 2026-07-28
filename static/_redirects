@@ -26028,7 +26028,7 @@
 /docs/Moorhouse%20-%20Killing%20Hitler:%20the%20plots%2C%20the%20assassins%2C%20and%20the%20dictator%20who%20cheated%20death.pdf  /works/moorhouse-2007-killing-hitler-plots/  301
 /docs/Moorhouse%20-%20Killing%20Hitler:%20the%20plots,%20the%20assassins,%20and%20the%20dictator%20who%20cheated%20death.pdf  /works/moorhouse-2007-killing-hitler-plots/  301
 /docs/Moorhouse%20-%20La%20governance%20dello%20spazio.pdf  /works/moorhouse-2022-space-governance-it/  301
-/docs/Moorhouse%20-%20Les%20trois%20hypoth%C3%A8ses%20du%20long-termisme.pdf  /works/moorhouse-2021-longtermism-introduction-fr/  301
+/docs/Moorhouse%20-%20Les%20trois%20hypoth%C3%A8ses%20du%20long-termisme.pdf  /works/moorhouse-2021-longtermism-introduction/  301
 /docs/Moorhouse%20-%20Longtermism.pdf  /works/moorhouse-2021-frequently-asked-questions-de/  301
 /docs/Moorhouse%20-%20Longtermism:%20An%20introduction.pdf  /works/moorhouse-2021-longtermism-introduction/  301
 /docs/Moorhouse%20-%20Longtermism:%20FAQ.pdf  /works/moorhouse-2021-frequently-asked-questions-de/  301
@@ -36970,7 +36970,7 @@
 /docs/Todd%20-%20Moralna%20nesigurnost.pdf  /works/todd-2021-expected-value-how-sr/  301
 /docs/Todd%20-%20Moralna%20nesigurnost:%20kako%20se%20pona%C5%A1ati%20kada%20niste%20sigurni%20%C5%A1ta%20je%20dobro.pdf  /works/todd-2021-expected-value-how-sr/  301
 /docs/Todd%20-%20N%C3%A3o%20siga%20seu%20instinto.pdf  /works/todd-2015-dont-go-with-pt/  301
-/docs/Todd%20-%20Najbolja%20re%C5%A1enja%20su%20daleko%20efikasnija%20od%20drugih.pdf  /works/todd-2023-how-much-do-sr/  301
+/docs/Todd%20-%20Najbolja%20re%C5%A1enja%20su%20daleko%20efikasnija%20od%20drugih.pdf  /works/todd-2023-how-much-do/  301
 /docs/Todd%20-%20Nejv%C4%9Bt%C5%A1%C3%AD%20probl%C3%A9my%20sv%C4%9Bta%20a%20pro%C4%8D%20to%20nejsou%20ty%2C%20kter%C3%A9%20v%C3%A1s%20napadnou%20jako%20prvn%C3%AD.pdf  /works/todd-2017-world-sbiggest-cs/  301
 /docs/Todd%20-%20Nejv%C4%9Bt%C5%A1%C3%AD%20probl%C3%A9my%20sv%C4%9Bta%20a%20pro%C4%8D%20to%20nejsou%20ty,%20kter%C3%A9%20v%C3%A1s%20napadnou%20jako%20prvn%C3%AD.pdf  /works/todd-2017-world-sbiggest-cs/  301
 /docs/Todd%20-%20No%20matter%20your%20job%2C%20here%27s%203%20evidence-based%20ways%20to%20have%20a%20real%20impact.pdf  /works/todd-2017-no-matter-your/  301
@@ -39261,7 +39261,6 @@
 /docs/Wikipedia%20-%20Nuclear%20winter.pdf  /works/wikipedia-2002-nuclear-winter/  301
 /docs/Wikipedia%20-%20Optimal%20virulence.pdf  /works/wikipedia-2021-optimal-virulence/  301
 /docs/Wikipedia%20-%20Pareto%20efficiency.pdf  /works/wikipedia-2002-pareto-efficiency/  301
-/docs/Wikipedia%20-%20Phil%20Torres.pdf  /works/wikipedia-2015-phil-torres-author/  301
 /docs/Wikipedia%20-%20Prisoner%27s%20dilemma.pdf  /works/wikipedia-2001-prisoner-dilemma/  301
 /docs/Wikipedia%20-%20Prisoner's%20dilemma.pdf  /works/wikipedia-2001-prisoner-dilemma/  301
 /docs/Wikipedia%20-%20Probability%20axioms.pdf  /works/wikipedia-2001-probability-axioms/  301
@@ -40391,8 +40390,6 @@
 /docs/Zollman%20-%20Social%20structure%20and%20the%20effects%20of%20conformity.pdf  /works/zollman-2010-social-structure-effects/  301
 /docs/Zollman%20-%20The%20Epistemic%20Benefit%20of%20Transient%20Diversity.pdf  /works/zollman-2010-epistemic-benefit-transient/  301
 /docs/Zollman%20-%20The%20communication%20structure%20of%20epistemic%20communities.pdf  /works/zollman-2007-communication-structure-epistemic/  301
-/docs/Zong%20%26%20Krishnamachari%20-%20A%20Survey%20on%20GPT-3.pdf  /works/zong-2022-survey-gpt-3-dup/  301
-/docs/Zong%20&%20Krishnamachari%20-%20A%20Survey%20on%20GPT-3.pdf  /works/zong-2022-survey-gpt-3-dup/  301
 /docs/Zuboff%20-%20One%20self.pdf  /works/zuboff-1990-one-self-logic/  301
 /docs/Zuboff%20-%20One%20self:%20The%20logic%20of%20experience.pdf  /works/zuboff-1990-one-self-logic/  301
 /docs/Zubok%20-%20A%20failed%20empire.pdf  /works/zubok-2007-failed-empire-soviet/  301
@@ -42146,13 +42143,13 @@
 # splats don't allow a trailing literal.
 
 # Cite-key slug renames (non-ASCII → ASCII, dots/underscores/semicolons stripped).
-/works/bródy-1955-the-neumann-compendium/  /works/brody-1955-the-neumann-compendium/  301
-/works/comisión-nacionalde-seguridad-2021-final-report/  /works/comision-nacionalde-seguridad-2021-final-report/  301
-/works/diderot-1755-encyclopédie-ou-dictionnaire-raisonné/  /works/diderot-1755-encyclopedie-ou-dictionnaire-raisonne/  301
-/works/gonzálezricoy-2016-institutions-future-generations/  /works/gonzalezricoy-2016-institutions-future-generations/  301
-/works/jørgensen-2008-encyclopedia-ecology/  /works/jorgensen-2008-encyclopedia-ecology/  301
-/works/müller-2016-fundamental-issues-artificial-intelligence/  /works/muller-2016-fundamental-issues-artificial-intelligence/  301
-/works/organización-mundial-salud-2020-eliminacion-mundial-de/  /works/organizacion-mundial-salud-2020-eliminacion-mundial-de/  301
+/works/br%C3%B3dy-1955-the-neumann-compendium/  /works/brody-1955-the-neumann-compendium/  301
+/works/comisi%C3%B3n-nacionalde-seguridad-2021-final-report/  /works/comision-nacionalde-seguridad-2021-final-report/  301
+/works/diderot-1755-encyclop%C3%A9die-ou-dictionnaire-raisonn%C3%A9/  /works/diderot-1755-encyclopedie-ou-dictionnaire-raisonne/  301
+/works/gonz%C3%A1lezricoy-2016-institutions-future-generations/  /works/gonzalezricoy-2016-institutions-future-generations/  301
+/works/j%C3%B8rgensen-2008-encyclopedia-ecology/  /works/jorgensen-2008-encyclopedia-ecology/  301
+/works/m%C3%BCller-2016-fundamental-issues-artificial-intelligence/  /works/muller-2016-fundamental-issues-artificial-intelligence/  301
+/works/organizaci%C3%B3n-mundial-salud-2020-eliminacion-mundial-de/  /works/organizacion-mundial-salud-2020-eliminacion-mundial-de/  301
 /works/d.2019-should-we-colonize/  /works/d-2019-should-we-colonize/  301
 /works/d.pennebaker-1953-daybreak-express/  /works/dpennebaker-1953-daybreak-express/  301
 /works/e.1968-hora-de-hornos/  /works/e-1968-hora-de-hornos/  301
@@ -42177,3 +42174,11 @@
 /works/no_bear_so_low-2017-socialism-communism-marxism/  /works/no-bear-so-low-2017-socialism-communism-marxism/  301
 /works/daron-acemoglu;giuseppe-de-feo;giacomo-de-luca;gianluca-russo-war-socialism-rise/  /works/daron-acemoglu-giuseppe-de-feo-giacomo-de-luca-gianluca-russo-war-socialism-rise/  301
 /works/noble-tim;webster-1957-young-man-hurry/  /works/noble-tim-webster-1957-young-man-hurry/  301
+
+# Work slugs Google indexed under an earlier cite key. Each target was
+# confirmed to be the same work under its current slug; entries whose work
+# was deliberately removed (takedown blocklist) are intentionally absent.
+/works/bronski-2022-is-combatting-ageismb/  /works/bronski-2022-is-combatting-ageism/  301
+/works/staton-lake-2002-ethical-intuitionisms-re/  /works/stratton-lake-2002-ethical-intuitionism-reevaluations/  301
+/works/gov.uk-2022-government-review-uk/  /works/govuk-2022-government-review-uk/  301
+/works/daron-acemoglugiuseppe-de-feogiacomo-de-lucagianluca-russo-war-socialism-rise/  /works/daron-acemoglu-giuseppe-de-feo-giacomo-de-luca-gianluca-russo-war-socialism-rise/  301
