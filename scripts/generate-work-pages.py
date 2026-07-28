@@ -342,8 +342,13 @@ def work_metadata(entry: dict, *, excluded: bool = False,
     return meta
 
 
-def generate_work_page(entry: dict) -> str:
-    """Generate YAML front matter for a work page."""
+def generate_work_page(entry: dict, canonical: str = "") -> str:
+    """Generate YAML front matter for a work page.
+
+    ``canonical`` names another work slug that this page duplicates. It is
+    emitted as a ``canonical`` param, which head.html turns into a
+    ``<link rel="canonical">`` and sitemap.xml uses to skip the page.
+    """
     title = clean_work_field(entry["title"])
     # Compute short title: use BibTeX shorttitle if present, otherwise
     # truncate at the first colon (the standard subtitle separator)
@@ -401,6 +406,8 @@ def generate_work_page(entry: dict) -> str:
         lines.append(f'external_url: "{escape_yaml_string(url)}"')
     if pub_date:
         lines.append(f'pub_date: "{pub_date}"')
+    if canonical:
+        lines.append(f'canonical: "/works/{canonical}/"')
     lines.append("---")
     lines.append("")
 
@@ -464,6 +471,52 @@ def select_canonical_work_entry(entries: list[dict], work_path: Path | None = No
             if generate_work_page(entry) == existing_text:
                 return entry
     return max(entries, key=_work_entry_preference)
+
+
+def _duplicate_primary_slug(slugs: list[str]) -> str:
+    """Pick which of several identical work pages is the real one.
+
+    Most duplicates are a cite key re-imported under a disambiguator
+    letter (``Guzey2022ThesesSleep`` / ``Guzey2022ThesesSleepb``); there
+    the undecorated slug wins. Otherwise the longest slug wins, since it
+    carries the most description — ``godwin-1793-enquiry-concerning-political``
+    is a better canonical than a bare ``godwin-1793``.
+    """
+    def undecorated(slug: str) -> str:
+        if len(slug) > 1 and slug[-1].isalpha():
+            slug = slug[:-1]
+        return slug.rstrip("-")
+
+    ordered = sorted(slugs)
+    for slug in ordered:
+        if any(other != slug and undecorated(other) == slug for other in ordered):
+            return slug
+    return max(ordered, key=len)
+
+
+def assign_duplicate_canonicals(slugs: list[str], slug_to_entry: dict) -> dict[str, str]:
+    """Map each redundant work slug to the slug it duplicates.
+
+    Separate cite keys sometimes render byte-identical pages — the same
+    work imported twice. Google files those under "Duplicate, Google chose
+    different canonical than user" and picks a winner itself. Naming the
+    winner explicitly is the fix; deleting the extra bib entry is not,
+    since most of them live in a shared bibliography and some are cited.
+    """
+    by_content: dict[str, list[str]] = {}
+    for slug in slugs:
+        page = generate_work_page(slug_to_entry[slug])
+        by_content.setdefault(page, []).append(slug)
+
+    canonicals = {}
+    for group in by_content.values():
+        if len(group) < 2:
+            continue
+        primary = _duplicate_primary_slug(group)
+        for slug in group:
+            if slug != primary:
+                canonicals[slug] = primary
+    return canonicals
 
 
 def build_work_entry_map(bib_by_key: dict) -> tuple[dict[str, dict], dict[str, list[str]]]:
@@ -538,6 +591,12 @@ def generate_work_pages(bib_by_key: dict, dry_run: bool = False, limit: int = 0)
             atomic_write_json(WORK_METADATA_PATH, metadata, ensure_ascii=False)
             print(f"  Wrote {len(metadata)} work metadata entries to data/works.json")
 
+    duplicate_canonicals = assign_duplicate_canonicals(publishable_slugs, slug_to_entry)
+    if duplicate_canonicals:
+        print(f"  {len(duplicate_canonicals)} duplicate page(s) pointed at a canonical")
+        for slug, primary in sorted(duplicate_canonicals.items())[:10]:
+            print(f"    {slug} -> {primary}")
+
     processed = 0
     for slug in publishable_slugs:
         if limit and processed >= limit:
@@ -545,7 +604,7 @@ def generate_work_pages(bib_by_key: dict, dry_run: bool = False, limit: int = 0)
 
         work_path = WORKS_DIR / f"{slug}.md"
         entry = slug_to_entry[slug]
-        page_content = generate_work_page(entry)
+        page_content = generate_work_page(entry, duplicate_canonicals.get(slug, ""))
 
         if work_path.exists():
             if work_path.read_text() == page_content:

@@ -2,7 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   {{- range .Data.Pages }}
-  {{- if partial "is-indexable.html" . }}
+  {{- /* A page that points its canonical elsewhere is a duplicate; listing
+         it here would contradict that signal. */}}
+  {{- if and (partial "is-indexable.html" .) (not .Params.canonical) }}
   <url>
     <loc>{{ .Permalink }}</loc>
     {{- if not .Lastmod.IsZero }}
