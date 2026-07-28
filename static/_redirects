@@ -42133,6 +42133,15 @@
 # Stale Hugo tag pages and tango-era WordPress feeds: send to the matching
 # section's RSS feed.
 /tags/*/index.xml  /notes/index.xml                301
+# WordPress per-page feeds in the archived tango blog. The pages
+# themselves are all still served, so send each feed to its own page
+# rather than to the section root. Placeholders match exactly one
+# segment, so enumerate the nesting depths in use.
+/tango/:a/feed/  /tango/:a/  301
+/tango/:a/:b/feed/  /tango/:a/:b/  301
+/tango/:a/:b/:c/feed/  /tango/:a/:b/:c/  301
+/tango/:a/:b/:c/:d/feed/  /tango/:a/:b/:c/:d/  301
+# Anything deeper still lands somewhere useful.
 /tango/category/*/feed/  /tango/                   301
 /tango/*/feed/  /tango/                            301
 

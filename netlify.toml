@@ -101,29 +101,8 @@ from = "/tango/feed"
 to = "/notes/index.xml"
 status = 301
 
-# Per-page feeds in the archived tango blog. The pages themselves are all
-# still served; only the WordPress /feed/ suffix is gone. Netlify splats
-# match a trailing segment only, so enumerate the nesting depths in use:
-# /tango/<post>/, /tango/<section>/<post>/, /tango/category/<kind>/<name>/.
-[[redirects]]
-from = "/tango/:a/feed/"
-to = "/tango/:a/"
-status = 301
-
-[[redirects]]
-from = "/tango/:a/:b/feed/"
-to = "/tango/:a/:b/"
-status = 301
-
-[[redirects]]
-from = "/tango/:a/:b/:c/feed/"
-to = "/tango/:a/:b/:c/"
-status = 301
-
-[[redirects]]
-from = "/tango/:a/:b/:c/:d/feed/"
-to = "/tango/:a/:b/:c/:d/"
-status = 301
+# Per-page feeds in the archived tango blog are handled in
+# static/_redirects, which Netlify processes before this file.
 
 # force = true is required because /quotes/ exists as a static page;
 # without it Netlify serves the HTML and ignores the query-string redirect.
