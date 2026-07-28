@@ -8,3 +8,5 @@ Full details with rejected alternatives and evidence are in `decisions/`. Read t
 | 002 | rebuild gating | Plausibility-check the existing migration entry first; only replace when provably wrong (cite-key surname mismatch in author, no title overlap, all-caps title, placeholder location). | Final |
 | 003 | short stories inside books | Story gets its own `@incollection{StoryKey, crossref = {BookKey}}`; book entry stays separate; quotes attribute to the story key, not the book key. | Final |
 | 004 | cite-key character set | ASCII alphanumerics + hyphens (for compound surnames) only. No accents, periods, underscores, semicolons. Use `scripts/rename-cite-keys.py` for renames. | Final |
+| 005 | Netlify redirect rules | Source paths must be percent-encoded (sub-delimiters stay raw); `static/_redirects` is processed before `netlify.toml`, so grep it for a shadowing rule before adding one there. | Final |
+| 006 | deploy cost | Dominated by total file count, not changed-file count. ~30 min for `--quick`; hashing and re-upload already ruled out as causes. Do not undo the fingerprinting removal or `.netlifyignore`. | Final |

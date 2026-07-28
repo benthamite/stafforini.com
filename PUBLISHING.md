@@ -190,6 +190,14 @@ regeneration, but it still cleans and rebuilds the whole Hugo site, regenerates
 Pagefind, and asks Netlify to publish the full atomic deploy tree. It is not the
 right path for small already-exported note updates.
 
+**Expect `--quick` to take about 30 minutes**, regardless of how little
+changed — the cost tracks the total file count in the deploy tree (~57k
+files), not the number of changed files. Before trying to speed this up,
+read `decisions/006.md`: it records the measured baseline, the causes
+already ruled out, and the optimisations that are in place and must not be
+undone. Several plausible-sounding explanations have already been tested
+and rejected.
+
 Use `scripts/deploy.sh --fast-note` only for minor already-exported note body
 edits. It preserves the existing `public/` snapshot, renders only the
 note-oriented Hugo segment into it, copies lightweight static assets, preserves
