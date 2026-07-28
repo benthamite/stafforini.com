@@ -570,3 +570,54 @@ class TestAssignDuplicateCanonicals:
     def test_no_canonical_key_when_page_is_its_own_canonical(self):
         assert "canonical:" not in generate_work_page(
             _entry("Doe2022Thing", "A thing"))
+
+
+# ---------------------------------------------------------------------------
+# normalize_external_url
+# ---------------------------------------------------------------------------
+
+normalize_external_url = _mod.normalize_external_url
+
+
+class TestNormalizeExternalUrl:
+    def test_absolute_url_is_kept(self):
+        assert normalize_external_url("https://x.com/a") == "https://x.com/a"
+
+    def test_non_http_scheme_is_kept(self):
+        assert normalize_external_url("mailto:a@b.com") == "mailto:a@b.com"
+
+    def test_bare_host_gains_a_scheme(self):
+        # Without this, the browser resolves the href relative to the work
+        # page and the link 404s.
+        assert normalize_external_url("www.reddit.com/r/emacs/x") == (
+            "https://www.reddit.com/r/emacs/x")
+
+    def test_host_without_path_gains_a_scheme(self):
+        assert normalize_external_url("www.covid-19-mc.ca") == (
+            "https://www.covid-19-mc.ca")
+
+    def test_protocol_relative_url_gains_a_scheme(self):
+        assert normalize_external_url("//cdn.example.com/a") == (
+            "https://cdn.example.com/a")
+
+    def test_foreign_site_relative_path_is_dropped(self):
+        # Scraped from another site without its host; unusable here.
+        assert normalize_external_url("/文章/关于ai未来的未决辩论") == ""
+
+    def test_bare_doi_is_not_mistaken_for_a_host(self):
+        assert normalize_external_url("10.1234/journal.pone") == ""
+
+    def test_non_url_junk_is_dropped(self):
+        for junk in ("9789505330188", "#", "MetaPress", "Pett1974Pacific"):
+            assert normalize_external_url(junk) == ""
+
+    def test_empty_stays_empty(self):
+        assert normalize_external_url("") == ""
+
+    def test_braces_are_stripped_before_inspection(self):
+        assert normalize_external_url("{https://x.com/a}") == "https://x.com/a"
+
+    def test_dropped_url_produces_no_front_matter_key(self):
+        entry = _entry("Doe2022Thing", "A thing")
+        entry["url"] = "/文章/关于ai"
+        assert "external_url" not in generate_work_page(entry)

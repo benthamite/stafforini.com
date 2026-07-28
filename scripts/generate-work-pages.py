@@ -310,6 +310,35 @@ _LATEX_TEXT_RE = [
 ]
 
 
+_HAS_SCHEME_RE = re.compile(r"^[a-zA-Z][a-zA-Z0-9+.-]*:")
+# A bare hostname: dot-separated labels ending in an alphabetic TLD. The
+# alphabetic requirement keeps bare DOIs ("10.1234/foo") from being read
+# as hosts.
+_BARE_HOST_RE = re.compile(r"^[\w-]+(?:\.[\w-]+)*\.[A-Za-z]{2,}(?:[/?#]|$)")
+
+
+def normalize_external_url(value: str) -> str:
+    """Return an absolute URL for a bib ``url`` field, or "" if unusable.
+
+    Bib entries collect three kinds of junk here: hostnames that lost
+    their scheme ("www.reddit.com/r/emacs/..."), paths scraped from
+    another site without its host ("/文章/..."), and values that are not
+    URLs at all (an ISBN, a cite key, a bare "#"). All three render as
+    same-site links — a browser resolves a scheme-less href relative to
+    the current page — so each one became a broken link on the work page.
+    """
+    value = value.replace("{", "").replace("}", "").strip()
+    if not value:
+        return ""
+    if _HAS_SCHEME_RE.match(value):
+        return value
+    if value.startswith("//"):
+        return "https:" + value
+    if _BARE_HOST_RE.match(value):
+        return "https://" + value
+    return ""
+
+
 def clean_work_field(value: str) -> str:
     """Strip BibTeX braces, unescape special chars, and convert org italic."""
     for pattern, char in _LATEX_TEXT_RE:
@@ -349,7 +378,7 @@ def work_metadata(entry: dict, *, excluded: bool = False,
     raw_date = entry.get("date", "")
     pub_date = raw_date[:10] if re.match(r"\d{4}-\d{2}-\d{2}", raw_date) else ""
 
-    external_url = "" if excluded else entry.get("url", "").replace("{", "").replace("}", "")
+    external_url = "" if excluded else normalize_external_url(entry.get("url", ""))
 
     bookauthor_raw = entry.get("bookauthor", "")
     meta = {
@@ -403,7 +432,7 @@ def generate_work_page(entry: dict, canonical: str = "") -> str:
     editor = bib_author_to_display(editor_raw) if editor_raw else ""
     bookauthor_raw = entry.get("bookauthor", "")
     bookauthor = bib_author_to_display(bookauthor_raw) if bookauthor_raw else ""
-    url = entry.get("url", "").replace("{", "").replace("}", "")
+    url = normalize_external_url(entry.get("url", ""))
     # Extract full date (YYYY-MM-DD) for rich formatting; year-only handled by 'year'
     raw_date = entry.get("date", "")
     pub_date = ""
