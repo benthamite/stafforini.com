@@ -8,13 +8,22 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 
 # Run a labeled step, aborting on failure.
+#
+# Each step reports its own duration. Deploys take about half an hour and
+# nobody has ever known which phase owns that time — see decisions/006.md,
+# where the causes ruled out so far are recorded. Printing it per step
+# means the answer is in the log of every run instead of needing a fresh
+# investigation.
 run_step() {
   local label="$1"; shift
   echo "$label..."
+  local start
+  start=$SECONDS
   if ! "$@"; then
-    echo "Error: $label failed." >&2
+    echo "Error: $label failed after $((SECONDS - start))s." >&2
     exit 1
   fi
+  echo "  ✓ $label — $((SECONDS - start))s"
 }
 
 PUBLIC_TREE_LOCK="$REPO_ROOT/.public-tree.lock"

@@ -78,8 +78,21 @@ def parse_delays(raw: str) -> tuple[int, ...]:
 
 
 def run_streaming(args: Sequence[str], **kwargs) -> subprocess.CompletedProcess[str]:
+    """Run a command, echoing each output line with elapsed time.
+
+    The Netlify CLI announces its phases as it goes — hashing, CDN
+    diffing, uploading, waiting for the deploy to go live — but prints no
+    timings, so a half-hour deploy gives no clue which phase owned the
+    time. Prefixing each line with seconds-since-start turns the ordinary
+    deploy log into the measurement. See decisions/006.md for the baseline
+    this is meant to refine, and for the explanations already ruled out.
+
+    The captured output keeps the original lines, unprefixed, since
+    callers parse it for the deploy id and URL.
+    """
     kwargs.pop("capture_output", None)
     kwargs.pop("text", None)
+    started = time.monotonic()
     proc = subprocess.Popen(
         args,
         stdout=subprocess.PIPE,
@@ -91,8 +104,13 @@ def run_streaming(args: Sequence[str], **kwargs) -> subprocess.CompletedProcess[
     assert proc.stdout is not None
     for line in proc.stdout:
         output_parts.append(line)
-        print(line, end="")
+        if line.strip():
+            print(f"[{time.monotonic() - started:6.1f}s] {line}", end="")
+        else:
+            print(line, end="")
     returncode = proc.wait()
+    print(f"[{time.monotonic() - started:6.1f}s] netlify CLI finished "
+          f"(exit {returncode})")
     return subprocess.CompletedProcess(args, returncode, "".join(output_parts), "")
 
 
