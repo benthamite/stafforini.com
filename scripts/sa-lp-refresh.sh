@@ -17,7 +17,7 @@ export PATH="/opt/homebrew/bin:$HOME/.pyenv/shims:$PATH"
 
 ORG_FILE="$HOME/My Drive/notes/public/situational-awareness-lp.org"
 NOTES_REPO="$HOME/My Drive/notes"
-STAFFORINI_REPO="$HOME/My Drive/repos/stafforini.com"
+STAFFORINI_REPO="$HOME/repos/stafforini.com"
 NOTES_ORG_PATH="public/situational-awareness-lp.org"
 LOG_PATH="$HOME/.cache/sa-lp-refresh.log"
 

@@ -211,7 +211,7 @@ notes with custom URLs resolve to the real page."
                   (export--fix-missing-titles
                    file
                    (expand-file-name
-                    "~/My Drive/repos/stafforini.com/")
+                    "~/repos/stafforini.com/")
                    "notes"))
               (kill-buffer buf)))
         (error

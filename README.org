@@ -1,8 +1,14 @@
 #+title: stafforini.com
 
 * Skills
+:PROPERTIES:
+:ID:       A8C85266-70B7-4EE4-9FB8-9C40E8C7DDC4
+:END:
 
 ** gsc-indexing-triage
+:PROPERTIES:
+:ID:       C3D0D6E2-436C-45FB-9388-70920301D517
+:END:
 
 The project-local =gsc-indexing-triage= skill handles Google Search Console
 Page indexing alerts for =stafforini.com=. Read-only triage includes opening
@@ -14,6 +20,9 @@ messages remain externally visible actions and require explicit authorization
 in the current invocation.
 
 * Note Export
+:PROPERTIES:
+:ID:       526CD116-FDDA-4436-BDF6-35611338B920
+:END:
 
 The note exporter resolves =id:= links through the generated ID maps.
 Links to unpublished targets become plain text, links to published
@@ -21,6 +30,9 @@ notes become =/notes/slug/= URLs, and links to headings inside the
 same note become local fragment links such as =#copycat-delays=.
 
 ** SA LP Refresh
+:PROPERTIES:
+:ID:       8431CA99-D3B5-4497-8E2F-BDECC669517C
+:END:
 
 =scripts/sa-lp-refresh.sh= evaluates every dynamic Babel block used by the
 Situational Awareness LP note, including the AIS comparison block, before

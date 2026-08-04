@@ -36,11 +36,11 @@ Do not use this skill for Search Console performance reports, Core Web Vitals, o
    ```
 
 2. Read `$skill_dir/references/stafforini-com.md`.
-3. Read `/Users/pablostafforini/My Drive/repos/stafforini.com/CLAUDE.md`.
+3. Read `/Users/pablostafforini/repos/stafforini.com/CLAUDE.md`.
 4. Read the persistent log if it exists:
-   `/Users/pablostafforini/My Drive/repos/stafforini.com/logs/gsc-indexing.md`.
+   `/Users/pablostafforini/repos/stafforini.com/logs/gsc-indexing.md`.
 5. Inspect worktrees before editing:
-   - `/Users/pablostafforini/My Drive/repos/stafforini.com`
+   - `/Users/pablostafforini/repos/stafforini.com`
    - `/Users/pablostafforini/My Drive/notes` if org notes may need edits
    - `/Users/pablostafforini/My Drive/bibliographic-notes` if quote sources may need edits
 
@@ -89,7 +89,7 @@ Prefer root-cause fixes over broad catch-all redirects. If redirecting historica
 
 ## Verify locally
 
-From `/Users/pablostafforini/My Drive/repos/stafforini.com`, run the relevant export first. Then run:
+From `/Users/pablostafforini/repos/stafforini.com`, run the relevant export first. Then run:
 
 ```bash
 npm test
@@ -145,7 +145,7 @@ Do not archive unrelated Search Console messages that still need investigation.
 
 ## Persistent log
 
-Append to `/Users/pablostafforini/My Drive/repos/stafforini.com/logs/gsc-indexing.md` before finishing. Include:
+Append to `/Users/pablostafforini/repos/stafforini.com/logs/gsc-indexing.md` before finishing. Include:
 
 - Date/time and agent.
 - Gmail message ids and subjects.
