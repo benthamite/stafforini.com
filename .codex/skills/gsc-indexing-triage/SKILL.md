@@ -128,7 +128,7 @@ For each issue:
 1. Open the issue detail URL from the email or Search Console.
 2. If validation details show a previous failure, open "SEE DETAILS".
 3. Confirm visible examples are no longer broken on the live site.
-4. If validation is explicitly authorized and representative examples pass, click "START NEW VALIDATION" or "VALIDATE FIX".
+4. If validation is explicitly authorized and representative examples pass, click "START NEW VALIDATION" or "VALIDATE FIX" — unless the issue is one that can never pass; see the reference file. Passing examples are not sufficient grounds for those two.
 5. Record the resulting status and counts, such as `Validation started`, `Started: DATE`, `PENDING`, and `FAILED`; if validation was not authorized, record browser inspection findings and `validation not authorized`.
 
 Do not start validation if representative examples still fail live checks.

@@ -19,6 +19,34 @@ Always prefer issue URLs extracted from the emails. Observed Page indexing item 
 | Page with redirect | `CAMYCyAC` |
 | Indexed, though blocked by robots.txt | `CAMYBCAD` |
 
+## Two issues that can never pass validation
+
+Do not click VALIDATE FIX or START NEW VALIDATION on `Not found (404)` or
+`Page with redirect`, however clean the representative examples look. Google
+re-crawls the whole affected set and marks the validation Failed if any URL
+still shows the issue. For both of these, the set permanently contains URLs
+that are *supposed* to show it, so every validation fails and generates
+another "Some fixes failed" email — which is what most of these triage
+sessions have been spent on.
+
+- `Page with redirect` (2,498) is intentional by construction: legacy
+  WordPress 301s, `/docs/*.pdf`, `/quotes/?p=N`, `www.` to apex, `/tango/**`.
+  The count *rises* when work is done correctly, as on 7/28 when 404s became
+  301s. The report has no diagnostic value.
+- `Not found (404)` (217) is mostly pre-WordPress content that is correctly
+  gone, plus at least one permanently corrupt inbound URL (a `/docs/*.pdf`
+  link with a stray Hangul syllable appended; the clean form redirects fine
+  and nothing can make the corrupt form return 200).
+
+The difference between them matters for what to do instead. `Page with
+redirect` can be ignored outright. `Not found (404)` is worth reading every
+time, because a 404 there can be a real regression — a page that lost its
+redirect. Both regressions found on 2026-08-08 came from this list. Triage
+rule: look only at URLs crawled since the last deploy, fix what is genuinely
+broken, and leave the standing backlog alone without validating.
+
+`Soft 404` is a separate matter and is not covered by this rule.
+
 ## Commands
 
 Query GSC emails:

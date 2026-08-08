@@ -24,6 +24,15 @@ Paths, item keys, and command recipes live in the skill's
 =.codex/skills/=. Those paths are absolute, so they have to be updated
 whenever the repository moves; they now point at =~/repos/stafforini.com=.
 
+Two issues must never be validated: =Not found (404)= and =Page with
+redirect=. Google fails a validation if any affected URL still shows the
+issue, and for both of these the affected set permanently contains URLs that
+are meant to show it — correctly retired pre-WordPress pages in the first,
+intentional legacy 301s in the second. Validating them only produces another
+"Some fixes failed" email. =Not found (404)= is still worth reading for
+genuine lost redirects; =Page with redirect= can be ignored. The reference
+file carries the full rule.
+
 * Note Export
 :PROPERTIES:
 :ID:       526CD116-FDDA-4436-BDF6-35611338B920
