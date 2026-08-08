@@ -266,7 +266,7 @@ The `stafforini-publish-note` Emacs command (replacing the former
 `prepare-org-notes.py` bulk script) adds ox-hugo export metadata to
 individual org files:
 
-- **File level**: `#+hugo_base_dir: ~/My Drive/repos/stafforini.com/`
+- **File level**: `#+hugo_base_dir: ~/repos/stafforini.com/`
 - **Heading level** (in the level-1 PROPERTIES drawer):
   - `:EXPORT_FILE_NAME:` — slug derived from the org filename
   - `:EXPORT_HUGO_SECTION: notes` — target Hugo section
