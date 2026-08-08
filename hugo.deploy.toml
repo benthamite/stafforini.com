@@ -32,11 +32,14 @@ thumbBaseURL = "https://pdf.stafforini.com"
   [[module.mounts]]
     source = "static/ltximg"
     target = "static/ltximg"
+  # Note attachments live beside their org sources in the notes repo, which
+  # is still under ~/My Drive/; this repo moved to ~/repos/ on 2026-08-03, so
+  # the path back out has to cross into Drive rather than staying a sibling.
   [[module.mounts]]
-    source = "../../notes/public/anki-decks-from-the-lesswrong-community"
+    source = "../../My Drive/notes/public/anki-decks-from-the-lesswrong-community"
     target = "static/anki-decks-from-the-lesswrong-community"
   [[module.mounts]]
-    source = "../../notes/public/summary-of-time-management-by-randy-pausch"
+    source = "../../My Drive/notes/public/summary-of-time-management-by-randy-pausch"
     target = "static/summary-of-time-management-by-randy-pausch"
   [[module.mounts]]
     source = "static/_redirects"
