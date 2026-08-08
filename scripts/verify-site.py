@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import html
+import importlib.util
 import re
 import subprocess
 import sys
@@ -333,6 +334,26 @@ def verify_built_site(site_dir: Path) -> list[str]:
     return errors
 
 
+def verify_redirect_targets(site_dir: Path, redirects_file: Path | None = None) -> list[str]:
+    """Report `_redirects` rules whose destination is not in the rendered tree.
+
+    A rule that 301s into a deleted page keeps returning its redirect, so
+    nothing about `_redirects` looks wrong; the fault surfaces weeks later as
+    a Search Console "Not found (404)" entry against the *target*.
+
+    Full profile only. The dev config mounts a subset of `content/` with no
+    `works/` at all, so every `/works/` target would read as dead there.
+    """
+    module_path = REPO_ROOT / "scripts" / "audit-redirect-targets.py"
+    spec = importlib.util.spec_from_file_location("audit_redirect_targets", module_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return [
+        f"_redirects line {lineno}: {source} -> {target} (target does not exist)"
+        for lineno, source, target in module.audit(site_dir, redirects_file)
+    ]
+
+
 def build_dev_site(destination: Path) -> None:
     subprocess.run(
         [
@@ -369,7 +390,11 @@ def main() -> None:
         site_dir = args.dir
         errors = source_errors + verify_built_site(site_dir)
         if args.profile == "full":
-            errors += verify_sitemap(site_dir) + verify_internal_links(site_dir)
+            errors += (
+                verify_sitemap(site_dir)
+                + verify_internal_links(site_dir)
+                + verify_redirect_targets(site_dir)
+            )
     else:
         if args.profile != "full":
             parser.error("--profile can only be used with --dir")
