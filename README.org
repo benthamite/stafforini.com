@@ -17,7 +17,12 @@ affected URLs locally or live.
 
 Deployment, clicking Search Console validation buttons, and archiving Gmail
 messages remain externally visible actions and require explicit authorization
-in the current invocation.
+in the current invocation. That gate governs what the skill may do; it is not
+a licence to do less. Within whatever scope an invocation allows, the skill is
+expected to finish the work in one turn rather than return a to-do list, and to
+stop only for judgments the repository cannot supply — which of two defensible
+outcomes is wanted, or anything touching the shared =babel-refs= bibliography,
+published content, or another property.
 
 Paths, item keys, and command recipes live in the skill's
 =references/stafforini-com.md=, mirrored under both =.claude/skills/= and

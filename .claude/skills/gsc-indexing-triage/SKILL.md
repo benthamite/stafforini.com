@@ -21,6 +21,17 @@ Search Console browser inspection is read-only triage. Do not skip it merely
 because deploy/validation/archive actions are not authorized; only the
 validation click itself is an external action.
 
+## Working within the authorized scope
+
+The gate decides what you may do. It does not license doing less than that. Whatever scope the invocation allows, carry out all of it in one turn: do not hand back a to-do list of work you could have done yourself, and do not stop at the first obstacle. One blocked item never justifies leaving the unblocked ones undone. If a blocked decision also gates a later step — a pending fix that would fail verification, say — say so explicitly rather than quietly working around it.
+
+Stop for a decision only where the next step needs a judgment the repository cannot supply. In practice that means:
+
+- Which of two defensible outcomes the user wants: restoring deleted content versus dropping the rule that points at it, or choosing between two plausible redirect targets when the sources cannot settle it.
+- Anything that would edit the shared `babel-refs` bibliography, delete published content, or act on a property other than `stafforini.com`.
+
+When you hit one of those, do everything else first, then report the open decision on its own.
+
 ## When not to use
 
 Do not use this skill for Search Console performance reports, Core Web Vitals, ownership verification, analytics, generic sitemap questions, or properties other than `stafforini.com` unless the user explicitly asks to adapt the workflow.
@@ -109,7 +120,7 @@ Commit each logical change in the repo that owns it. If the user explicitly auth
 bash scripts/deploy.sh --quick
 ```
 
-When telling the user to deploy manually, mention the Emacs command too: `stafforini-deploy` with `C-u` for quick deploy.
+A quick deploy takes roughly 30 minutes. When it is authorized, run it in the background and keep working rather than idling on it. When telling the user to deploy manually instead, mention the Emacs command too: `stafforini-deploy`, with `C-u` for the quick variant.
 
 After deploy, confirm the live site reflects the fix before Search Console validation. At minimum, fetch `https://stafforini.com/sitemap.xml` and spot-check representative example URLs.
 
@@ -129,7 +140,7 @@ For each issue:
 2. If validation details show a previous failure, open "SEE DETAILS".
 3. Confirm visible examples are no longer broken on the live site.
 4. If validation is explicitly authorized and representative examples pass, click "START NEW VALIDATION" or "VALIDATE FIX" — unless the issue is one that can never pass; see the reference file. Passing examples are not sufficient grounds for those two.
-5. Record the resulting status and counts, such as `Validation started`, `Started: DATE`, `PENDING`, and `FAILED`; if validation was not authorized, record browser inspection findings and `validation not authorized`.
+5. Record the resulting status and counts, such as `Validation started`, `Started: DATE`, `PENDING`, and `FAILED`. If you did not validate, record the browser inspection findings and which reason applied: examples still failing, an issue that can never pass, or `validation not authorized`.
 
 Do not start validation if representative examples still fail live checks.
 
@@ -155,8 +166,9 @@ Append to `/Users/pablostafforini/repos/stafforini.com/logs/gsc-indexing.md` bef
 - Files changed and commits.
 - Verification commands and results.
 - Deploy result, or `not authorized in this invocation`.
-- Browser validation result and counts, or `not authorized in this invocation`.
-- Emails archived, or `not authorized in this invocation`.
+- Browser validation result and counts, or why validation was not started.
+- Emails archived, and why any handled ones were left.
+- Open decisions the user still owes, each with a recommendation.
 - Open follow-up or reason none remains.
 
 If the log file does not exist, create it with a short heading and append the first dated entry.
