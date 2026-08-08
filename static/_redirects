@@ -42191,3 +42191,9 @@
 /works/staton-lake-2002-ethical-intuitionisms-re/  /works/stratton-lake-2002-ethical-intuitionism-reevaluations/  301
 /works/gov.uk-2022-government-review-uk/  /works/govuk-2022-government-review-uk/  301
 /works/daron-acemoglugiuseppe-de-feogiacomo-de-lucagianluca-russo-war-socialism-rise/  /works/daron-acemoglu-giuseppe-de-feo-giacomo-de-luca-gianluca-russo-war-socialism-rise/  301
+
+# Work pages deleted when their duplicate bib entry was dropped (977874a).
+# Each points at the entry it duplicated. Zong2022SurveyGpt3-dup has no rule
+# because the entry it duplicated is itself gone, so 404 is correct there.
+/works/anonymous-1969-libro-de-las-2-dup/  /works/anonymous-1969-libro-de-las-2/  301
+/works/anonymous-1969-libro-de-las-2-dup-dup/  /works/anonymous-1969-libro-de-las-2/  301
