@@ -1,5 +1,5 @@
 baseURL = "https://stafforini.com/"
-languageCode = "en"
+locale = "en"
 title = "Pablo Stafforini"
 
 # Preserve the natural case of taxonomy terms, section titles, etc.

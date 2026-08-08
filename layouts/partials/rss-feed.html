@@ -16,7 +16,7 @@
     <link>{{ $ctx.Permalink }}</link>
     <description>{{ with $ctx.Description }}{{ . }}{{ else }}{{ with $ctx.Site.Params.description }}{{ . }}{{ end }}{{ end }}</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>{{ $ctx.Site.LanguageCode }}</language>{{ with $ctx.Site.Params.author }}{{ with .email }}
+    <language>{{ $ctx.Site.Language.Locale }}</language>{{ with $ctx.Site.Params.author }}{{ with .email }}
     <managingEditor>{{ . }}{{ with $ctx.Site.Params.author.name }} ({{ . }}){{ end }}</managingEditor>{{ end }}{{ with .email }}
     <webMaster>{{ . }}{{ with $ctx.Site.Params.author.name }} ({{ . }}){{ end }}</webMaster>{{ end }}{{ end }}{{ with $ctx.Site.Copyright }}
     <copyright>{{ . }}</copyright>{{ end }}{{ if not $ctx.Date.IsZero }}
