@@ -759,10 +759,18 @@ def main():
         # Parse all bib files
         print("\n  Parsing bib files...")
         bib_by_key = {}
+        missing = [p for p in BIB_FILES if not p.exists()]
+        if missing:
+            # Skipping a missing source is never safe here: every work page
+            # sourced from it becomes stale and is deleted on this run, and
+            # the next deploy removes it from production. A moved or unmounted
+            # bibliography must stop the run, not quietly shrink the site.
+            raise SystemExit(
+                "  ERROR: bibliography source(s) missing, refusing to run:\n"
+                + "\n".join(f"    {p}" for p in missing)
+                + "\n  Fix the paths in scripts/lib.py:BIB_FILES, or restore the files."
+            )
         for source_index, bib_path in enumerate(BIB_FILES):
-            if not bib_path.exists():
-                print(f"  WARNING: {bib_path} not found, skipping")
-                continue
             entries = _parse_bib_entries_for_works(bib_path)
             for entry in entries:
                 entry["_source_index"] = source_index

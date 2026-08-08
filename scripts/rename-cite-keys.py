@@ -35,9 +35,9 @@ BIB_FILES = [
     Path.home() / "My Drive/bibliography/new.bib",
     Path.home() / "My Drive/bibliography/old.bib",
     Path.home() / "My Drive/bibliography/migration.bib",
-    Path.home() / "My Drive/repos/babel-refs/bib/fluid.bib",
-    Path.home() / "My Drive/repos/babel-refs/bib/stable.bib",
-    Path.home() / "My Drive/repos/babel-refs/bib/db.bib",
+    Path.home() / "repos/babel-refs/bib/fluid.bib",
+    Path.home() / "repos/babel-refs/bib/stable.bib",
+    Path.home() / "repos/babel-refs/bib/db.bib",
 ]
 BIBNOTES = Path.home() / "My Drive/bibliographic-notes"
 NOTES = Path.home() / "My Drive/notes"

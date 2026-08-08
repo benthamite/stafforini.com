@@ -43,11 +43,11 @@ BIB_FILES = [
     # Personal bibliography: older/archival entries
     Path.home() / "My Drive/bibliography/old.bib",
     # Shared bibliography (babel-refs): entries still being edited
-    Path.home() / "My Drive/repos/babel-refs/bib/fluid.bib",
+    Path.home() / "repos/babel-refs/bib/fluid.bib",
     # Shared bibliography (babel-refs): stable/finalized entries
-    Path.home() / "My Drive/repos/babel-refs/bib/stable.bib",
+    Path.home() / "repos/babel-refs/bib/stable.bib",
     # Shared bibliography (babel-refs): database-sourced entries
-    Path.home() / "My Drive/repos/babel-refs/bib/db.bib",
+    Path.home() / "repos/babel-refs/bib/db.bib",
     # Auto-generated entries from WordPress quote migration
     Path.home() / "My Drive/bibliography/migration.bib",
 ]

@@ -99,8 +99,8 @@ The `.bib` files are
 
 "~/My Drive/bibliography/new.bib"
 "~/My Drive/bibliography/old.bib"
-"~/My Drive/repos/babel-refs/bib/fluid.bib"
-"~/My Drive/repos/babel-refs/bib/stable.bib"
+"~/repos/babel-refs/bib/fluid.bib"
+"~/repos/babel-refs/bib/stable.bib"
 
 ## Design
 

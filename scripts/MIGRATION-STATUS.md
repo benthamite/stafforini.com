@@ -17,9 +17,9 @@ Five `.bib` files are used for matching:
 
 1. `~/My Drive/bibliography/new.bib` (493 entries)
 2. `~/My Drive/bibliography/old.bib` (14,454 entries)
-3. `~/My Drive/repos/babel-refs/bib/fluid.bib` (158 entries)
-4. `~/My Drive/repos/babel-refs/bib/stable.bib` (6,195 entries)
-5. `~/My Drive/repos/babel-refs/bib/db.bib` (2,112 entries)
+3. `~/repos/babel-refs/bib/fluid.bib` (158 entries)
+4. `~/repos/babel-refs/bib/stable.bib` (6,195 entries)
+5. `~/repos/babel-refs/bib/db.bib` (2,112 entries)
 
 Total: ~23,412 entries, ~23,391 unique cite keys.
 

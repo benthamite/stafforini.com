@@ -54,7 +54,7 @@ MUTOOL = shutil.which("mutool") or "/opt/homebrew/bin/mutool"
 # 150 DPI balances visual quality against file size for thumbnail images.
 THUMB_DPI = 150
 
-DB_BIB = Path.home() / "My Drive/repos/babel-refs/bib/db.bib"
+DB_BIB = Path.home() / "repos/babel-refs/bib/db.bib"
 
 # Entry types treated as "books" for copyright-filtering purposes.
 # PDFs from these types are excluded when published in 2000 or later.
@@ -268,10 +268,16 @@ def collect_entries() -> list[dict]:
     """
     # Step 1: Parse ALL entries from ALL bib files into a single dict
     entries_by_key = {}
+    missing = [p for p in BIB_FILES if not p.exists()]
+    if missing:
+        # A missing source silently narrows which PDFs are considered
+        # hostable, so the run would look clean while dropping work.
+        raise SystemExit(
+            "  ERROR: bibliography source(s) missing, refusing to run:\n"
+            + "\n".join(f"    {p}" for p in missing)
+            + "\n  Fix the paths in scripts/lib.py:BIB_FILES, or restore the files."
+        )
     for bib_path in BIB_FILES:
-        if not bib_path.exists():
-            print(f"  WARNING: {bib_path} not found, skipping")
-            continue
 
         is_db = bib_path.resolve() == DB_BIB.resolve()
 
