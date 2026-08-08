@@ -19,6 +19,11 @@ Deployment, clicking Search Console validation buttons, and archiving Gmail
 messages remain externally visible actions and require explicit authorization
 in the current invocation.
 
+Paths, item keys, and command recipes live in the skill's
+=references/stafforini-com.md=, mirrored under both =.claude/skills/= and
+=.codex/skills/=. Those paths are absolute, so they have to be updated
+whenever the repository moves; they now point at =~/repos/stafforini.com=.
+
 * Note Export
 :PROPERTIES:
 :ID:       526CD116-FDDA-4436-BDF6-35611338B920

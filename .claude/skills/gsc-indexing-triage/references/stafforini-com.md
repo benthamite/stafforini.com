@@ -2,12 +2,12 @@
 
 ## Paths and tools
 
-- Site repo: `/Users/pablostafforini/My Drive/repos/stafforini.com`
+- Site repo: `/Users/pablostafforini/repos/stafforini.com`
 - Notes source: `/Users/pablostafforini/My Drive/notes`
 - Bibliographic quote source: `/Users/pablostafforini/My Drive/bibliographic-notes`
 - Gmail CLI: `/Users/pablostafforini/My Drive/dotfiles/claude/bin/gmail.py`
 - Personal Gmail account flag: `--account personal`
-- Persistent log: `/Users/pablostafforini/My Drive/repos/stafforini.com/logs/gsc-indexing.md`
+- Persistent log: `/Users/pablostafforini/repos/stafforini.com/logs/gsc-indexing.md`
 - Domain property: `sc-domain:stafforini.com`
 - Known accessible Search Console account in Chrome: `pablo@stafforini.com`, observed as `authuser=1`
 
@@ -54,7 +54,7 @@ python3 "/Users/pablostafforini/My Drive/dotfiles/claude/bin/gmail.py" archive M
 
 Use `npm test` or `bash scripts/test.sh`, not global `pytest`.
 
-From `/Users/pablostafforini/My Drive/repos/stafforini.com`, use a production-profile temporary render before deploying:
+From `/Users/pablostafforini/repos/stafforini.com`, use a production-profile temporary render before deploying:
 
 ```bash
 tmp=$(mktemp -d)
