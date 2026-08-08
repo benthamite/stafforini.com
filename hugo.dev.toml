@@ -31,11 +31,13 @@
   [[module.mounts]]
     source = "static/ltximg"
     target = "static/ltximg"
+  # See the note on these two mounts in hugo.deploy.toml: the notes repo is
+  # still under ~/My Drive/, so the path has to cross into Drive.
   [[module.mounts]]
-    source = "../../notes/public/anki-decks-from-the-lesswrong-community"
+    source = "../../My Drive/notes/public/anki-decks-from-the-lesswrong-community"
     target = "static/anki-decks-from-the-lesswrong-community"
   [[module.mounts]]
-    source = "../../notes/public/summary-of-time-management-by-randy-pausch"
+    source = "../../My Drive/notes/public/summary-of-time-management-by-randy-pausch"
     target = "static/summary-of-time-management-by-randy-pausch"
 
   # Content is intentionally narrowed for local preview.  The full work-page
