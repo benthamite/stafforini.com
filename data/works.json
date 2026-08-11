@@ -36787,6 +36787,23 @@
     "external_url": "",
     "pub_date": ""
   },
+  "beller-1992-restless-conscience-resistance": {
+    "title": "The Restless Conscience: Resistance to Hitler Within Germany 1933-1945",
+    "author": "Hava Kohav Beller",
+    "entry_type": "movie",
+    "shorttitle": "The Restless Conscience",
+    "year": "1992",
+    "location": "United States",
+    "booktitle": "",
+    "journaltitle": "",
+    "volume": "",
+    "number": "",
+    "pages": "",
+    "editor": "",
+    "bookauthor": "",
+    "external_url": "https://www.imdb.com/title/tt0102778/",
+    "pub_date": ""
+  },
   "beller-2007-antisemitism-very-short": {
     "title": "Antisemitism: A very short introduction",
     "author": "Steven Beller",
@@ -199916,8 +199933,10 @@
     "pages": "",
     "editor": "",
     "bookauthor": "",
-    "external_url": "https://forum.effectivealtruism.org/posts/z56YFpphrQDTSPLqi",
-    "pub_date": "2021-08-30"
+    "external_url": "",
+    "pub_date": "2021-08-30",
+    "excluded": true,
+    "excluded_reason": "Requested by a person named in the work on 2026-08-11"
   },
   "kagan-2024-answering-moral-skepticism": {
     "title": "Answering moral skepticism",
@@ -219367,6 +219386,23 @@
     "external_url": "https://www.jneurosci.org/cgi/doi/10.1523/JNEUROSCI.2039-08.2008",
     "pub_date": "2008-10-01"
   },
+  "kurosawa-1948-drunken-angel": {
+    "title": "Drunken Angel",
+    "author": "Akira Kurosawa",
+    "entry_type": "movie",
+    "shorttitle": "",
+    "year": "1948",
+    "location": "Japan",
+    "booktitle": "",
+    "journaltitle": "",
+    "volume": "",
+    "number": "",
+    "pages": "",
+    "editor": "",
+    "bookauthor": "",
+    "external_url": "https://www.imdb.com/title/tt0040979/",
+    "pub_date": ""
+  },
   "kurosawa-1949-stray-dog": {
     "title": "Stray Dog",
     "author": "Akira Kurosawa",
@@ -223156,6 +223192,23 @@
     "editor": "",
     "bookauthor": "",
     "external_url": "https://linkinghub.elsevier.com/retrieve/pii/S0140673607606382",
+    "pub_date": ""
+  },
+  "lautner-1981-professional": {
+    "title": "The Professional",
+    "author": "Georges Lautner",
+    "entry_type": "movie",
+    "shorttitle": "",
+    "year": "1981",
+    "location": "France",
+    "booktitle": "",
+    "journaltitle": "",
+    "volume": "",
+    "number": "",
+    "pages": "",
+    "editor": "",
+    "bookauthor": "",
+    "external_url": "https://www.imdb.com/title/tt0082949/",
     "pub_date": ""
   },
   "law-2021-biased-benevolence-perceived": {
@@ -286055,8 +286108,10 @@
     "pages": "",
     "editor": "",
     "bookauthor": "",
-    "external_url": "https://www.openphilanthropy.org/giving/grants/centre-effective-altruism-jade-leung",
-    "pub_date": ""
+    "external_url": "",
+    "pub_date": "",
+    "excluded": true,
+    "excluded_reason": "Requested by a person named in the work on 2026-08-11"
   },
   "open-philanthropy-2020-earlycareer-funding-individuals": {
     "title": "Early-career funding for individuals interested in improving the long-term future",
@@ -297343,8 +297398,10 @@
     "pages": "",
     "editor": "",
     "bookauthor": "",
-    "external_url": "https://futureoflife.org/2019/07/22/on-the-governance-of-ai-with-jade-leung/",
-    "pub_date": "2019-07-22"
+    "external_url": "",
+    "pub_date": "2019-07-22",
+    "excluded": true,
+    "excluded_reason": "Requested by a person named in the work on 2026-08-11"
   },
   "perry-2020-kelly-wanser-climate": {
     "title": "Kelly wanser on climate change as a possible existential threat",
