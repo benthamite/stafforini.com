@@ -6,6 +6,7 @@ import re
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SIDENOTES_CSS = REPO_ROOT / "assets" / "css" / "_sidenotes.css"
+CONTENT_CSS = REPO_ROOT / "assets" / "css" / "_content.css"
 SIDENOTES_JS = REPO_ROOT / "assets" / "js" / "sidenotes.js"
 
 
@@ -37,3 +38,11 @@ def test_closed_details_code_is_not_a_sidenote_obstacle():
     measure = js.index("var rect = pre.getBoundingClientRect();", skip)
 
     assert skip < measure
+
+
+def test_footnote_reference_does_not_expand_body_line_box():
+    """Superscript references must preserve the body-text baseline rhythm."""
+    css = CONTENT_CSS.read_text()
+    body = _css_block(css, 'sup[id^="fnref:"]')
+
+    assert re.search(r"\bline-height\s*:\s*0\s*;", body)

@@ -180,6 +180,12 @@ details:has(> .highlight) > .highlight pre {
 }
 
 /* Footnotes */
+/* The browser's superscript line box is taller than the body-text line box,
+   which otherwise adds vertical space to every line containing a reference. */
+sup[id^="fnref:"] {
+  line-height: 0;
+}
+
 .footnotes > hr {
   display: none;
 }
