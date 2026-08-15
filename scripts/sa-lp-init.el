@@ -54,6 +54,9 @@ block still fails after `sa-lp-max-attempts' tries."
             (when (sa-lp-had-babel-error-p)
               (sa-lp-log-babel-error-output)
               (error "Babel subprocess reported an error"))
+            (when (and (string= name sa-lp-sensitivity-block)
+                       (sa-lp-sensitivity-result-has-error-p))
+              (error "Sensitivity result contains an err cell"))
             (setq success t))
         (error
          (message "sa-lp-refresh: %s failed on attempt %d: %s"
@@ -63,6 +66,18 @@ block still fails after `sa-lp-max-attempts' tries."
          (setq attempt (1+ attempt)))))
     (unless success
       (error "Block %s failed after %d attempts" name sa-lp-max-attempts))))
+
+(defun sa-lp-sensitivity-result-has-error-p ()
+  "Return non-nil when the sensitivity result contains an `err' cell."
+  (save-excursion
+    (org-babel-goto-named-src-block sa-lp-sensitivity-block)
+    (when-let ((result (org-babel-where-is-src-block-result)))
+      (goto-char result)
+      (let ((end (or (save-excursion
+                       (and (re-search-forward "^#\\+end_" nil t)
+                            (line-end-position)))
+                     (point-max))))
+        (re-search-forward "\\berr\\b" end t)))))
 
 (defun sa-lp-backoff-seconds (attempt)
   "Return seconds to sleep before retrying after failed ATTEMPT.
