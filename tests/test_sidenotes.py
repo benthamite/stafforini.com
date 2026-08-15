@@ -1,4 +1,4 @@
-"""Regression checks for sidenote hover layering."""
+"""Regression checks for sidenote collision and hover behavior."""
 
 from pathlib import Path
 import re
@@ -6,6 +6,7 @@ import re
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SIDENOTES_CSS = REPO_ROOT / "assets" / "css" / "_sidenotes.css"
+SIDENOTES_JS = REPO_ROOT / "assets" / "js" / "sidenotes.js"
 
 
 def _css_block(css: str, selector: str) -> str:
@@ -27,3 +28,12 @@ def test_sidenote_column_paints_above_code_masks():
     css = SIDENOTES_CSS.read_text()
 
     assert _z_index(css, ".sidenote-column") > _z_index(css, ".sidenote-code-mask")
+
+
+def test_closed_details_code_is_not_a_sidenote_obstacle():
+    """Hidden code geometry must not truncate neighboring sidenotes."""
+    js = SIDENOTES_JS.read_text()
+    skip = js.index("if (pre.closest('details:not([open])')) return;")
+    measure = js.index("var rect = pre.getBoundingClientRect();", skip)
+
+    assert skip < measure

@@ -183,8 +183,8 @@
    * On wide screens, rendered <pre> blocks extend into the sidenote margin.
    * Treat a code block like a following sidenote: if it starts below a
    * sidenote but before that sidenote's visible bottom edge, fade the sidenote
-   * out at the collision point.  Closed <details> content has no rendered
-   * rectangle and is ignored.
+   * out at the collision point.  Ignore code inside closed <details> elements:
+   * browsers can report geometry for that content even though it is not painted.
    */
   function truncateForCodeBlocks(container) {
     // .note-body and .quote-body are layout classes, not styling hooks.
@@ -196,6 +196,11 @@
     wideCodeBlocks = [];
 
     Array.prototype.forEach.call(preEls, function (pre) {
+      // Closed <details> content is not painted, but Chrome can still report
+      // a non-zero bounding rectangle for it.  Do not treat that hidden box
+      // as an obstacle in the sidenote margin.
+      if (pre.closest('details:not([open])')) return;
+
       var rect = pre.getBoundingClientRect();
       if (rect.width === 0 || rect.height === 0) return;
       if (rect.right <= columnRect.left || rect.left >= columnRect.right) return;
