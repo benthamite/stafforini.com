@@ -1,16 +1,30 @@
 #!/usr/bin/env bash
 # Daily auto-evaluation of the SA-LP org file's dynamic blocks.
 #
-# Executes sa-data, sa-perf, sa-chart, sa-chart-ais, sa-sensitivity, sa-delay, and sa-calc
-# in situational-awareness-lp.org, regenerating the returns table, returns
-# chart, sensitivity table, copycat-delays table, and portfolio calculator
-# HTML. Then re-exports the note to Hugo and commits + pushes any changes
-# in both the notes and stafforini.com repos.
+# Executes the daily data, performance, chart, delay, and calculator blocks in
+# situational-awareness-lp.org. Pass --with-sensitivity after a new filing or a
+# model change to also rerun the expensive contract-choice sensitivity sweep.
+# Then re-exports the note to Hugo and commits + pushes any changes in both the
+# notes and stafforini.com repos.
 #
 # Designed to be invoked by launchd. Exits non-zero on error so failures
 # surface in the launchd log.
 
 set -euo pipefail
+
+INCLUDE_SENSITIVITY=0
+if [[ "$#" -gt 1 ]]; then
+  echo "Usage: $0 [--with-sensitivity]" >&2
+  exit 2
+fi
+case "${1:-}" in
+  "") ;;
+  --with-sensitivity) INCLUDE_SENSITIVITY=1 ;;
+  *)
+    echo "Usage: $0 [--with-sensitivity]" >&2
+    exit 2
+    ;;
+esac
 
 # launchd runs with a minimal PATH; make sure Homebrew + pyenv are findable.
 export PATH="/opt/homebrew/bin:$HOME/.pyenv/shims:$PATH"
@@ -47,7 +61,12 @@ fi
 export MARKETDATA_KEY
 export SEC_USER_AGENT="stafforini.com situational-awareness-lp research; Pablo Stafforini <pablo@stafforini.com>"
 
-BLOCKS=(sa-data sa-perf sa-chart sa-chart-ais sa-sensitivity sa-delay sa-calc)
+BLOCKS=(sa-data sa-perf sa-chart sa-chart-ais sa-delay sa-calc)
+ELISP_INCLUDE_SENSITIVITY=nil
+if [[ "$INCLUDE_SENSITIVITY" -eq 1 ]]; then
+  BLOCKS+=(sa-sensitivity)
+  ELISP_INCLUDE_SENSITIVITY=t
+fi
 
 echo "=== [$(date '+%Y-%m-%d %H:%M:%S')] sa-lp refresh starting ==="
 
@@ -79,7 +98,7 @@ echo "--- Evaluating babel blocks in $(basename "$ORG_FILE") ---"
 INIT_FILE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/sa-lp-init.el"
 
 emacs -Q --batch --load "$INIT_FILE" \
-  --eval "(sa-lp-refresh \"$ORG_FILE\")"
+  --eval "(sa-lp-refresh \"$ORG_FILE\" $ELISP_INCLUDE_SENSITIVITY)"
 
 # The Emacs save-hook that maintains "#+lastmod:" doesn't fire in batch
 # mode, so the keyword stays stale across programmatic refreshes. Update
@@ -116,8 +135,13 @@ commit_if_changed() {
   echo "$repo: committed and pushed."
 }
 
+NOTES_COMMIT_MESSAGE="sa-lp: refresh returns/charts/delays/calculator (auto-eval)"
+if [[ "$INCLUDE_SENSITIVITY" -eq 1 ]]; then
+  NOTES_COMMIT_MESSAGE="sa-lp: refresh returns/charts/sensitivity/delays/calculator (auto-eval)"
+fi
+
 commit_if_changed "$NOTES_REPO" \
-  "sa-lp: refresh returns/chart/sensitivity/delays/calculator (auto-eval)" \
+  "$NOTES_COMMIT_MESSAGE" \
   "$NOTES_ORG_PATH" ".sa-lp-option-cache"
 
 commit_if_changed "$STAFFORINI_REPO" \

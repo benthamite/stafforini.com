@@ -9,19 +9,32 @@
 (setq shell-file-name "/bin/bash")
 (setq shell-command-switch "-c")
 
-(defconst sa-lp-blocks
-  '("sa-data" "sa-perf" "sa-chart" "sa-chart-ais" "sa-sensitivity" "sa-delay" "sa-calc")
-  "Named src blocks in situational-awareness-lp.org to refresh.")
+(defconst sa-lp-daily-blocks
+  '("sa-data" "sa-perf" "sa-chart" "sa-chart-ais" "sa-delay" "sa-calc")
+  "Named src blocks to refresh every day.")
+
+(defconst sa-lp-sensitivity-block "sa-sensitivity"
+  "Named sensitivity block to refresh after filings or model changes.")
 
 (defconst sa-lp-max-attempts 3
   "Maximum attempts per block on transient failure.")
 
-(defun sa-lp-refresh (org-file)
-  "Evaluate every sa-lp block in ORG-FILE with retry on failure.
+(defun sa-lp-blocks (&optional include-sensitivity)
+  "Return refresh blocks, including sensitivity when requested."
+  (if include-sensitivity
+      (append (butlast sa-lp-daily-blocks 2)
+              (list sa-lp-sensitivity-block)
+              (last sa-lp-daily-blocks 2))
+    sa-lp-daily-blocks))
+
+(defun sa-lp-refresh (org-file &optional include-sensitivity)
+  "Evaluate the daily blocks in ORG-FILE with retry on failure.
+When INCLUDE-SENSITIVITY is non-nil, also evaluate the sensitivity
+block after the charts and before the delay model.
 Raises an error if any block still fails after `sa-lp-max-attempts'
 tries."
   (find-file org-file)
-  (dolist (name sa-lp-blocks)
+  (dolist (name (sa-lp-blocks include-sensitivity))
     (sa-lp-execute-with-retry name))
   (save-buffer))
 
