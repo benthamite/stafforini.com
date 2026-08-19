@@ -42192,3 +42192,34 @@
 # because the entry it duplicated is itself gone, so 404 is correct there.
 /works/anonymous-1969-libro-de-las-2-dup/  /works/anonymous-1969-libro-de-las-2/  301
 /works/anonymous-1969-libro-de-las-2-dup-dup/  /works/anonymous-1969-libro-de-las-2/  301
+
+# Work slug corrected from a cite-key typo (Borges1949Alpeh -> Aleph) without
+# a forwarding rule; Google kept crawling the old slug.
+/works/borges-1949-alpeh/  /works/borges-1949-aleph/  301
+
+# Non-diary quote slugs hash the heading :ID:, falling back to the quote text
+# when the heading has none. The 2026-08-02 bibliographic-notes commit
+# 45e22f08 added IDs to 35 files, which moved these 23 quotes to new slugs.
+/quotes/bass-1974-phase-iv-q-5879f06b/  /quotes/bass-1974-phase-iv-q-92882127/  301
+/quotes/bednarski-2008-strangest-dream-q-63e49b8d/  /quotes/bednarski-2008-strangest-dream-q-5d09ad9f/  301
+/quotes/benton-1979-kramer-vs-q-e8f55f8e/  /quotes/benton-1979-kramer-vs-q-7332679f/  301
+/quotes/bostrom-2009-human-enhancement-ethics-q-5411bc50/  /quotes/bostrom-2009-human-enhancement-ethics-q-806075e4/  301
+/quotes/buhler-2023-future-technological-progress-q-8df598d6/  /quotes/buhler-2023-future-technological-progress-q-444409ff/  301
+/quotes/cascavilla-1973-unora-con-rodolfo-q-90f22aac/  /quotes/cascavilla-1973-unora-con-rodolfo-q-534d0e94/  301
+/quotes/dassin-1947-brute-force-q-6bd6d14b/  /quotes/dassin-1947-brute-force-q-a706852a/  301
+/quotes/halperin-2023-agi-and-emh-q-b160e9ed/  /quotes/halperin-2023-agi-and-emh-q-2287415e/  301
+/quotes/heaven-2025-how-agi-became-q-65ebebc8/  /quotes/heaven-2025-how-agi-became-q-70944929/  301
+/quotes/iverson-1980-notation-as-tool-q-25f31a04/  /quotes/iverson-1980-notation-as-tool-q-33732410/  301
+/quotes/kater-1997-twisted-muse-musicians-q-67929217/  /quotes/kater-1997-twisted-muse-musicians-q-50ba96b2/  301
+/quotes/lang-1944-woman-in-window-q-a763b43c/  /quotes/lang-1944-woman-in-window-q-b42caf16/  301
+/quotes/oesterheld-2020-complications-evaluating-neglectedness-q-688cb9fb/  /quotes/oesterheld-2020-complications-evaluating-neglectedness-q-a3b956cb/  301
+/quotes/parfit-1998-why-anything-why-q-17bf27dc/  /quotes/parfit-1998-why-anything-why-q-2fcb71f4/  301
+/quotes/ricks-2017-churchill-orwell-fight-q-69dd9526/  /quotes/ricks-2017-churchill-orwell-fight-q-18b8646c/  301
+/quotes/sarris-1968-american-cinema-directors-q-badb9d66/  /quotes/sarris-1968-american-cinema-directors-q-7f595abf/  301
+/quotes/sarris-1968-american-cinema-directors-q-388d7ae5/  /quotes/sarris-1968-american-cinema-directors-q-7806935b/  301
+/quotes/schrader-2016-stefan-zweig-farewell-q-b4a33981/  /quotes/schrader-2016-stefan-zweig-farewell-q-886e9367/  301
+/quotes/sjostrom-1924-he-who-gets-q-553ad1ea/  /quotes/sjostrom-1924-he-who-gets-q-e8bd9bee/  301
+/quotes/smith-2025-why-has-american-q-eb2b1409/  /quotes/smith-2025-why-has-american-q-741e10fa/  301
+/quotes/thomas-2024-dispelling-anthropic-shadow-q-579cbaaa/  /quotes/thomas-2024-dispelling-anthropic-shadow-q-a6762839/  301
+/quotes/wilder-1954-sabrina-q-f973a822/  /quotes/wilder-1954-sabrina-q-c5b233af/  301
+/quotes/young-2023-why-flashcards-beat-q-7ff223ae/  /quotes/young-2023-why-flashcards-beat-q-363f5efc/  301
