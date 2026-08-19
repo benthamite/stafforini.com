@@ -12,6 +12,7 @@ Usage:
 """
 
 import argparse
+import hashlib
 import re
 from pathlib import Path
 
@@ -25,14 +26,23 @@ from lib import (
     find_ancestor_with_export,
     is_dataless,
     load_excluded_works,
+    load_json_manifest,
     make_non_diary_slug,
     parse_org_headings,
     safe_remove,
+    save_json_manifest,
 )
 
 # === Constants ===
 
 QUOTES_DIR = REPO_ROOT / "content" / "quotes"
+SLUG_MANIFEST_PATH = REPO_ROOT / "data" / "quote-slug-map.json"
+REDIRECTS_PATH = REPO_ROOT / "static" / "_redirects"
+
+# Managed block in static/_redirects. Rules inside it are appended by
+# record_slug_renames(); everything outside it is hand-maintained.
+REDIRECTS_BLOCK_BEGIN = "# BEGIN generated: non-diary quote slug renames (extract-non-diary-quotes.py)"
+REDIRECTS_BLOCK_END = "# END generated: non-diary quote slug renames"
 
 
 def extract_blockquotes(content: str) -> list[tuple[str, str]]:
@@ -131,6 +141,60 @@ def make_slug(work_slug: str, heading_id: str, quote_text: str) -> str:
 # === Main extraction logic ===
 
 
+def content_key(work_slug: str, quote_text: str) -> str:
+    """Return a slug-independent identity for a quote.
+
+    The slug hashes the heading :ID: when there is one and the quote text
+    otherwise, so a heading that acquires an ID after its first export moves
+    to a new slug (bibliographic-notes 45e22f08 did this to 23 quotes at
+    once). The manifest keys quotes by work plus normalized text instead, so
+    the two slugs of one quote can be matched up and a redirect emitted.
+    """
+    norm = re.sub(r"\s+", " ", quote_text).strip()
+    return hashlib.sha256(f"{work_slug}\n{norm}".encode()).hexdigest()[:16]
+
+
+def detect_slug_renames(manifest: dict, current: dict) -> tuple[list[tuple[str, str]], dict]:
+    """Compare the stored manifest with this run's {content_key: slug}.
+
+    Returns (renames, new_manifest). A rename is (old_slug, new_slug) for a
+    key present in both with different slugs. Keys no longer produced are
+    dropped: the quote is gone, so a 404 is the right answer there.
+    """
+    renames = []
+    for key, slug in current.items():
+        old = manifest.get(key)
+        if old and old != slug:
+            renames.append((old, slug))
+    return renames, dict(sorted(current.items()))
+
+
+def append_redirect_rules(redirects_text: str, renames: list[tuple[str, str]]) -> str:
+    """Append ``/quotes/OLD/ -> /quotes/NEW/`` rules to the managed block.
+
+    Creates the block at the end of the file if absent. Sources already
+    present anywhere in the file are skipped so a re-run never duplicates.
+    """
+    existing_sources = {
+        line.split()[0]
+        for line in redirects_text.splitlines()
+        if line.strip() and not line.startswith("#")
+    }
+    new_rules = [
+        f"/quotes/{old}/  /quotes/{new}/  301"
+        for old, new in renames
+        if f"/quotes/{old}/" not in existing_sources
+    ]
+    if not new_rules:
+        return redirects_text
+    if REDIRECTS_BLOCK_BEGIN not in redirects_text:
+        if not redirects_text.endswith("\n"):
+            redirects_text += "\n"
+        redirects_text += f"\n{REDIRECTS_BLOCK_BEGIN}\n{REDIRECTS_BLOCK_END}\n"
+    head, _, tail = redirects_text.partition(REDIRECTS_BLOCK_END)
+    return head + "\n".join(new_rules) + "\n" + REDIRECTS_BLOCK_END + tail
+
+
 def process_org_file(org_path: Path, excluded_cite_keys: set) -> list[dict]:
     """Process a single org file and return extracted non-diary quotes.
 
@@ -198,6 +262,7 @@ def process_org_file(org_path: Path, excluded_cite_keys: set) -> list[dict]:
                 "work_slug": work_slug,
                 "locator": locator,
                 "quote_md": quote_md,
+                "content_key": content_key(work_slug, bq_text),
             })
 
     return quotes
@@ -260,6 +325,8 @@ def main():
 
     # Collect all slugs we generate to track which files are ours
     generated_slugs = set()
+    # content_key -> slug for this run, compared against the stored manifest
+    current_slugs = {}
 
     for org_path in org_files:
         stats["files_scanned"] += 1
@@ -273,6 +340,7 @@ def main():
         for q in quotes:
             stats["quotes_extracted"] += 1
             generated_slugs.add(q["slug"])
+            current_slugs[q["content_key"]] = q["slug"]
 
             if args.dry_run:
                 if stats["quotes_extracted"] <= 10:
@@ -301,11 +369,29 @@ def main():
     elif stats["files_skipped_dataless"]:
         print("  Stale cleanup skipped because dataless source files were skipped.")
 
+    # Detect slugs that moved since the last run and redirect the old URLs.
+    stats["renames"] = 0
+    if stats["files_skipped_dataless"] == 0:
+        manifest = load_json_manifest(SLUG_MANIFEST_PATH)
+        renames, new_manifest = detect_slug_renames(manifest, current_slugs)
+        stats["renames"] = len(renames)
+        for old, new in renames:
+            print(f"  [RENAME] /quotes/{old}/ -> /quotes/{new}/")
+        if not args.dry_run:
+            if renames:
+                text = REDIRECTS_PATH.read_text()
+                atomic_write_text(REDIRECTS_PATH, append_redirect_rules(text, renames))
+            if new_manifest != manifest:
+                save_json_manifest(SLUG_MANIFEST_PATH, new_manifest)
+    else:
+        print("  Slug-rename check skipped because dataless source files were skipped.")
+
     print(f"  Files scanned:       {stats['files_scanned']}")
     print(f"  Skipped (dataless):  {stats['files_skipped_dataless']}")
     print(f"  Quotes extracted:    {stats['quotes_extracted']}")
     print(f"  Files written:       {stats['files_written']}")
     print(f"  Stale files removed: {stats['stale_removed']}")
+    print(f"  Slug renames:        {stats['renames']}")
     if args.dry_run:
         print("  *** DRY RUN — no files written ***")
 
