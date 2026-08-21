@@ -1,4 +1,4 @@
-name: SA-LP filing watcher
+name: 13F filing watcher (SA-LP + VARA)
 
 on:
   schedule:
@@ -51,12 +51,12 @@ jobs:
 
       - name: Commit state if changed
         run: |
-          if [[ -z "$(git status --porcelain data/sa-lp-13f-state.json)" ]]; then
+          if [[ -z "$(git status --porcelain data/sa-lp-13f-state.json data/vara-13f-state.json)" ]]; then
             echo "No changes to commit."
             exit 0
           fi
           git config user.name  'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          git add data/sa-lp-13f-state.json
-          git commit -m "sa-lp: record new filing"
+          git add data/sa-lp-13f-state.json data/vara-13f-state.json
+          git commit -m "13f: record new filing"
           git push

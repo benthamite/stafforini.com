@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Poll SEC EDGAR for new filings by Situational Awareness LP.
+"""Poll SEC EDGAR for new filings by watched funds (SA LP and VARA).
 
-On each run:
-  1. Fetch recent 13F-HR filings from SA LP's SEC submissions feed.
-  2. Search recent Schedule 13G filings that mention watched SA LP names.
-  3. Compare accessions against ``data/sa-lp-13f-state.json``.
+On each run, for every fund in ``FUNDS``:
+  1. Fetch recent 13F-HR filings from the fund's SEC submissions feed.
+  2. For funds with ``watch_13g``, search recent Schedule 13G filings that
+     mention the fund's watched names.
+  3. Compare accessions against the fund's state file under ``data/``.
   4. Notify Pablo about unseen filings.
   5. Update state so notifications are not repeated.
 
@@ -30,16 +31,35 @@ from datetime import date, datetime, timedelta, timezone
 from email.message import EmailMessage
 from pathlib import Path
 
-CIK_PAD = "0002045724"
-CIK_INT = "2045724"
 # SEC requires a real identifying User-Agent; a generic UA gets 403'd.
-UA = "SA-LP filing watcher (Pablo Stafforini pablo@stafforini.com)"
+UA = "13F filing watcher (Pablo Stafforini pablo@stafforini.com)"
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-STATE_FILE = REPO_ROOT / "data" / "sa-lp-13f-state.json"
-POST_URL = "https://stafforini.com/notes/situational-awareness-lp/"
+DATA_DIR = REPO_ROOT / "data"
 TELEGRAM_API = "https://api.telegram.org"
 EFTS_SEARCH_URL = "https://efts.sec.gov/LATEST/search-index"
+
+FUNDS = [
+    {
+        "key": "sa-lp",
+        "name": "Situational Awareness LP",
+        "cik_pad": "0002045724",
+        "cik_int": "2045724",
+        "post_url": "https://stafforini.com/notes/situational-awareness-lp/",
+        "state_file": "sa-lp-13f-state.json",
+        "watch_13g": True,
+    },
+    {
+        "key": "vara",
+        "name": "Value Aligned Research Advisors",
+        "cik_pad": "0001963565",
+        "cik_int": "1963565",
+        "post_url": "https://stafforini.com/notes/value-aligned-research-advisors/",
+        "state_file": "vara-13f-state.json",
+        "watch_13g": False,
+    },
+]
+
 WATCHED_13G_NAMES = [
     "Situational Awareness LP",
     "Situational Awareness, LP",
@@ -68,9 +88,11 @@ def http_get_text(url: str) -> str:
         return resp.read().decode("utf-8", errors="replace")
 
 
-def recent_13f_filings() -> list[dict]:
-    """Return recent 13F-HR and 13F-HR/A filings from SA LP's feed."""
-    data = http_get_json(f"https://data.sec.gov/submissions/CIK{CIK_PAD}.json")
+def recent_13f_filings(fund: dict) -> list[dict]:
+    """Return recent 13F-HR and 13F-HR/A filings from the fund's feed."""
+    data = http_get_json(
+        f"https://data.sec.gov/submissions/CIK{fund['cik_pad']}.json"
+    )
     recent = data["filings"]["recent"]
     rows = zip(
         recent["form"],
@@ -87,22 +109,19 @@ def recent_13f_filings() -> list[dict]:
                 "filed": filed,
                 "period": period,
                 "accession": accession,
-                "issuer": "Situational Awareness LP",
+                "issuer": fund["name"],
+                "fund_name": fund["name"],
+                "post_url": fund["post_url"],
+                "cik_int": fund["cik_int"],
             })
     return filings
 
 
-def latest_13f() -> dict | None:
-    """Return the most recent 13F-HR (or 13F-HR/A) filing, or None."""
-    filings = recent_13f_filings()
-    return filings[0] if filings else None
-
-
-def filing_url(accession: str) -> str:
-    acc_nd = accession.replace("-", "")
+def filing_url(filing: dict) -> str:
+    acc_nd = filing["accession"].replace("-", "")
     return (
-        f"https://www.sec.gov/Archives/edgar/data/{CIK_INT}/"
-        f"{acc_nd}/{accession}-index.html"
+        f"https://www.sec.gov/Archives/edgar/data/{filing['cik_int']}/"
+        f"{acc_nd}/{filing['accession']}-index.html"
     )
 
 
@@ -116,8 +135,8 @@ def efts_document_url(hit: dict) -> str:
     )
 
 
-def search_recent_13g_filings() -> list[dict]:
-    """Search SEC full text for recent Schedule 13G filings naming SA LP."""
+def search_recent_13g_filings(fund: dict) -> list[dict]:
+    """Search SEC full text for recent Schedule 13G filings naming the fund."""
     end = date.today()
     start = end - timedelta(days=14)
     seen: set[str] = set()
@@ -157,6 +176,9 @@ def search_recent_13g_filings() -> list[dict]:
                     "period": source.get("period_ending") or source.get("file_date", ""),
                     "accession": accession,
                     "issuer": first_display_name(source.get("display_names", [])),
+                    "fund_name": fund["name"],
+                    "post_url": fund["post_url"],
+                    "cik_int": fund["cik_int"],
                     "document_url": efts_document_url(hit),
                 })
 
@@ -175,33 +197,31 @@ def confirms_watched_13g(filing: dict) -> bool:
     return any(name in text for name in WATCHED_13G_NAMES)
 
 
-def recent_watched_filings() -> list[dict]:
-    filings = recent_13f_filings()
-    for filing in search_recent_13g_filings():
-        if confirms_watched_13g(filing):
-            filing.setdefault("kind", "13G")
-            filing.setdefault("issuer", filing.get("entity", "unknown issuer"))
-            filing.setdefault("period", filing.get("filed", ""))
-            filings.append(filing)
+def recent_watched_filings(fund: dict) -> list[dict]:
+    filings = recent_13f_filings(fund)
+    if fund.get("watch_13g"):
+        for filing in search_recent_13g_filings(fund):
+            if confirms_watched_13g(filing):
+                filings.append(filing)
     return sorted(filings, key=lambda filing: (filing["filed"], filing["accession"]))
 
 
 def notification_subject(filing: dict) -> str:
     prefix = "TEST: " if filing.get("kind") == "TEST" else ""
     return (
-        f"{prefix}Situational Awareness LP filed a new {filing['form']} "
+        f"{prefix}{filing['fund_name']} filed a new {filing['form']} "
         f"(period {filing['period']})"
     )
 
 
 def notification_body(filing: dict) -> str:
-    filing_link = filing.get("url") or filing_url(filing["accession"])
+    filing_link = filing.get("url") or filing_url(filing)
     test_note = ""
     if filing.get("kind") == "TEST":
         test_note = "This is a test alert; no SEC filing was detected.\n\n"
     return (
         f"{test_note}"
-        f"A new {filing['form']} involving Situational Awareness LP has "
+        f"A new {filing['form']} involving {filing['fund_name']} has "
         f"been filed with the SEC.\n\n"
         f"- Kind: {filing['kind']}\n"
         f"- Issuer: {filing['issuer']}\n"
@@ -210,23 +230,27 @@ def notification_body(filing: dict) -> str:
         f"- Accession: {filing['accession']}\n\n"
         f"SEC filing index:\n{filing_link}\n\n"
         f"Next steps:\n"
-        f"1. Inspect the filing and update the Situational Awareness LP note.\n"
+        f"1. Inspect the filing and update the {filing['fund_name']} note.\n"
         f"2. Review the updated post.\n"
         f"3. Send the newsletter message manually.\n\n"
-        f"Post:\n{POST_URL}\n"
+        f"Post:\n{filing['post_url']}\n"
     )
 
 
 def build_test_alert() -> dict:
     now = datetime.now(timezone.utc)
+    fund = FUNDS[0]
     return {
         "kind": "TEST",
         "form": "TEST ALERT",
         "filed": now.date().isoformat(),
         "period": now.date().isoformat(),
         "accession": f"test-alert-{now.strftime('%Y%m%d%H%M%S')}",
-        "issuer": "Situational Awareness LP watcher",
-        "url": POST_URL,
+        "issuer": "13F filing watcher",
+        "fund_name": fund["name"],
+        "post_url": fund["post_url"],
+        "cik_int": fund["cik_int"],
+        "url": fund["post_url"],
     }
 
 
@@ -313,24 +337,29 @@ def send_private_notifications(filing: dict) -> None:
 def build_legacy_buttondown_email(filing: dict) -> tuple[str, str]:
     """Return the old public-newsletter message for manual reuse if needed."""
     subject = (
-        f"Situational Awareness LP filed a new {filing['form']} "
+        f"{filing['fund_name']} filed a new {filing['form']} "
         f"(period {filing['period']})"
     )
     body = (
         f"A new {filing['form']} has been filed with the SEC by "
-        f"Situational Awareness LP.\n\n"
+        f"{filing['fund_name']}.\n\n"
         f"- Period: {filing['period']}\n"
         f"- Filed:  {filing['filed']}\n"
         f"- Accession: {filing['accession']}\n\n"
-        f"SEC filing index:\n{filing_url(filing['accession'])}\n\n"
-        f"Portfolio calculator and strategy context:\n{POST_URL}\n"
+        f"SEC filing index:\n{filing_url(filing)}\n\n"
+        f"Portfolio calculator and strategy context:\n{filing['post_url']}\n"
     )
     return subject, body
 
 
-def load_state() -> dict:
-    if STATE_FILE.exists():
-        state = json.loads(STATE_FILE.read_text())
+def state_path(fund: dict) -> Path:
+    return DATA_DIR / fund["state_file"]
+
+
+def load_state(fund: dict) -> dict:
+    path = state_path(fund)
+    if path.exists():
+        state = json.loads(path.read_text())
     else:
         state = {}
 
@@ -355,16 +384,60 @@ def notified_accessions(state: dict, filings: list[dict]) -> set[str]:
     return notified
 
 
-def save_state(filings: list[dict]) -> None:
-    STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
-    existing = load_state().get("notified_accessions", [])
+def save_state(fund: dict, filings: list[dict]) -> None:
+    path = state_path(fund)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    existing = load_state(fund).get("notified_accessions", [])
     accessions = list(dict.fromkeys(existing + [filing["accession"] for filing in filings]))
     state = {
         "notified_accessions": accessions,
         "last_notified": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "_comment": "Auto-updated by scripts/sa-lp-13f-check.py after private notification.",
     }
-    STATE_FILE.write_text(json.dumps(state, indent=2) + "\n")
+    path.write_text(json.dumps(state, indent=2) + "\n")
+
+
+def check_fund(fund: dict, dry_run: bool) -> int:
+    filings = recent_watched_filings(fund)
+    if not filings:
+        print(
+            f"No watched filings found in SEC feeds for {fund['name']}.",
+            file=sys.stderr,
+        )
+        return 1
+
+    state = load_state(fund)
+    notified = notified_accessions(state, filings)
+    new_filings = [filing for filing in filings if filing["accession"] not in notified]
+    if not new_filings:
+        latest = filings[-1]
+        print(
+            f"{fund['name']}: no new filing. Latest watched filing is still "
+            f"{latest['accession']} ({latest['form']}, period {latest['period']}, "
+            f"filed {latest['filed']})."
+        )
+        return 0
+
+    for filing in new_filings:
+        print(
+            f"New filing detected: {filing['fund_name']} {filing['form']} "
+            f"period={filing['period']} filed={filing['filed']} "
+            f"accession={filing['accession']}"
+        )
+
+    if dry_run:
+        for filing in new_filings:
+            print(notification_subject(filing))
+            print()
+            print(notification_body(filing))
+        print("--dry-run: skipping private notification and file writes.")
+        return 0
+
+    for filing in new_filings:
+        send_private_notifications(filing)
+    save_state(fund, filings)
+    print(f"{fund['name']}: private notification sent and state saved.")
+    return 0
 
 
 def main() -> int:
@@ -386,42 +459,10 @@ def main() -> int:
         print("Test notification sent.")
         return 0
 
-    filings = recent_watched_filings()
-    if not filings:
-        print("No watched filings found in SEC feeds.", file=sys.stderr)
-        return 1
-
-    state = load_state()
-    notified = notified_accessions(state, filings)
-    new_filings = [filing for filing in filings if filing["accession"] not in notified]
-    if not new_filings:
-        latest = filings[-1]
-        print(
-            f"No new filing. Latest watched filing is still {latest['accession']} "
-            f"({latest['form']}, period {latest['period']}, filed {latest['filed']})."
-        )
-        return 0
-
-    for filing in new_filings:
-        print(
-            f"New filing detected: {filing['form']} "
-            f"period={filing['period']} filed={filing['filed']} "
-            f"accession={filing['accession']}"
-        )
-
-    if args.dry_run:
-        for filing in new_filings:
-            print(notification_subject(filing))
-            print()
-            print(notification_body(filing))
-        print("--dry-run: skipping private notification and file writes.")
-        return 0
-
-    for filing in new_filings:
-        send_private_notifications(filing)
-    save_state(filings)
-    print("Private notification sent and state saved.")
-    return 0
+    status = 0
+    for fund in FUNDS:
+        status = max(status, check_fund(fund, args.dry_run))
+    return status
 
 
 if __name__ == "__main__":
