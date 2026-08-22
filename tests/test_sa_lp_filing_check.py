@@ -1,4 +1,4 @@
-"""Tests for the SA LP SEC filing watcher."""
+"""Tests for the multi-fund SEC filing watcher."""
 
 import importlib.util
 from pathlib import Path
@@ -7,6 +7,19 @@ _SCRIPT = Path(__file__).parent.parent / "scripts" / "sa-lp-13f-check.py"
 _spec = importlib.util.spec_from_file_location("sa_lp_filing_check", _SCRIPT)
 _mod = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_mod)
+
+SA_LP = _mod.FUNDS[0]
+VARA = _mod.FUNDS[1]
+
+
+def test_fund_table_lists_sa_lp_and_vara():
+    assert SA_LP["key"] == "sa-lp"
+    assert SA_LP["cik_pad"] == "0002045724"
+    assert SA_LP["watch_13g"] is True
+    assert VARA["key"] == "vara"
+    assert VARA["cik_pad"] == "0001963565"
+    assert VARA["watch_13g"] is False
+    assert VARA["post_url"].endswith("/value-aligned-research-advisors/")
 
 
 def test_recent_watched_filings_includes_13f_and_confirmed_13g(monkeypatch):
@@ -28,16 +41,22 @@ def test_recent_watched_filings_includes_13f_and_confirmed_13g(monkeypatch):
         {
             "form": "SC 13G",
             "filed": "2026-05-27",
-            "entity": "Nebius Group N.V.",
-            "cik": "1513845",
+            "issuer": "Nebius Group N.V.",
+            "kind": "13G",
+            "fund_name": SA_LP["name"],
+            "post_url": SA_LP["post_url"],
+            "cik_int": SA_LP["cik_int"],
             "accession": "0000935836-26-000303",
             "document_url": "https://www.sec.gov/Archives/edgar/data/1513845/000093583626000303/primary_doc.xml",
         },
         {
             "form": "SC 13G",
             "filed": "2026-05-28",
-            "entity": "False Positive Inc.",
-            "cik": "9999999",
+            "issuer": "False Positive Inc.",
+            "kind": "13G",
+            "fund_name": SA_LP["name"],
+            "post_url": SA_LP["post_url"],
+            "cik_int": SA_LP["cik_int"],
             "accession": "0000999999-26-000001",
             "document_url": "https://www.sec.gov/Archives/edgar/data/9999999/000099999926000001/primary_doc.xml",
         },
@@ -57,10 +76,12 @@ def test_recent_watched_filings_includes_13f_and_confirmed_13g(monkeypatch):
         raise AssertionError(url)
 
     monkeypatch.setattr(_mod, "http_get_json", fake_json)
-    monkeypatch.setattr(_mod, "search_recent_13g_filings", lambda: search_results)
+    monkeypatch.setattr(
+        _mod, "search_recent_13g_filings", lambda fund: search_results
+    )
     monkeypatch.setattr(_mod, "http_get_text", lambda url: documents[url])
 
-    filings = _mod.recent_watched_filings()
+    filings = _mod.recent_watched_filings(SA_LP)
 
     assert [filing["accession"] for filing in filings] == [
         "0002045724-26-000008",
@@ -69,43 +90,87 @@ def test_recent_watched_filings_includes_13f_and_confirmed_13g(monkeypatch):
     ]
     assert filings[-1]["kind"] == "13G"
     assert filings[-1]["issuer"] == "Nebius Group N.V."
+    assert all(filing["fund_name"] == SA_LP["name"] for filing in filings)
+
+
+def test_recent_watched_filings_skips_13g_search_for_vara(monkeypatch):
+    submissions = {
+        "filings": {
+            "recent": {
+                "form": ["13F-HR"],
+                "filingDate": ["2026-08-17"],
+                "reportDate": ["2026-06-30"],
+                "accessionNumber": ["0001963565-26-000005"],
+            }
+        }
+    }
+
+    monkeypatch.setattr(_mod, "http_get_json", lambda url: submissions)
+    monkeypatch.setattr(
+        _mod,
+        "search_recent_13g_filings",
+        lambda fund: (_ for _ in ()).throw(
+            AssertionError("VARA should not search 13G filings")
+        ),
+    )
+
+    filings = _mod.recent_watched_filings(VARA)
+
+    assert [filing["accession"] for filing in filings] == [
+        "0001963565-26-000005"
+    ]
+    assert filings[0]["fund_name"] == VARA["name"]
+    assert filings[0]["post_url"] == VARA["post_url"]
 
 
 def test_load_state_migrates_legacy_last_accession(tmp_path, monkeypatch):
-    state_file = tmp_path / "sa-lp-state.json"
-    state_file.write_text(
+    monkeypatch.setattr(_mod, "DATA_DIR", tmp_path)
+    (tmp_path / SA_LP["state_file"]).write_text(
         '{\n'
         '  "last_accession": "0002045724-26-000008",\n'
         '  "last_notified": "2026-05-18T00:00:00+00:00"\n'
         '}\n'
     )
-    monkeypatch.setattr(_mod, "STATE_FILE", state_file)
 
-    state = _mod.load_state()
+    state = _mod.load_state(SA_LP)
 
     assert state["notified_accessions"] == ["0002045724-26-000008"]
 
 
 def test_save_state_preserves_existing_accessions_and_adds_new(tmp_path, monkeypatch):
-    state_file = tmp_path / "sa-lp-state.json"
-    state_file.write_text(
+    monkeypatch.setattr(_mod, "DATA_DIR", tmp_path)
+    (tmp_path / SA_LP["state_file"]).write_text(
         '{\n'
         '  "notified_accessions": ["0002045724-26-000008"]\n'
         '}\n'
     )
-    monkeypatch.setattr(_mod, "STATE_FILE", state_file)
 
     _mod.save_state(
+        SA_LP,
         [
             {"accession": "0002045724-26-000008"},
             {"accession": "0000935836-26-000303"},
-        ]
+        ],
     )
 
-    state = _mod.load_state()
+    state = _mod.load_state(SA_LP)
     assert state["notified_accessions"] == [
         "0002045724-26-000008",
         "0000935836-26-000303",
+    ]
+
+
+def test_state_files_are_per_fund(tmp_path, monkeypatch):
+    monkeypatch.setattr(_mod, "DATA_DIR", tmp_path)
+
+    _mod.save_state(SA_LP, [{"accession": "0002045724-26-000008"}])
+    _mod.save_state(VARA, [{"accession": "0001963565-26-000005"}])
+
+    assert _mod.load_state(SA_LP)["notified_accessions"] == [
+        "0002045724-26-000008"
+    ]
+    assert _mod.load_state(VARA)["notified_accessions"] == [
+        "0001963565-26-000005"
     ]
 
 
@@ -133,19 +198,19 @@ def test_test_alert_is_labeled_and_uses_post_url():
 
     assert filing["kind"] == "TEST"
     assert filing["form"] == "TEST ALERT"
-    assert filing["url"] == _mod.POST_URL
+    assert filing["url"] == SA_LP["post_url"]
     assert _mod.notification_subject(filing).startswith("TEST: ")
     assert "This is a test alert" in _mod.notification_body(filing)
-    assert _mod.POST_URL in _mod.notification_body(filing)
+    assert SA_LP["post_url"] in _mod.notification_body(filing)
 
 
 def test_test_alert_mode_sends_without_polling_or_writing(monkeypatch):
     sent = []
 
-    monkeypatch.setattr(_mod, "recent_watched_filings", lambda: (_ for _ in ()).throw(
+    monkeypatch.setattr(_mod, "recent_watched_filings", lambda fund: (_ for _ in ()).throw(
         AssertionError("test alert should not poll SEC")
     ))
-    monkeypatch.setattr(_mod, "save_state", lambda _filings: (_ for _ in ()).throw(
+    monkeypatch.setattr(_mod, "save_state", lambda fund, _filings: (_ for _ in ()).throw(
         AssertionError("test alert should not write state")
     ))
     monkeypatch.setattr(_mod, "send_private_notifications", sent.append)
