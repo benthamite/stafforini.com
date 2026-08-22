@@ -9,30 +9,41 @@
 (setq shell-file-name "/bin/bash")
 (setq shell-command-switch "-c")
 
-(defconst sa-lp-daily-blocks
-  '("sa-data" "sa-perf" "sa-chart" "sa-chart-ais" "sa-delay" "sa-calc")
-  "Named src blocks to refresh every day.")
+(defconst sa-lp-daily-block-suffixes
+  '("data" "perf" "chart" "chart-ais" "delay" "calc")
+  "Suffixes of the named src blocks to refresh every day.")
 
-(defconst sa-lp-sensitivity-block "sa-sensitivity"
-  "Named sensitivity block to refresh after filings or model changes.")
+(defvar sa-lp-block-prefix "sa"
+  "Prefix of the note's named src blocks (\"sa\" or \"vara\").")
 
 (defconst sa-lp-max-attempts 3
   "Maximum attempts per block on transient failure.")
 
-(defun sa-lp-blocks (&optional include-sensitivity)
-  "Return refresh blocks, including sensitivity when requested."
-  (if include-sensitivity
-      (append (butlast sa-lp-daily-blocks 2)
-              (list sa-lp-sensitivity-block)
-              (last sa-lp-daily-blocks 2))
-    sa-lp-daily-blocks))
+(defun sa-lp-sensitivity-block ()
+  "Return the sensitivity block name for `sa-lp-block-prefix'."
+  (concat sa-lp-block-prefix "-sensitivity"))
 
-(defun sa-lp-refresh (org-file &optional include-sensitivity)
+(defun sa-lp-blocks (&optional include-sensitivity)
+  "Return refresh blocks for `sa-lp-block-prefix'.
+When INCLUDE-SENSITIVITY is non-nil, insert the sensitivity block
+after the charts and before the delay model."
+  (let ((blocks (mapcar (lambda (suffix)
+                          (concat sa-lp-block-prefix "-" suffix))
+                        sa-lp-daily-block-suffixes)))
+    (if include-sensitivity
+        (append (butlast blocks 2)
+                (list (sa-lp-sensitivity-block))
+                (last blocks 2))
+      blocks)))
+
+(defun sa-lp-refresh (org-file &optional include-sensitivity prefix)
   "Evaluate the daily blocks in ORG-FILE with retry on failure.
 When INCLUDE-SENSITIVITY is non-nil, also evaluate the sensitivity
-block after the charts and before the delay model.
+block after the charts and before the delay model. PREFIX selects the
+note's block-name prefix and defaults to \"sa\".
 Raises an error if any block still fails after `sa-lp-max-attempts'
 tries."
+  (when prefix (setq sa-lp-block-prefix prefix))
   (find-file org-file)
   (dolist (name (sa-lp-blocks include-sensitivity))
     (sa-lp-execute-with-retry name))
@@ -54,7 +65,7 @@ block still fails after `sa-lp-max-attempts' tries."
             (when (sa-lp-had-babel-error-p)
               (sa-lp-log-babel-error-output)
               (error "Babel subprocess reported an error"))
-            (when (and (string= name sa-lp-sensitivity-block)
+            (when (and (string= name (sa-lp-sensitivity-block))
                        (sa-lp-sensitivity-result-has-error-p))
               (error "Sensitivity result contains an err cell"))
             (setq success t))
@@ -70,7 +81,7 @@ block still fails after `sa-lp-max-attempts' tries."
 (defun sa-lp-sensitivity-result-has-error-p ()
   "Return non-nil when the sensitivity result contains an `err' cell."
   (save-excursion
-    (org-babel-goto-named-src-block sa-lp-sensitivity-block)
+    (org-babel-goto-named-src-block (sa-lp-sensitivity-block))
     (when-let ((result (org-babel-where-is-src-block-result)))
       (goto-char result)
       (let ((end (or (save-excursion
