@@ -16,7 +16,7 @@ emacs -Q --batch --load "$INIT_FILE" --eval '
   (setq sa-lp-block-prefix "vara")
   (let ((vara (sa-lp-blocks t)))
     (unless (equal vara (list "vara-data" "vara-perf" "vara-chart"
-                              "vara-chart-ais" "vara-sensitivity"
+                              "vara-chart-salp" "vara-sensitivity"
                               "vara-delay" "vara-calc"))
       (error "Unexpected vara block list: %S" vara)))
   (message "sa-lp-init.el OK: block lists verified for both prefixes"))'

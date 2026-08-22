@@ -9,9 +9,10 @@
 (setq shell-file-name "/bin/bash")
 (setq shell-command-switch "-c")
 
-(defconst sa-lp-daily-block-suffixes
-  '("data" "perf" "chart" "chart-ais" "delay" "calc")
-  "Suffixes of the named src blocks to refresh every day.")
+(defconst sa-lp-daily-block-suffixes-alist
+  '(("sa" . ("data" "perf" "chart" "chart-ais" "delay" "calc"))
+    ("vara" . ("data" "perf" "chart" "chart-salp" "delay" "calc")))
+  "Per-prefix suffixes of the named src blocks to refresh every day.")
 
 (defvar sa-lp-block-prefix "sa"
   "Prefix of the note's named src blocks (\"sa\" or \"vara\").")
@@ -29,7 +30,10 @@ When INCLUDE-SENSITIVITY is non-nil, insert the sensitivity block
 after the charts and before the delay model."
   (let ((blocks (mapcar (lambda (suffix)
                           (concat sa-lp-block-prefix "-" suffix))
-                        sa-lp-daily-block-suffixes)))
+                        (or (cdr (assoc sa-lp-block-prefix
+                                        sa-lp-daily-block-suffixes-alist))
+                            (error "Unknown block prefix: %s"
+                                   sa-lp-block-prefix)))))
     (if include-sensitivity
         (append (butlast blocks 2)
                 (list (sa-lp-sensitivity-block))

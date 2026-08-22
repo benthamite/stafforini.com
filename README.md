@@ -125,7 +125,7 @@ Org files → ox-hugo export → content/*.md → Hugo build → Pagefind index 
 | `process-pdfs.py` | Strips annotations, generates first-page thumbnails |
 | `verify-site.py` | Builds/checks rendered output for homepage smoke tests |
 | `deploy.sh` | Full export/build + Netlify deploy; `--fast-note` deploys minor already-exported note body edits |
-| `sa-lp-refresh.sh` / `vara-refresh.sh` | Daily launchd re-evaluation of the SA LP / VARA note's babel blocks (`sa-lp-init.el` drives batch Emacs; `check-elisp-init.sh` smoke-tests it) |
+| `sa-lp-refresh.sh` / `vara-refresh.sh` | Daily launchd re-evaluation of the SA LP / VARA note's babel blocks (`sa-lp-init.el` holds the per-note block lists and drives batch Emacs; `check-elisp-init.sh` smoke-tests it) |
 | `sa-lp-13f-check.py` | GitHub Actions poller for new SA LP and VARA SEC filings |
 | `start-dev-server.sh` | Starts the Hugo dev server |
 | `build-search-index.sh` | Builds Hugo + runs Pagefind |

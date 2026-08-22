@@ -61,7 +61,7 @@ fi
 export MARKETDATA_KEY
 export SEC_USER_AGENT="stafforini.com value-aligned-research-advisors research; Pablo Stafforini <pablo@stafforini.com>"
 
-BLOCKS=(vara-data vara-perf vara-chart vara-chart-ais vara-delay vara-calc)
+BLOCKS=(vara-data vara-perf vara-chart vara-chart-salp vara-delay vara-calc)
 ELISP_INCLUDE_SENSITIVITY=nil
 if [[ "$INCLUDE_SENSITIVITY" -eq 1 ]]; then
   BLOCKS+=(vara-sensitivity)
@@ -147,7 +147,7 @@ commit_if_changed "$NOTES_REPO" \
 commit_if_changed "$STAFFORINI_REPO" \
   "vara: refresh returns/chart/calculator HTML" \
   "static/images/value-aligned-research-advisors-returns.html" \
-  "static/images/value-aligned-research-advisors-returns-ais.html" \
+  "static/images/value-aligned-research-advisors-returns-salp.html" \
   "static/images/value-aligned-research-advisors-calculator.html"
 
 echo "--- Deploying to Netlify (fast note/static asset path) ---"
