@@ -33,6 +33,8 @@ ORG_FILE="$HOME/My Drive/notes/public/value-aligned-research-advisors.org"
 NOTES_REPO="$HOME/My Drive/notes"
 STAFFORINI_REPO="$HOME/repos/stafforini.com"
 NOTES_ORG_PATH="public/value-aligned-research-advisors.org"
+DEPENDENCY_ORG_FILE="$HOME/My Drive/notes/public/situational-awareness-lp.org"
+DEPENDENCY_ORG_PATH="public/situational-awareness-lp.org"
 LOG_PATH="$HOME/.cache/vara-refresh.log"
 
 notify_failure() {
@@ -90,6 +92,18 @@ if [[ -e "$LOCKFILE" || -L "$LOCKFILE" ]]; then
   exit 0
 fi
 
+# The VARA comparison embeds SALP's current model. Refuse to package an
+# unrelated saved or unsaved SALP edit into the automated site commit.
+DEPENDENCY_LOCKFILE="$(dirname "$DEPENDENCY_ORG_FILE")/.#$(basename "$DEPENDENCY_ORG_FILE")"
+if [[ -e "$DEPENDENCY_LOCKFILE" || -L "$DEPENDENCY_LOCKFILE" ]]; then
+  echo "Error: dependency is locked by an Emacs session: $DEPENDENCY_LOCKFILE" >&2
+  exit 1
+fi
+if [[ -n "$(git -C "$NOTES_REPO" status --porcelain -- "$DEPENDENCY_ORG_PATH")" ]]; then
+  echo "Error: dependency has uncommitted changes: $DEPENDENCY_ORG_PATH" >&2
+  exit 1
+fi
+
 echo "--- Evaluating babel blocks in $(basename "$ORG_FILE") ---"
 # Run in an isolated batch Emacs with a minimal init so the user's active
 # session stays fully responsive. -Q skips site + user init entirely; we
@@ -99,6 +113,9 @@ INIT_FILE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/sa-lp-init.el"
 
 emacs -Q --batch --load "$INIT_FILE" \
   --eval "(sa-lp-refresh \"$ORG_FILE\" $ELISP_INCLUDE_SENSITIVITY \"vara\")"
+
+echo "--- Generating standalone public scripts ---"
+python3 "$STAFFORINI_REPO/scripts/generate-copycat-scripts.py" --profile vara
 
 # The Emacs save-hook that maintains "#+lastmod:" doesn't fire in batch
 # mode, so the keyword stays stale across programmatic refreshes. Update
@@ -145,10 +162,11 @@ commit_if_changed "$NOTES_REPO" \
   "$NOTES_ORG_PATH" ".value-aligned-research-advisors-option-cache"
 
 commit_if_changed "$STAFFORINI_REPO" \
-  "vara: refresh returns/chart/calculator HTML" \
+  "vara: refresh returns/chart/calculator/code" \
   "static/images/value-aligned-research-advisors-returns.html" \
   "static/images/value-aligned-research-advisors-returns-salp.html" \
-  "static/images/value-aligned-research-advisors-calculator.html"
+  "static/images/value-aligned-research-advisors-calculator.html" \
+  "static/code/value-aligned-research-advisors.py"
 
 echo "--- Deploying to Netlify (fast note/static asset path) ---"
 if [[ "${DRY_RUN:-0}" == "1" ]]; then

@@ -27,6 +27,9 @@ thumbBaseURL = "https://pdf.stafforini.com"
     source = "static/images"
     target = "static/images"
   [[module.mounts]]
+    source = "static/code"
+    target = "static/code"
+  [[module.mounts]]
     source = "static/ox-hugo"
     target = "static/ox-hugo"
   [[module.mounts]]
