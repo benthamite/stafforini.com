@@ -56,3 +56,7 @@ same note become local fragment links such as =#copycat-delays=.
 =scripts/sa-lp-refresh.sh= evaluates every dynamic Babel block used by the
 Situational Awareness LP note, including the AIS comparison block, before
 exporting and committing the generated static chart/calculator assets.
+Both it and =scripts/vara-refresh.sh= drive a =emacs -Q --batch= process
+through =scripts/sa-lp-init.el=, which sets =debug-on-event= to nil so a
+SIGUSR2 aimed at the interactive Emacs (the =emacsk= shell helper) cannot
+arm the debugger and abort the batch run with exit 255.

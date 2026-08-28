@@ -8,6 +8,11 @@
 (setq python-shell-interpreter "/Users/pablostafforini/.pyenv/shims/python3")
 (setq shell-file-name "/bin/bash")
 (setq shell-command-switch "-c")
+;; `debug-on-event' defaults to `sigusr2'.  A SIGUSR2 (e.g. from the
+;; `emacsk' shell helper aimed at a busy interactive Emacs) would arm
+;; `debug-on-quit' and set `quit-flag' here, killing this batch run with
+;; exit 255 at its next activity.  Batch children must opt out.
+(setq debug-on-event nil)
 
 (defconst sa-lp-daily-block-suffixes-alist
   '(("sa" . ("data" "perf" "chart" "chart-ais" "delay" "calc"))
