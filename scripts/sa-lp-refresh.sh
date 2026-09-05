@@ -175,6 +175,10 @@ if [[ "${DRY_RUN:-0}" == "1" ]]; then
   echo "$STAFFORINI_REPO: [dry-run] would deploy with --fast-note."
 else
   bash "$STAFFORINI_REPO/scripts/deploy.sh" --fast-note
+  # Only a completed deployment establishes freshness; skips and dry runs do not.
+  SUCCESS_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/launchd"
+  mkdir -p "$SUCCESS_DIR"
+  touch "$SUCCESS_DIR/com.stafforini.sa-lp-refresh.success"
 fi
 
 echo "=== [$(date '+%Y-%m-%d %H:%M:%S')] sa-lp refresh done ==="
