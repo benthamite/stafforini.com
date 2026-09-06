@@ -1,141 +1,114 @@
 # stafforini.com Search Console reference
 
-## Paths and tools
+## Maintained locations
 
-- Site repo: `/Users/pablostafforini/repos/stafforini.com`
-- Notes source: `/Users/pablostafforini/My Drive/notes`
-- Bibliographic quote source: `/Users/pablostafforini/My Drive/bibliographic-notes`
-- Gmail CLI: `/Users/pablostafforini/My Drive/dotfiles/claude/bin/gmail.py`
-- Personal Gmail account flag: `--account personal`
-- Persistent log: `/Users/pablostafforini/repos/stafforini.com/logs/gsc-indexing.md`
-- Domain property: `sc-domain:stafforini.com`
-- Known accessible Search Console account in Chrome: `pablo@stafforini.com`, observed as `authuser=1`
+- Site: `/Users/pablostafforini/repos/stafforini.com`.
+- Notes: `/Users/pablostafforini/My Drive/notes`.
+- Quotes: `/Users/pablostafforini/My Drive/bibliographic-notes`.
+- Bibliographies: resolve `scripts/lib.py:BIB_FILES`; don't infer paths from
+  old repository layouts. Some are in shared `babel-refs`.
+- Service routing: `/Users/pablostafforini/My Drive/dotfiles/claude/context/service-access.md`
+  and `google-services.md`. Gmail uses the local `gmail.py --account personal`.
+- Run history: `logs/gsc-indexing.md`, relative to the site. Read as dated
+  evidence; append only for requested logging/closeout.
+- Property: `sc-domain:stafforini.com`. Verify the live selector, including
+  sitemap filters, rather than trusting an email subject or URL hint.
 
-Always prefer issue URLs extracted from the emails. Observed Page indexing item keys:
+A previously working browser account occupied `authuser=1`/`/u/1/`.
+Account order can change; use the visible account and current configured Chrome
+profile. Never switch to a different mailbox/property just to obtain access.
 
-| Issue | item_key |
-|---|---|
-| Not found (404) | `CAMYDSAC` |
-| Page with redirect | `CAMYCyAC` |
-| Indexed, though blocked by robots.txt | `CAMYBCAD` |
+## Standing validation policy
 
-## Two issues that can never pass validation
+Decision008 (updated 2026-08-08) says **do not request validation for this
+property's `Not found (404)` or `Page with redirect` buckets**. They contain
+deliberately retired pages and intentional legacy redirects. Keep that policy
+unless the user explicitly changes it; neither apparently clean samples nor
+a filtered view overrides it.
 
-Do not click VALIDATE FIX or START NEW VALIDATION on `Not found (404)` or
-`Page with redirect`, however clean the representative examples look. Google
-re-crawls the whole affected set and marks the validation Failed if any URL
-still shows the issue. For both of these, the set permanently contains URLs
-that are *supposed* to show it, so every validation fails and generates
-another "Some fixes failed" email — which is what most of these triage
-sessions have been spent on.
+This is an operational choice, not a claim that Google can never pass either
+category. Google's process concerns the affected set and any applied sitemap
+filter, not necessarily the whole property. See the current
+[Page indexing documentation](https://support.google.com/webmasters/answer/7440203?hl=en).
+Validation is optional and should not be restarted while a cycle is running.
 
-- `Page with redirect` (2,498) is intentional by construction: legacy
-  WordPress 301s, `/docs/*.pdf`, `/quotes/?p=N`, `www.` to apex, `/tango/**`.
-  The count *rises* when work is done correctly, as on 7/28 when 404s became
-  301s. The report has no diagnostic value.
-- `Not found (404)` (217) is mostly pre-WordPress content that is correctly
-  gone, plus at least one permanently corrupt inbound URL (a `/docs/*.pdf`
-  link with a stray Hangul syllable appended; the clean form redirects fine
-  and nothing can make the corrupt form return 200).
+Do not confuse skipping validation with skipping diagnosis:
 
-The difference between them matters for what to do instead. `Page with
-redirect` can be ignored outright. `Not found (404)` is worth reading every
-time, because a 404 there can be a real regression — a page that lost its
-redirect. Both regressions found on 2026-08-08 came from this list. Triage
-rule: look only at URLs crawled since the last deploy, fix what is genuinely
-broken, and leave the standing backlog alone without validating.
+- Intentional legacy redirects need no change. Check novel or suspicious
+  examples for loops, a wrong destination or a final error.
+- Correctly retired URLs can remain 404. Check new regressions and important
+  internally linked/sitemapped URLs even when their recorded crawl date is old.
+- `Redirect error` and `Soft 404` are different categories; neither inherits
+  the no-validation rule simply because its name resembles another bucket.
+- Do not manufacture redirects to make totals fall. Respect takedowns and
+  source ownership; an uncertain replacement is not a guessed target.
 
-`Soft 404` is a separate matter and is not covered by this rule.
+Counts such as 2,498 redirects/217 404s were observed in August 2026, not a current
+inventory. Old item keys in the log are navigation hints, not stable API values.
+If an email link is missing, select the issue in the verified property's UI.
 
-## Commands
+## Google evidence boundaries
 
-Query GSC emails:
+The report's examples may be incomplete even below its 1,000-row limit.
+A report crawl date differs from a live check. A success from the
+[URL Inspection live test](https://support.google.com/webmasters/answer/9012289?hl=en)
+does not establish actual indexing; inspect source redirects separately because
+the live test can follow them. Preserve the distinction between a page's
+current response, Google's recorded index state and validation progress.
 
-```bash
-python3 "/Users/pablostafforini/My Drive/dotfiles/claude/bin/gmail.py" query \
-  'from:(sc-noreply@google.com) ("Page indexing" OR "Search Console") newer_than:45d' \
-  --account personal --max 20
-```
+A working redirect target is not necessarily the intended canonical target.
+Check content, indexability and internal/sitemap references, not only final 200.
+Robots restrictions and `noindex` are separate controls; consult current Google
+documentation before changing either to address an indexing alert.
 
-Read a message:
+## Site integration
 
-```bash
-python3 "/Users/pablostafforini/My Drive/dotfiles/claude/bin/gmail.py" get MESSAGE_ID --account personal
-```
+Read the canonical decisions before modifying the affected subsystem:
 
-Decode issue links:
+- 005: encoded redirect sources and `static/_redirects` precedence. Use the
+  existing generator's encoding routine for work-slug mappings.
+- 006: deploy-cost measurements and already-tested explanations.
+- 007: duplicate work pages retain their canonical links; don't delete shared
+  bibliography entries to tidy the site.
+- 008/012: no-validation policy and action-specific authorization.
+- 009/011: required mounts/sources must resolve before generation or deployment.
+- 010/015: full rendered verification includes redirect-target checks; quote
+  slug changes are handled by the content-keyed mapping generator.
 
-```bash
-tool=codex  # use claude in Claude Code
-skill_file=$("$HOME/My Drive/dotfiles/bin/agent-skill" path gsc-indexing-triage --tool "$tool")
-skill_dir=$(dirname "$skill_file")
-python3 "$skill_dir/scripts/extract-gsc-links.py" --account personal MESSAGE_ID...
-```
+Use `npm test` or `bash scripts/test.sh`, not bare pytest. The production
+Hugo render plus `verify-site.py --dir EXACT_RENDER` checks local structure,
+including redirect targets; it does not execute Netlify's edge rules.
+`--quick` deploy skips export/PDF/R2 steps and publishes the full current tree.
+Read `scripts/deploy.sh`/`PUBLISHING.md` before selecting a different mode.
 
-Archive a handled message:
+The 2026-08-19 log records a bulk live-sitemap sweep stopped after rate limiting.
+Use bounded representative live checks, not a high-volume sweep. Local structural
+checks supply breadth; live checks supply evidence of the affected deployed
+behavior. Neither alone proves Google has recrawled or indexed the pages.
 
-```bash
-python3 "/Users/pablostafforini/My Drive/dotfiles/claude/bin/gmail.py" archive MESSAGE_ID --account personal
-```
+Read `docs/pdf-hosting-policy.md` for the deliberate crawlability/duplicate
+policy before changing PDF indexing. PDFs are served from a separate R2 host;
+Netlify headers do not control that host. The policy's hosting choices are not
+a legal assessment or proof that every reported PDF duplicate is intentional.
 
-## Site-specific checks
+## Optional log shape
 
-Use `npm test` or `bash scripts/test.sh`, not global `pytest`.
-
-From `/Users/pablostafforini/repos/stafforini.com`, use a production-profile temporary render before deploying:
-
-```bash
-tmp=$(mktemp -d)
-trap 'trash "$tmp"' EXIT
-hugo --minify --config hugo.toml,hugo.deploy.toml --destination "$tmp" --noBuildLock --quiet
-python3 scripts/verify-site.py --dir "$tmp"
-```
-
-After quick deploy, check the live sitemap and representative URLs:
-
-```bash
-curl -Ls https://stafforini.com/sitemap.xml | python3 -c 'import sys; s=sys.stdin.read(); print(s.count("<url>"), "urls")'
-curl -IL "https://example-affected-url"
-```
-
-## Recent seed context
-
-On 2026-05-05, the current GSC failures were `Not found (404)` and `Page with redirect`. Fixes included:
-
-- Excluding non-indexable pages from `sitemap.xml` with a shared `is-indexable` partial.
-- Aligning head robots meta and sitemap inclusion.
-- Adding Netlify redirects for old WordPress, doubled asset, Anki, and `blog/bostrom` URLs.
-- Normalizing legacy `www.stafforini.com` and `/blog/` links in work-page canonical link rendering.
-- Extending `scripts/verify-site.py` to catch sitemap noindex/canonical/broken-link problems in rendered output.
-
-After deploy, Search Console validation was restarted:
-
-- `Not found (404)`: `Validation started`, `Started: 05/05/2026`, `PENDING 375`, `FAILED 0`.
-- `Page with redirect`: `Validation started`, `Started: 05/05/2026`, `PENDING 1,556`, `FAILED 0`.
-
-Use this only as context. Always re-read the persistent log and current GSC examples before making new changes.
-
-## Log entry template
+When logging is authorized, retain a short dated record:
 
 ```markdown
 ## YYYY-MM-DD - GSC indexing triage
 
-- Messages:
-  - `MESSAGE_ID` - SUBJECT
-- Issues:
-  - ISSUE_LABEL - ISSUE_URL
-- Examples checked:
-  - URL -> FINAL_URL, STATUS
-- Root cause:
-- Changes:
-  - Repo commit/path summary
-- Verification:
-  - Command -> result
-- Deploy:
-  - Command/result or not done
-- Browser validation:
-  - Issue -> status/counts
-- Archived:
-  - MESSAGE_ID
-- Follow-up:
+- Scope and actual agent:
+- Messages/issues (minimal identifiers, property and filter):
+- Examples and observations (crawl/report/live times distinguished):
+- Root cause or remaining uncertainty:
+- Source changes and commits:
+- Local verification:
+- Deploy and live acceptance:
+- GSC validation (observed state, or reason not started):
+- Archive (exact handled IDs and confirmed label state):
+- Open decisions/follow-up:
 ```
+
+Keep historical entries intact. Do not copy private email bodies, credentials
+or access-bearing shared-report URLs into this potentially public repository.

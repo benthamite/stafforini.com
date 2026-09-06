@@ -13,7 +13,9 @@
 The project-local =gsc-indexing-triage= skill handles Google Search Console
 Page indexing alerts for =stafforini.com=. Read-only triage includes opening
 Search Console in a browser to inspect failed examples and checking the
-affected URLs locally or live.
+affected URLs locally or live. It does not write a log, export content or apply
+fixes unless the request authorizes those changes. The link helper reports
+extraction failures explicitly, validates link destinations and never logs in.
 
 Deployment, clicking Search Console validation buttons, and archiving Gmail
 messages remain externally visible actions and require explicit authorization
@@ -29,14 +31,14 @@ Paths, item keys, and command recipes live in the skill's
 =.codex/skills/=. Those paths are absolute, so they have to be updated
 whenever the repository moves; they now point at =~/repos/stafforini.com=.
 
-Two issues must never be validated: =Not found (404)= and =Page with
-redirect=. Google fails a validation if any affected URL still shows the
-issue, and for both of these the affected set permanently contains URLs that
-are meant to show it — correctly retired pre-WordPress pages in the first,
-intentional legacy 301s in the second. Validating them only produces another
-"Some fixes failed" email. =Not found (404)= is still worth reading for
-genuine lost redirects; =Page with redirect= can be ignored. The reference
-file carries the full rule.
+Decision 008 says not to validate this property's =Not found (404)= or =Page
+with redirect= buckets because they contain intentional backlogs. This is a
+site policy, not a claim that Google can never validate either category.
+Inspect relevant examples in both buckets for genuine regressions, including
+broken redirect targets; recent crawl dates prioritize work but do not exclude
+older important URLs. Use bounded live checks and distinguish local fixes,
+deployed behavior and Google's recorded state. The skill's reference carries
+the policy, evidence limits and source links.
 
 * Note Export
 :PROPERTIES:
