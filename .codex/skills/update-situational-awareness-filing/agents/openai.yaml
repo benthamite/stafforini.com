@@ -1,4 +1,4 @@
 interface:
   display_name: "Update Situational Awareness Filing"
   short_description: "Refresh the SA LP note after a new filing"
-  default_prompt: "Use $update-situational-awareness-filing to update and publish the Situational Awareness LP note for the latest SEC filing."
+  default_prompt: "Use $update-situational-awareness-filing to inspect the selected disclosure and report which Situational Awareness LP artifacts need refreshing, without recomputation or publication."

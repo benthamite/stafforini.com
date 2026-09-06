@@ -40,6 +40,21 @@ older important URLs. Use bounded live checks and distinguish local fixes,
 deployed behavior and Google's recorded state. The skill's reference carries
 the policy, evidence limits and source links.
 
+** update-situational-awareness-filing
+
+The paired project-local filing skill distinguishes read-only research from
+local recomputation and explicitly authorized publication. Its checker tests
+current full-13F artifact consistency, not SEC completeness, financial-model
+correctness, a newly completed sensitivity run or live publication. The skill's
+=references/filing-refresh.md= describes current producer limitations and the
+affected SALP/VARA artifacts.
+
+=DRY_RUN=1 scripts/sa-lp-refresh.sh --with-sensitivity= still reads credentials,
+uses data services and changes local results, caches and exports; only automatic
+commit/push/deploy are suppressed. A filing refresh must verify all three proxy
+modes and both generated standalone scripts. Filing-related date/link/citation
+changes do not qualify for the limited =--fast-note= deployment path.
+
 * Note Export
 :PROPERTIES:
 :ID:       526CD116-FDDA-4436-BDF6-35611338B920
