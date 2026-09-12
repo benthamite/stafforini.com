@@ -9,8 +9,14 @@
     "0000935836-26-000303",
     "0000935836-26-000334",
     "0000935836-26-000416",
-    "0000935836-26-000418"
+    "0000935836-26-000418",
+    "0000935836-25-000543",
+    "0000935836-25-000638",
+    "0000935836-26-000333",
+    "0000935836-26-000339",
+    "0000919574-26-004796",
+    "0000935836-26-000468"
   ],
   "last_notified": "2026-08-14T20:38:43+00:00",
-  "_comment": "Auto-updated by scripts/sa-lp-13f-check.py after private notification."
+  "_comment": "Auto-updated by scripts/sa-lp-13f-check.py after private notification. Seeded 2026-09-12 with historical 13D and Form 3/4 accessions when those forms were added."
 }
