@@ -27,11 +27,21 @@ Options:
     --only KEY          Process only the book with this citekey
     --update-bib        Add file fields to old.bib for downloaded PDFs
     --verbose           Print extra debugging info
+    --article-doi DOI   Download an article via SciDB (repeat for multiple DOIs)
+    --out DIR           Article download directory (default: current directory)
+
+Article lookups distinguish failed requests and bot challenges from successful
+responses with no downloadable links. A failed lookup leaves availability
+unknown. Fast-download diagnostics omit credentials, signed URLs and remote messages.
+DOI mode selects only result cards with a matching Sci-Hub DOI filename and one
+record link. Other filenames or page layouts require separate identity checking;
+the script refuses them rather than selecting unrelated recent-download links.
 """
 
 from __future__ import annotations
 
 import argparse
+from html.parser import HTMLParser
 import json
 import os
 import re
@@ -179,13 +189,103 @@ def resolve_annas_home_url(*, verbose: bool = False) -> str:
     return _annas_url_from_wikitext(content)
 
 
+class ArticleLookupError(Exception):
+    """SciDB could not provide a usable lookup response."""
+
+
+class _ArticleHTML(HTMLParser):
+    """Retain element boundaries needed to identify actual article result cards."""
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.root = {"tag": "root", "attrs": {}, "children": []}
+        self.stack = [self.root]
+
+    def handle_starttag(self, tag, attrs):
+        node = {"tag": tag, "attrs": dict(attrs), "children": []}
+        self.stack[-1]["children"].append(node)
+        if tag not in {"area", "base", "br", "col", "embed", "hr", "img", "input",
+                       "link", "meta", "param", "source", "track", "wbr"}:
+            self.stack.append(node)
+
+    def handle_endtag(self, tag):
+        for index in range(len(self.stack) - 1, 0, -1):
+            if self.stack[index]["tag"] == tag:
+                del self.stack[index:]
+                return
+
+    def handle_data(self, text):
+        self.stack[-1]["children"].append(text)
+
+
+def _article_nodes(node):
+    yield node
+    for child in node["children"]:
+        if isinstance(child, dict):
+            yield from _article_nodes(child)
+
+
+def _article_text(node):
+    return "".join(_article_text(child) if isinstance(child, dict) else child
+                   for child in node["children"])
+
+
+def _parse_article_md5s(html: str, doi: str) -> list[str]:
+    """Select only DOI-labelled PDF cards inside the observed result container."""
+    document = _ArticleHTML()
+    document.feed(html)
+    nodes = list(_article_nodes(document.root))
+    mains = [node for node in nodes
+             if node["tag"] == "main" or node["attrs"].get("role") == "main"]
+    for main in mains:
+        for node in _article_nodes(main):
+            if (node["tag"] == "span"
+                    and "font-bold" in node["attrs"].get("class", "").split()
+                    and _article_text(node).strip() == "No files found."):
+                return []
+    expected = "scihub/" + urllib.parse.unquote(doi).strip().casefold() + ".pdf"
+    matches = []
+    containers = [node for node in nodes
+                  if "js-aarecord-list-outer" in node["attrs"].get("class", "").split()]
+    for container in containers:
+        for card in container["children"]:
+            if (not isinstance(card, dict) or card["tag"] != "div"
+                    or not {"flex", "border-b"}.issubset(card["attrs"].get("class", "").split())):
+                continue
+            card_nodes = list(_article_nodes(card))
+            if not any(urllib.parse.unquote(_article_text(node).strip()).casefold() == expected
+                       for node in card_nodes if node["tag"] == "div"):
+                continue
+            hashes = set()
+            for node in card_nodes:
+                if (node["tag"] == "a"
+                        and "js-vim-focus" in node["attrs"].get("class", "").split()):
+                    match = re.fullmatch(r"/md5/([0-9a-f]{32})", node["attrs"].get("href", ""))
+                    if match:
+                        hashes.add(match[1])
+            if len(hashes) != 1:
+                raise ArticleLookupError("Ambiguous article result; DOI identity not established")
+            matches.extend(hashes)
+    if not matches:
+        raise ArticleLookupError("Unrecognized or unmatched article results; DOI identity not established")
+    return list(dict.fromkeys(matches))
+
+
+def _safe_error_description(error: Exception) -> str:
+    """Describe a failure without echoing URLs or remote exception messages."""
+    if isinstance(error, urllib.error.HTTPError):
+        return f"HTTP {error.code}"
+    return type(error).__name__
+
+
 def fetch_scidb_md5s(doi: str, base_url: str, *, verbose: bool = False) -> list[str]:
     """Return md5 hashes listed on the Anna's Archive SciDB page for a DOI.
 
-    Ported from annas-archive.el (``…/scidb/<doi>`` → md5). Returns hashes in
-    page order (deduplicated), or [] if none are found — e.g. the DOI isn't in
-    Anna's, or a DDoS-Guard challenge page was served instead of content (in
-    which case a real browser is needed, as the elisp uses eww).
+    Requests ``…/scidb/<doi>`` and inspects actual result cards after redirects.
+    Returns hashes from DOI-labelled PDF cards in page order (deduplicated), or
+    [] for the recognized no-results response. Recent-download links are ignored.
+    Raises ArticleLookupError on transport failure or a bot-challenge response;
+    unknown layouts and cards without verifiable DOI identity also fail closed.
     """
     url = f"{base_url}scidb/{doi}"
     if verbose:
@@ -193,20 +293,14 @@ def fetch_scidb_md5s(doi: str, base_url: str, *, verbose: bool = False) -> list[
     try:
         html = _fetch_url(url)
     except Exception as e:
-        print(f"    SciDB fetch failed: {e}", file=sys.stderr)
-        return []
+        raise ArticleLookupError(_safe_error_description(e)) from None
     if (
         "ddos-guard" in html.lower()
         or "Just a moment" in html
         or "captcha" in html.lower()
     ):
-        print(
-            "    SciDB returned a bot-challenge page, not content "
-            "(needs a real browser, as annas-archive.el uses eww)",
-            file=sys.stderr,
-        )
-        return []
-    return list(dict.fromkeys(re.findall(r"/md5/([0-9a-f]{32})", html)))
+        raise ArticleLookupError("SciDB returned a bot-challenge page")
+    return _parse_article_md5s(html, doi)
 
 
 def download_article_by_doi(
@@ -223,9 +317,15 @@ def download_article_by_doi(
     the fast-download API. Returns the saved path, or None if the DOI couldn't
     be resolved or the download failed.
     """
-    md5s = fetch_scidb_md5s(doi, base_url, verbose=verbose)
+    try:
+        md5s = fetch_scidb_md5s(doi, base_url, verbose=verbose)
+    except ArticleLookupError as e:
+        print(f"    SciDB lookup failed for DOI {doi}; availability unknown: {e}",
+              file=sys.stderr)
+        return None
     if not md5s:
-        print(f"    No Anna's Archive record found for DOI {doi}", file=sys.stderr)
+        print(f"    SciDB returned no downloadable record links for DOI {doi}",
+              file=sys.stderr)
         return None
     md5 = md5s[0]
     if verbose:
@@ -661,7 +761,7 @@ def _download_once(
     )
 
     if verbose:
-        print(f"    API URL: {api_url[:80]}...", file=sys.stderr)
+        print("    Requesting fast-download API", file=sys.stderr)
 
     try:
         req = urllib.request.Request(
@@ -673,17 +773,20 @@ def _download_once(
     except urllib.error.HTTPError as e:
         if e.code == 429:
             raise RateLimitError()
-        print(f"    Fast download API failed: {e}", file=sys.stderr)
+        print(f"    Fast download API failed: {_safe_error_description(e)}", file=sys.stderr)
         return False
     except Exception as e:
-        print(f"    Fast download API failed: {e}", file=sys.stderr)
+        print(f"    Fast download API failed: {_safe_error_description(e)}", file=sys.stderr)
         return False
 
+    if not isinstance(data, dict):
+        print("    Fast download API returned an invalid response", file=sys.stderr)
+        return False
     download_url = data.get("download_url")
     error = data.get("error")
 
     if error:
-        print(f"    API error: {error}", file=sys.stderr)
+        print("    Fast download API returned an error", file=sys.stderr)
         return False
 
     if not download_url:
@@ -691,7 +794,7 @@ def _download_once(
         return False
 
     if verbose:
-        print(f"    Download URL: {download_url[:80]}...", file=sys.stderr)
+        print("    Downloading file from the returned link", file=sys.stderr)
 
     # Download the actual file
     try:
@@ -717,7 +820,7 @@ def _download_once(
             dest_path.write_bytes(content)
 
     except Exception as e:
-        print(f"    Download failed: {e}", file=sys.stderr)
+        print(f"    Download failed: {_safe_error_description(e)}", file=sys.stderr)
         # Clean up partial file
         if dest_path.exists():
             dest_path.unlink()
