@@ -219,3 +219,79 @@ def test_test_alert_mode_sends_without_polling_or_writing(monkeypatch):
     assert _mod.main() == 0
     assert len(sent) == 1
     assert sent[0]["kind"] == "TEST"
+
+
+def test_feed_form_kind_accepts_ownership_forms_only():
+    assert _mod.feed_form_kind("13F-HR") == "13F"
+    assert _mod.feed_form_kind("13F-HR/A") == "13F"
+    assert _mod.feed_form_kind("SCHEDULE 13D") == "13D"
+    assert _mod.feed_form_kind("SCHEDULE 13D/A") == "13D"
+    assert _mod.feed_form_kind("SC 13D/A") == "13D"
+    assert _mod.feed_form_kind("SCHEDULE 13G/A") == "13G"
+    assert _mod.feed_form_kind("SC 13G") == "13G"
+    for form in ("3", "4", "4/A", "5"):
+        assert _mod.feed_form_kind(form) == "Section 16"
+    for form in ("N-PX", "8-K", "40-F", "424B3", "SC 13E3", "13F-NT"):
+        assert _mod.feed_form_kind(form) is None
+
+
+def test_recent_watched_filings_reads_13d_13g_and_section_16_from_feed(monkeypatch):
+    submissions = {
+        "filings": {
+            "recent": {
+                "form": ["SCHEDULE 13D", "N-PX", "SCHEDULE 13G/A", "4", "13F-HR"],
+                "filingDate": [
+                    "2026-08-28", "2026-08-28", "2026-08-14", "2026-07-02", "2026-08-14",
+                ],
+                "reportDate": ["", "2026-06-30", "", "2026-06-30", "2026-06-30"],
+                "accessionNumber": [
+                    "0000935836-26-000468",
+                    "0000935836-26-000464",
+                    "0000935836-26-000416",
+                    "0000935836-26-000339",
+                    "0000935836-26-000418",
+                ],
+            }
+        }
+    }
+    search_results = [
+        {
+            "kind": "13G",
+            "form": "SCHEDULE 13G/A",
+            "filed": "2026-08-14",
+            "period": "2026-06-30",
+            "accession": "0000935836-26-000416",
+            "issuer": "SharonAI Holdings Inc.",
+            "fund_name": SA_LP["name"],
+            "post_url": SA_LP["post_url"],
+            "cik_int": SA_LP["cik_int"],
+            "document_url": "https://www.sec.gov/unused",
+        },
+    ]
+
+    monkeypatch.setattr(_mod, "http_get_json", lambda url: submissions)
+    monkeypatch.setattr(
+        _mod, "search_recent_13g_filings", lambda fund: search_results
+    )
+    monkeypatch.setattr(
+        _mod,
+        "http_get_text",
+        lambda url: (_ for _ in ()).throw(
+            AssertionError("feed filings need no document name check")
+        ),
+    )
+
+    filings = _mod.recent_watched_filings(SA_LP)
+
+    by_accession = {filing["accession"]: filing for filing in filings}
+    assert list(by_accession) == [
+        "0000935836-26-000339",
+        "0000935836-26-000416",
+        "0000935836-26-000418",
+        "0000935836-26-000468",
+    ]
+    assert by_accession["0000935836-26-000468"]["kind"] == "13D"
+    assert by_accession["0000935836-26-000468"]["period"] == "2026-08-28"
+    assert by_accession["0000935836-26-000339"]["kind"] == "Section 16"
+    assert by_accession["0000935836-26-000416"]["issuer"] == "SharonAI Holdings Inc."
+    assert "document_url" not in by_accession["0000935836-26-000416"]

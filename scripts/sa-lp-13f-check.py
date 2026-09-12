@@ -2,9 +2,11 @@
 """Poll SEC EDGAR for new filings by watched funds (SA LP and VARA).
 
 On each run, for every fund in ``FUNDS``:
-  1. Fetch recent 13F-HR filings from the fund's SEC submissions feed.
-  2. For funds with ``watch_13g``, search recent Schedule 13G filings that
-     mention the fund's watched names.
+  1. Fetch recent 13F-HR, Schedule 13D/13G, and Form 3/4/5 filings from the
+     fund's SEC submissions feed.
+  2. For funds with ``watch_13g``, also search recent Schedule 13G filings
+     that mention the fund's watched names, to catch affiliate filings made
+     under another CIK.
   3. Compare accessions against the fund's state file under ``data/``.
   4. Notify Pablo about unseen filings.
   5. Update state so notifications are not repeated.
@@ -60,6 +62,18 @@ FUNDS = [
     },
 ]
 
+# Form-name prefixes accepted from a fund's own submissions feed. Older
+# filings use the "SC 13D"/"SC 13G" spellings.
+FEED_FORM_PREFIXES = [
+    ("13F-HR", "13F"),
+    ("SCHEDULE 13D", "13D"),
+    ("SC 13D", "13D"),
+    ("SCHEDULE 13G", "13G"),
+    ("SC 13G", "13G"),
+]
+# Section 16 ownership forms, matched exactly so "40-F" or "424B3" never match.
+SECTION_16_FORMS = {"3", "3/A", "4", "4/A", "5", "5/A"}
+
 WATCHED_13G_NAMES = [
     "Situational Awareness LP",
     "Situational Awareness, LP",
@@ -88,8 +102,18 @@ def http_get_text(url: str) -> str:
         return resp.read().decode("utf-8", errors="replace")
 
 
-def recent_13f_filings(fund: dict) -> list[dict]:
-    """Return recent 13F-HR and 13F-HR/A filings from the fund's feed."""
+def feed_form_kind(form: str) -> str | None:
+    """Return the watcher kind for a submissions-feed form, or None to skip it."""
+    if form in SECTION_16_FORMS:
+        return "Section 16"
+    for prefix, kind in FEED_FORM_PREFIXES:
+        if form.startswith(prefix):
+            return kind
+    return None
+
+
+def recent_feed_filings(fund: dict) -> list[dict]:
+    """Return recent watched filings from the fund's own submissions feed."""
     data = http_get_json(
         f"https://data.sec.gov/submissions/CIK{fund['cik_pad']}.json"
     )
@@ -102,14 +126,18 @@ def recent_13f_filings(fund: dict) -> list[dict]:
     )
     filings = []
     for form, filed, period, accession in rows:
-        if form.startswith("13F-HR"):
+        kind = feed_form_kind(form)
+        if kind:
             filings.append({
-                "kind": "13F",
-                "form": form,
+                "kind": kind,
+                "form": f"Form {form}" if kind == "Section 16" else form,
                 "filed": filed,
-                "period": period,
+                "period": period or filed,
                 "accession": accession,
-                "issuer": fund["name"],
+                # The feed does not name the subject company of a 13D/13G or
+                # Section 16 filing; the 13G full-text search fills it in when
+                # it sees the same accession.
+                "issuer": fund["name"] if kind == "13F" else "see SEC filing index",
                 "fund_name": fund["name"],
                 "post_url": fund["post_url"],
                 "cik_int": fund["cik_int"],
@@ -198,12 +226,19 @@ def confirms_watched_13g(filing: dict) -> bool:
 
 
 def recent_watched_filings(fund: dict) -> list[dict]:
-    filings = recent_13f_filings(fund)
+    filings = {filing["accession"]: filing for filing in recent_feed_filings(fund)}
     if fund.get("watch_13g"):
         for filing in search_recent_13g_filings(fund):
-            if confirms_watched_13g(filing):
-                filings.append(filing)
-    return sorted(filings, key=lambda filing: (filing["filed"], filing["accession"]))
+            feed_filing = filings.get(filing["accession"])
+            if feed_filing:
+                # Already in the fund's own feed, so no name check is needed.
+                feed_filing["issuer"] = filing["issuer"]
+            elif confirms_watched_13g(filing):
+                filings[filing["accession"]] = filing
+    return sorted(
+        filings.values(),
+        key=lambda filing: (filing["filed"], filing["accession"]),
+    )
 
 
 def notification_subject(filing: dict) -> str:
