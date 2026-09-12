@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       test_alert:
-        description: Send a clearly labeled test notification instead of polling SEC.
+        description: Send a labeled test notification and a create-then-delete test draft instead of polling SEC.
         required: false
         default: "false"
         type: choice
@@ -24,7 +24,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # Needed to commit state + feed updates back to the repo.
+      contents: write  # Needed to commit state and feed updates back to the repo.
     steps:
       - uses: actions/checkout@v4
 
@@ -34,6 +34,7 @@ jobs:
 
       - name: Run poller
         env:
+          BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.SA_LP_TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.SA_LP_TELEGRAM_CHAT_ID }}
           SMTP_HOST: ${{ secrets.SA_LP_SMTP_HOST }}
@@ -49,14 +50,15 @@ jobs:
             python3 scripts/sa-lp-13f-check.py
           fi
 
-      - name: Commit state if changed
+      - name: Commit state and feeds if changed
         run: |
-          if [[ -z "$(git status --porcelain data/sa-lp-13f-state.json data/vara-13f-state.json)" ]]; then
+          paths=(data/sa-lp-13f-state.json data/vara-13f-state.json static/feed/sa-lp-13f.xml static/feed/vara-13f.xml)
+          if [[ -z "$(git status --porcelain "${paths[@]}")" ]]; then
             echo "No changes to commit."
             exit 0
           fi
           git config user.name  'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          git add data/sa-lp-13f-state.json data/vara-13f-state.json
-          git commit -m "13f: record new filing"
+          git add "${paths[@]}"
+          git commit -m "filings: record new filing"
           git push

@@ -8,14 +8,16 @@ On each run, for every fund in ``FUNDS``:
      that mention the fund's watched names, to catch affiliate filings made
      under another CIK.
   3. Compare accessions against the fund's state file under ``data/``.
-  4. Notify Pablo about unseen filings.
+  4. For each unseen filing, create a Buttondown newsletter draft, notify
+     Pablo privately, and add an entry to the fund's public Atom feed.
   5. Update state so notifications are not repeated.
 
 Designed to run idempotently from GitHub Actions. Exits non-zero on
 unrecoverable errors so the workflow run is flagged.
 
 Usage:
-    TELEGRAM_BOT_TOKEN=... TELEGRAM_CHAT_ID=... python3 scripts/sa-lp-13f-check.py
+    BUTTONDOWN_API_KEY=... TELEGRAM_BOT_TOKEN=... TELEGRAM_CHAT_ID=... \
+        python3 scripts/sa-lp-13f-check.py
     python3 scripts/sa-lp-13f-check.py --dry-run    # no notification, no writes
 """
 
@@ -29,6 +31,7 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
+import xml.etree.ElementTree as ET
 from datetime import date, datetime, timedelta, timezone
 from email.message import EmailMessage
 from pathlib import Path
@@ -38,7 +41,11 @@ UA = "13F filing watcher (Pablo Stafforini pablo@stafforini.com)"
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = REPO_ROOT / "data"
+FEED_DIR = REPO_ROOT / "static" / "feed"
+FEED_BASE_URL = "https://stafforini.com/feed/"
+ATOM_NS = "http://www.w3.org/2005/Atom"
 TELEGRAM_API = "https://api.telegram.org"
+BUTTONDOWN_EMAILS_API = "https://api.buttondown.com/v1/emails"
 EFTS_SEARCH_URL = "https://efts.sec.gov/LATEST/search-index"
 
 FUNDS = [
@@ -49,6 +56,7 @@ FUNDS = [
         "cik_int": "2045724",
         "post_url": "https://stafforini.com/notes/situational-awareness-lp/",
         "state_file": "sa-lp-13f-state.json",
+        "feed_file": "sa-lp-13f.xml",
         "watch_13g": True,
     },
     {
@@ -58,6 +66,7 @@ FUNDS = [
         "cik_int": "1963565",
         "post_url": "https://stafforini.com/notes/value-aligned-research-advisors/",
         "state_file": "vara-13f-state.json",
+        "feed_file": "vara-13f.xml",
         "watch_13g": False,
     },
 ]
@@ -151,6 +160,22 @@ def filing_url(filing: dict) -> str:
         f"https://www.sec.gov/Archives/edgar/data/{filing['cik_int']}/"
         f"{acc_nd}/{filing['accession']}-index.html"
     )
+
+
+def filing_link(filing: dict) -> str:
+    """Return the best public URL for a filing.
+
+    Full-text-search hits may be filed under an affiliate's CIK, where the
+    fund-CIK index path does not exist, so prefer their document URL.
+    """
+    return filing.get("url") or filing.get("document_url") or filing_url(filing)
+
+
+def issuer_suffix(filing: dict) -> str:
+    issuer = filing.get("issuer", "")
+    if issuer in ("", filing["fund_name"], "see SEC filing index"):
+        return ""
+    return f" ({issuer})"
 
 
 def efts_document_url(hit: dict) -> str:
@@ -250,7 +275,7 @@ def notification_subject(filing: dict) -> str:
 
 
 def notification_body(filing: dict) -> str:
-    filing_link = filing.get("url") or filing_url(filing)
+    link = filing_link(filing)
     test_note = ""
     if filing.get("kind") == "TEST":
         test_note = "This is a test alert; no SEC filing was detected.\n\n"
@@ -263,11 +288,11 @@ def notification_body(filing: dict) -> str:
         f"- Period: {filing['period']}\n"
         f"- Filed:  {filing['filed']}\n"
         f"- Accession: {filing['accession']}\n\n"
-        f"SEC filing index:\n{filing_link}\n\n"
+        f"SEC filing:\n{link}\n\n"
         f"Next steps:\n"
         f"1. Inspect the filing and update the {filing['fund_name']} note.\n"
         f"2. Review the updated post.\n"
-        f"3. Send the newsletter message manually.\n\n"
+        f"3. Review and send the Buttondown draft.\n\n"
         f"Post:\n{filing['post_url']}\n"
     )
 
@@ -369,22 +394,122 @@ def send_private_notifications(filing: dict) -> None:
         )
 
 
-def build_legacy_buttondown_email(filing: dict) -> tuple[str, str]:
-    """Return the old public-newsletter message for manual reuse if needed."""
+def newsletter_email(filing: dict) -> tuple[str, str]:
+    """Return the public newsletter subject and Markdown body for a filing."""
+    prefix = "TEST: " if filing.get("kind") == "TEST" else ""
     subject = (
-        f"{filing['fund_name']} filed a new {filing['form']} "
-        f"(period {filing['period']})"
+        f"{prefix}{filing['fund_name']} filed a new {filing['form']}"
+        f"{issuer_suffix(filing)}"
     )
     body = (
-        f"A new {filing['form']} has been filed with the SEC by "
-        f"{filing['fund_name']}.\n\n"
+        f"A new {filing['form']} involving {filing['fund_name']} has been "
+        f"filed with the SEC.\n\n"
         f"- Period: {filing['period']}\n"
-        f"- Filed:  {filing['filed']}\n"
+        f"- Filed: {filing['filed']}\n"
         f"- Accession: {filing['accession']}\n\n"
-        f"SEC filing index:\n{filing_url(filing)}\n\n"
-        f"Portfolio calculator and strategy context:\n{filing['post_url']}\n"
+        f"SEC filing: {filing_link(filing)}\n\n"
+        f"Portfolio calculator and strategy context: {filing['post_url']}\n"
     )
     return subject, body
+
+
+def buttondown_request(method: str, url: str, api_key: str, payload: dict | None = None) -> bytes:
+    data = json.dumps(payload).encode() if payload is not None else None
+    req = urllib.request.Request(
+        url,
+        data=data,
+        headers={
+            "Authorization": f"Token {api_key}",
+            "Content-Type": "application/json",
+            "User-Agent": UA,
+        },
+        method=method,
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            return resp.read()
+    except urllib.error.HTTPError as err:
+        raise RuntimeError(
+            f"Buttondown API returned HTTP {err.code}: {err.read()!r}"
+        ) from err
+
+
+def buttondown_api_key() -> str:
+    api_key = os.environ.get("BUTTONDOWN_API_KEY")
+    if not api_key:
+        raise RuntimeError("Newsletter drafts require BUTTONDOWN_API_KEY.")
+    return api_key
+
+
+def create_newsletter_draft(filing: dict) -> str:
+    """Create an unsent Buttondown draft and return its email id."""
+    subject, body = newsletter_email(filing)
+    response = buttondown_request(
+        "POST",
+        BUTTONDOWN_EMAILS_API,
+        buttondown_api_key(),
+        {"subject": subject, "body": body, "status": "draft"},
+    )
+    email = json.loads(response)
+    if email.get("status") != "draft":
+        raise RuntimeError(
+            f"Buttondown created email {email.get('id')!r} with status "
+            f"{email.get('status')!r}, not 'draft'."
+        )
+    print(f"Buttondown draft created: {email['id']}")
+    return email["id"]
+
+
+def delete_newsletter_email(email_id: str) -> None:
+    buttondown_request(
+        "DELETE", f"{BUTTONDOWN_EMAILS_API}/{email_id}", buttondown_api_key()
+    )
+    print(f"Buttondown email deleted: {email_id}")
+
+
+def feed_path(fund: dict) -> Path:
+    return FEED_DIR / fund["feed_file"]
+
+
+def add_feed_entry(fund: dict, filing: dict) -> None:
+    """Prepend an Atom entry for the filing, unless the feed already has it."""
+    ET.register_namespace("", ATOM_NS)
+    path = feed_path(fund)
+    tree = ET.parse(path)
+    feed = tree.getroot()
+    entry_tag = f"{{{ATOM_NS}}}entry"
+    entry_id = f"urn:sec:accession:{filing['accession']}"
+    for existing in feed.iter(entry_tag):
+        if existing.findtext(f"{{{ATOM_NS}}}id") == entry_id:
+            return
+
+    filed_iso = f"{filing['filed']}T00:00:00+00:00"
+    entry = ET.Element(entry_tag)
+    ET.SubElement(entry, f"{{{ATOM_NS}}}id").text = entry_id
+    ET.SubElement(entry, f"{{{ATOM_NS}}}title").text = (
+        f"{filing['form']}{issuer_suffix(filing)}, filed {filing['filed']}"
+    )
+    ET.SubElement(entry, f"{{{ATOM_NS}}}link").set("href", filing_link(filing))
+    ET.SubElement(entry, f"{{{ATOM_NS}}}updated").text = filed_iso
+    ET.SubElement(entry, f"{{{ATOM_NS}}}published").text = filed_iso
+    ET.SubElement(entry, f"{{{ATOM_NS}}}summary").text = (
+        f"{filing['fund_name']} filed a {filing['form']}{issuer_suffix(filing)} "
+        f"with the SEC on {filing['filed']} (period {filing['period']}, "
+        f"accession {filing['accession']})."
+    )
+
+    children = list(feed)
+    insert_at = next(
+        (i for i, child in enumerate(children) if child.tag == entry_tag),
+        len(children),
+    )
+    feed.insert(insert_at, entry)
+    feed.find(f"{{{ATOM_NS}}}updated").text = (
+        datetime.now(timezone.utc).isoformat(timespec="seconds")
+    )
+    ET.indent(tree, space="  ")
+    tree.write(path, encoding="utf-8", xml_declaration=True)
+    print(f"Feed entry added to {path.name}: {filing['accession']}")
 
 
 def state_path(fund: dict) -> Path:
@@ -469,9 +594,11 @@ def check_fund(fund: dict, dry_run: bool) -> int:
         return 0
 
     for filing in new_filings:
+        create_newsletter_draft(filing)
         send_private_notifications(filing)
+        add_feed_entry(fund, filing)
     save_state(fund, filings)
-    print(f"{fund['name']}: private notification sent and state saved.")
+    print(f"{fund['name']}: draft created, notification sent, feed and state saved.")
     return 0
 
 
@@ -485,13 +612,18 @@ def main() -> int:
     parser.add_argument(
         "--test-alert",
         action="store_true",
-        help="Send a clearly labeled test notification and do not poll SEC.",
+        help=(
+            "Send a clearly labeled test notification, create and delete a "
+            "test Buttondown draft, and do not poll SEC or write files."
+        ),
     )
     args = parser.parse_args()
 
     if args.test_alert:
-        send_private_notifications(build_test_alert())
-        print("Test notification sent.")
+        test_filing = build_test_alert()
+        send_private_notifications(test_filing)
+        delete_newsletter_email(create_newsletter_draft(test_filing))
+        print("Test notification sent; test draft created and deleted.")
         return 0
 
     status = 0
