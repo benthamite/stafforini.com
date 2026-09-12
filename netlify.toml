@@ -101,6 +101,22 @@ from = "/tango/feed"
 to = "/notes/index.xml"
 status = 301
 
+# Filing-watcher Atom feeds. GitHub Actions commits new entries to
+# static/feed/*.xml, but deploys only run from Pablo's machine, so serving the
+# deployed copy would leave the live feed stale. Proxy the committed file on
+# main instead; force is required because the static copy also exists.
+[[redirects]]
+from = "/feed/sa-lp-13f.xml"
+to = "https://raw.githubusercontent.com/benthamite/stafforini.com/main/static/feed/sa-lp-13f.xml"
+status = 200
+force = true
+
+[[redirects]]
+from = "/feed/vara-13f.xml"
+to = "https://raw.githubusercontent.com/benthamite/stafforini.com/main/static/feed/vara-13f.xml"
+status = 200
+force = true
+
 # Per-page feeds in the archived tango blog are handled in
 # static/_redirects, which Netlify processes before this file.
 
