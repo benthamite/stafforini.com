@@ -26,3 +26,4 @@ Full details with rejected alternatives and evidence are in `decisions/`. Read t
 | 020 | SA LP issuer disclosures | Each Schedule 13D/13G newer than the latest 13F sets that issuer's position from its filing date; layers accumulate until the next 13F. Warrant treatment superseded by 021. | Final |
 | 021 | SA LP pre-funded warrants | Count warrants as shares: the June 2026 SHAZ layer uses the Form 3 total, and 13Fs that omit known warrants are scaled up; the August 13D then adds nothing. Supersedes 020's as-filed clause. | Final |
 | 022 | Work-page PDF eligibility | Require a current eligible bibliography attachment, matching processed source path, PDF and thumbnail; refresh on builds/deploys and promote fast-note when retained links differ. | Final |
+| 023 | ox-blackfriday details overflow | Scoped advice in `export-common.el` answers the details-summary regexp with a literal search; `check-export-elisp.sh` guards it. Upstream PR prepared but declined. | Final |
