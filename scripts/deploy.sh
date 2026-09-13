@@ -81,6 +81,15 @@ fi
 
 acquire_public_tree_lock
 
+run_step "Refreshing bibliography PDF links" python3 "$SCRIPT_DIR/generate-pdf-links.py"
+
+# A note-only render preserves work pages, so attachment changes require the
+# complete quick build, even when the caller requested --fast-note.
+if $fast_note && ! python3 "$SCRIPT_DIR/verify-site.py" --dir public --profile pdf-links; then
+  echo "PDF attachments changed; rebuilding the full site to update work links."
+  fast_note=false
+fi
+
 # Recreate the pagefind symlink if it was lost.
 ensure_static_symlinks
 

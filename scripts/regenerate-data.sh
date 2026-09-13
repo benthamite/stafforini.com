@@ -51,3 +51,4 @@ fi
 # Hugo taxonomies and Pagefind facets read tags from front matter, so running
 # this earlier leaves newly generated quote/work pages without tags.
 run_step "Injecting tags" python3 "$SCRIPT_DIR/inject-tags.py"
+run_step "Refreshing bibliography PDF links" python3 "$SCRIPT_DIR/generate-pdf-links.py"

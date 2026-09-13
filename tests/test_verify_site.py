@@ -70,12 +70,21 @@ def pdf_preview_site(verify_module, tmp_path, monkeypatch):
         'thumbBaseURL = "https://thumb.example.test"\n'
     )
     monkeypatch.setattr(verify_module, "REPO_ROOT", repo)
+    expected = set()
+
+    def current_pdf_slugs(*, repo_root):
+        assert repo_root == repo
+        return expected
+
+    monkeypatch.setattr(verify_module, "available_pdf_slugs", current_pdf_slugs)
     site = tmp_path / "site"
 
-    def add_work(slug, markup, thumbnail=True):
+    def add_work(slug, markup, thumbnail=True, attached=True):
         (repo / "content" / "works" / f"{slug}.md").touch()
         if thumbnail:
             (repo / "static" / "pdf-thumbnails" / f"{slug}.png").touch()
+        if thumbnail and attached:
+            expected.add(slug)
         page = site / "works" / slug / "index.html"
         page.parent.mkdir(parents=True)
         page.write_text(markup)
@@ -120,9 +129,9 @@ def test_work_pdf_previews_reject_missing_or_wrong_targets(
 
 
 def test_work_pdf_previews_report_missing_rendered_page(verify_module, pdf_preview_site):
-    repo, site, _add_work = pdf_preview_site
-    (repo / "content" / "works" / "missing.md").touch()
-    (repo / "static" / "pdf-thumbnails" / "missing.png").touch()
+    _repo, site, add_work = pdf_preview_site
+    add_work("missing", "<h1>Work</h1>")
+    (site / "works" / "missing" / "index.html").unlink()
     assert verify_module.verify_work_pdf_previews(site) == [
         "1 work page(s) missing expected rendered page: missing"
     ]
@@ -137,6 +146,26 @@ def test_work_pdf_previews_fail_on_missing_source(verify_module, pdf_preview_sit
     assert "pdf-thumbnails" in errors[0]
 
 
+def test_work_pdf_previews_reject_links_after_attachment_removed(
+    verify_module, pdf_preview_site
+):
+    _repo, site, add_work = pdf_preview_site
+    add_work("removed", '<a href="https://pdf.example.test/removed.pdf">'
+             '<img src="https://thumb.example.test/removed.png"></a>', attached=False)
+    assert verify_module.verify_work_pdf_previews(site) == [
+        "1 work page(s) retain stale PDF link: removed",
+        "1 work page(s) retain stale PDF preview image: removed",
+    ]
+
+
+def test_work_pdf_previews_allow_stale_assets_without_links(
+    verify_module, pdf_preview_site
+):
+    _repo, site, add_work = pdf_preview_site
+    add_work("removed", "<h1>Work without attachment</h1>", attached=False)
+    assert verify_module.verify_work_pdf_previews(site) == []
+
+
 def test_work_pdf_preview_errors_are_aggregated(verify_module, pdf_preview_site):
     _repo, site, add_work = pdf_preview_site
     for i in range(20):
@@ -147,8 +176,9 @@ def test_work_pdf_preview_errors_are_aggregated(verify_module, pdf_preview_site)
     assert all("work-04" in error and "work-05" not in error for error in errors)
 
 
-@pytest.mark.parametrize("profile, expected_calls", [("full", 1), ("fast-note", 0)])
-def test_work_pdf_preview_check_runs_only_for_full_profile(
+@pytest.mark.parametrize("profile, expected_calls", [("full", 1), ("fast-note", 0),
+                                                   ("pdf-links", 1)])
+def test_work_pdf_preview_check_profile_wiring(
     verify_module, monkeypatch, tmp_path, profile, expected_calls
 ):
     from unittest.mock import Mock
@@ -162,6 +192,10 @@ def test_work_pdf_preview_check_runs_only_for_full_profile(
                                    "--profile", profile])
     verify_module.main()
     assert check.call_count == expected_calls
+    if profile == "pdf-links":
+        for name in ("verify_excluded_works", "verify_built_site", "verify_sitemap",
+                     "verify_internal_links", "verify_redirect_targets"):
+            getattr(verify_module, name).assert_not_called()
 
 
 def test_dev_site_smoke_check_passes():

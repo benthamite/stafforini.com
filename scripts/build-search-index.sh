@@ -14,6 +14,7 @@ fi
 
 acquire_public_tree_lock
 
+run_step "Refreshing bibliography PDF links" python3 "$SCRIPT_DIR/generate-pdf-links.py"
 run_step "Generating citing-notes data" python3 "$SCRIPT_DIR/generate-citing-notes.py"
 
 # Clean stale build output (Hugo doesn't remove deleted/renamed pages)

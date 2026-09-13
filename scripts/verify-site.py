@@ -24,6 +24,7 @@ from pathlib import Path
 from urllib.parse import unquote, urldefrag, urljoin, urlparse
 
 from lib import REPO_ROOT, cite_key_to_slug, load_excluded_works
+from pdf_inventory import available_pdf_slugs
 
 
 SITE_HOSTS = {"stafforini.com", "www.stafforini.com"}
@@ -362,10 +363,10 @@ def verify_redirect_targets(site_dir: Path, redirects_file: Path | None = None) 
 
 
 def verify_work_pdf_previews(site_dir: Path) -> list[str]:
-    """Require production PDF links and thumbnails for works with local previews.
+    """Match rendered PDF links and previews to current bibliography attachments.
 
-    Read the actual thumbnail source, independently of Hugo's mounted files:
-    a broken mount must not make both the renderer and this check see zero PDFs.
+    Recompute eligibility independently of Hugo's generated inventory: stale
+    thumbnails must not keep links visible after an attachment is removed.
     Full builds only; the dev profile deliberately omits work pages.
     """
     thumbnails = REPO_ROOT / "static" / "pdf-thumbnails"
@@ -377,24 +378,34 @@ def verify_work_pdf_previews(site_dir: Path) -> list[str]:
     config = tomllib.loads((REPO_ROOT / "hugo.deploy.toml").read_text())
     pdf_base = config["params"]["pdfBaseURL"].rstrip("/")
     thumb_base = config["params"]["thumbBaseURL"].rstrip("/")
+    expected = available_pdf_slugs(repo_root=REPO_ROOT)
     missing: dict[str, list[str]] = defaultdict(list)
-    for source in sorted(works.glob("*.md")):
-        slug = source.stem
-        if slug == "_index" or not (thumbnails / f"{slug}.png").is_file():
+    stale: dict[str, list[str]] = defaultdict(list)
+    work_slugs = {source.stem for source in works.glob("*.md")} | expected
+    for slug in sorted(work_slugs):
+        if slug == "_index":
             continue
         rendered = site_dir / "works" / slug / "index.html"
         if not rendered.is_file():
-            missing["rendered page"].append(slug)
+            if slug in expected:
+                missing["rendered page"].append(slug)
             continue
         page = parse_rendered_html(rendered)
-        if f"{pdf_base}/{slug}.pdf" not in page.anchor_hrefs:
-            missing["PDF link"].append(slug)
-        if f"{thumb_base}/{slug}.png" not in page.image_sources:
-            missing["PDF preview image"].append(slug)
+        for kind, target, urls in (
+            ("PDF link", f"{pdf_base}/{slug}.pdf", page.anchor_hrefs),
+            ("PDF preview image", f"{thumb_base}/{slug}.png", page.image_sources),
+        ):
+            if slug in expected and target not in urls:
+                missing[kind].append(slug)
+            elif slug not in expected and target in urls:
+                stale[kind].append(slug)
 
     return [
         f"{len(slugs)} work page(s) missing expected {kind}: {', '.join(slugs[:5])}"
         for kind, slugs in missing.items()
+    ] + [
+        f"{len(slugs)} work page(s) retain stale {kind}: {', '.join(slugs[:5])}"
+        for kind, slugs in stale.items()
     ]
 
 
@@ -422,17 +433,21 @@ def main() -> None:
     group.add_argument("--build", choices=["dev"], help="Build and verify a site profile")
     parser.add_argument(
         "--profile",
-        choices=["full", "fast-note"],
+        choices=["full", "fast-note", "pdf-links"],
         default="full",
         help="Verification depth for an existing rendered site",
     )
     args = parser.parse_args()
 
-    source_errors = verify_excluded_works()
+    source_errors = [] if args.profile == "pdf-links" else verify_excluded_works()
 
     if args.dir:
         site_dir = args.dir
-        errors = source_errors + verify_built_site(site_dir)
+        errors = (
+            verify_work_pdf_previews(site_dir)
+            if args.profile == "pdf-links"
+            else source_errors + verify_built_site(site_dir)
+        )
         if args.profile == "full":
             errors += (
                 verify_sitemap(site_dir)

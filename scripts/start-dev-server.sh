@@ -21,6 +21,7 @@ if [ -n "$existing" ]; then
 fi
 
 # Regenerate pre-computed data
+run_step "Refreshing bibliography PDF links" python3 "$SCRIPT_DIR/generate-pdf-links.py"
 if [ -d content/notes ]; then
   python3 "$SCRIPT_DIR/generate-citing-notes.py"
 fi

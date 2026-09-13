@@ -220,6 +220,12 @@ which points at the R2 public URL.  Local `hugo server` uses the `/pdfs` and
 `/pdf-thumbnails` defaults in `hugo.toml`, so development still works offline
 against `static/pdfs/`.
 
+Exports, builds, and deploys refresh `data/pdf-links.json` from current
+bibliography attachments and the processed-PDF manifest. Removing an attachment
+removes its work-page link even if old PDF and thumbnail files remain. If those
+links change, `--fast-note` promotes itself to a full quick build. For a direct
+Hugo invocation, run `python3 scripts/generate-pdf-links.py` first.
+
 R2 credentials live in `scripts/r2.env.sh` (gitignored).  See
 `docs/pdf-hosting-policy.md` for the one-time setup.
 

@@ -84,10 +84,12 @@
   {{ $thumbBase := site.Params.thumbBaseURL | default "/pdf-thumbnails" }}
   {{ $pdfHref := printf "%s/%s.pdf" $pdfBase $workSlug }}
   {{ $thumbSrc := printf "%s/%s.png" $thumbBase $workSlug }}
-  {{/* Use the explicit asset mount: os.FileExists rejects symlink ancestors
-       as of Hugo 0.165, and our thumbnail directory is a symlink. Looking up
-       this resource without its permalink does not publish it to Netlify. */}}
-  {{ if resources.Get (printf "work-pdf-thumbnails/%s.png" $workSlug) }}
+  {{/* This inventory is rebuilt from current bibliography attachments and
+       processed-PDF provenance. Old thumbnails alone do not authorize links. */}}
+  {{ if not (isset hugo.Data "pdf-links") }}
+    {{ errorf "Missing PDF link inventory; run python3 scripts/generate-pdf-links.py before building" }}
+  {{ end }}
+  {{ if index (index hugo.Data "pdf-links") $workSlug }}
   <section class="pdf-preview" aria-label="PDF preview">
     <h2>PDF</h2>
     <a href="{{ $pdfHref }}" class="pdf-preview-link" target="_blank" rel="noopener">

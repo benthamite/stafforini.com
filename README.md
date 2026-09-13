@@ -123,6 +123,7 @@ Org files → ox-hugo export → content/*.md → Hugo build → Pagefind index 
 | `generate-citing-notes.py` | Scans notes for cite shortcodes, builds `data/citing-notes.json` |
 | `generate-work-pages.py` | Creates work pages from BibTeX data |
 | `process-pdfs.py` | Strips annotations, generates first-page thumbnails |
+| `generate-pdf-links.py` | Reconciles PDF links with current bibliography attachments |
 | `verify-site.py` | Builds/checks rendered output for homepage smoke tests |
 | `deploy.sh` | Full export/build + Netlify deploy; `--fast-note` deploys minor already-exported note body edits |
 | `sa-lp-refresh.sh` / `vara-refresh.sh` | Daily launchd re-evaluation of the SA LP / VARA note's babel blocks (`sa-lp-init.el` holds the per-note block lists and drives batch Emacs; `check-elisp-init.sh` smoke-tests it) |

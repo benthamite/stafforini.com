@@ -2,7 +2,7 @@
   "name": "stafforini.com",
   "private": true,
   "scripts": {
-    "build": "hugo --minify && npx pagefind --site public",
+    "build": "python3 scripts/generate-pdf-links.py && hugo --minify && npx pagefind --site public",
     "dev": "bash scripts/start-dev-server.sh",
     "test": "bash scripts/test.sh",
     "reindex": "bash scripts/build-search-index.sh",
