@@ -4066,9 +4066,12 @@ def _run(command, args):
                             option_equity_fraction=1.0):
             rows = []
             for (ticker, pos_type), value in positions.items():
+                # Derive every basis from the same cent-rounded reported value so
+                # they agree even when a position's value carries sub-cent fractions.
+                value = round(value, 2)
                 underlying_price = None
                 row = {"ticker": ticker, "type": pos_type,
-                       "reported_value": round(value, 2)}
+                       "reported_value": value}
                 if ticker in current and today in current[ticker]:
                     underlying_price = round(current[ticker][today], 2)
                 if pos_type == 'long' or (pos_type in ('call', 'put')
