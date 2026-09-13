@@ -454,10 +454,12 @@ def _build_salp_context(args):
     # aggregate beneficial ownership the schedule reports as of `event_date` (the
     # holdings date: for the 2026-08-04 CORZ 13D/A, the cover-page date rather than
     # its July 15 event). Layers accumulate until the next full 13F replaces the
-    # whole portfolio. Omitted: the 2026-08-14 SHAZ 13G/A, whose June 30 holdings
-    # are no newer than the Q2 2026 13F filed 19 minutes later, and Section 16
-    # Forms 3/4. SHAZ figures include pre-funded warrants; the 13G figure is capped
-    # by a 19.99% beneficial-ownership limit.
+    # whole portfolio. Pre-funded warrants count as shares: the 2026-06-29 SHAZ
+    # layer uses the Form 3 filed that day (1,696,127 shares plus warrants for
+    # 6,374,823) rather than the 13G's figure, which a 19.99% ownership limit caps.
+    # Omitted: the 2026-08-14 SHAZ 13G/A, whose June 30 holdings are no newer than
+    # the Q2 2026 13F filed 19 minutes later, and the 2026-08-28 SHAZ 13D, whose
+    # 8,070,950 total equals the warrant-adjusted Q2 2026 13F below.
     SA_ISSUER_DISCLOSURES = [
         {
             "quarter": "13D_2025_08_19", "ticker": "CORZ", "type": "long",
@@ -482,7 +484,7 @@ def _build_salp_context(args):
         },
         {
             "quarter": "13G_2026_06_29", "ticker": "SHAZ", "type": "long",
-            "shares": 5_404_540, "percent": 19.9,
+            "shares": 8_070_950, "percent": None, "warrant_shares": 6_374_823,
             "event_date": "2026-06-22", "filing_date": "2026-06-29",
             "issuer": "SharonAI Holdings Inc.",
             "security": "Class A Ordinary Common Stock",
@@ -495,20 +497,43 @@ def _build_salp_context(args):
             "issuer": "Core Scientific, Inc.", "security": "Common Stock",
             "source": "Schedule 13D/A", "accession": "0000919574-26-004796",
         },
-        {
-            "quarter": "13D_2026_08_28", "ticker": "SHAZ", "type": "long",
-            "shares": 8_070_950, "percent": 21.1,
-            "event_date": "2026-08-27", "filing_date": "2026-08-28",
-            "issuer": "SharonAI Holdings Inc.",
-            "security": "Class A Ordinary Common Stock",
-            "source": "Schedule 13D", "accession": "0000935836-26-000468",
-        },
     ]
     for _disclosure in SA_ISSUER_DISCLOSURES:
         _disclosure["url"] = (
             "https://www.sec.gov/Archives/edgar/data/2045724/"
             f"{_disclosure['accession'].replace('-', '')}/"
             f"{_disclosure['accession']}-index.html")
+
+    # Pre-funded warrants convert to shares for $0.0001 each, so the backtest
+    # counts them as shares, but 13F information tables list only the shares. For
+    # each full 13F below, scale the issuer's reported long value by
+    # (shares + warrants) / shares, using the warrant count public by that 13F's
+    # filing date; this keeps the 13F's own quarter-end price.
+    SA_13F_WARRANT_ADJUSTMENTS = [
+        {
+            "quarter": "Q2_2026", "ticker": "SHAZ",
+            "reported_shares": 5_396_127, "warrant_shares": 2_674_823,
+            "warrant_source": "Form 4 filed 2026-07-02",
+        },
+    ]
+    for _adjustment in SA_13F_WARRANT_ADJUSTMENTS:
+        _rows = [
+            h
+            for f in filings if f["quarter"] == _adjustment["quarter"]
+            for h in f["holdings"]
+            if (h["ticker"], h["type"]) == (_adjustment["ticker"], "long")
+        ]
+        if len(_rows) != 1:
+            raise RuntimeError(
+                f"Expected one {_adjustment['ticker']} long row in "
+                f"{_adjustment['quarter']}, found {len(_rows)}")
+        _row = _rows[0]
+        if "warrant_shares" not in _row:
+            _row["value"] *= (
+                (_adjustment["reported_shares"] + _adjustment["warrant_shares"])
+                / _adjustment["reported_shares"])
+            _row["warrant_shares"] = _adjustment["warrant_shares"]
+            _row["warrant_source"] = _adjustment["warrant_source"]
 
     # Build internal structures. Issuer disclosures are added after price download.
     # Their share counts need to be converted to a dollar value at the disclosure
@@ -851,6 +876,8 @@ def _build_salp_context(args):
                 "percent": disclosure["percent"],
                 "event_date": disclosure["event_date"],
                 "filing_date": filing_date,
+                **({"warrant_shares": disclosure["warrant_shares"]}
+                   if "warrant_shares" in disclosure else {}),
             }
             filings.append({
                 "quarter": q,
