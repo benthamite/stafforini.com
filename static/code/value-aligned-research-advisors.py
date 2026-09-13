@@ -449,23 +449,68 @@ def _build_salp_context(args):
     parsed = json.loads(data) if isinstance(data, str) else data
     filings = parsed["filings"]
 
-    SA_13G_DISCLOSURES = [
+    # Issuer-specific Schedule 13D/13G disclosures layered onto the rebalance
+    # timeline. From its filing date, each sets that issuer's long position to the
+    # aggregate beneficial ownership the schedule reports as of `event_date` (the
+    # holdings date: for the 2026-08-04 CORZ 13D/A, the cover-page date rather than
+    # its July 15 event). Layers accumulate until the next full 13F replaces the
+    # whole portfolio. Omitted: the 2026-08-14 SHAZ 13G/A, whose June 30 holdings
+    # are no newer than the Q2 2026 13F filed 19 minutes later, and Section 16
+    # Forms 3/4. SHAZ figures include pre-funded warrants; the 13G figure is capped
+    # by a 19.99% beneficial-ownership limit.
+    SA_ISSUER_DISCLOSURES = [
         {
-            "quarter": "13G_2026_05_27",
-            "ticker": "NBIS",
-            "type": "long",
-            "shares": 12_410_060,
-            "percent": 5.6,
-            "event_date": "2026-05-19",
-            "filing_date": "2026-05-27",
-            "issuer": "Nebius Group N.V.",
-            "security": "Class A Ordinary Shares",
-            "source": "Schedule 13G",
-            "url": "https://www.sec.gov/Archives/edgar/data/1513845/000093583626000303/xslSCHEDULE_13G_X02/primary_doc.xml",
-        }
+            "quarter": "13D_2025_08_19", "ticker": "CORZ", "type": "long",
+            "shares": 17_682_918, "percent": 5.8,
+            "event_date": "2025-08-12", "filing_date": "2025-08-19",
+            "issuer": "Core Scientific, Inc.", "security": "Common Stock",
+            "source": "Schedule 13D", "accession": "0000935836-25-000543",
+        },
+        {
+            "quarter": "13D_2025_10_14", "ticker": "CORZ", "type": "long",
+            "shares": 28_756_478, "percent": 9.4,
+            "event_date": "2025-10-09", "filing_date": "2025-10-14",
+            "issuer": "Core Scientific, Inc.", "security": "Common Stock",
+            "source": "Schedule 13D/A", "accession": "0000935836-25-000638",
+        },
+        {
+            "quarter": "13G_2026_05_27", "ticker": "NBIS", "type": "long",
+            "shares": 12_410_060, "percent": 5.6,
+            "event_date": "2026-05-19", "filing_date": "2026-05-27",
+            "issuer": "Nebius Group N.V.", "security": "Class A Ordinary Shares",
+            "source": "Schedule 13G", "accession": "0000935836-26-000303",
+        },
+        {
+            "quarter": "13G_2026_06_29", "ticker": "SHAZ", "type": "long",
+            "shares": 5_404_540, "percent": 19.9,
+            "event_date": "2026-06-22", "filing_date": "2026-06-29",
+            "issuer": "SharonAI Holdings Inc.",
+            "security": "Class A Ordinary Common Stock",
+            "source": "Schedule 13G", "accession": "0000935836-26-000334",
+        },
+        {
+            "quarter": "13D_2026_08_04", "ticker": "CORZ", "type": "long",
+            "shares": 14_089_395, "percent": 4.4,
+            "event_date": "2026-08-04", "filing_date": "2026-08-04",
+            "issuer": "Core Scientific, Inc.", "security": "Common Stock",
+            "source": "Schedule 13D/A", "accession": "0000919574-26-004796",
+        },
+        {
+            "quarter": "13D_2026_08_28", "ticker": "SHAZ", "type": "long",
+            "shares": 8_070_950, "percent": 21.1,
+            "event_date": "2026-08-27", "filing_date": "2026-08-28",
+            "issuer": "SharonAI Holdings Inc.",
+            "security": "Class A Ordinary Common Stock",
+            "source": "Schedule 13D", "accession": "0000935836-26-000468",
+        },
     ]
+    for _disclosure in SA_ISSUER_DISCLOSURES:
+        _disclosure["url"] = (
+            "https://www.sec.gov/Archives/edgar/data/2045724/"
+            f"{_disclosure['accession'].replace('-', '')}/"
+            f"{_disclosure['accession']}-index.html")
 
-    # Build internal structures. 13G disclosures are added after price download.
+    # Build internal structures. Issuer disclosures are added after price download.
     # Their share counts need to be converted to a dollar value at the disclosure
     # date so downstream backtests can use the same weights API.
     filing_dates = {f["quarter"]: f["filing_date"] for f in filings}
@@ -715,7 +760,7 @@ def _build_salp_context(args):
     for positions in holdings.values():
         for (ticker, _) in positions:
             all_tickers.add(ticker)
-    for disclosure in SA_13G_DISCLOSURES:
+    for disclosure in SA_ISSUER_DISCLOSURES:
         all_tickers.add(disclosure["ticker"])
     all_tickers.add('SPY')
     all_tickers.add('AIS')
@@ -739,14 +784,14 @@ def _build_salp_context(args):
     today = _latest_completed_us_market_date(datetime.now().strftime('%Y-%m-%d'))
     first_date = filing_dates[quarters[0]]
     all_dates = set(filing_dates.values()) | set(quarter_end_dates.values()) | {today}
-    all_dates |= {d["filing_date"] for d in SA_13G_DISCLOSURES}
-    all_dates |= {d["event_date"] for d in SA_13G_DISCLOSURES}
+    all_dates |= {d["filing_date"] for d in SA_ISSUER_DISCLOSURES}
+    all_dates |= {d["event_date"] for d in SA_ISSUER_DISCLOSURES}
 
     prices = get_prices(sorted(all_tickers), sorted(all_dates))
 
 
     def _latest_full_13f_before(filing_date):
-        """Return the latest 13F row before an issuer-specific disclosure."""
+        """Return the latest full 13F row filed before an issuer disclosure."""
         candidates = [
             f for f in filings
             if f.get("form", "").startswith("13F")
@@ -757,34 +802,63 @@ def _build_salp_context(args):
         return max(candidates, key=lambda f: f["filing_date"])
 
 
-    def _add_13g_disclosures():
-        """Append 13G-updated portfolios to the rebalance timeline."""
-        for disclosure in SA_13G_DISCLOSURES:
+    disclosure_meta = {}
+
+
+    def _add_issuer_disclosures():
+        """Append issuer-disclosure portfolios to the rebalance timeline.
+
+        Each disclosure starts from the latest portfolio filed before it (a full
+        13F or an earlier layer) and replaces one issuer's position, so layers
+        accumulate until the next 13F.
+        """
+        for disclosure in sorted(SA_ISSUER_DISCLOSURES,
+                                 key=lambda d: d["filing_date"]):
             q = disclosure["quarter"]
             if q in filing_dates:
                 continue
             ticker = disclosure["ticker"]
             filing_date = disclosure["filing_date"]
+            if any(f["filing_date"] == filing_date for f in filings):
+                raise RuntimeError(
+                    f"{q} shares filing date {filing_date} with another "
+                    f"disclosure; decide their order explicitly")
             base_disclosure = _latest_full_13f_before(filing_date)
+            if disclosure["event_date"] <= base_disclosure["quarter_end"]:
+                raise RuntimeError(
+                    f"{q} reports holdings as of {disclosure['event_date']}, "
+                    f"no later than the {base_disclosure['quarter']} 13F; "
+                    f"omit it")
+            previous = max(
+                (f for f in filings if f["filing_date"] < filing_date),
+                key=lambda f: f["filing_date"])
             px = prices.get(ticker, {}).get(filing_date)
             if px is None or px <= 0:
                 raise RuntimeError(
-                    f"No {ticker} price available for 13G filing date "
-                    f"{filing_date}")
+                    f"No {ticker} price available for {disclosure['source']} "
+                    f"filing date {filing_date}")
             value = disclosure["shares"] * px
-            updated_positions = holdings[base_disclosure["quarter"]].copy()
+            updated_positions = holdings[previous["quarter"]].copy()
             updated_source_dates = position_source_dates[
-                base_disclosure["quarter"]].copy()
+                previous["quarter"]].copy()
+            updated_meta = dict(disclosure_meta.get(previous["quarter"], {}))
             disclosure_key = (ticker, disclosure["type"])
             updated_positions[disclosure_key] = value
             updated_source_dates[disclosure_key] = filing_date
+            updated_meta[disclosure_key] = {
+                "source": disclosure["source"],
+                "shares": disclosure["shares"],
+                "percent": disclosure["percent"],
+                "event_date": disclosure["event_date"],
+                "filing_date": filing_date,
+            }
             filings.append({
                 "quarter": q,
                 "quarter_end": disclosure["event_date"],
                 "filing_date": filing_date,
                 "source_filing_date": filing_date,
                 "form": disclosure["source"],
-                "accession": "0000935836-26-000303",
+                "accession": disclosure["accession"],
                 "issuer": disclosure["issuer"],
                 "security": disclosure["security"],
                 "base_disclosure": base_disclosure["quarter"],
@@ -795,13 +869,7 @@ def _build_salp_context(args):
                         "type": pos_type,
                         "value": position_value,
                         "selected_on": updated_source_dates[(t, pos_type)],
-                        **({
-                            "source": disclosure["source"],
-                            "shares": disclosure["shares"],
-                            "percent": disclosure["percent"],
-                            "event_date": disclosure["event_date"],
-                            "filing_date": filing_date,
-                        } if (t, pos_type) == (ticker, disclosure["type"]) else {})
+                        **updated_meta.get((t, pos_type), {}),
                     }
                     for (t, pos_type), position_value in sorted(updated_positions.items())
                 ],
@@ -810,11 +878,12 @@ def _build_salp_context(args):
             quarter_end_dates[q] = disclosure["event_date"]
             holdings[q] = updated_positions
             position_source_dates[q] = updated_source_dates
+            disclosure_meta[q] = updated_meta
         filings.sort(key=lambda f: f["filing_date"])
         quarters[:] = [f["quarter"] for f in filings]
 
 
-    _add_13g_disclosures()
+    _add_issuer_disclosures()
 
     # Resolve `today` to the actual last available closing date.
     # yfinance may not have data for today (market still open or holiday),
