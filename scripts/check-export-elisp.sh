@@ -9,9 +9,12 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 empty_list="$(mktemp)"
-trap 'rm -f "$empty_list"' EXIT
+emacs_log="$(mktemp)"
+trap 'rm -f "$empty_list" "$emacs_log"' EXIT
 
-EXPORT_FILE_LIST="$empty_list" emacs --batch -l "$SCRIPT_DIR/export-notes.el" --eval '
+# Loading the export setup prints one progress line per notes file, so keep
+# Emacs output in a log and show it only when the check fails.
+if ! EXPORT_FILE_LIST="$empty_list" emacs --batch -l "$SCRIPT_DIR/export-notes.el" --eval '
 (progn
   (dolist (s (list "" "no summary here" "<summary>x</summary>rest"
                    "pre<summary>a</summary>mid</summary>tail"
@@ -45,4 +48,8 @@ EXPORT_FILE_LIST="$empty_list" emacs --batch -l "$SCRIPT_DIR/export-notes.el" --
                 (progn (org-export-string-as org (quote hugo) t) nil)
               (error t))
       (error "Fixture no longer reproduces the unpatched overflow")))
-  (message "export Elisp OK: details-summary override verified"))'
+  (message "export Elisp OK: details-summary override verified"))' >"$emacs_log" 2>&1; then
+  cat "$emacs_log" >&2
+  exit 1
+fi
+echo "export Elisp OK: details-summary override verified"
