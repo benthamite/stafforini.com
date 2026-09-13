@@ -190,6 +190,65 @@ into any exported .md file that lacks one."
   (add-to-list 'org-export-filter-body-functions #'export--fix-broken-relrefs)
   (add-to-list 'org-export-filter-body-functions #'export--fix-broken-italic-close))
 
+;;;; ox-blackfriday details-summary overflow (workaround)
+
+;; `org-blackfriday-special-block' finds a details block's summary with
+;; (string-match "\\(?1:<summary>\\(?:.\\|\n\\)*</summary>\\)" contents).
+;; The per-character alternation exhausts Emacs's regexp backtracking stack
+;; once a collapsed block's exported contents reach roughly 130 KB, as the
+;; SA LP note's model code did on 2026-09-12 ("Stack overflow in regexp
+;; matcher"). Upstream ox-hugo still uses the same pattern, so while that
+;; function runs, answer exactly this regexp with an equivalent linear search.
+;; scripts/check-export-elisp.sh verifies the equivalence and the large case.
+
+(defconst export--blackfriday-summary-regexp
+  "\\(?1:<summary>\\(?:.\\|\n\\)*</summary>\\)"
+  "The summary regexp `org-blackfriday-special-block' uses for details blocks.")
+
+(defvar export--blackfriday-special-block-depth 0
+  "Nesting depth of `org-blackfriday-special-block' calls.")
+
+(defun export--blackfriday-special-block-linear-summary (orig &rest args)
+  "Call ORIG with ARGS while the details-summary regexp is searched linearly."
+  (when (= export--blackfriday-special-block-depth 0)
+    (advice-add 'string-match :around #'export--blackfriday-summary-match))
+  (unwind-protect
+      (let ((export--blackfriday-special-block-depth
+             (1+ export--blackfriday-special-block-depth)))
+        (apply orig args))
+    (when (= export--blackfriday-special-block-depth 0)
+      (advice-remove 'string-match #'export--blackfriday-summary-match))))
+
+(defun export--blackfriday-summary-match (orig regexp string &optional start inhibit-modify)
+  "Match the details-summary REGEXP in STRING without regexp backtracking.
+ORIG is `string-match', which handles any other REGEXP or a non-nil START.
+The result equals the greedy regexp: from the first \"<summary>\" through
+the last \"</summary>\" after it.  Unless INHIBIT-MODIFY, set match data for
+groups 0 and 1."
+  (if (not (and (null start) (equal regexp export--blackfriday-summary-regexp)))
+      (funcall orig regexp string start inhibit-modify)
+    (let* ((beg (string-search "<summary>" string))
+           (end (and beg (export--last-summary-close-end
+                          string (+ beg (length "<summary>"))))))
+      (when end
+        (unless inhibit-modify
+          (set-match-data (list beg end beg end)))
+        beg))))
+
+(defun export--last-summary-close-end (string from)
+  "Return the end of the last \"</summary>\" in STRING starting at or after FROM."
+  (let ((pos from)
+        end
+        hit)
+    (while (setq hit (string-search "</summary>" string pos))
+      (setq end (+ hit (length "</summary>"))
+            pos (1+ hit)))
+    end))
+
+(with-eval-after-load 'ox-blackfriday
+  (advice-add 'org-blackfriday-special-block :around
+              #'export--blackfriday-special-block-linear-summary))
+
 ;;;; Transclusion support
 
 (defun export--expand-includes ()
