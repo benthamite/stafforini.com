@@ -80,3 +80,13 @@ thumbBaseURL = "/pdf-thumbnails"
 # Pagination (controls quotes per page in the /quotes/ feed)
 [pagination]
   pagerSize = 20
+
+[module]
+  [[module.mounts]]
+    source = "assets"
+    target = "assets"
+  # Availability checks use Hugo resources so the symlinked source is supported.
+  # Templates do not publish these assets; production serves them from R2.
+  [[module.mounts]]
+    source = "static/pdf-thumbnails"
+    target = "assets/work-pdf-thumbnails"

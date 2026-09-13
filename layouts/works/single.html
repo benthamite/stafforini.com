@@ -84,9 +84,10 @@
   {{ $thumbBase := site.Params.thumbBaseURL | default "/pdf-thumbnails" }}
   {{ $pdfHref := printf "%s/%s.pdf" $pdfBase $workSlug }}
   {{ $thumbSrc := printf "%s/%s.png" $thumbBase $workSlug }}
-  {{/* fileExists still probes the local static/ tree -- that's how we know
-       a PDF was generated for this work, regardless of where it's served. */}}
-  {{ if fileExists (printf "static/pdf-thumbnails/%s.png" $workSlug) }}
+  {{/* Use the explicit asset mount: os.FileExists rejects symlink ancestors
+       as of Hugo 0.165, and our thumbnail directory is a symlink. Looking up
+       this resource without its permalink does not publish it to Netlify. */}}
+  {{ if resources.Get (printf "work-pdf-thumbnails/%s.png" $workSlug) }}
   <section class="pdf-preview" aria-label="PDF preview">
     <h2>PDF</h2>
     <a href="{{ $pdfHref }}" class="pdf-preview-link" target="_blank" rel="noopener">

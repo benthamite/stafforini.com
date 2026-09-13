@@ -69,5 +69,8 @@
     source = "assets"
     target = "assets"
   [[module.mounts]]
+    source = "static/pdf-thumbnails"
+    target = "assets/work-pdf-thumbnails"
+  [[module.mounts]]
     source = "archetypes"
     target = "archetypes"

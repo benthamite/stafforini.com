@@ -70,6 +70,10 @@ thumbBaseURL = "https://pdf.stafforini.com"
   [[module.mounts]]
     source = "assets"
     target = "assets"
+  # Resource lookup only; no permalink access, so thumbnails stay on R2.
+  [[module.mounts]]
+    source = "static/pdf-thumbnails"
+    target = "assets/work-pdf-thumbnails"
   [[module.mounts]]
     source = "archetypes"
     target = "archetypes"

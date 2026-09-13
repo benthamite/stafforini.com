@@ -33,12 +33,19 @@ class RenderedPageParser(HTMLParser):
     def __init__(self) -> None:
         super().__init__()
         self.links: list[str] = []
+        self.anchor_hrefs: set[str] = set()
+        self.image_sources: set[str] = set()
         self.canonical: str | None = None
         self.noindex = False
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         attr = {key.lower(): value or "" for key, value in attrs}
         tag = tag.lower()
+
+        if tag == "a" and attr.get("href"):
+            self.anchor_hrefs.add(attr["href"])
+        if tag == "img" and attr.get("src"):
+            self.image_sources.add(attr["src"])
 
         if tag == "meta" and attr.get("name", "").lower() == "robots":
             if "noindex" in attr.get("content", "").lower():
@@ -354,6 +361,43 @@ def verify_redirect_targets(site_dir: Path, redirects_file: Path | None = None) 
     ]
 
 
+def verify_work_pdf_previews(site_dir: Path) -> list[str]:
+    """Require production PDF links and thumbnails for works with local previews.
+
+    Read the actual thumbnail source, independently of Hugo's mounted files:
+    a broken mount must not make both the renderer and this check see zero PDFs.
+    Full builds only; the dev profile deliberately omits work pages.
+    """
+    thumbnails = REPO_ROOT / "static" / "pdf-thumbnails"
+    works = REPO_ROOT / "content" / "works"
+    missing_sources = [path for path in (thumbnails, works) if not path.is_dir()]
+    if missing_sources:
+        return [f"missing work PDF verification source: {path}" for path in missing_sources]
+
+    config = tomllib.loads((REPO_ROOT / "hugo.deploy.toml").read_text())
+    pdf_base = config["params"]["pdfBaseURL"].rstrip("/")
+    thumb_base = config["params"]["thumbBaseURL"].rstrip("/")
+    missing: dict[str, list[str]] = defaultdict(list)
+    for source in sorted(works.glob("*.md")):
+        slug = source.stem
+        if slug == "_index" or not (thumbnails / f"{slug}.png").is_file():
+            continue
+        rendered = site_dir / "works" / slug / "index.html"
+        if not rendered.is_file():
+            missing["rendered page"].append(slug)
+            continue
+        page = parse_rendered_html(rendered)
+        if f"{pdf_base}/{slug}.pdf" not in page.anchor_hrefs:
+            missing["PDF link"].append(slug)
+        if f"{thumb_base}/{slug}.png" not in page.image_sources:
+            missing["PDF preview image"].append(slug)
+
+    return [
+        f"{len(slugs)} work page(s) missing expected {kind}: {', '.join(slugs[:5])}"
+        for kind, slugs in missing.items()
+    ]
+
+
 def build_dev_site(destination: Path) -> None:
     subprocess.run(
         [
@@ -394,6 +438,7 @@ def main() -> None:
                 verify_sitemap(site_dir)
                 + verify_internal_links(site_dir)
                 + verify_redirect_targets(site_dir)
+                + verify_work_pdf_previews(site_dir)
             )
     else:
         if args.profile != "full":
