@@ -63,7 +63,12 @@ changes do not qualify for the limited =--fast-note= deployment path.
 The note exporter resolves =id:= links through the generated ID maps.
 Links to unpublished targets become plain text, links to published
 notes become =/notes/slug/= URLs, and links to headings inside the
-same note become local fragment links such as =#copycat-delays=.
+same note become local fragment links such as =#copycat-delays=. To
+resolve those cross-references, a batch load of =scripts/export-common.el=
+first builds a throwaway org-id location database over the notes, people
+and bibliographic-notes trees; the scan runs silently, since its per-file
+progress output would otherwise add 10k+ lines to every export log and
+every batch check that loads the file.
 
 Collapsible =#+begin_details= blocks go through ox-blackfriday, whose
 summary regexp overflows Emacs's regexp stack once a block's exported

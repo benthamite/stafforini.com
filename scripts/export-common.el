@@ -442,11 +442,14 @@ so that transcluded content is included in the export."
   (let ((notes-dir (expand-file-name "~/My Drive/notes/"))
         (people-dir (expand-file-name "~/My Drive/people/"))
         (bib-dir   (expand-file-name "~/My Drive/bibliographic-notes/")))
+    ;; SILENT: otherwise this prints one progress line per file (10k+ lines),
+    ;; which swamps export logs and any batch check that loads this file.
     (org-id-update-id-locations
      (append
       (directory-files-recursively notes-dir "\\.org$")
       (directory-files-recursively people-dir "\\.org$")
-      (directory-files-recursively bib-dir "\\.org$")))))
+      (directory-files-recursively bib-dir "\\.org$"))
+     t)))
 
 (provide 'export-common)
 
