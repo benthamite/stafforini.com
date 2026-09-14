@@ -114,6 +114,20 @@ class TestSharedClient:
         fake_http([("search", html("<div>No files found.</div>"))])
         assert _mod.search_annas_archive("9781234567890", "https://a.invalid/") == []
 
+    def test_libgen_isbn_results_feed_the_existing_ranking(self, monkeypatch):
+        monkeypatch.setattr(pf, "libgen_isbn_files", lambda http, isbn: [
+            {"md5": "a" * 32, "extension": "pdf", "size_bytes": 5 * 1024 * 1024, "title": "Introduction to Algorithms",
+             "author": "Cormen, Thomas", "year": "2009", "filename": "Cormen.pdf", "source": "libgen"},
+            {"md5": "b" * 32, "extension": "epub", "size_bytes": 2 * 1024 * 1024, "title": "Introduction to Algorithms",
+             "author": "Cormen, Thomas", "year": "2009", "filename": "Cormen.epub", "source": "libgen"},
+        ])
+        monkeypatch.setattr(_mod, "_http", lambda: object())
+        results = _mod.libgen_results("9780262033848")
+        assert [r["format"] for r in results] == ["pdf", "epub"]
+        assert results[0]["size"] == "5.0MB"
+        best = _mod.select_best_result(results, target_book={"title": "Introduction to Algorithms", "author": "Cormen, Thomas"})
+        assert best["md5"] == "a" * 32
+
     def test_host_override_must_be_annas_archive(self, monkeypatch, capsys):
         monkeypatch.setattr(sys, "argv", [str(_SCRIPT), "--dry-run", "--base-url", "https://evil.invalid/"])
         with pytest.raises(SystemExit) as exited:

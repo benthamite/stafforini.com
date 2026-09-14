@@ -215,6 +215,43 @@ def _fetch_url(url: str, timeout: int = 30) -> str:
     return response.text
 
 
+def _human_size(size_bytes: int) -> str:
+    if size_bytes >= 1024 * 1024:
+        return f"{size_bytes / (1024 * 1024):.1f}MB"
+    return f"{max(size_bytes, 0) // 1024}KB"
+
+
+def libgen_results(isbn: str, *, verbose: bool = False) -> list[dict]:
+    """ISBN -> search-result dicts through LibGen's JSON API (shared library).
+
+    Records are shaped like `_parse_search_results` output so the same ranking
+    applies: md5, title, authors, format, size, size_bytes, year, language,
+    source, filename. Returns [] when LibGen has no edition for the ISBN or the
+    request failed; the caller treats that like an empty search.
+    """
+    try:
+        records = paper_fetch.libgen_isbn_files(_http(), isbn)
+    except Exception as e:
+        if verbose:
+            print(f"    LibGen lookup failed: {type(e).__name__}", file=sys.stderr)
+        return []
+    results = []
+    for rec in records:
+        results.append({
+            "md5": rec["md5"],
+            "title": rec.get("title", ""),
+            "authors": rec.get("author", ""),
+            "format": rec.get("extension", ""),
+            "size": _human_size(rec.get("size_bytes", 0)),
+            "size_bytes": rec.get("size_bytes", 0),
+            "year": rec.get("year", ""),
+            "language": "",
+            "source": "libgen",
+            "filename": rec.get("filename", ""),
+        })
+    return results
+
+
 def _parse_search_results(html: str) -> list[dict]:
     """Parse search result HTML into a list of result dicts."""
     results = []
@@ -861,6 +898,14 @@ def main() -> None:
         print(f"  Query: {query}")
 
         results = search_annas_archive(query, args.base_url, verbose=args.verbose)
+        if not results:
+            # Anna's HTML search sits behind a bot challenge for non-browser
+            # clients; LibGen's JSON API indexes the same files by ISBN and
+            # answers a shell, so it is the working route for most books.
+            libgen = libgen_results(query, verbose=args.verbose)
+            if libgen:
+                results = libgen
+                print(f"  LibGen ISBN lookup: {len(libgen)} file(s)")
         if results is None:
             print("  Search failed or blocked; availability unknown.")
             if key not in progress["errors"]:
