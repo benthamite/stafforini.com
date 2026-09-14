@@ -27,33 +27,50 @@ Options:
     --only KEY          Process only the book with this citekey
     --update-bib        Add file fields to old.bib for downloaded PDFs
     --verbose           Print extra debugging info
-    --article-doi DOI   Download an article via SciDB (repeat for multiple DOIs)
-    --out DIR           Article download directory (default: current directory)
 
-Article lookups distinguish failed requests and bot challenges from successful
-responses with no downloadable links. A failed lookup leaves availability
-unknown. Fast-download diagnostics omit credentials, signed URLs and remote messages.
-DOI mode selects only result cards with a matching Sci-Hub DOI filename and one
-record link. Other filenames or page layouts require separate identity checking;
-the script refuses them rather than selecting unrelated recent-download links.
+Individual papers (by DOI, URL, arXiv id or title) are not this script's job:
+use `paper-fetch get IDENT` from the dotfiles. Both share one implementation of
+Anna's Archive access — domain resolution, member fast-download API, bot-challenge
+detection and credential lookup — in the dotfiles library `paper_fetch.py`; this
+script keeps only the book search, ranking and bib bookkeeping. A search that
+answers with a challenge page is recorded as an error, not as "not found".
+Fast-download diagnostics omit credentials, signed URLs and remote messages.
 """
 
 from __future__ import annotations
 
 import argparse
-from html.parser import HTMLParser
+import importlib.util
 import json
 import os
 import re
-import subprocess
 import sys
 import time
-import urllib.error
 import urllib.parse
-import urllib.request
 from pathlib import Path
 
 from lib import parse_bib_entries
+
+_PAPER_FETCH_LIB = Path(
+    os.environ.get("DOTFILES_DIR", str(Path.home() / "My Drive" / "dotfiles"))
+) / "lib" / "python" / "paper_fetch.py"
+_spec = importlib.util.spec_from_file_location("paper_fetch", _PAPER_FETCH_LIB)
+if _spec is None or _spec.loader is None:
+    raise SystemExit(f"cannot load shared paper library: {_PAPER_FETCH_LIB}")
+paper_fetch = sys.modules.get("paper_fetch") or importlib.util.module_from_spec(_spec)
+if "paper_fetch" not in sys.modules:
+    sys.modules["paper_fetch"] = paper_fetch  # dataclasses resolve annotations through sys.modules
+    _spec.loader.exec_module(paper_fetch)
+
+_HTTP_CLIENT = None
+
+
+def _http():
+    """One shared Chrome-impersonating HTTP session for the whole run."""
+    global _HTTP_CLIENT
+    if _HTTP_CLIENT is None:
+        _HTTP_CLIENT = paper_fetch.Http()
+    return _HTTP_CLIENT
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -138,204 +155,21 @@ def build_search_query(book: dict) -> str:
     return re.sub(r"-", "", first_isbn)
 
 
-# Anna's Archive rotates its domain frequently; the canonical current URL is
-# tracked in the infobox of its Wikipedia article, so auto-discovering it from
-# there keeps this script working across domain changes. Ported from
-# annas-archive.el (`annas-archive--wikipedia-home-url`).
-WIKIPEDIA_ANNAS_API_URL = (
-    "https://en.wikipedia.org/w/api.php?action=query&prop=revisions"
-    "&titles=Anna%27s_Archive&rvprop=content&rvslots=main"
-    "&format=json&formatversion=2"
-)
-
-
-def _annas_url_from_wikitext(wikitext: str) -> str:
-    """Extract the Anna's Archive home URL from Wikipedia article wikitext.
-
-    Looks for the infobox ``| url = {{URL|https://annas-archive.XX/}}`` field
-    and returns the normalized URL (with trailing slash), or "" if not found.
-    Pure (no I/O) so it can be unit-tested.
-    """
-    m_url = re.search(r"\|\s*url\s*=", wikitext)
-    if not m_url:
-        return ""
-    m = re.search(
-        r"\{\{URL\s*\|\s*(https://annas-archive\.[^\]\[|{}\s]+/?)",
-        wikitext[m_url.end() :],
-    )
-    if not m:
-        return ""
-    url = m.group(1)
-    if not re.fullmatch(r"https://annas-archive\.[A-Za-z0-9-]+/?", url):
-        return ""
-    return url if url.endswith("/") else url + "/"
-
-
 def resolve_annas_home_url(*, verbose: bool = False) -> str:
-    """Resolve the current Anna's Archive home URL from Wikipedia.
+    """Resolve the current Anna's Archive home URL through the shared library.
 
-    Returns a normalized URL with a trailing slash, or "" on failure (the
-    caller should fall back to an explicit ``--base-url`` or a hardcoded
-    default). Ported from annas-archive.el.
+    Returns a normalized URL with a trailing slash. The shared library tries the
+    Wikipedia infobox first and falls back to the known mirrors, so this never
+    returns "" unless the override host is not an Anna's Archive domain.
     """
-    try:
-        raw = _fetch_url(WIKIPEDIA_ANNAS_API_URL)
-        data = json.loads(raw)
-        content = data["query"]["pages"][0]["revisions"][0]["slots"]["main"]["content"]
-    except Exception as e:  # network / JSON / shape errors → caller falls back
-        if verbose:
-            print(f"    Wikipedia URL resolution failed: {e}", file=sys.stderr)
-        return ""
-    return _annas_url_from_wikitext(content)
-
-
-class ArticleLookupError(Exception):
-    """SciDB could not provide a usable lookup response."""
-
-
-class _ArticleHTML(HTMLParser):
-    """Retain element boundaries needed to identify actual article result cards."""
-
-    def __init__(self):
-        super().__init__(convert_charrefs=True)
-        self.root = {"tag": "root", "attrs": {}, "children": []}
-        self.stack = [self.root]
-
-    def handle_starttag(self, tag, attrs):
-        node = {"tag": tag, "attrs": dict(attrs), "children": []}
-        self.stack[-1]["children"].append(node)
-        if tag not in {"area", "base", "br", "col", "embed", "hr", "img", "input",
-                       "link", "meta", "param", "source", "track", "wbr"}:
-            self.stack.append(node)
-
-    def handle_endtag(self, tag):
-        for index in range(len(self.stack) - 1, 0, -1):
-            if self.stack[index]["tag"] == tag:
-                del self.stack[index:]
-                return
-
-    def handle_data(self, text):
-        self.stack[-1]["children"].append(text)
-
-
-def _article_nodes(node):
-    yield node
-    for child in node["children"]:
-        if isinstance(child, dict):
-            yield from _article_nodes(child)
-
-
-def _article_text(node):
-    return "".join(_article_text(child) if isinstance(child, dict) else child
-                   for child in node["children"])
-
-
-def _parse_article_md5s(html: str, doi: str) -> list[str]:
-    """Select only DOI-labelled PDF cards inside the observed result container."""
-    document = _ArticleHTML()
-    document.feed(html)
-    nodes = list(_article_nodes(document.root))
-    mains = [node for node in nodes
-             if node["tag"] == "main" or node["attrs"].get("role") == "main"]
-    for main in mains:
-        for node in _article_nodes(main):
-            if (node["tag"] == "span"
-                    and "font-bold" in node["attrs"].get("class", "").split()
-                    and _article_text(node).strip() == "No files found."):
-                return []
-    expected = "scihub/" + urllib.parse.unquote(doi).strip().casefold() + ".pdf"
-    matches = []
-    containers = [node for node in nodes
-                  if "js-aarecord-list-outer" in node["attrs"].get("class", "").split()]
-    for container in containers:
-        for card in container["children"]:
-            if (not isinstance(card, dict) or card["tag"] != "div"
-                    or not {"flex", "border-b"}.issubset(card["attrs"].get("class", "").split())):
-                continue
-            card_nodes = list(_article_nodes(card))
-            if not any(urllib.parse.unquote(_article_text(node).strip()).casefold() == expected
-                       for node in card_nodes if node["tag"] == "div"):
-                continue
-            hashes = set()
-            for node in card_nodes:
-                if (node["tag"] == "a"
-                        and "js-vim-focus" in node["attrs"].get("class", "").split()):
-                    match = re.fullmatch(r"/md5/([0-9a-f]{32})", node["attrs"].get("href", ""))
-                    if match:
-                        hashes.add(match[1])
-            if len(hashes) != 1:
-                raise ArticleLookupError("Ambiguous article result; DOI identity not established")
-            matches.extend(hashes)
-    if not matches:
-        raise ArticleLookupError("Unrecognized or unmatched article results; DOI identity not established")
-    return list(dict.fromkeys(matches))
-
-
-def _safe_error_description(error: Exception) -> str:
-    """Describe a failure without echoing URLs or remote exception messages."""
-    if isinstance(error, urllib.error.HTTPError):
-        return f"HTTP {error.code}"
-    return type(error).__name__
-
-
-def fetch_scidb_md5s(doi: str, base_url: str, *, verbose: bool = False) -> list[str]:
-    """Return md5 hashes listed on the Anna's Archive SciDB page for a DOI.
-
-    Requests ``…/scidb/<doi>`` and inspects actual result cards after redirects.
-    Returns hashes from DOI-labelled PDF cards in page order (deduplicated), or
-    [] for the recognized no-results response. Recent-download links are ignored.
-    Raises ArticleLookupError on transport failure or a bot-challenge response;
-    unknown layouts and cards without verifiable DOI identity also fail closed.
-    """
-    url = f"{base_url}scidb/{doi}"
+    hosts = paper_fetch.resolve_annas_hosts(_http())
     if verbose:
-        print(f"    SciDB URL: {url}", file=sys.stderr)
-    try:
-        html = _fetch_url(url)
-    except Exception as e:
-        raise ArticleLookupError(_safe_error_description(e)) from None
-    if (
-        "ddos-guard" in html.lower()
-        or "Just a moment" in html
-        or "captcha" in html.lower()
-    ):
-        raise ArticleLookupError("SciDB returned a bot-challenge page")
-    return _parse_article_md5s(html, doi)
+        print(f"    Anna's hosts: {', '.join(hosts)}", file=sys.stderr)
+    return f"https://{hosts[0]}/"
 
 
-def download_article_by_doi(
-    doi: str,
-    secret_key: str,
-    base_url: str,
-    dest_dir: Path,
-    *,
-    verbose: bool = False,
-) -> "Path | None":
-    """Download a paper by DOI via the SciDB page → fast-download API.
-
-    Resolves the DOI to an md5 on its SciDB page, then downloads that md5 with
-    the fast-download API. Returns the saved path, or None if the DOI couldn't
-    be resolved or the download failed.
-    """
-    try:
-        md5s = fetch_scidb_md5s(doi, base_url, verbose=verbose)
-    except ArticleLookupError as e:
-        print(f"    SciDB lookup failed for DOI {doi}; availability unknown: {e}",
-              file=sys.stderr)
-        return None
-    if not md5s:
-        print(f"    SciDB returned no downloadable record links for DOI {doi}",
-              file=sys.stderr)
-        return None
-    md5 = md5s[0]
-    if verbose:
-        print(f"    Resolved DOI {doi} → md5 {md5}", file=sys.stderr)
-    safe = re.sub(r"[^A-Za-z0-9._-]", "_", doi)
-    dest = dest_dir / f"{safe}.pdf"
-    dest_dir.mkdir(parents=True, exist_ok=True)
-    if download_via_fast_api(md5, secret_key, base_url, dest, verbose=verbose):
-        return dest
-    return None
+class ChallengeError(Exception):
+    """A request answered with a bot-challenge page instead of content."""
 
 
 def search_annas_archive(
@@ -345,6 +179,9 @@ def search_annas_archive(
 
     Each result is a dict with keys: md5, title, authors, format, size,
     size_bytes, year, language, source, filename.
+
+    Returns None when the request failed or answered with a bot-challenge page,
+    so the caller can record an error instead of a false "not found".
     """
     encoded = urllib.parse.quote_plus(query)
     url = f"{base_url}search?q={encoded}&content=book_any"
@@ -354,29 +191,28 @@ def search_annas_archive(
 
     try:
         html = _fetch_url(url)
+    except ChallengeError as e:
+        print(f"    Search blocked: {e}; availability unknown", file=sys.stderr)
+        return None
     except Exception as e:
-        print(f"    Search failed: {e}", file=sys.stderr)
-        return []
+        print(f"    Search failed: {type(e).__name__}", file=sys.stderr)
+        return None
 
     return _parse_search_results(html)
 
 
 def _fetch_url(url: str, timeout: int = 30) -> str:
-    """Fetch a URL using urllib with browser-like headers."""
-    req = urllib.request.Request(
-        url,
-        headers={
-            "User-Agent": (
-                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/120.0.0.0 Safari/537.36"
-            ),
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-            "Accept-Language": "en-US,en;q=0.5",
-        },
-    )
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
-        return resp.read().decode("utf-8", errors="replace")
+    """Fetch a URL through the shared Chrome-impersonating session.
+
+    Raises ChallengeError for bot-challenge pages and for HTTP errors, which
+    both leave availability unknown.
+    """
+    response = _http().get(url, timeout=timeout)
+    if response.is_challenge:
+        raise ChallengeError(f"bot challenge (HTTP {response.status})")
+    if response.status != 200:
+        raise ChallengeError(f"HTTP {response.status}")
+    return response.text
 
 
 def _parse_search_results(html: str) -> list[dict]:
@@ -752,80 +588,40 @@ def download_via_fast_api(
 def _download_once(
     md5: str, secret_key: str, base_url: str, dest_path: Path, *, verbose: bool = False
 ) -> bool:
-    """Single download attempt.  Raises RateLimitError on 429."""
-    api_url = (
-        f"{base_url}dyn/api/fast_download.json"
-        f"?md5={urllib.parse.quote(md5)}"
-        f"&key={urllib.parse.quote(secret_key)}"
-        f"&path_index=0&domain_index=0"
-    )
+    """Single download attempt through the shared fast-download client.
 
+    Raises RateLimitError when the API reports a quota/rate limit. Diagnostics
+    never include the key, the signed download URL or remote error text.
+    """
+    host = urllib.parse.urlparse(base_url).netloc or base_url.strip("/")
     if verbose:
         print("    Requesting fast-download API", file=sys.stderr)
-
     try:
-        req = urllib.request.Request(
-            api_url,
-            headers={"Accept": "application/json"},
-        )
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            data = json.loads(resp.read())
-    except urllib.error.HTTPError as e:
-        if e.code == 429:
-            raise RateLimitError()
-        print(f"    Fast download API failed: {_safe_error_description(e)}", file=sys.stderr)
+        result = paper_fetch.annas_fast_download(_http(), host, md5, secret_key)
+    except paper_fetch.PaperFetchError as e:
+        print(f"    Fast download refused: {e}", file=sys.stderr)
         return False
     except Exception as e:
-        print(f"    Fast download API failed: {_safe_error_description(e)}", file=sys.stderr)
+        print(f"    Fast download API failed: {type(e).__name__}", file=sys.stderr)
         return False
-
-    if not isinstance(data, dict):
-        print("    Fast download API returned an invalid response", file=sys.stderr)
-        return False
-    download_url = data.get("download_url")
-    error = data.get("error")
-
-    if error:
-        print("    Fast download API returned an error", file=sys.stderr)
-        return False
-
-    if not download_url:
-        print("    No download URL returned", file=sys.stderr)
+    if result.status == "quota":
+        raise RateLimitError()
+    if result.status != "ok":
+        print(f"    Fast download API returned an error ({result.status})", file=sys.stderr)
         return False
 
     if verbose:
         print("    Downloading file from the returned link", file=sys.stderr)
-
-    # Download the actual file
     try:
-        req = urllib.request.Request(
-            download_url,
-            headers={
-                "User-Agent": (
-                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                    "AppleWebKit/537.36 (KHTML, like Gecko) "
-                    "Chrome/120.0.0.0 Safari/537.36"
-                ),
-            },
-        )
-        with urllib.request.urlopen(req, timeout=300) as resp:
-            content = resp.read()
-
-            # Check if we got HTML instead of a PDF (DDoS Guard challenge)
-            if content[:20].lstrip().startswith((b"<!DOCTYPE", b"<html", b"<HTML")):
-                print("    Got HTML instead of PDF (DDoS challenge?)", file=sys.stderr)
-                return False
-
-            dest_path.parent.mkdir(parents=True, exist_ok=True)
-            dest_path.write_bytes(content)
-
+        response = _http().get(result.url, timeout=300)
     except Exception as e:
-        print(f"    Download failed: {_safe_error_description(e)}", file=sys.stderr)
-        # Clean up partial file
-        if dest_path.exists():
-            dest_path.unlink()
+        print(f"    Download failed: {type(e).__name__}", file=sys.stderr)
         return False
-
+    if response.status != 200 or not response.is_pdf:
+        print("    Got a non-PDF response instead of the file (challenge?)", file=sys.stderr)
+        return False
+    dest_path.parent.mkdir(parents=True, exist_ok=True)
+    dest_path.write_bytes(response.content)
     return True
 
 
@@ -895,19 +691,8 @@ def update_bib_file(bib_path: Path, progress: dict) -> int:
 
 
 def get_secret_key() -> str:
-    """Read the Anna's Archive secret key from pass."""
-    try:
-        result = subprocess.run(
-            ["pass", "show", "tlon/core/annas-archive"],
-            capture_output=True,
-            check=False,
-            text=True,
-        )
-    except FileNotFoundError:
-        return ""
-    if result.returncode != 0:
-        return ""
-    return result.stdout.splitlines()[0] if result.stdout else ""
+    """Read the Anna's Archive secret key through the shared library (never printed)."""
+    return paper_fetch.annas_secret_key()
 
 
 def main() -> None:
@@ -952,19 +737,6 @@ def main() -> None:
         help="Retry books that failed due to download errors",
     )
     parser.add_argument("--verbose", action="store_true", help="Extra debug output")
-    parser.add_argument(
-        "--article-doi",
-        action="append",
-        default=[],
-        metavar="DOI",
-        help="Download a paper by DOI via SciDB (repeatable); skips the book batch",
-    )
-    parser.add_argument(
-        "--out",
-        default="",
-        metavar="DIR",
-        help="Destination directory for --article-doi downloads (default: cwd)",
-    )
     args = parser.parse_args()
 
     # Handle --update-bib separately
@@ -977,27 +749,16 @@ def main() -> None:
         print(f"Updated {n} entries in {BIB_FILE.name}")
         sys.exit(0)
 
-    # Resolve the Anna's Archive base URL. Anna's rotates its domain often, so
-    # prefer auto-discovery from Wikipedia; an explicit --base-url overrides it,
-    # and we fall back to a known mirror if discovery fails. (We deliberately do
-    # NOT read ANNAS_BASE_URL — that is annas-mcp's env var and is often left
-    # pinned to a stale domain, which would defeat auto-discovery.)
-    base_url = args.base_url
-    source = "override"
-    if not base_url:
-        base_url = resolve_annas_home_url(verbose=args.verbose)
-        source = "Wikipedia"
-    if not base_url:
-        base_url = "https://annas-archive.gl/"
-        source = "fallback"
-    # Normalize: ensure scheme + trailing slash.
-    if not re.match(r"https?://", base_url):
-        base_url = "https://" + base_url
-    if not base_url.endswith("/"):
-        base_url += "/"
-    args.base_url = base_url
+    # Resolve the Anna's Archive host through the shared library: an explicit
+    # --base-url wins, then Wikipedia's current domain, then the known mirrors.
+    try:
+        hosts = paper_fetch.resolve_annas_hosts(_http(), args.base_url)
+    except paper_fetch.PaperFetchError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+    args.base_url = f"https://{hosts[0]}/"
     if args.verbose:
-        print(f"    Anna's base URL ({source}): {base_url}", file=sys.stderr)
+        print(f"    Anna's base URL: {args.base_url}", file=sys.stderr)
 
     # Resolve secret key
     secret_key = args.key or os.environ.get("ANNAS_SECRET_KEY", "") or get_secret_key()
@@ -1008,25 +769,6 @@ def main() -> None:
             file=sys.stderr,
         )
         sys.exit(1)
-
-    # Article-by-DOI mode: download the given DOIs via SciDB → fast-download,
-    # then exit (independent of the book-batch flow).
-    if args.article_doi:
-        out_dir = Path(args.out).expanduser() if args.out else Path.cwd()
-        ok = 0
-        for doi in args.article_doi:
-            doi = doi.strip()
-            print(f"DOI {doi} ...", file=sys.stderr)
-            path = download_article_by_doi(
-                doi, secret_key, args.base_url, out_dir, verbose=args.verbose
-            )
-            if path:
-                print(f"  ✓ {path}")
-                ok += 1
-            else:
-                print(f"  ✗ failed: {doi}")
-        print(f"Downloaded {ok}/{len(args.article_doi)} articles to {out_dir}")
-        sys.exit(0 if ok == len(args.article_doi) else 1)
 
     # Handle --retry-not-found / --retry-errors: clear lists so they get retried
     if args.retry_not_found or args.retry_errors:
@@ -1119,6 +861,15 @@ def main() -> None:
         print(f"  Query: {query}")
 
         results = search_annas_archive(query, args.base_url, verbose=args.verbose)
+        if results is None:
+            print("  Search failed or blocked; availability unknown.")
+            if key not in progress["errors"]:
+                progress["errors"].append(key)
+            error_count += 1
+            save_progress(PROGRESS_FILE, progress)
+            if i < len(to_process):
+                time.sleep(args.delay)
+            continue
         pdf_count = sum(1 for r in results if r.get("format") == "pdf")
         print(f"  Results: {len(results)} total, {pdf_count} PDFs")
 
