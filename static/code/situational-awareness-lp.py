@@ -256,8 +256,11 @@ def _run(command, args):
     # layer uses the Form 3 filed that day (1,696,127 shares plus warrants for
     # 6,374,823) rather than the 13G's figure, which a 19.99% ownership limit caps.
     # Omitted: the 2026-08-14 SHAZ 13G/A, whose June 30 holdings are no newer than
-    # the Q2 2026 13F filed 19 minutes later, and the 2026-08-28 SHAZ 13D, whose
-    # 8,070,950 total equals the warrant-adjusted Q2 2026 13F below.
+    # the Q2 2026 13F filed 19 minutes later, and the 2026-08-28 SHAZ 13D and its
+    # 2026-09-17 amendment, whose 8,070,950 total equals the warrant-adjusted
+    # Q2 2026 13F below. The amendment reports the September 15 exercise of the
+    # last pre-funded warrants, which converts that adjustment into shares without
+    # changing the total.
     SA_ISSUER_DISCLOSURES = [
         {
             "quarter": "13D_2025_08_19", "ticker": "CORZ", "type": "long",
