@@ -49,6 +49,13 @@ correctness, a newly completed sensitivity run or live publication. The skill's
 =references/filing-refresh.md= describes current producer limitations and the
 affected SALP/VARA artifacts.
 
+The checker reads =SA_13F_WARRANT_ADJUSTMENTS= literally out of the note rather
+than executing it, so it expects the calculator label to carry the pre-funded
+warrant suffix each adjusted row generates, and it accepts a cent-rounded
+reported value for exactly those ticker/type keys. It checks that the artifacts
+agree with the note's declared adjustment, never that the warrant count itself
+matches the underlying Form 3/4.
+
 =DRY_RUN=1 scripts/sa-lp-refresh.sh --with-sensitivity= still reads credentials,
 uses data services and changes local results, caches and exports; only automatic
 commit/push/deploy are suppressed. A filing refresh must verify all three proxy

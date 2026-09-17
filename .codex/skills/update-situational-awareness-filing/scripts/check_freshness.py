@@ -123,9 +123,10 @@ def parse_data(block: str) -> dict:
     return data
 
 
-def holdings_signature(rows: list[dict], value_key: str, *, aggregate=True) -> dict:
+def holdings_signature(rows: list[dict], value_key: str, *, aggregate=True,
+                       cents=()) -> dict:
     need(isinstance(rows, list), "holdings must be a list")
-    totals = defaultdict(int)
+    totals = defaultdict(Decimal)
     for row in rows:
         need(isinstance(row, dict), "each holding must be an object")
         ticker, kind, value = row.get("ticker"), row.get("type"), row.get(value_key)
@@ -135,11 +136,52 @@ def holdings_signature(rows: list[dict], value_key: str, *, aggregate=True) -> d
         # Full 13F values are integer dollars. JSON 100.0 is equivalent to 100;
         # fractions, booleans, strings and non-finite numbers cannot be rounded away.
         need(type(value) is int or isinstance(value, Decimal), "holding value must be numeric")
-        need(value >= 0 and value == int(value), "holding value must be a nonnegative integer")
         key = (ticker, kind)
+        # A warrant-adjusted row is scaled by a share ratio and emitted to the
+        # cent, so only those keys may carry a fraction, and only two decimals.
+        if key in cents:
+            need(value >= 0 and value == round(Decimal(value), 2),
+                 "warrant-adjusted holding value must be a nonnegative cent amount")
+        else:
+            need(value >= 0 and value == int(value),
+                 "holding value must be a nonnegative integer")
         need(aggregate or key not in totals, "duplicate calculator ticker/type row")
-        totals[key] += int(value)
+        totals[key] += Decimal(value)
     return dict(totals)
+
+
+ADJUSTMENT_FIELDS = (
+    ("quarter", rf'"quarter":\s*"({QUARTER})"'),
+    ("ticker", r'"ticker":\s*"([A-Z][A-Z0-9.]*)"'),
+    ("reported_shares", r'"reported_shares":\s*([0-9][0-9_]*)'),
+    ("warrant_shares", r'"warrant_shares":\s*([0-9][0-9_]*)'),
+    ("warrant_source", r'"warrant_source":\s*"([^"\r\n]+)"'),
+)
+
+
+def parse_warrant_adjustments(note: str) -> list[dict]:
+    """Read SA_13F_WARRANT_ADJUSTMENTS literally; never execute the note's code."""
+    blocks = list(re.finditer(
+        r"(?ms)^SA_13F_WARRANT_ADJUSTMENTS\s*=\s*\[(.*?)^\]\s*$", note))
+    need(len(blocks) <= 1, "expected at most one SA_13F_WARRANT_ADJUSTMENTS literal")
+    if not blocks:
+        return []
+    adjustments = []
+    for entry in re.finditer(r"\{[^{}]*\}", blocks[0][1]):
+        parsed = {}
+        for field, pattern in ADJUSTMENT_FIELDS:
+            found = re.findall(pattern, entry[0])
+            need(len(found) == 1, f"warrant adjustment needs exactly one {field}")
+            parsed[field] = found[0]
+        for field in ("reported_shares", "warrant_shares"):
+            parsed[field] = int(parsed[field].replace("_", ""))
+        need(parsed["reported_shares"] > 0, "warrant adjustment needs positive reported shares")
+        need(parsed["warrant_shares"] > 0, "warrant adjustment needs positive warrant shares")
+        adjustments.append(parsed)
+    need(bool(adjustments), "SA_13F_WARRANT_ADJUSTMENTS is present but has no entries")
+    need(len({(a["quarter"], a["ticker"]) for a in adjustments}) == len(adjustments),
+         "duplicate warrant adjustment for one quarter and ticker")
+    return adjustments
 
 
 def target_filing(data: dict, args) -> tuple[list, dict]:
@@ -301,15 +343,46 @@ def parse_calculator_rows(text: str) -> dict:
     return modes
 
 
-def check_calculator(text: str, target: dict, rebalance: str) -> None:
+def warrant_adjusted_holdings(target: dict, adjustments: list[dict]) -> tuple[list, list]:
+    """Apply the note's own warrant scaling to the target's rows, in its order."""
+    applied = []
+    rows = list(target["holdings"])
+    for adjustment in adjustments:
+        key = (adjustment["ticker"], "long")
+        matches = [i for i, row in enumerate(rows)
+                   if (row.get("ticker"), row.get("type")) == key]
+        need(len(matches) == 1,
+             f"expected one {adjustment['ticker']} long row to carry its warrant adjustment")
+        index = matches[0]
+        reported = adjustment["reported_shares"]
+        # Mirror the producer's arithmetic: scale by the share ratio, then let
+        # the calculator round the aggregate to the cent.
+        ratio = (reported + adjustment["warrant_shares"]) / reported
+        scaled = round(float(rows[index]["value"]) * ratio, 2)
+        rows[index] = dict(rows[index], value=Decimal(repr(scaled)))
+        applied.append((index, adjustment))
+    applied.sort()
+    return rows, [adjustment for _, adjustment in applied]
+
+
+def check_calculator(text: str, target: dict, rebalance: str,
+                     adjustments: list[dict]) -> None:
     artifact = ArtifactHTML(text)
     labels = [part.split(" · ", 1)[0] for part in artifact.meta
               if part.startswith("Latest disclosed portfolio:")]
-    expected = f"Latest disclosed portfolio: {target['quarter'].replace('_', ' ')} 13F filed {rebalance}"
+    rows, applied = warrant_adjusted_holdings(target, adjustments)
+    expected = (
+        f"Latest disclosed portfolio: {target['quarter'].replace('_', ' ')} 13F "
+        f"filed {rebalance}"
+        + "".join(f"; {adjustment['ticker']} adds {adjustment['warrant_shares']:,} "
+                  f"pre-funded warrants from the {adjustment['warrant_source']}"
+                  for adjustment in applied))
     need(labels == [expected], "calculator current-portfolio metadata differs or is ambiguous")
-    expected_holdings = holdings_signature(target["holdings"], "value")
+    cents = {(adjustment["ticker"], "long") for adjustment in applied}
+    expected_holdings = holdings_signature(rows, "value", cents=cents)
     for mode, rows in parse_calculator_rows(text).items():
-        need(holdings_signature(rows, "reported_value", aggregate=False) == expected_holdings,
+        need(holdings_signature(rows, "reported_value", aggregate=False,
+                                cents=cents) == expected_holdings,
              f"calculator {mode} holdings differ from the target's aggregate holdings")
 
 
@@ -371,6 +444,12 @@ def main() -> int:
         results = {name: result_block(note, name) for name in
                    ("sa-data", "sa-perf", "sa-delay", "sa-sensitivity")}
         filings, target = target_filing(parse_data(results["sa-data"]), args)
+        quarters = {filing["quarter"] for filing in filings}
+        adjustments = parse_warrant_adjustments(note)
+        for adjustment in adjustments:
+            need(adjustment["quarter"] in quarters,
+                 "warrant adjustment names a quarter absent from sa-data")
+        adjustments = [a for a in adjustments if a["quarter"] == target["quarter"]]
     except (OSError, UnicodeError, ValueError, RecursionError) as error:
         print(f"FAIL: cannot establish target filing: {error}", file=sys.stderr)
         return 1
@@ -390,13 +469,15 @@ def main() -> int:
               lambda path=path: check_chart(path.read_text(encoding="utf-8"), args.rebalance_date))
     calculator = args.site_repo / "static/images/sa-lp-calculator.html"
     check("calculator current label and all three modes' aggregate holdings",
-          lambda: check_calculator(calculator.read_text(encoding="utf-8"), target, args.rebalance_date))
+          lambda: check_calculator(calculator.read_text(encoding="utf-8"), target,
+                                   args.rebalance_date, adjustments))
     for item in successes:
         print(f"PASS: {item}")
     for item in failures:
         print(f"FAIL: {item}", file=sys.stderr)
     print("LIMIT: local identity/boundary checks only; no SEC completeness, model/amendment "
-          "correctness, refresh provenance, sensitivity-rerun, price, browser or publication proof.")
+          "or warrant-count correctness, refresh provenance, sensitivity-rerun, price, "
+          "browser or publication proof.")
     return 1 if failures else 0
 
 

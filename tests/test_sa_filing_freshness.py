@@ -46,16 +46,27 @@ class FreshnessTests(unittest.TestCase):
         self.write_calculator()
         self.write_charts()
 
-    def write_note(self):
+    def write_note(self, warrants=None):
         data = ": " + json.dumps({"filings": self.filings})
         blocks = [("sa-data", data)] + [
             (name, "#+begin_example\n" + value + "\n#+end_example")
             for name, value in (("sa-perf", self.perf), ("sa-delay", self.delay),
                                 ("sa-sensitivity", self.sensitivity))]
-        self.note.write_text("\n\n".join("#+RESULTS: " + name + "\n" + value
-                                       for name, value in blocks) + "\n", encoding="utf-8")
+        text = "\n\n".join("#+RESULTS: " + name + "\n" + value
+                            for name, value in blocks) + "\n"
+        if warrants is not None:
+            entries = "".join(
+                '    {\n'
+                '        "quarter": "%(quarter)s", "ticker": "%(ticker)s",\n'
+                '        "reported_shares": %(reported_shares)s,'
+                ' "warrant_shares": %(warrant_shares)s,\n'
+                '        "warrant_source": "%(warrant_source)s",\n'
+                '    },\n' % entry for entry in warrants)
+            text += "\nSA_13F_WARRANT_ADJUSTMENTS = [\n" + entries + "]\n"
+        self.note.write_text(text, encoding="utf-8")
 
-    def write_calculator(self, rows=None, label_date="2026-08-14", legacy=False):
+    def write_calculator(self, rows=None, label_date="2026-08-14", legacy=False,
+                         label_suffix=""):
         if rows is None:
             totals = {}
             for row in self.holdings:
@@ -66,7 +77,8 @@ class FreshnessTests(unittest.TestCase):
         modes = ["equity_only", "full"] if legacy else ["equity_only", "scaled", "full"]
         data = ",\n  ".join(mode + ": " + json.dumps(rows) for mode in modes)
         text = ('<div class="meta">Latest disclosed portfolio: Q2 2026 13F filed '
-                + label_date + ' &middot; underlying prices as of 2026-09-04</div>\n'
+                + label_date + label_suffix
+                + ' &middot; underlying prices as of 2026-09-04</div>\n'
                 '<script>var DATA = {\n  ' + data + '\n};</script>')
         (self.images / "sa-lp-calculator.html").write_text(text, encoding="utf-8")
 
@@ -157,6 +169,60 @@ class FreshnessTests(unittest.TestCase):
             path.write_text(original.replace(mode + ': [{"ticker": "TEST"', mode + ': [{"ticker": "STALE"'))
             with self.subTest(mode=mode):
                 self.assert_rejected()
+
+    WARRANTS = [{"quarter": "Q2_2026", "ticker": "TEST", "reported_shares": "3_000",
+                 "warrant_shares": "1_000", "warrant_source": "Form 4 filed 2026-07-02"}]
+    WARRANT_SUFFIX = ("; TEST adds 1,000 pre-funded warrants from the "
+                      "Form 4 filed 2026-07-02")
+
+    def write_warrant_case(self, value=133.33, suffix=None):
+        self.write_note(warrants=self.WARRANTS)
+        self.write_calculator(
+            [{"ticker": "TEST", "type": "long", "reported_value": value}],
+            label_suffix=self.WARRANT_SUFFIX if suffix is None else suffix)
+
+    def test_warrant_adjusted_producer_accepted(self):
+        self.write_warrant_case()
+        result = self.run_checker()
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_warrant_adjusted_label_must_name_the_source(self):
+        for suffix in ("", "; TEST adds 1,000 pre-funded warrants from the Form 3 filed 2026-06-29",
+                       "; TEST adds 999 pre-funded warrants from the Form 4 filed 2026-07-02"):
+            with self.subTest(suffix=suffix):
+                self.write_warrant_case(suffix=suffix)
+                self.assert_rejected()
+
+    def test_unscaled_calculator_value_rejected_when_warrants_apply(self):
+        for value in (100, 133.3, 133.34):
+            with self.subTest(value=value):
+                self.write_warrant_case(value=value)
+                self.assert_rejected()
+
+    def test_warrant_suffix_rejected_without_a_declared_adjustment(self):
+        self.write_calculator(label_suffix=self.WARRANT_SUFFIX)
+        self.assert_rejected()
+
+    def test_warrant_adjustment_for_unknown_quarter_rejected(self):
+        self.write_note(warrants=[dict(self.WARRANTS[0], quarter="Q3_2026")])
+        self.assert_rejected()
+
+    def test_warrant_adjustment_for_unknown_ticker_rejected(self):
+        self.write_note(warrants=[dict(self.WARRANTS[0], ticker="OTHER")])
+        self.assert_rejected()
+
+    def test_malformed_warrant_adjustment_fails_cleanly(self):
+        for entry in ({"quarter": "Q2_2026", "ticker": "TEST", "reported_shares": "0",
+                       "warrant_shares": "1_000", "warrant_source": "Form 4 filed 2026-07-02"},
+                      {"quarter": "Q2_2026", "ticker": "TEST", "reported_shares": "3_000",
+                       "warrant_shares": "0", "warrant_source": "Form 4 filed 2026-07-02"}):
+            with self.subTest(entry=entry):
+                self.write_note(warrants=[entry])
+                self.assert_rejected()
+
+    def test_duplicate_warrant_adjustments_rejected(self):
+        self.write_note(warrants=self.WARRANTS * 2)
+        self.assert_rejected()
 
     def test_reordered_filings_cannot_make_old_target_latest(self):
         future = copy.deepcopy(self.filings[-1])
