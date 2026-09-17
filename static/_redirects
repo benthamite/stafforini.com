@@ -4765,7 +4765,7 @@
 /docs/Barrett%20&%20Schmidt%20-%20Longtermist%20political%20philosophy.pdf  /works/barrett-2022-longtermist-political-philosophy/  301
 /docs/Barrett%20&%20Schmidt%20-%20Longtermist%20political%20philosophy:%20an%20agenda%20for%20future%20research.pdf  /works/barrett-2022-longtermist-political-philosophy/  301
 /docs/Barrett%20-%20Are%20emotions%20natural%20kinds?.pdf  /works/barrett-2006-are-emotions-natural/  301
-/docs/Barrett%20et%20al%20-%20Essays%20on%20Longtermism.pdf  /works/barrett-2023-essays-longtermism/  301
+/docs/Barrett%20et%20al%20-%20Essays%20on%20Longtermism.pdf  /works/greaves-2025-essays-longtermism-present/  301
 /docs/Barron%20%26%20Klein%20-%20What%20insects%20can%20tell%20us%20about%20the%20origins%20of%20consciousness.pdf  /works/barron-2016-what-insects-can/  301
 /docs/Barron%20&%20Klein%20-%20What%20insects%20can%20tell%20us%20about%20the%20origins%20of%20consciousness.pdf  /works/barron-2016-what-insects-can/  301
 /docs/Barrow%20%26%20Tipler%20-%20The%20anthropic%20cosmological%20principle.pdf  /works/barrow-1986-anthropic-cosmological-principle/  301
@@ -42221,3 +42221,8 @@
 /quotes/thomas-2024-dispelling-anthropic-shadow-q-579cbaaa/  /quotes/thomas-2024-dispelling-anthropic-shadow-q-a6762839/  301
 /quotes/wilder-1954-sabrina-q-f973a822/  /quotes/wilder-1954-sabrina-q-c5b233af/  301
 /quotes/young-2023-why-flashcards-beat-q-7ff223ae/  /quotes/young-2023-why-flashcards-beat-q-363f5efc/  301
+
+# The Essays on Longtermism collection was re-keyed in babel-refs from
+# Barrett2023EssaysLongtermism to Greaves2025EssaysLongtermismPresent
+# (editor order and publication year corrected), which moved its page.
+/works/barrett-2023-essays-longtermism/  /works/greaves-2025-essays-longtermism-present/  301
