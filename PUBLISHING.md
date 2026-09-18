@@ -159,6 +159,7 @@ Or from the shell:
 ```bash
 bash scripts/deploy.sh                       # export content, process PDFs, build, index, deploy
 bash scripts/deploy.sh --fast-note           # deploy an already-exported minor note body edit
+bash scripts/deploy.sh --fast-quote=WORK     # deploy an already-exported new or edited diary quote
 
 # Or, to regenerate content without deploying:
 bash scripts/export-notes.sh                 # export notes + lastmod, backlinks, citing-notes
@@ -190,9 +191,11 @@ regeneration, but it still cleans and rebuilds the whole Hugo site, regenerates
 Pagefind, and asks Netlify to publish the full atomic deploy tree. It is not the
 right path for small already-exported note updates.
 
-**Expect `--quick` to take about 30 minutes**, regardless of how little
-changed — the cost tracks the total file count in the deploy tree (~57k
-files), not the number of changed files. Before trying to speed this up,
+**`--quick` costs the same regardless of how little changed** — the cost
+tracks the total file count in the deploy tree (~58k files), not the number
+of changed files. It measured about 30 minutes in July 2026 and about six
+minutes after export in September 2026 (see the amendment in
+`decisions/006.md`). Before trying to speed this up,
 read `decisions/006.md`: it records the measured baseline, the causes
 already ruled out, and the optimisations that are in place and must not be
 undone. Several plausible-sounding explanations have already been tested
@@ -209,6 +212,19 @@ slug/date/tag/citation/link/template changes, new notes, deleted notes, quote
 changes, work-page changes, PDF changes, or anything that should update search
 immediately; use full deploy (`stafforini-deploy`) or quick deploy
 (`C-u stafforini-deploy`) instead.
+
+Use `scripts/deploy.sh --fast-quote=WORK-SLUG` for an already-exported diary
+quote that was added or edited; repeat the flag once per affected work. It is
+the same mechanism as `--fast-note` with a different segment: the home page,
+the `/quotes/` feed and quote pages, tag pages, the sitemap, and the named work
+pages. Work pages can't be listed statically, so the script writes them into a
+throwaway config layer as a second segment. The search index is not rebuilt, so
+the quote is unsearchable until the next full or quick deploy. Two conditions
+promote it to a complete quick build: changed PDF attachments (as for
+`--fast-note`) and rendered quote pages whose markdown no longer exists, since a
+fast render cannot delete a removed or renamed quote's old page. In Emacs,
+`stafforini-publish-quote` runs the export and this deploy for the quote at
+point.
 
 PDFs and PDF thumbnails are served directly from Cloudflare R2, not Netlify.
 On each full deploy, `scripts/upload-pdfs.sh` runs `aws s3 sync` against the

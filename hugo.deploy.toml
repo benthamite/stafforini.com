@@ -85,3 +85,16 @@ thumbBaseURL = "https://pdf.stafforini.com"
       kind = "{taxonomy,term}"
     [[segments.fast_note.includes]]
       path = "{/notes,/notes/**,/posts,/posts/**,/search}"
+  # Fast production deploys for added or edited diary quotes. Every page that
+  # lists quotes is here except work pages: deploy.sh --fast-quote adds the
+  # affected ones as a second, per-run segment (fast_quote_works). The sitemap
+  # is included because a new diary quote is an indexable page.
+  [segments.fast_quote]
+    [[segments.fast_quote.includes]]
+      kind = "home"
+    [[segments.fast_quote.includes]]
+      kind = "sitemap"
+    [[segments.fast_quote.includes]]
+      kind = "{taxonomy,term}"
+    [[segments.fast_quote.includes]]
+      path = "{/quotes,/quotes/**}"

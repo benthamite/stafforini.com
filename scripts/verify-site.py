@@ -342,6 +342,29 @@ def verify_built_site(site_dir: Path) -> list[str]:
     return errors
 
 
+def verify_no_orphan_quote_pages(site_dir: Path, content_dir: Path | None = None) -> list[str]:
+    """Report rendered quote pages whose markdown source no longer exists.
+
+    A fast deploy renders into the previous build without cleaning it, so a
+    quote deleted or renamed since then would stay live under its old URL.
+    Quote URLs are `/quotes/:contentbasename/` (hugo.toml permalinks), so a
+    rendered directory maps one-to-one onto a markdown file.
+    """
+    content_dir = content_dir or REPO_ROOT / "content" / "quotes"
+    quotes_dir = site_dir / "quotes"
+    if not quotes_dir.is_dir():
+        return [f"missing rendered quotes directory: {quotes_dir}"]
+    orphans = sorted(
+        page.parent.name
+        for page in quotes_dir.glob("*/index.html")
+        if not (content_dir / f"{page.parent.name}.md").exists()
+    )
+    if not orphans:
+        return []
+    shown = ", ".join(orphans[:5]) + (" ..." if len(orphans) > 5 else "")
+    return [f"{len(orphans)} rendered quote page(s) without source: {shown}"]
+
+
 def verify_redirect_targets(site_dir: Path, redirects_file: Path | None = None) -> list[str]:
     """Report `_redirects` rules whose destination is not in the rendered tree.
 
@@ -433,19 +456,23 @@ def main() -> None:
     group.add_argument("--build", choices=["dev"], help="Build and verify a site profile")
     parser.add_argument(
         "--profile",
-        choices=["full", "fast-note", "pdf-links"],
+        choices=["full", "fast-note", "fast-quote", "pdf-links", "quote-pages"],
         default="full",
         help="Verification depth for an existing rendered site",
     )
     args = parser.parse_args()
 
-    source_errors = [] if args.profile == "pdf-links" else verify_excluded_works()
+    # pdf-links and quote-pages are eligibility probes for a fast deploy,
+    # not verifications of a finished build.
+    probes = {"pdf-links": verify_work_pdf_previews,
+              "quote-pages": verify_no_orphan_quote_pages}
+    source_errors = [] if args.profile in probes else verify_excluded_works()
 
     if args.dir:
         site_dir = args.dir
         errors = (
-            verify_work_pdf_previews(site_dir)
-            if args.profile == "pdf-links"
+            probes[args.profile](site_dir)
+            if args.profile in probes
             else source_errors + verify_built_site(site_dir)
         )
         if args.profile == "full":

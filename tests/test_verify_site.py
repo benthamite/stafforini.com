@@ -177,7 +177,7 @@ def test_work_pdf_preview_errors_are_aggregated(verify_module, pdf_preview_site)
 
 
 @pytest.mark.parametrize("profile, expected_calls", [("full", 1), ("fast-note", 0),
-                                                   ("pdf-links", 1)])
+                                                   ("fast-quote", 0), ("pdf-links", 1)])
 def test_work_pdf_preview_check_profile_wiring(
     verify_module, monkeypatch, tmp_path, profile, expected_calls
 ):
@@ -196,6 +196,42 @@ def test_work_pdf_preview_check_profile_wiring(
         for name in ("verify_excluded_works", "verify_built_site", "verify_sitemap",
                      "verify_internal_links", "verify_redirect_targets"):
             getattr(verify_module, name).assert_not_called()
+
+
+def test_orphan_quote_pages_are_reported(verify_module, tmp_path):
+    """A rendered quote page whose markdown is gone blocks a fast deploy."""
+    site, content = tmp_path / "site", tmp_path / "content"
+    content.mkdir()
+    for slug in ("kept", "deleted"):
+        (site / "quotes" / slug).mkdir(parents=True)
+        (site / "quotes" / slug / "index.html").write_text("<html></html>")
+    (site / "quotes" / "page" / "2").mkdir(parents=True)
+    (site / "quotes" / "page" / "2" / "index.html").write_text("<html></html>")
+    (content / "kept.md").write_text("+++\n+++\n")
+
+    errors = verify_module.verify_no_orphan_quote_pages(site, content)
+    assert len(errors) == 1, errors
+    assert "deleted" in errors[0] and "kept" not in errors[0]
+
+    (content / "deleted.md").write_text("+++\n+++\n")
+    assert verify_module.verify_no_orphan_quote_pages(site, content) == []
+
+
+def test_quote_pages_profile_runs_only_the_probe(verify_module, monkeypatch, tmp_path):
+    from unittest.mock import Mock
+
+    for name in ("verify_excluded_works", "verify_built_site", "verify_sitemap",
+                 "verify_internal_links", "verify_redirect_targets",
+                 "verify_work_pdf_previews"):
+        monkeypatch.setattr(verify_module, name, Mock(return_value=[]))
+    probe = Mock(return_value=[])
+    monkeypatch.setattr(verify_module, "verify_no_orphan_quote_pages", probe)
+    monkeypatch.setattr(sys, "argv", ["verify-site.py", "--dir", str(tmp_path),
+                                   "--profile", "quote-pages"])
+    verify_module.main()
+    probe.assert_called_once_with(tmp_path)
+    verify_module.verify_excluded_works.assert_not_called()
+    verify_module.verify_built_site.assert_not_called()
 
 
 def test_dev_site_smoke_check_passes():
