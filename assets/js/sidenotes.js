@@ -51,6 +51,8 @@
     // Build sidenote DOM
     var sidenote = document.createElement('div');
     sidenote.className = 'sidenote';
+    sidenote.id = 'sn:' + num;
+    sidenote.setAttribute('tabindex', '-1');
     sidenote.setAttribute('data-footnote', num);
     sidenote.setAttribute('role', 'note');
     sidenote.setAttribute('aria-label', 'Sidenote ' + num);
@@ -338,6 +340,9 @@
     computePositions(minHeight, gapHeight);
     truncateForCodeBlocks(container);
     applyPositions(fadeoutHeight);
+    sidenotes.forEach(function (sn, i) {
+      if (sn.el.contains(document.activeElement) || sn.ref.contains(document.activeElement)) activateSidenote(i);
+    });
   }
 
   // ── Hover behavior ─────────────────────────────────────────────
@@ -388,19 +393,26 @@
     if (refLink) refLink.classList.remove('is-active');
   }
 
-  // Sidenote hover
-  sidenotes.forEach(function (sn, i) {
-    sn.el.addEventListener('mouseenter', function () { activateSidenote(i); });
-    sn.el.addEventListener('mouseleave', function () { deactivateSidenote(i); });
-  });
-
-  // Footnote ref hover
+  // Both keyboard focus and pointer hover reveal the complete note. Moving
+  // from the reference into its sidenote must keep it expanded.
   sidenotes.forEach(function (sn, i) {
     var refLink = findRefLink(sn.ref);
     if (!refLink) return;
-
-    refLink.addEventListener('mouseenter', function () { activateSidenote(i); });
-    refLink.addEventListener('mouseleave', function () { deactivateSidenote(i); });
+    sn.refHref = refLink.getAttribute('href');
+    var hovered = new Set();
+    function update(focused) {
+      if (hovered.size || sn.el.contains(focused) || refLink.contains(focused)) {
+        activateSidenote(i);
+      } else {
+        deactivateSidenote(i);
+      }
+    }
+    [sn.el, refLink].forEach(function (el) {
+      el.addEventListener('mouseenter', function () { hovered.add(el); update(document.activeElement); });
+      el.addEventListener('mouseleave', function () { hovered.delete(el); update(document.activeElement); });
+      el.addEventListener('focusin', function () { update(document.activeElement); });
+      el.addEventListener('focusout', function (e) { update(e.relatedTarget); });
+    });
   });
 
   // ── Activation / deactivation based on viewport width ──────────
@@ -408,6 +420,10 @@
   function activate() {
     document.body.classList.add('has-sidenotes');
     positionSidenotes();
+    sidenotes.forEach(function (sn) {
+      var refLink = findRefLink(sn.ref);
+      if (refLink) refLink.setAttribute('href', '#' + sn.el.id);
+    });
   }
 
   function deactivate() {
@@ -416,6 +432,8 @@
 
     // Reset inline styles
     sidenotes.forEach(function (sn) {
+      var refLink = findRefLink(sn.ref);
+      if (refLink && sn.refHref != null) refLink.setAttribute('href', sn.refHref);
       sn.el.style.top = '';
       sn.el.style.height = '';
       sn.el.style.overflow = '';
