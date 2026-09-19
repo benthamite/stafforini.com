@@ -105,12 +105,12 @@ def run_streaming(args: Sequence[str], **kwargs) -> subprocess.CompletedProcess[
     for line in proc.stdout:
         output_parts.append(line)
         if line.strip():
-            print(f"[{time.monotonic() - started:6.1f}s] {line}", end="")
+            print(f"[{time.monotonic() - started:6.1f}s] {line}", end="", flush=True)
         else:
-            print(line, end="")
+            print(line, end="", flush=True)
     returncode = proc.wait()
     print(f"[{time.monotonic() - started:6.1f}s] netlify CLI finished "
-          f"(exit {returncode})")
+          f"(exit {returncode})", flush=True)
     return subprocess.CompletedProcess(args, returncode, "".join(output_parts), "")
 
 
