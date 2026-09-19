@@ -49,7 +49,7 @@ import time
 import urllib.parse
 from pathlib import Path
 
-from lib import parse_bib_entries
+from lib import atomic_write_text, extract_pdf_path, parse_bib_entries
 
 _PAPER_FETCH_LIB = Path(
     os.environ.get("DOTFILES_DIR", str(Path.home() / "My Drive" / "dotfiles"))
@@ -684,8 +684,8 @@ def save_progress(path: Path, progress: dict) -> None:
 # ---------------------------------------------------------------------------
 
 
-def update_bib_entry(bib_path: Path, key: str) -> bool:
-    """Add a file field to a single @book entry.  Returns True if updated."""
+def update_bib_entry(bib_path: Path, key: str, *, replace_broken: bool = False) -> bool:
+    """Attach a downloaded PDF, optionally replacing missing PDF references."""
     content = bib_path.read_text(encoding="utf-8")
     expected_path = f"~/My Drive/library-pdf/{key}.pdf"
 
@@ -699,14 +699,35 @@ def update_bib_entry(bib_path: Path, key: str) -> bool:
 
     entry_text = m.group(1)
     if re.search(r"^\s*file\s*=", entry_text, re.MULTILINE):
-        return False
+        if not replace_broken or not (LIBRARY_DIR / f"{key}.pdf").is_file():
+            return False
+        field = re.search(
+            r'^([ \t]*file\s*=\s*)(\{[^{}]*\}|"[^"]*")',
+            entry_text, re.MULTILINE,
+        )
+        if not field:
+            return False
+        attachments = field.group(2)[1:-1].split(";")
+        retained = []
+        for attachment in attachments:
+            pdf = extract_pdf_path(attachment)
+            if pdf is not None:
+                if pdf.exists():
+                    return False  # never replace a working PDF attachment
+            elif attachment.strip():
+                retained.append(attachment.strip())
+        retained.append(expected_path)
+        start = m.start(1) + field.start(2)
+        end = m.start(1) + field.end(2)
+        atomic_write_text(bib_path, content[:start] + "{" + ";".join(retained) + "}" + content[end:])
+        return True
 
     # Ensure the last field before the closing brace has a trailing comma
     entry_text_end = content[: m.start(2)]
     entry_text_end = re.sub(r"([^\s,])([ \t]*\n)$", r"\1,\2", entry_text_end)
     file_line = f"\tfile = {{{expected_path}}}\n"
     content = entry_text_end + file_line + content[m.start(2) :]
-    bib_path.write_text(content, encoding="utf-8")
+    atomic_write_text(bib_path, content)
     return True
 
 
@@ -717,7 +738,7 @@ def update_bib_file(bib_path: Path, progress: dict) -> int:
     """
     updated = 0
     for key in progress.get("downloaded", {}):
-        if update_bib_entry(bib_path, key):
+        if update_bib_entry(bib_path, key, replace_broken=True):
             updated += 1
     return updated
 
@@ -972,7 +993,7 @@ def main() -> None:
             }
             downloaded_count += 1
             # Update bib entry inline
-            if update_bib_entry(BIB_FILE, key):
+            if update_bib_entry(BIB_FILE, key, replace_broken=broken):
                 print("  Updated bib entry")
         else:
             print("  FAILED")

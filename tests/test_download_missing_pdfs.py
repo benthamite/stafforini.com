@@ -76,6 +76,67 @@ class TestParseBibBooks:
         assert books[0]["author"] == "Doe, Jane"
 
 
+@pytest.mark.parametrize("replay_progress", [False, True])
+def test_broken_attachment_is_repaired_after_download(tmp_path, monkeypatch, replay_progress):
+    """Both download completion and progress replay reconnect the actual PDF."""
+    monkeypatch.setenv("HOME", str(tmp_path))
+    library = tmp_path / "My Drive" / "library-pdf"
+    library.mkdir(parents=True)
+    bib = tmp_path / "old.bib"
+    bib.write_text('''@book{Example2020,
+ title = {Example},
+ author = {Author, Alice},
+ isbn = {9781234567890},
+ file = {/missing/old-name.pdf;/missing/supplement.html},
+}
+''')
+    progress = tmp_path / "progress.json"
+    monkeypatch.setattr(_mod, "BIB_FILE", bib)
+    monkeypatch.setattr(_mod, "LIBRARY_DIR", library)
+    monkeypatch.setattr(_mod, "PROGRESS_FILE", progress)
+    dest = library / "Example2020.pdf"
+    if replay_progress:
+        dest.write_bytes(b"%PDF-existing-download")
+        progress.write_text(json.dumps({"downloaded": {"Example2020": {}}}))
+        monkeypatch.setattr(sys, "argv", [str(_SCRIPT), "--update-bib"])
+        with pytest.raises(SystemExit) as exited:
+            _mod.main()
+        assert exited.value.code == 0
+    else:
+        monkeypatch.setattr(_mod, "_http", lambda: object())
+        monkeypatch.setattr(pf, "resolve_annas_hosts", lambda *args: ["annas-archive.gl"])
+        best = {"md5": "a" * 32, "size": "1MB", "format": "pdf", "size_bytes": 1000000}
+        monkeypatch.setattr(_mod, "search_annas_archive", lambda *args, **kwargs: [best])
+        monkeypatch.setattr(_mod, "select_best_result", lambda *args, **kwargs: best)
+        def download(md5, key, base, target, **kwargs):
+            target.write_bytes(b"%PDF-downloaded")
+            return True
+        monkeypatch.setattr(_mod, "download_via_fast_api", download)
+        monkeypatch.setattr(sys, "argv", [str(_SCRIPT), "--include-broken", "--key", "fixture-key"])
+        _mod.main()
+        assert "Example2020" in json.loads(progress.read_text())["downloaded"]
+    book = parse_bib_books(bib)[0]
+    assert _mod.extract_pdf_path(book["file"]) == dest
+    assert _mod.extract_pdf_path(book["file"]).is_file()
+    assert "/missing/old-name.pdf" not in book["file"]
+    assert "/missing/supplement.html" in book["file"]
+    assert _mod.books_missing_pdf([book], include_broken=True) == []
+
+
+def test_broken_repair_preserves_working_pdf(tmp_path, monkeypatch):
+    library = tmp_path / "library"
+    library.mkdir()
+    (library / "Example2020.pdf").write_bytes(b"%PDF-downloaded")
+    working = tmp_path / "working.pdf"
+    working.write_bytes(b"%PDF-original")
+    bib = tmp_path / "old.bib"
+    original = f"@book{{Example2020,\n file = {{{working}}},\n}}\n"
+    bib.write_text(original)
+    monkeypatch.setattr(_mod, "LIBRARY_DIR", library)
+    assert not _mod.update_bib_entry(bib, "Example2020", replace_broken=True)
+    assert bib.read_text() == original
+
+
 class TestScoreResult:
     def test_accepts_author_only_match_when_title_missing(self):
         target = {"title": "", "author": "Smith, John"}
