@@ -687,6 +687,8 @@ def main() -> int:
         ),
     )
     args = parser.parse_args()
+    if args.dry_run and args.test_alert:
+        parser.error("--dry-run and --test-alert cannot be combined")
 
     if args.test_alert:
         test_filing = build_test_alert()

@@ -504,3 +504,18 @@ def test_completed_filing_survives_later_filing_failure(tmp_path, monkeypatch):
             _mod.check_fund(SA_LP, dry_run=False)
     assert drafts == ["first", "second"]
     assert _mod.load_state(SA_LP)["notified_accessions"] == ["first"]
+
+
+def test_dry_run_test_alert_rejected_before_any_effect(monkeypatch, capsys):
+    import pytest
+    def unexpected(*args, **kwargs):
+        raise AssertionError("conflicting flags must stop before any action")
+    for name in ("build_test_alert", "recent_watched_filings", "load_state",
+                 "send_private_notifications", "create_newsletter_draft",
+                 "delete_newsletter_email", "write_state", "add_feed_entry"):
+        monkeypatch.setattr(_mod, name, unexpected)
+    monkeypatch.setattr(_mod.sys, "argv", ["sa-lp-13f-check.py", "--dry-run", "--test-alert"])
+    with pytest.raises(SystemExit) as exit_info:
+        _mod.main()
+    assert exit_info.value.code == 2
+    assert "--dry-run and --test-alert cannot be combined" in capsys.readouterr().err
