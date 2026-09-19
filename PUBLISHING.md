@@ -79,12 +79,24 @@ The normal day-to-day workflow uses ox-hugo's interactive export from within Ema
 
 The `.dir-locals.el` in `notes/` activates the `hugo-cite` processor so citations are correctly converted to Hugo shortcodes. It also sets `org-export-with-broken-links` to handle any dead links.
 
-### Editing a quote
+### Publishing or editing a diary quote
 
-1. Open the bibliographic note in Emacs
-2. Edit the `:public:` subtree
-3. Export with `C-c C-e H A`
-4. If `hugo server` is running, the site updates automatically
+1. Put point on the quote heading in its bibliographic note.
+2. Run `M-x stafforini-publish-quote` and select topics if prompted.
+3. Answer yes to deployment, then wait for `Published and verified live:` and
+   the quote URL in `*stafforini-export-quotes*`.
+
+The command saves the source, exports quotes, builds and deploys the site, then
+fetches the public quote URL and compares its quote text and attribution with
+the freshly built page. A failed stage stops the chain and reports failure;
+adding `:public:` or producing local HTML does not count as publication.
+Re-running the command on the same heading retries publication without
+creating a second quote. Answering no to deployment produces a local preview
+only. The fast quote path leaves search unchanged until a full or quick deploy.
+
+The workflow still depends on valid source files, network access, and Netlify.
+An unrelated export error can block publication because the export covers all
+public quotes. Its completion message distinguishes that failure from success.
 
 The `.dir-locals.el` in `bibliographic-notes/` activates the `hugo-cite-noop` processor, which suppresses citation text (quotes get their attribution from work pages instead).
 
@@ -224,7 +236,9 @@ promote it to a complete quick build: changed PDF attachments (as for
 `--fast-note`) and rendered quote pages whose markdown no longer exists, since a
 fast render cannot delete a removed or renamed quote's old page. In Emacs,
 `stafforini-publish-quote` runs the export and this deploy for the quote at
-point.
+point, then runs `scripts/verify-live-quote.py --slug QUOTE-SLUG`. The live
+check rejects missing pages, redirects, stale quote text, and changed
+attribution; bounded retries allow the deployed page to become available.
 
 PDFs and PDF thumbnails are served directly from Cloudflare R2, not Netlify.
 On each full deploy, `scripts/upload-pdfs.sh` runs `aws s3 sync` against the
