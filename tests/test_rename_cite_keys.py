@@ -6,7 +6,10 @@ tests pin the encoding, since the failure is silent in production.
 """
 
 import importlib.util
+import io
 from pathlib import Path
+
+import pytest
 
 _SCRIPT = Path(__file__).parent.parent / "scripts" / "rename-cite-keys.py"
 _spec = importlib.util.spec_from_file_location("rename_cite_keys", _SCRIPT)
@@ -15,6 +18,75 @@ _spec.loader.exec_module(_mod)
 
 encode_work_path = _mod.encode_work_path
 rename_redirects = _mod.rename_redirects
+
+
+@pytest.fixture
+def rename_sources(tmp_path, monkeypatch):
+    bib = tmp_path / "source.bib"
+    bib.write_text("@book{Old2020,\n title = {Original}\n}\n")
+    monkeypatch.setattr(_mod, "BIB_FILES", [bib])
+    for name in ("BIBNOTES", "NOTES", "QUOTES"):
+        directory = tmp_path / name
+        directory.mkdir()
+        monkeypatch.setattr(_mod, name, directory)
+    monkeypatch.setattr(_mod, "REDIRECTS", tmp_path / "redirects")
+    (_mod.BIBNOTES / "Old2020.org").write_text("Original note\n")
+    return tmp_path, bib
+
+
+class TestRenameCollisions:
+    def test_existing_note_is_preserved_before_bib_changes(self, rename_sources):
+        root, bib = rename_sources
+        destination = _mod.BIBNOTES / "New2020.org"
+        destination.write_text("Unique destination content\n")
+        before = {p: p.read_bytes() for p in root.rglob("*") if p.is_file()}
+        with pytest.raises(ValueError, match="Destination note already exists"):
+            _mod.apply_rename("Old2020", "New2020")
+        assert {p: p.read_bytes() for p in root.rglob("*") if p.is_file()} == before
+
+    def test_existing_bib_key_is_rejected(self, rename_sources):
+        _, bib = rename_sources
+        bib.write_text(bib.read_text() + "@book{New2020,\n title = {Existing}\n}\n")
+        before = bib.read_bytes()
+        with pytest.raises(ValueError, match="Destination cite key already exists"):
+            _mod.apply_rename("Old2020", "New2020")
+        assert bib.read_bytes() == before
+        assert (_mod.BIBNOTES / "Old2020.org").exists()
+
+    @pytest.mark.parametrize("mapping", [
+        {"Old2020": "New2020", "Other": "New2020"},
+        {"Old2020": "New2020", "New2020": "Last"},
+        {"Old2020": "New2020", "New2020": "Old2020"},
+    ])
+    def test_batch_collisions_fail_before_any_write(self, rename_sources, monkeypatch, mapping):
+        root, _ = rename_sources
+        before = {p: p.read_bytes() for p in root.rglob("*") if p.is_file()}
+        monkeypatch.setattr(_mod.sys, "stdin", io.StringIO(
+            "".join(f"{old}\t{new}\n" for old, new in mapping.items())))
+        assert _mod.main() == 1
+        assert {p: p.read_bytes() for p in root.rglob("*") if p.is_file()} == before
+
+    def test_later_existing_destination_blocks_entire_batch(self, rename_sources, monkeypatch):
+        root, _ = rename_sources
+        (_mod.BIBNOTES / "Taken.org").write_text("Keep this note\n")
+        before = {p: p.read_bytes() for p in root.rglob("*") if p.is_file()}
+        monkeypatch.setattr(_mod.sys, "stdin", io.StringIO(
+            "Old2020\tNew2020\nOther\tTaken\n"))
+        assert _mod.main() == 1
+        assert {p: p.read_bytes() for p in root.rglob("*") if p.is_file()} == before
+
+    def test_noncolliding_rename_updates_sources(self, rename_sources):
+        _, bib = rename_sources
+        _mod.apply_rename("Old2020", "New2020")
+        assert "@book{New2020," in bib.read_text()
+        assert not (_mod.BIBNOTES / "Old2020.org").exists()
+        assert (_mod.BIBNOTES / "New2020.org").read_text() == "Original note\n"
+
+    def test_identity_rename_does_not_add_a_self_redirect(self, rename_sources):
+        root, _ = rename_sources
+        before = {p: p.read_bytes() for p in root.rglob("*") if p.is_file()}
+        _mod.apply_rename("Old2020", "Old2020")
+        assert {p: p.read_bytes() for p in root.rglob("*") if p.is_file()} == before
 
 
 class TestEncodeWorkPath:

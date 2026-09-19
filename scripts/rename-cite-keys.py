@@ -141,8 +141,36 @@ def rename_redirects(text: str, old_slug: str, new_slug: str) -> tuple[str, int,
     return new_text, count, added
 
 
+def validate_renames(renames: dict[str, str]) -> None:
+    """Reject collisions throughout a batch before changing any source file.
+
+    Chained renames and swaps need simultaneous updates, which this script's
+    sequential writer cannot perform safely.
+    """
+    active = {old: new for old, new in renames.items() if old != new}
+    targets = list(active.values())
+    if len(set(targets)) != len(targets):
+        raise ValueError("Multiple cite keys cannot be renamed to the same target")
+    if set(targets) & active.keys():
+        raise ValueError("Chained or cyclic cite-key renames are not supported")
+
+    existing_keys = set()
+    for path in BIB_FILES:
+        if path.exists():
+            existing_keys.update(re.findall(
+                r"^@\w+\s*\{\s*([^,\s]+)\s*,",
+                path.read_text(encoding="utf-8"), re.MULTILINE))
+    for old, new in active.items():
+        if new in existing_keys:
+            raise ValueError(f"Destination cite key already exists: {new}")
+        destination = BIBNOTES / f"{new}.org"
+        if destination.exists():
+            raise ValueError(f"Destination note already exists: {destination}")
+
+
 def apply_rename(old: str, new: str) -> dict:
     """Apply one rename and return a stats dict."""
+    validate_renames({old: new})
     old_slug = cite_key_to_slug(old)
     new_slug = cite_key_to_slug(new)
     stats = {
@@ -152,6 +180,8 @@ def apply_rename(old: str, new: str) -> dict:
         "md_files_changed": [], "redirect_changes": 0,
         "redirect_added": False,
     }
+    if old == new:
+        return stats
 
     # Bib files
     for path in BIB_FILES:
@@ -232,6 +262,12 @@ def main() -> int:
         renames = RENAMES
     else:
         renames = load_renames_from_stdin()
+
+    try:
+        validate_renames(renames)
+    except ValueError as exc:
+        print(f"Refusing to rename: {exc}", file=sys.stderr)
+        return 1
 
     print(f"Applying {len(renames)} cite-key renames...")
     print()
