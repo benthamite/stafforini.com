@@ -15,7 +15,7 @@ The site has three content sections:
 - **Backlinks** — org-roam-powered link graph with "links to this note" sections, replacing traditional tags and categories
 - **Client-side search** — [Pagefind](https://pagefind.app/) WebAssembly search with section faceting, keyboard navigation, and a header overlay triggered by `/` or `Cmd+K`
 - **Citations** — org-cite references rendered via a custom Hugo shortcode, with formatted output by BibTeX entry type (book, article, incollection, etc.)
-- **Link previews** — Wikipedia-style hover popups showing the first paragraph of linked notes
+- **Link previews** — hover or focus popups showing note excerpts, or work details and full abstracts; long previews scroll
 - **Sidenotes** — footnotes displayed as margin notes on wide viewports, falling back to standard footnotes on narrow screens
 - **Dark mode** — three-state toggle (light / dark / system) with `localStorage` persistence and `prefers-color-scheme` support
 - **Math rendering** — KaTeX, conditionally loaded only on pages that use math

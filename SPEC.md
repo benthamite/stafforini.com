@@ -63,7 +63,7 @@ Client-side search using [Pagefind](https://pagefind.app/). The search index is 
 
 ### Link previews
 
-Wikipedia-style popup previews on hover for internal links. Shows the first paragraph of the target note. Simple and clean — no metadata in the preview popup.
+Wikipedia-style popup previews on hover or keyboard focus for internal links throughout the site. Note previews show the first paragraph (up to 200 characters). Work previews show the title, author or editor, publication details, and full abstract when available. Long work previews can be scrolled while hovering over the popup. Works without abstracts still show their bibliographic details.
 
 ## Quotes section
 
@@ -188,7 +188,7 @@ Hugo build triggered on push to the main branch. The build pipeline should:
 | Citations             | Org-cite + shared `.bib` file + CSL            |
 | Theme                 | Custom, built from scratch                     |
 | Search                | Pagefind (client-side)                         |
-| Link previews         | Wikipedia-style hover popups (first paragraph) |
+| Link previews         | Note excerpts; work details and full abstracts |
 | Dark mode             | Toggle + system preference + localStorage      |
 | Math rendering        | KaTeX                                          |
 | Syntax highlighting   | Hugo/Chroma                                    |

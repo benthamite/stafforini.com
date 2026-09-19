@@ -1,8 +1,14 @@
 /* Link preview popup */
 .link-preview {
-  position: absolute;
+  position: fixed;
   z-index: 50; /* see z-index scale in _base.css */
-  max-width: 22rem;
+  width: 28rem;
+  max-width: calc(100vw - 16px);
+  max-height: min(30rem, calc(100vh - 16px));
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+  overscroll-behavior: contain;
   padding: 0.85rem 1rem;
   background: var(--color-bg);
   border: 1px solid var(--color-border);
@@ -10,11 +16,32 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   font-size: var(--font-size-sm);
   line-height: 1.5;
-  pointer-events: none;
+  visibility: hidden;
   opacity: 0;
   transition: opacity 0.15s ease;
 }
 
 .link-preview.visible {
+  visibility: visible;
   opacity: 1;
+}
+
+.link-preview p {
+  margin: 0 0 0.5rem;
+}
+
+.link-preview p:last-child {
+  margin-bottom: 0;
+}
+
+.link-preview-title {
+  font-weight: 600;
+}
+
+.link-preview-details {
+  color: var(--color-text-secondary);
+}
+
+.link-preview-abstract {
+  white-space: pre-line;
 }
