@@ -128,12 +128,14 @@ class TestSharedClient:
         best = _mod.select_best_result(results, target_book={"title": "Introduction to Algorithms", "author": "Cormen, Thomas"})
         assert best["md5"] == "a" * 32
 
-    def test_host_override_must_be_annas_archive(self, monkeypatch, capsys):
+    def test_host_override_must_be_annas_archive(self, monkeypatch, capsys, fake_http):
+        http = fake_http([])
         monkeypatch.setattr(sys, "argv", [str(_SCRIPT), "--dry-run", "--base-url", "https://evil.invalid/"])
         with pytest.raises(SystemExit) as exited:
             _mod.main()
         assert exited.value.code == 1
         assert "refusing" in capsys.readouterr().err.lower()
+        assert http.calls == []
 
 
 class TestDownloadLogging:
