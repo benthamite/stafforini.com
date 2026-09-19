@@ -1,5 +1,5 @@
-{{ with .TableOfContents }}
-{{ $tocInner := partial "toc-raw.html" . }}
+{{ $tocInner := partial "toc-raw.html" .TableOfContents | strings.TrimSpace }}
+{{ with $tocInner }}
 <aside class="toc-floating" aria-label="Table of contents">
   <nav class="toc-floating-nav">
     <a href="#" class="toc-title" aria-label="Scroll to top">{{ $.Title | markdownify }}</a>

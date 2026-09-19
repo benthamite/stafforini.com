@@ -1,5 +1,5 @@
-{{ with .TableOfContents }}
-{{ $tocInner := partial "toc-raw.html" . }}
+{{ $tocInner := partial "toc-raw.html" .TableOfContents | strings.TrimSpace }}
+{{ with $tocInner }}
 <div class="toc-inline-wrapper">
   <nav class="toc-inline" aria-label="Table of contents">
     {{ $tocInner | safeHTML }}

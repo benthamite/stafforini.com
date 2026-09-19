@@ -58,11 +58,14 @@
   color: var(--color-text);
   text-decoration: none;
   margin-bottom: 0.75rem;
+  /* Transparent links remain focusable and can receive browser link hints. */
+  visibility: hidden;
   opacity: 0;
   transition: opacity 0.2s ease;
 }
 
 .toc-title.is-visible {
+  visibility: visible;
   opacity: 1;
 }
 
