@@ -84,6 +84,11 @@ regexp with an equivalent linear search while the details transcoder runs,
 and =scripts/check-export-elisp.sh= verifies the equivalence and a large
 block that fails without the override.
 
+Batch exports use the personal TODO keywords and numeric priorities declared
+in =dotfiles/emacs/config.org=. This keeps headings such as =DOING [#3]=
+stable through ox-hugo preprocessing. Notes retain their existing policy of
+excluding task headings; quotes can be exported from beneath task headings.
+
 ** SA LP Refresh
 :PROPERTIES:
 :ID:       8431CA99-D3B5-4497-8E2F-BDECC669517C
@@ -96,3 +101,12 @@ Both it and =scripts/vara-refresh.sh= drive a =emacs -Q --batch= process
 through =scripts/sa-lp-init.el=, which sets =debug-on-event= to nil so a
 SIGUSR2 aimed at the interactive Emacs (the =emacsk= shell helper) cannot
 arm the debugger and abort the batch run with exit 255.
+
+* Quote Export
+
+=scripts/export-quotes.el= sets =#+hugo_base_dir:= to this repository in each
+temporary export buffer, adding it when absent and replacing stale paths.
+Source notes are not saved. This permits quote subtrees merged into an existing
+bibliographic note to export without copying a file-level destination setting.
+=scripts/check-export-elisp.sh= checks missing and stale destinations and quote
+export beneath a task heading with a numeric priority.

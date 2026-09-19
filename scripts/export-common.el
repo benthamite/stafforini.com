@@ -22,6 +22,17 @@
 
 ;; Shared export settings — only in batch mode to avoid clobbering interactive config
 (when noninteractive
+  ;; Match the source notes' task syntax from dotfiles/emacs/config.org.
+  ;; Otherwise ox-hugo's AST round-trip can drop an unrecognized TODO word
+  ;; before a numeric priority, making the original outline path unfindable.
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "DOING(g)" "IMPORTANT(i)" "URGENT(u)"
+                    "SOMEDAY(s)" "MAYBE(m)" "WAITING(w)" "PROJECT(p)"
+                    "NEXT(n)" "LATER(l)" "|" "DELEGATED(e)" "DONE(d)"
+                    "CANCELLED(c)")))
+  (setq org-priority-highest 1
+        org-priority-default 7
+        org-priority-lowest 9)
   (setq org-export-with-broken-links t)
   (setq org-export-exclude-tags '("noexport" "ARCHIVE"))
   (setq org-hugo-suppress-lastmod-period 0)

@@ -16,6 +16,25 @@ trap 'rm -f "$empty_list" "$emacs_log"' EXIT
 # Emacs output in a log and show it only when the check fails.
 if ! EXPORT_FILE_LIST="$empty_list" emacs --batch -l "$SCRIPT_DIR/export-notes.el" --eval '
 (progn
+  (dolist (state (list "TODO" "DOING" "IMPORTANT" "URGENT" "SOMEDAY"
+                      "MAYBE" "WAITING" "PROJECT" "NEXT" "LATER"
+                      "DELEGATED" "DONE" "CANCELLED" ""))
+    (with-temp-buffer
+      (insert (format "* %s%s[#3] Parent\n** Quote\n:PROPERTIES:\n:EXPORT_FILE_NAME: quote\n:END:\nText\n"
+                      state (if (equal state "") "" " ")))
+      (org-mode)
+      (goto-char (point-min))
+      (unless (equal (org-get-todo-state) (unless (equal state "") state))
+        (error "Batch Org does not recognize task state %S" state))
+      (re-search-forward "^\\*\\* Quote")
+      (let ((path (org-get-outline-path t))
+            (buffer (org-hugo--get-pre-processed-buffer)))
+        (unwind-protect
+            (with-current-buffer buffer
+              (goto-char (org-find-olp path t))
+              (unless (equal (org-get-heading t t t t) "Quote")
+                (error "Preprocessing lost the quote under task state %S" state)))
+          (kill-buffer buffer)))))
   (dolist (s (list "" "no summary here" "<summary>x</summary>rest"
                    "pre<summary>a</summary>mid</summary>tail"
                    "</summary>before<summary>open only"
@@ -52,4 +71,31 @@ if ! EXPORT_FILE_LIST="$empty_list" emacs --batch -l "$SCRIPT_DIR/export-notes.e
   cat "$emacs_log" >&2
   exit 1
 fi
-echo "export Elisp OK: details-summary override verified"
+if ! EXPORT_FILE_LIST="$empty_list" emacs --batch -l "$SCRIPT_DIR/export-quotes.el" --eval '
+(let ((export-hugo-base-dir (make-temp-file "quote-export-check-" t)))
+  (unwind-protect
+      (dolist (header (list "" "#+hugo_base_dir: /obsolete/site\n"
+                           "#+HUGO_BASE_DIR: /obsolete/site\n"))
+        (with-temp-buffer
+          (insert header "* DOING [#3] Parent\n** Quote :public:\n:PROPERTIES:\n:EXPORT_FILE_NAME: regression-quote\n:EXPORT_HUGO_SECTION: quotes\n:END:\nA quote preserved through export.\n")
+          (org-mode)
+          (export--ensure-hugo-base-dir)
+          (let ((once (buffer-string)))
+            (export--ensure-hugo-base-dir)
+            (unless (equal once (buffer-string))
+              (error "Setting the quote destination is not idempotent")))
+          (org-hugo-export-wim-to-md :all-subtrees)
+          (let ((output (expand-file-name "content/quotes/regression-quote.md"
+                                          export-hugo-base-dir)))
+            (unless (file-exists-p output)
+              (error "Quote was not exported for header %S" header))
+            (with-temp-buffer
+              (insert-file-contents output)
+              (unless (search-forward "A quote preserved through export." nil t)
+                (error "Exported quote lost its body")))
+            (delete-file output))))
+    (delete-directory export-hugo-base-dir t)))' >"$emacs_log" 2>&1; then
+  cat "$emacs_log" >&2
+  exit 1
+fi
+echo "export Elisp OK: task headings, quote destinations, and details blocks verified"

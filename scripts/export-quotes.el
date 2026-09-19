@@ -15,23 +15,22 @@
 ;; org-cite-basic to parse all bib files per subtree, which is extremely slow
 ;; and errors out in batch mode.
 
-;; Override hugo_base_dir: org files still reference the old Dropbox path,
-;; but the repo now lives under Google Drive.  ox-hugo reads #+hugo_base_dir:
-;; from the buffer as an export option; there is no `org-hugo--get-basedir'
-;; function to advise.  Instead, rewrite the keyword in each buffer before export.
+;; Set the destination in each export buffer.  Sources may have a stale
+;; #+hugo_base_dir: or none at all after quote subtrees are merged into a note.
 (defvar export-hugo-base-dir
   (file-name-directory (directory-file-name
                         (file-name-directory load-file-name)))
   "Hugo base directory, derived from this script's location (repo root).")
 
-(defun export--rewrite-hugo-base-dir ()
-  "Replace any #+hugo_base_dir: line in the current buffer with the repo root."
+(defun export--ensure-hugo-base-dir ()
+  "Set #+hugo_base_dir: in the current export buffer to the repo root."
   (save-excursion
     (goto-char (point-min))
-    (when (re-search-forward
-           "^#\\+hugo_base_dir:.*$" nil t)
-      (replace-match
-       (format "#+hugo_base_dir: %s" export-hugo-base-dir)))))
+    (let ((case-fold-search t)
+          (keyword (format "#+hugo_base_dir: %s" export-hugo-base-dir)))
+      (if (re-search-forward "^#\\+hugo_base_dir:.*$" nil t)
+          (replace-match keyword t t)
+        (insert keyword "\n")))))
 
 ;; Disable citation processing entirely — register a no-op export processor
 ;; that just renders the raw [cite:@key] as empty text
@@ -113,7 +112,7 @@
           (let ((buf (find-file-noselect file)))
             (unwind-protect
                 (with-current-buffer buf
-                  (export--rewrite-hugo-base-dir)
+                  (export--ensure-hugo-base-dir)
                   (export--expand-includes)
                   (export--expand-transclusions)
                   (let ((count (org-hugo-export-wim-to-md :all-subtrees)))
