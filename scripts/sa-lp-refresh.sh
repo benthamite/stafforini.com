@@ -148,7 +148,7 @@ commit_if_changed() {
     return 0
   fi
   git add -- "${paths[@]}"
-  git commit -m "$message"
+  git commit --only -m "$message" -- "${paths[@]}"
   python3 "$STAFFORINI_REPO/scripts/push-refresh.py" "$repo"
   echo "$repo: committed and pushed."
 }
