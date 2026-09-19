@@ -102,7 +102,9 @@ def expected_recent_quote_labels(limit: int = 5) -> list[str]:
 
     works = json.loads(works_path.read_text()) if works_path.exists() else {}
     diary_quotes: list[tuple[Path, dict]] = []
-    for path in quotes_dir.glob("*.md"):
+    # Match activity-feed.html: basename ascending breaks equal-date ties.
+    # Python and Hugo both preserve this order in the subsequent date sort.
+    for path in sorted(quotes_dir.glob("*.md"), key=lambda path: path.stem):
         fm = read_toml_front_matter(path)
         if fm.get("diary") is True:
             diary_quotes.append((path, fm))

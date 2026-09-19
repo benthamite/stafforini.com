@@ -21,6 +21,55 @@ def verify_module():
     return module
 
 
+def test_recent_quote_tie_matches_rendered_feed(verify_module, tmp_path, monkeypatch):
+    """A tie at fifth place must not depend on filenames' discovery or titles."""
+    if not shutil.which("hugo"):
+        pytest.skip("hugo executable not available")
+    quotes = tmp_path / "content" / "quotes"
+    quotes.mkdir(parents=True)
+    # Reverse filename/title order so Hugo's default title tie-break differs.
+    entries = [
+        ("z-tied", "A excluded quote", "2020-01-01"),
+        ("a-tied", "Z included quote", "2020-01-01"),
+        *[(f"recent-{day}", f"Recent {day}", f"2020-01-0{day}")
+          for day in range(2, 6)],
+    ]
+    for slug, title, date in entries:
+        (quotes / f"{slug}.md").write_text(
+            f'+++\ntitle = "{title}"\ndate = {date}\ndiary = true\n+++\nQuote.\n'
+        )
+    original_glob = Path.glob
+
+    def reversed_discovery(path, pattern):
+        if path == quotes and pattern == "*.md":
+            return iter([quotes / f"{slug}.md" for slug, _, _ in entries])
+        return original_glob(path, pattern)
+
+    monkeypatch.setattr(Path, "glob", reversed_discovery)
+    monkeypatch.setattr(verify_module, "REPO_ROOT", tmp_path)
+    expected = ["Recent 5", "Recent 4", "Recent 3", "Recent 2", "Z included quote"]
+    assert verify_module.expected_recent_quote_labels() == expected
+
+    partials = tmp_path / "layouts" / "partials"
+    partials.mkdir(parents=True)
+    source = VERIFY_PATH.parent.parent / "layouts" / "partials"
+    for name in ("activity-feed.html", "format-date.html", "work-ref.html"):
+        shutil.copyfile(source / name, partials / name)
+    (tmp_path / "layouts" / "index.html").write_text(
+        '{{ partial "activity-feed.html" . }}'
+    )
+    (tmp_path / "hugo.toml").write_text('baseURL = "https://example.test/"\n')
+    result = subprocess.run(
+        ["hugo", "--source", str(tmp_path), "--quiet"],
+        text=True, capture_output=True, timeout=30,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    rendered = (tmp_path / "public" / "index.html").read_text()
+    assert all(label in rendered for label in expected)
+    assert "A excluded quote" not in rendered
+    assert sorted(expected, key=rendered.index) == expected
+
+
 def test_redirect_target_check_reports_dead_targets(verify_module, tmp_path):
     """A rule pointing at a page absent from the render must fail verification."""
     site = tmp_path / "site"
