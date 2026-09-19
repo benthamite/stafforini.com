@@ -59,19 +59,70 @@ def rename_in_bib(text: str, old: str, new: str) -> tuple[str, int]:
     return text, count
 
 
+# Org's full key alphabet prevents a rename from matching just the prefix of
+# another key. See https://orgmode.org/worg/org-syntax.html#Citations.
+ORG_CITE_KEY = r"[\w\-.:?!`'/\*@+|(){}<>&^$#%~]+"
+ORG_CITATION_START = re.compile(r"\[cite(?:/[\w-]+(?:/[\w/-]+)?)?:", re.I)
+
+
+def rename_org_references(text: str, old: str, new: str) -> tuple[str, int]:
+    """Rewrite complete keys in citations and bare ROAM_REFS properties."""
+    count = 0
+
+    def replace_key(match):
+        nonlocal count
+        key = match.group(1)
+        if key == old:
+            count += 1
+            return "@" + new
+        if key == "-" + old:
+            count += 1
+            return "@-" + new
+        return match.group(0)
+
+    key_pattern = re.compile(r"@(" + ORG_CITE_KEY + r")")
+    pieces = []
+    previous_end = 0
+    for start in ORG_CITATION_START.finditer(text):
+        if start.start() < previous_end:
+            continue
+        # Prefixes and suffixes may contain balanced square brackets. Stop
+        # only at the citation's closing bracket, not at an inner link.
+        depth = 1
+        end = start.end()
+        while end < len(text) and depth:
+            if text[end] == "[":
+                depth += 1
+            elif text[end] == "]":
+                depth -= 1
+            end += 1
+        if depth:
+            continue
+        pieces.append(text[previous_end:start.end()])
+        pieces.append(key_pattern.sub(replace_key, text[start.end():end]))
+        previous_end = end
+    pieces.append(text[previous_end:])
+    text = "".join(pieces)
+
+    bare_key_pattern = re.compile(r"(?<!\S)@(" + ORG_CITE_KEY + r")")
+    text = re.sub(
+        r"^([ \t]*:ROAM_REFS:[ \t]*)([^\n]*)$",
+        lambda match: match.group(1) + bare_key_pattern.sub(replace_key, match.group(2)),
+        text, flags=re.MULTILINE | re.IGNORECASE)
+    return text, count
+
+
 def rename_in_org(text: str, old: str, new: str,
                   old_slug: str, new_slug: str) -> tuple[str, int]:
-    """Rewrite Custom_ID, ROAM_REFS, [cite:@old], and :work "old-slug"."""
-    count = 0
-    for pat_text, repl_text in [
-        (rf"\bCustom_ID:\s+{re.escape(old)}\b", f"Custom_ID: {new}"),
-        (rf"\[cite:@{re.escape(old)}\b", f"[cite:@{new}"),
-        (rf'"{re.escape(old_slug)}"', f'"{new_slug}"'),
-    ]:
-        new_text, n = re.subn(pat_text, repl_text, text)
-        text = new_text
-        count += n
-    return text, count
+    """Rewrite Custom_ID, citation references, and :work "old-slug"."""
+    text, count = rename_org_references(text, old, new)
+    text, n = re.subn(
+        rf"^([ \t]*:?Custom_ID:[ \t]*){re.escape(old)}(?=[ \t]*$)",
+        lambda match: match.group(1) + new,
+        text, flags=re.MULTILINE | re.IGNORECASE)
+    count += n
+    text, n = re.subn(rf'"{re.escape(old_slug)}"', lambda _: f'"{new_slug}"', text)
+    return text, count + n
 
 
 def rename_quote_md(text: str, old_slug: str, new_slug: str) -> tuple[str, int]:
@@ -205,10 +256,9 @@ def apply_rename(old: str, new: str) -> dict:
         new_org.write_text(new_text, encoding="utf-8")
         stats["org_changes"] = n
 
-    # ~/My Drive/notes/**/*.org — replace [cite:@old] anywhere in the
+    # ~/My Drive/notes/**/*.org — replace citation references anywhere in the
     # user's note tree. Skip the claude-logs/ directory (transcripts).
     if NOTES.exists():
-        cite_pat = re.compile(rf"\[cite([^]]*?):@{re.escape(old)}\b")
         for org in NOTES.rglob("*.org"):
             if "claude-logs" in str(org) or "/.git/" in str(org):
                 continue
@@ -216,7 +266,7 @@ def apply_rename(old: str, new: str) -> dict:
                 text = org.read_text(encoding="utf-8")
             except Exception:
                 continue
-            new_text, n = cite_pat.subn(rf"[cite\1:@{new}", text)
+            new_text, n = rename_org_references(text, old, new)
             if n > 0:
                 org.write_text(new_text, encoding="utf-8")
                 stats.setdefault("notes_changed", []).append(org.name)

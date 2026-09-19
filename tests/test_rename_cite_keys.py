@@ -89,6 +89,53 @@ class TestRenameCollisions:
         assert {p: p.read_bytes() for p in root.rglob("*") if p.is_file()} == before
 
 
+class TestCitationRenames:
+    def test_apply_renames_all_supported_reference_forms(self, rename_sources):
+        _, bib = rename_sources
+        source = (
+            "[cite:@Other;@Old2020]\n"
+            "[cite/t:see;@Old2020 p. 3;@-Old2020;@Other;afterward]\n"
+            "[cite/a/f:see [[https://example.org][reference]];@Old2020]\n"
+            "[cite:@Old2020;@Old2020]\n"
+            ":ROAM_REFS: @Old2020 @Other\n"
+            ":ROAM_REFS: [cite:@Old2020]\n"
+            "[cite:@Old2020-extra]\n"
+            "Plain text @Old2020 stays unchanged.\n"
+        )
+        expected = (
+            "[cite:@Other;@New2020]\n"
+            "[cite/t:see;@New2020 p. 3;@-New2020;@Other;afterward]\n"
+            "[cite/a/f:see [[https://example.org][reference]];@New2020]\n"
+            "[cite:@New2020;@New2020]\n"
+            ":ROAM_REFS: @New2020 @Other\n"
+            ":ROAM_REFS: [cite:@New2020]\n"
+            "[cite:@Old2020-extra]\n"
+            "Plain text @Old2020 stays unchanged.\n"
+        )
+        note = _mod.NOTES / "example.org"
+        note.write_text(source)
+        (_mod.BIBNOTES / "Old2020.org").write_text(source)
+        _mod.apply_rename("Old2020", "New2020")
+        assert "@book{New2020," in bib.read_text()
+        assert note.read_text() == expected
+        assert (_mod.BIBNOTES / "New2020.org").read_text() == expected
+
+    @pytest.mark.parametrize("suffix", ["-extra", ".extra", ":extra", "_extra", "/extra", "@extra"])
+    def test_does_not_replace_a_prefix_of_another_key(self, suffix):
+        text = f"[cite:@Old2020{suffix}]\n:ROAM_REFS: @Old2020{suffix}\n"
+        assert _mod.rename_org_references(text, "Old2020", "New2020") == (text, 0)
+
+    def test_custom_id_requires_the_complete_property_value(self):
+        text = ":Custom_ID: Old2020-extra\n:CUSTOM_ID: Old2020\n"
+        result, count = _mod.rename_in_org(text, "Old2020", "New2020", "old-2020", "new-2020")
+        assert result == ":Custom_ID: Old2020-extra\n:CUSTOM_ID: New2020\n"
+        assert count == 1
+
+    def test_unterminated_citation_does_not_change_plain_text(self):
+        text = "[cite:@Old2020\nplain text @Old2020\n"
+        assert _mod.rename_org_references(text, "Old2020", "New2020") == (text, 0)
+
+
 class TestEncodeWorkPath:
     def test_ascii_slug_is_unchanged(self):
         assert encode_work_path("guzey-2022-theses-sleep") == (
