@@ -5,6 +5,8 @@ import sys
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from lib import extract_export_file_names_from_text
@@ -51,6 +53,50 @@ class TestExportFileDiscovery:
 
 
 class TestFullExport:
+    @pytest.mark.parametrize("failure", ["dataless", "unreadable", "directory"])
+    def test_incomplete_scan_aborts_without_exporting_or_pruning(self, tmp_path, failure):
+        src, out = tmp_path / "src", tmp_path / "out"
+        src.mkdir()
+        out.mkdir()
+        for name in ("available", "unavailable"):
+            (src / f"{name}.org").write_text(
+                f"* Note\n:PROPERTIES:\n:EXPORT_FILE_NAME: {name}\n:END:\n")
+            (out / f"{name}.md").write_text(f"previous {name}")
+        cfg = {
+            "source_dirs": [src], "output_dir": out,
+            "elisp": tmp_path / "export.el", "skip_files": set(),
+            "preserve_output": lambda _path: False,
+        }
+        extract = _mod.extract_export_file_names
+
+        def read(path):
+            if failure == "unreadable" and path.stem == "unavailable":
+                raise PermissionError(f"Cannot read {path}")
+            return extract(path)
+
+        walk = _mod.os.walk
+
+        def traverse(path, *, onerror):
+            yield from walk(path, onerror=onerror)
+            if failure == "directory":
+                onerror(PermissionError(f"Cannot scan {path}/private"))
+
+        with patch.dict(_mod.SECTIONS, {"notes": cfg}), \
+             patch.object(_mod, "is_dataless", side_effect=lambda p:
+                          failure == "dataless" and p.stem == "unavailable"), \
+             patch.object(_mod, "extract_export_file_names", side_effect=read), \
+             patch.object(_mod.os, "walk", side_effect=traverse), \
+             patch.object(_mod, "run_emacs") as export, \
+             patch.object(_mod, "safe_remove") as remove:
+            with pytest.raises(SystemExit) as error:
+                _mod.run_export("notes")
+        assert error.value.code == 1
+        export.assert_not_called()
+        remove.assert_not_called()
+        assert {p.name: p.read_text() for p in out.iterdir()} == {
+            "available.md": "previous available", "unavailable.md": "previous unavailable",
+        }
+
     def test_failure_leaves_outputs_untouched(self, tmp_path):
         src = tmp_path / "src"
         out = tmp_path / "out"

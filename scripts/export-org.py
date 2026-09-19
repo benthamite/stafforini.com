@@ -100,11 +100,12 @@ def resolve_relpath(relpath: str, source_dirs: list[Path]) -> Path:
     return source_dirs[0] / relpath
 
 
-def scan_source_files(cfg: dict) -> tuple[dict[str, list[str]], list[Path], int]:
+def scan_source_files(cfg: dict) -> tuple[dict[str, list[str]], int]:
     """Return exportable files as {relpath: outputs}, plus diagnostics.
 
-    The third tuple element is the count of files excluded by the section's
+    The second tuple element is the count of files excluded by the section's
     takedown blocklist (``skip_file_fn``).
+    An incomplete scan raises rather than treating unreadable sources as deleted.
     """
     source_dirs = cfg["source_dirs"]
     skip_files = cfg["skip_files"]
@@ -112,13 +113,18 @@ def scan_source_files(cfg: dict) -> tuple[dict[str, list[str]], list[Path], int]
     excluded_cite_keys = set(load_excluded_works().keys())
 
     result: dict[str, list[str]] = {}
-    skipped_dataless: list[Path] = []
     excluded_count = 0
     org_files: list[Path] = []
+    def fail_walk(error: OSError) -> None:
+        raise error
+
     for source_dir in source_dirs:
-        org_files.extend(sorted(
-            p for p in source_dir.rglob("*.org") if not p.name.startswith(".")
-        ))
+        for directory, _dirs, filenames in os.walk(source_dir, onerror=fail_walk):
+            org_files.extend(
+                Path(directory) / name for name in filenames
+                if name.endswith(".org") and not name.startswith(".")
+            )
+    org_files.sort()
 
     total = len(org_files)
     for index, org_file in enumerate(org_files, 1):
@@ -129,37 +135,17 @@ def scan_source_files(cfg: dict) -> tuple[dict[str, list[str]], list[Path], int]
         if org_file.name.endswith("~") or org_file.name.startswith("."):
             continue
         if is_dataless(org_file):
-            skipped_dataless.append(org_file)
-            continue
+            raise OSError(f"Cloud-evicted source must be available offline: {org_file}")
         if skip_file_fn(org_file, excluded_cite_keys):
             excluded_count += 1
             continue
 
-        try:
-            outputs = extract_export_file_names(org_file)
-        except OSError as exc:
-            print(f"  Warning: skipping {org_file}: {exc}", file=sys.stderr)
-            continue
+        outputs = extract_export_file_names(org_file)
 
         if outputs:
             result[relpath_for(org_file, source_dirs)] = outputs
 
-    return result, skipped_dataless, excluded_count
-
-
-def warn_dataless_files(files: list[Path]) -> None:
-    """Warn about cloud-evicted files that could not be scanned."""
-    if not files:
-        return
-    sample = ", ".join(path.name for path in files[:5])
-    extra = f" ... and {len(files) - 5} more" if len(files) > 5 else ""
-    print(
-        f"WARNING: skipped {len(files)} dataless (cloud-evicted) org file(s): "
-        f"{sample}{extra}\n"
-        "  Export may be incomplete. In Finder, select the affected files, "
-        "right-click, and choose 'Make Available Offline'.",
-        file=sys.stderr,
-    )
+    return result, excluded_count
 
 
 def run_emacs(elisp: Path, file_list_path: str) -> int:
@@ -227,8 +213,12 @@ def run_export(section: str) -> None:
 
     print(f"Full export for {section}")
     print(f"Scanning {', '.join(str(d) for d in source_dirs)} ...")
-    current_files, skipped_dataless, excluded_count = scan_source_files(cfg)
-    warn_dataless_files(skipped_dataless)
+    try:
+        current_files, excluded_count = scan_source_files(cfg)
+    except (OSError, UnicodeError) as exc:
+        print(f"ERROR: incomplete source scan; refusing to export or prune: {exc}",
+              file=sys.stderr)
+        sys.exit(1)
 
     if excluded_count:
         print(f"Skipped {excluded_count} file(s) whose work is in the takedown blocklist.")
@@ -259,7 +249,7 @@ def run_export(section: str) -> None:
         os.unlink(file_list_path)
 
     if returncode != 0:
-        print("Export failed; leaving existing outputs untouched.", file=sys.stderr)
+        print("Export failed; refusing to prune existing outputs.", file=sys.stderr)
         sys.exit(returncode)
 
     remove_stale_outputs(output_dir, valid_outputs, cfg["preserve_output"])

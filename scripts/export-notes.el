@@ -189,7 +189,9 @@ notes with custom URLs resolve to the real page."
                files))))
          (total (length exportable))
          (processed 0))
-
+    (when export-notes-skipped-dataless
+      (error "Incomplete source scan: %d cloud-evicted file(s); refusing export"
+             (length export-notes-skipped-dataless)))
     (message "Found %d exportable org files in %s" total notes-dir)
 
     (dolist (file exportable)

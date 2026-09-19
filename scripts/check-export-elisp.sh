@@ -98,4 +98,28 @@ if ! EXPORT_FILE_LIST="$empty_list" emacs --batch -l "$SCRIPT_DIR/export-quotes.
   cat "$emacs_log" >&2
   exit 1
 fi
-echo "export Elisp OK: task headings, quote destinations, and details blocks verified"
+for section in notes quotes; do
+  if ! EXPORT_SECTION="$section" EXPORT_FILE_LIST="$empty_list" emacs --batch \
+      -l "$SCRIPT_DIR/export-$section.el" --eval '
+(let ((file-list (make-temp-file "export-evicted-list-")))
+  (unwind-protect
+      (progn
+        (with-temp-file file-list
+          (insert "/fixture/cloud-evicted.org\n"))
+        (setenv "EXPORT_FILE_LIST" file-list)
+        (cl-letf (((symbol-function (quote export--file-dataless-p))
+                   (lambda (_file) t)))
+          (let ((failure (condition-case err
+                             (progn
+                               (funcall (intern (format "export-%s-batch"
+                                                        (getenv "EXPORT_SECTION"))))
+                               nil)
+                           (error (error-message-string err)))))
+            (unless (and failure (string-prefix-p "Incomplete source scan:" failure))
+              (error "Cloud eviction after Python discovery did not abort: %S" failure)))))
+    (delete-file file-list)))' >"$emacs_log" 2>&1; then
+    cat "$emacs_log" >&2
+    exit 1
+  fi
+done
+echo "export Elisp OK: task headings, quote destinations, details blocks, and cloud eviction verified"

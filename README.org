@@ -89,6 +89,11 @@ in =dotfiles/emacs/config.org=. This keeps headings such as =DOING [#3]=
 stable through ox-hugo preprocessing. Notes retain their existing policy of
 excluding task headings; quotes can be exported from beneath task headings.
 
+Both note and quote exports abort before exporting or pruning pages if source
+discovery encounters cloud-evicted files, unreadable files or unreadable
+directories. The Emacs exporters also reject files evicted after Python's
+scan, so an incomplete export cannot be reported as successful.
+
 ** SA LP Refresh
 :PROPERTIES:
 :ID:       8431CA99-D3B5-4497-8E2F-BDECC669517C

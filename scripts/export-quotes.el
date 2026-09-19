@@ -100,6 +100,9 @@
                      (re-search-forward ":public:" nil t))))
                all-files))))
          (processed 0))
+    (when export-skipped-dataless
+      (error "Incomplete source scan: %d cloud-evicted file(s); refusing export"
+             (length export-skipped-dataless)))
     (message "Found %d files with :public: subheadings" (length public-files))
 
     (dolist (file public-files)
