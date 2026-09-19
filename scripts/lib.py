@@ -530,6 +530,45 @@ def heading_has_export_excluded_tag(line: str) -> bool:
     return any(f":{tag}:" in line for tag in ORG_EXPORT_EXCLUDED_TAGS)
 
 
+def exported_org_pages(text: str) -> list[dict]:
+    """Return metadata and owned node IDs for each exported Org subtree.
+
+    Descendant IDs belong to their nearest exported ancestor. A file-level ID
+    identifies a page only when the file has exactly one exported subtree.
+    Excluded subtrees contribute neither pages nor IDs.
+    """
+    pages = []
+    stack = []
+    for heading in parse_org_headings(text):
+        while stack and stack[-1][0] >= heading["level"]:
+            stack.pop()
+        parent = stack[-1] if stack else None
+        excluded = bool(parent and parent[2]) or bool(
+            heading["tags"].intersection(ORG_EXPORT_EXCLUDED_TAGS)
+        )
+        page = parent[1] if parent else None
+        props = heading["properties"]
+        if not excluded and props.get("EXPORT_FILE_NAME"):
+            page = {
+                "slug": props["EXPORT_FILE_NAME"],
+                "title": props.get("EXPORT_TITLE", heading["title"]),
+                "url": props.get("EXPORT_HUGO_URL"),
+                "ids": [],
+            }
+            pages.append(page)
+        if not excluded and page is not None and props.get("ID"):
+            page["ids"].append(props["ID"].upper())
+        stack.append((heading["level"], page, excluded))
+
+    if len(pages) == 1:
+        prelude = re.split(r"^\*+\s", text, maxsplit=1, flags=re.MULTILINE)[0]
+        pages[0]["ids"].extend(
+            value.upper()
+            for value in re.findall(r"^\s*:ID:\s+(\S+)", prelude, re.MULTILINE)
+        )
+    return pages
+
+
 def extract_export_file_names_from_text(text: str) -> list[str]:
     """Extract exported markdown filenames from non-excluded org subtrees.
 

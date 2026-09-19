@@ -36,6 +36,7 @@ from lib import (
     REPO_ROOT,
     atomic_write_text,
     escape_toml_string,
+    exported_org_pages,
     extract_export_file_names,
     find_org_files,
     is_dataless,
@@ -365,20 +366,17 @@ def get_front_matter_date(text):
 def get_org_title(slug, output_map=None):
     """Read the org source and return the heading title with markup preserved.
 
-    Parses the first level-1 heading from the org file and converts org
-    inline markup (=verbatim= and ~code~) to markdown backtick syntax.
-    Returns None if the org file doesn't exist or has no heading.
+    Selects the subtree with the matching EXPORT_FILE_NAME and converts Org
+    inline markup (=verbatim= and ~code~) to Markdown backtick syntax.
+    Returns None if the source has no matching exported subtree.
     """
     org_file = find_org_file(slug, output_map)
     if not org_file or is_dataless(org_file):
         return None
 
-    for line in org_file.read_text(errors="replace").splitlines():
-        m = re.match(r"^\*\s+(.+)", line)
-        if m:
-            title = m.group(1)
-            # Strip org tags like :note: at end of heading
-            title = re.sub(r"\s+:[\w:]+:\s*$", "", title)
+    for page in exported_org_pages(org_file.read_text(errors="replace")):
+        if page["slug"] == slug:
+            title = page["title"]
             # Convert org =verbatim= and ~code~ to markdown backticks
             title = re.sub(r"=([^=]+)=", r"`\1`", title)
             title = re.sub(r"~([^~]+)~", r"`\1`", title)

@@ -6,8 +6,8 @@ Covers two sources of published notes:
 1. Published notes under ~/My Drive/notes/ — slug = EXPORT_FILE_NAME value.
    Discovered by querying the org-roam SQLite database for all nodes whose
    files live under the notes directory, then reading each unique file to
-   check for :EXPORT_FILE_NAME:.  Sub-heading node IDs are mapped to their
-   parent file's slug.
+   check for :EXPORT_FILE_NAME:. Sub-heading IDs map to their nearest exported
+   ancestor, so a file may contain several independently linked pages.
 2. Direct filesystem scan — catches files not yet tracked by org-roam.
 
 Writes data/id-slug-map.json.
@@ -15,8 +15,6 @@ Writes data/id-slug-map.json.
 
 from __future__ import annotations
 
-import os
-import re
 import sqlite3
 import sys
 from pathlib import Path
@@ -26,6 +24,7 @@ from lib import (
     ORGROAM_DB_PATH,
     REPO_ROOT,
     atomic_write_json,
+    exported_org_pages,
     is_dataless,
     strip_elisp_quotes,
 )
@@ -34,19 +33,11 @@ OUTPUT_PATH = REPO_ROOT / "data" / "id-slug-map.json"
 URL_OVERRIDES_PATH = REPO_ROOT / "data" / "id-url-overrides.json"
 SLUG_URL_OVERRIDES_PATH = REPO_ROOT / "data" / "slug-url-overrides.json"
 
-ID_RE = re.compile(r"^:ID:\s+(\S+)", re.MULTILINE)
-# Allow leading whitespace — notes use indented property drawers under headings
-ID_INDENTED_RE = re.compile(r"^\s*:ID:\s+(\S+)", re.MULTILINE)
-EXPORT_FILE_NAME_RE = re.compile(r"^\s*:EXPORT_FILE_NAME:\s+(\S+)", re.MULTILINE)
-EXPORT_HUGO_URL_RE = re.compile(r"^\s*:EXPORT_HUGO_URL:\s+(\S+)", re.MULTILINE)
-
-
 def scan_published_notes() -> tuple[dict[str, str], dict[str, str]]:
     """Query org-roam DB and map node IDs to slugs for published notes.
 
-    A note is "published" if its org file contains :EXPORT_FILE_NAME:.
-    The slug comes from that property value (not the filename).
-    Sub-heading nodes inherit their parent file's slug.
+    Published subtrees have :EXPORT_FILE_NAME: outside export exclusions.
+    Descendant nodes inherit the nearest exported ancestor's slug and URL.
 
     Returns (slug_map, url_overrides) where url_overrides maps ids to the
     note's :EXPORT_HUGO_URL: value when that property is set.
@@ -103,21 +94,17 @@ def scan_published_notes() -> tuple[dict[str, str], dict[str, str]]:
             print(f"  Warning: skipping {path.name}: {exc}", file=sys.stderr)
             continue
 
-        match = EXPORT_FILE_NAME_RE.search(text)
-        if not match:
+        pages = exported_org_pages(text)
+        if not pages:
             continue  # not published
-
-        slug = match.group(1)
         files_published += 1
-
-        url_match = EXPORT_HUGO_URL_RE.search(text)
-        override_url = url_match.group(1) if url_match else None
-
-        # Map every node ID in this file to the slug
-        for node_id, _level in file_nodes[file_path]:
-            mapping[node_id] = slug
-            if override_url:
-                url_overrides[node_id] = override_url
+        known_ids = {node_id for node_id, _level in file_nodes[file_path]}
+        for page in pages:
+            for node_id in page["ids"]:
+                if node_id in known_ids:
+                    mapping[node_id] = page["slug"]
+                    if page["url"]:
+                        url_overrides[node_id] = page["url"]
 
     if skipped_dataless:
         print(f"  Skipped {skipped_dataless} dataless (cloud-evicted) file(s)")
@@ -130,7 +117,7 @@ def scan_notes_filesystem() -> tuple[dict[str, str], dict[str, str]]:
     """Direct filesystem scan for published notes not tracked by org-roam.
 
     Recursively scans ~/My Drive/notes/ for .org files with EXPORT_FILE_NAME,
-    extracts all :ID: properties from each, and maps them to the slug.
+    maps each :ID: property to its owning exported subtree.
 
     Returns (slug_map, url_overrides), matching scan_published_notes.
     """
@@ -160,22 +147,15 @@ def scan_notes_filesystem() -> tuple[dict[str, str], dict[str, str]]:
         except (OSError, UnicodeDecodeError):
             continue
 
-        efn_match = EXPORT_FILE_NAME_RE.search(text)
-        if not efn_match:
+        pages = exported_org_pages(text)
+        if not pages:
             continue
-
-        slug = efn_match.group(1)
         files_published += 1
-
-        url_match = EXPORT_HUGO_URL_RE.search(text)
-        override_url = url_match.group(1) if url_match else None
-
-        # Map ALL :ID: properties in this file to the slug
-        for id_match in ID_INDENTED_RE.finditer(text):
-            org_id = id_match.group(1).upper()
-            mapping[org_id] = slug
-            if override_url:
-                url_overrides[org_id] = override_url
+        for page in pages:
+            for org_id in page["ids"]:
+                mapping[org_id] = page["slug"]
+                if page["url"]:
+                    url_overrides[org_id] = page["url"]
 
     if skipped_dataless:
         print(f"  Skipped {skipped_dataless} dataless (cloud-evicted) file(s)")
