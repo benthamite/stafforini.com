@@ -37,6 +37,28 @@ select_canonical_work_entry = _mod.select_canonical_work_entry
 generate_work_pages_for_test = _mod.generate_work_pages
 
 
+def test_standard_journal_field_reaches_page_and_metadata(tmp_bib):
+    path = tmp_bib('''@article{Example2020,
+ title = {Example},
+ author = {Author, Alice},
+ journal = {Legal Theory},
+ year = {2020},
+}''')
+    entry = _mod._parse_bib_entries_for_works(path)[0]
+    assert 'journaltitle: "Legal Theory"' in generate_work_page(entry)
+    assert _mod.work_metadata(entry)["journaltitle"] == "Legal Theory"
+
+
+def test_journaltitle_takes_precedence_over_journal(tmp_bib):
+    path = tmp_bib('''@article{Example2020,
+ title = {Example},
+ journaltitle = {Current Journal},
+ journal = {Old Journal},
+}''')
+    entry = _mod._parse_bib_entries_for_works(path)[0]
+    assert _mod.work_metadata(entry)["journaltitle"] == "Current Journal"
+
+
 # ---------------------------------------------------------------------------
 # bib_author_to_display
 # ---------------------------------------------------------------------------

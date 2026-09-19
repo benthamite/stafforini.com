@@ -51,7 +51,7 @@ def _parse_bib_entries_for_works(bib_path: Path) -> list[dict]:
             "volume", "number", "pages", "bookauthor", "crossref", "abstract",
             "url", "date", "shorttitle",
         ],
-        field_fallbacks={"location": "address"},
+        field_fallbacks={"location": "address", "journaltitle": "journal"},
     )
 
 
