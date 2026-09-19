@@ -146,6 +146,7 @@ async function showMoreResults(instanceId, sectionKey, options) {
   if (!utils || !store) return;
 
   var button = options.button;
+  if (button.disabled) return;
   var resultsEl = options.resultsEl;
   var start = store.nextOffset;
   var end = Math.min(start + store.batchSize, store.resultHandles.length);
@@ -156,6 +157,8 @@ async function showMoreResults(instanceId, sectionKey, options) {
 
   try {
     var results = await Promise.all(items.map(function(r) { return r.data(); }));
+    // A different query may have replaced this section while its data loaded.
+    if (!searchResultStores[instanceId] || searchResultStores[instanceId][sectionKey] !== store) return;
     var html = '';
     for (var i = 0; i < results.length; i++) {
       html += utils.renderResult(results[i], sectionKey, store.query);
