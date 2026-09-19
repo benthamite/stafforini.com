@@ -395,8 +395,8 @@ def _run(command, args):
         return _extract_close_series(df, ticker)
 
 
-    def get_prices(tickers, dates):
-        """Fetch close prices for tickers on specific dates."""
+    def get_prices(tickers, dates, return_dates=False):
+        """Fetch closes, optionally returning the actual selected dates alongside prices."""
         unique_tickers = sorted(set(tickers))
         all_dates = [datetime.strptime(d, '%Y-%m-%d') for d in dates]
         start = min(all_dates) - timedelta(days=5)
@@ -415,6 +415,7 @@ def _run(command, args):
             close = pd.DataFrame()
 
         prices = {}
+        price_dates = {}
         for ticker in unique_tickers:
             if ticker in close.columns:
                 series = pd.to_numeric(close[ticker], errors='coerce').dropna()
@@ -425,16 +426,19 @@ def _run(command, args):
             if series.empty:
                 continue
             prices[ticker] = {}
+            price_dates[ticker] = {}
             for date_str in dates:
                 target = pd.Timestamp(datetime.strptime(date_str, '%Y-%m-%d'))
                 after = series[series.index >= target]
                 if not after.empty:
                     prices[ticker][date_str] = float(after.iloc[0])
+                    price_dates[ticker][date_str] = after.index[0].strftime('%Y-%m-%d')
                 else:
                     before = series[series.index <= target]
                     if not before.empty:
                         prices[ticker][date_str] = float(before.iloc[-1])
-        return prices
+                        price_dates[ticker][date_str] = before.index[-1].strftime('%Y-%m-%d')
+        return (prices, price_dates) if return_dates else prices
 
 
     def _price_on_or_after(px_by_date, target_date):
@@ -613,7 +617,8 @@ def _run(command, args):
     all_dates |= {d["filing_date"] for d in SA_ISSUER_DISCLOSURES}
     all_dates |= {d["event_date"] for d in SA_ISSUER_DISCLOSURES}
 
-    prices = get_prices(sorted(all_tickers), sorted(all_dates))
+    prices, price_dates = get_prices(
+        sorted(all_tickers), sorted(all_dates), return_dates=True)
 
 
     def _latest_full_13f_before(filing_date):
@@ -716,32 +721,15 @@ def _run(command, args):
     # Resolve `today` to the actual last available closing date.
     # yfinance may not have data for today (market still open or holiday),
     # so we look up what date SPY's price actually corresponds to.
-    def _resolve_price_date(prices, requested_date):
-        """Return the actual trading date of the price stored under requested_date."""
-        ref = 'SPY' if 'SPY' in prices else next(iter(prices), None)
-        if not ref or requested_date not in prices[ref]:
+    def _resolve_price_date(price_dates, requested_date):
+        """Return the timestamp of the selected reference quote, preserving equal closes."""
+        ref = 'SPY' if 'SPY' in price_dates else next(iter(price_dates), None)
+        if ref is None:
             return requested_date
-        target_price = prices[ref][requested_date]
-        # Re-download a small window to find the real date of this price
-        start = datetime.strptime(requested_date, '%Y-%m-%d') - timedelta(days=10)
-        end = datetime.strptime(requested_date, '%Y-%m-%d') + timedelta(days=5)
-        df = yf.download(ref, start=start, end=end, progress=False, auto_adjust=True)
-        if df.empty:
-            return requested_date
-        if isinstance(df.columns, pd.MultiIndex):
-            close = df['Close'][ref].dropna()
-        elif 'Close' in df.columns:
-            close = df['Close'].dropna()
-        else:
-            close = df.iloc[:, 0].dropna()
-        for dt, px in close.items():
-            val = float(px.iloc[0]) if isinstance(px, pd.Series) else float(px)
-            if abs(val - target_price) < 0.01:
-                ts = dt[0] if isinstance(dt, tuple) else dt
-                return pd.Timestamp(ts).strftime('%Y-%m-%d')
-        return requested_date
+        return price_dates[ref].get(requested_date, requested_date)
 
-    today_resolved = _resolve_price_date(prices, today)
+
+    today_resolved = _resolve_price_date(price_dates, today)
     if today_resolved != today:
         for ticker in prices:
             if today in prices[ticker]:
