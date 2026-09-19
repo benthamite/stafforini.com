@@ -60,6 +60,45 @@ class TestContentKey:
         assert mod.content_key("w1", "text") != mod.content_key("w2", "text")
 
 
+@pytest.mark.parametrize("tag", ["noexport", "ARCHIVE"])
+@pytest.mark.parametrize("inherited", [False, True])
+def test_excluded_quote_is_removed_on_export(mod, tmp_path, monkeypatch, tag, inherited):
+    """Withholding an existing public quote removes its generated page."""
+    import sys
+
+    notes = tmp_path / "notes"
+    notes.mkdir()
+    output = tmp_path / "quotes"
+    source = notes / "example.org"
+    source.write_text(ORG_WITH_ID)
+    monkeypatch.setattr(mod, "BIBLIO_NOTES_DIR", notes)
+    monkeypatch.setattr(mod, "QUOTES_DIR", output)
+    monkeypatch.setattr(mod, "SLUG_MANIFEST_PATH", tmp_path / "slugs.json")
+    monkeypatch.setattr(mod, "load_excluded_works", lambda: {})
+    monkeypatch.setattr(mod, "safe_remove", lambda path: path.unlink())
+    monkeypatch.setattr(sys, "argv", [str(MODULE_PATH)])
+    mod.main()
+    assert len(list(output.glob("*.md"))) == 1
+
+    if inherited:
+        text = ORG_WITH_ID.replace(
+            "* Notation as a tool of thought\n",
+            f"* Notation as a tool of thought :{tag}:\n",
+        )
+    else:
+        text = ORG_WITH_ID.replace(":public:", f":public:{tag}:")
+    source.write_text(text)
+    mod.main()
+    assert list(output.glob("*.md")) == []
+
+
+def test_excluded_subtree_does_not_exclude_following_sibling(mod, tmp_path):
+    text = ORG_WITHOUT_ID.replace(":public:", ":public:noexport:")
+    text += "\n** Visible sibling :public:\n#+begin_quote\nVisible.\n#+end_quote\n"
+    quotes = _quotes(mod, tmp_path, text)
+    assert [q["quote_md"] for q in quotes] == ["Visible."]
+
+
 class TestAddingAnIdMovesTheSlug:
     """Replay of the 2026-08-02 event: same quote, ID added, slug changes."""
 

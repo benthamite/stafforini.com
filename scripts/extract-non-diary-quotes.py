@@ -18,6 +18,7 @@ from pathlib import Path
 
 from lib import (
     BIBLIO_NOTES_DIR,
+    ORG_EXPORT_EXCLUDED_TAGS,
     REPO_ROOT,
     atomic_write_text,
     cite_key_to_slug,
@@ -216,8 +217,15 @@ def process_org_file(org_path: Path, excluded_cite_keys: set) -> list[dict]:
     work_slug = cite_key_to_slug(cite_key)
     headings = parse_org_headings(text)
     quotes = []
+    excluded_levels = []
 
     for i, h in enumerate(headings):
+        excluded_levels = [level for level in excluded_levels if level < h["level"]]
+        if h["tags"].intersection(ORG_EXPORT_EXCLUDED_TAGS):
+            excluded_levels.append(h["level"])
+        if excluded_levels:
+            continue
+
         # Skip top-level heading (the file's main heading)
         if h["level"] == 1:
             continue
