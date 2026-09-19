@@ -397,19 +397,84 @@ def test_create_newsletter_draft_requires_api_key(monkeypatch):
         _mod.create_newsletter_draft(_filing("0000935836-26-000468"))
 
 
-def test_check_fund_drafts_notifies_and_updates_feed_before_saving_state(monkeypatch):
+def test_check_fund_resumes_each_acknowledged_action(tmp_path, monkeypatch):
+    import pytest
     events = []
     new = _filing("0000935836-26-000468")
-
+    monkeypatch.setattr(_mod, "DATA_DIR", tmp_path)
+    monkeypatch.setattr(_mod, "FEED_DIR", tmp_path)
+    (tmp_path / SA_LP["feed_file"]).write_text(FEED_TEMPLATE)
     monkeypatch.setattr(_mod, "recent_watched_filings", lambda fund: [new])
-    monkeypatch.setattr(_mod, "load_state", lambda fund: {"notified_accessions": []})
-    monkeypatch.setattr(_mod, "create_newsletter_draft", lambda f: events.append("draft"))
-    monkeypatch.setattr(_mod, "send_private_notifications", lambda f: events.append("notify"))
-    monkeypatch.setattr(_mod, "add_feed_entry", lambda fund, f: events.append("feed"))
-    monkeypatch.setattr(_mod, "save_state", lambda fund, filings: events.append("state"))
+    monkeypatch.setattr(_mod, "ensure_newsletter_draft",
+                        lambda f: events.append("draft") or "em_123")
+    monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "test")
+    monkeypatch.setenv("TELEGRAM_CHAT_ID", "test")
+    monkeypatch.setenv("SMTP_HOST", "test")
+    monkeypatch.setattr(_mod, "send_telegram", lambda *args: events.append("telegram"))
 
+    def fail_smtp(filing):
+        events.append("smtp-failed")
+        raise RuntimeError("SMTP unavailable")
+
+    monkeypatch.setattr(_mod, "send_smtp_email", fail_smtp)
+    for _ in range(2):
+        with pytest.raises(RuntimeError, match="SMTP unavailable"):
+            _mod.check_fund(SA_LP, dry_run=False)
+    progress = _mod.load_state(SA_LP)["pending"][new["accession"]]
+    assert progress["draft_id"] == "em_123"
+    assert progress["notifications"] == ["telegram"]
+    assert events == ["draft", "telegram", "smtp-failed", "smtp-failed"]
+    # A pending filing remains resumable even after it disappears from SEC's feed.
+    monkeypatch.setattr(_mod, "recent_watched_filings", lambda fund: [])
+    monkeypatch.setattr(_mod, "send_smtp_email", lambda f: events.append("smtp"))
     assert _mod.check_fund(SA_LP, dry_run=False) == 0
-    assert events == ["draft", "notify", "feed", "state"]
+    state = _mod.load_state(SA_LP)
+    assert state["pending"] == {}
+    assert state["notified_accessions"] == [new["accession"]]
+    assert "urn:sec:accession:" + new["accession"] in (tmp_path / SA_LP["feed_file"]).read_text()
+    monkeypatch.setattr(_mod, "recent_watched_filings", lambda fund: [new])
+    assert _mod.check_fund(SA_LP, dry_run=False) == 0
+    assert events == ["draft", "telegram", "smtp-failed", "smtp-failed", "smtp"]
+
+
+def test_reconcile_lost_creation_response_across_pages(monkeypatch):
+    import json
+    import pytest
+    remote = []
+    calls = []
+    filing = _filing("0000935836-26-000468")
+    monkeypatch.setenv("BUTTONDOWN_API_KEY", "test")
+
+    def request(method, url, api_key, payload=None):
+        calls.append(method)
+        if method == "POST":
+            remote.append(dict(payload, id="em_saved"))
+            raise TimeoutError("response lost after creation")
+        if url.endswith("page=1"):
+            return json.dumps({"results": [{"id": "unrelated"}], "count": 1 + len(remote)}).encode()
+        assert url.endswith("page=2")
+        return json.dumps({"results": remote, "count": 2}).encode()
+
+    monkeypatch.setattr(_mod, "buttondown_request", request)
+    with pytest.raises(TimeoutError):
+        _mod.ensure_newsletter_draft(filing)
+    # Also reconcile drafts a person already sent or edited.
+    remote[0].update(status="sent", body="Edited by user")
+    assert _mod.ensure_newsletter_draft(filing) == "em_saved"
+    assert calls == ["GET", "POST", "GET", "GET"]
+    assert len(remote) == 1
+
+
+def test_reconcile_legacy_draft_without_metadata(monkeypatch):
+    import json
+    filing = _filing("0000935836-26-000468")
+    monkeypatch.setenv("BUTTONDOWN_API_KEY", "test")
+    _, body = _mod.newsletter_email(filing)
+    def request(method, *args):
+        assert method == "GET"
+        return json.dumps({"results": [{"id": "legacy", "body": body}], "count": 1}).encode()
+    monkeypatch.setattr(_mod, "buttondown_request", request)
+    assert _mod.ensure_newsletter_draft(filing) == "legacy"
 
 
 def test_affiliate_13g_links_to_its_document_not_the_fund_index():
@@ -418,3 +483,24 @@ def test_affiliate_13g_links_to_its_document_not_the_fund_index():
         document_url="https://www.sec.gov/Archives/edgar/data/9999999/000099999926000001/doc.xml",
     )
     assert _mod.filing_link(filing) == filing["document_url"]
+
+
+def test_completed_filing_survives_later_filing_failure(tmp_path, monkeypatch):
+    import pytest
+    filings = [_filing("first"), _filing("second")]
+    monkeypatch.setattr(_mod, "DATA_DIR", tmp_path)
+    monkeypatch.setattr(_mod, "FEED_DIR", tmp_path)
+    (tmp_path / SA_LP["feed_file"]).write_text(FEED_TEMPLATE)
+    monkeypatch.setattr(_mod, "recent_watched_filings", lambda fund: filings)
+    drafts = []
+    monkeypatch.setattr(_mod, "ensure_newsletter_draft",
+                        lambda f: drafts.append(f["accession"]) or f["accession"])
+    def notify(filing, completed, checkpoint):
+        if filing["accession"] == "second":
+            raise RuntimeError("notification failed")
+    monkeypatch.setattr(_mod, "send_private_notifications", notify)
+    for _ in range(2):
+        with pytest.raises(RuntimeError, match="notification failed"):
+            _mod.check_fund(SA_LP, dry_run=False)
+    assert drafts == ["first", "second"]
+    assert _mod.load_state(SA_LP)["notified_accessions"] == ["first"]

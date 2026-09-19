@@ -33,6 +33,7 @@ jobs:
           python-version: '3.12'
 
       - name: Run poller
+        id: poller
         env:
           BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.SA_LP_TELEGRAM_BOT_TOKEN }}
@@ -51,6 +52,7 @@ jobs:
           fi
 
       - name: Commit state and feeds if changed
+        if: ${{ always() && steps.poller.outcome != 'skipped' }}
         run: |
           paths=(data/sa-lp-13f-state.json data/vara-13f-state.json static/feed/sa-lp-13f.xml static/feed/vara-13f.xml)
           if [[ -z "$(git status --porcelain "${paths[@]}")" ]]; then

@@ -368,7 +368,17 @@ def send_smtp_email(filing: dict) -> None:
     print("SMTP email notification sent.")
 
 
-def send_private_notifications(filing: dict) -> None:
+def send_private_notifications(filing: dict, completed=None, checkpoint=None) -> None:
+    """Send each configured channel once, checkpointing acknowledged deliveries."""
+    completed = completed if completed is not None else []
+
+    def deliver(channel, send):
+        if channel not in completed:
+            send()
+            completed.append(channel)
+            if checkpoint is not None:
+                checkpoint()
+
     sent = False
 
     bot_token = os.environ.get("TELEGRAM_BOT_TOKEN")
@@ -379,11 +389,11 @@ def send_private_notifications(filing: dict) -> None:
                 "Telegram notification requires both TELEGRAM_BOT_TOKEN "
                 "and TELEGRAM_CHAT_ID."
             )
-        send_telegram(bot_token, chat_id, filing)
+        deliver("telegram", lambda: send_telegram(bot_token, chat_id, filing))
         sent = True
 
     if os.environ.get("SMTP_HOST") or os.environ.get("NOTIFY_EMAIL_TO"):
-        send_smtp_email(filing)
+        deliver("smtp", lambda: send_smtp_email(filing))
         sent = True
 
     if not sent:
@@ -448,7 +458,9 @@ def create_newsletter_draft(filing: dict) -> str:
         "POST",
         BUTTONDOWN_EMAILS_API,
         buttondown_api_key(),
-        {"subject": subject, "body": body, "status": "draft"},
+        {"subject": subject, "body": body, "status": "draft",
+         "metadata": {"sec_accession": filing["accession"],
+                      "fund_url": filing["post_url"]}},
     )
     email = json.loads(response)
     if email.get("status") != "draft":
@@ -458,6 +470,36 @@ def create_newsletter_draft(filing: dict) -> str:
         )
     print(f"Buttondown draft created: {email['id']}")
     return email["id"]
+
+
+def ensure_newsletter_draft(filing: dict) -> str:
+    """Reconcile a previous creation whose response or local state was lost.
+
+    Buttondown lists all email statuses with page/count pagination:
+    https://docs.buttondown.com/api-emails-list
+    Include sent emails so a manually sent draft is not recreated on retry.
+    """
+    api_key = buttondown_api_key()
+    page, seen = 1, 0
+    while True:
+        url = f"{BUTTONDOWN_EMAILS_API}?page={page}"
+        response = json.loads(buttondown_request("GET", url, api_key))
+        emails = response["results"]
+        for email in emails:
+            metadata = email.get("metadata") or {}
+            legacy_body = email.get("body", "")
+            if (metadata.get("sec_accession") == filing["accession"]
+                    and metadata.get("fund_url") == filing["post_url"]) or (
+                    f"- Accession: {filing['accession']}\n" in legacy_body
+                    and filing["post_url"] in legacy_body):
+                print(f"Reusing Buttondown email: {email['id']}")
+                return email["id"]
+        seen += len(emails)
+        if seen >= response["count"]:
+            return create_newsletter_draft(filing)
+        if not emails:
+            raise RuntimeError("Buttondown pagination ended before its reported count.")
+        page += 1
 
 
 def delete_newsletter_email(email_id: str) -> None:
@@ -547,18 +589,35 @@ def notified_accessions(state: dict, filings: list[dict]) -> set[str]:
 def save_state(fund: dict, filings: list[dict]) -> None:
     path = state_path(fund)
     path.parent.mkdir(parents=True, exist_ok=True)
-    existing = load_state(fund).get("notified_accessions", [])
+    state = load_state(fund)
+    existing = state.get("notified_accessions", [])
     accessions = list(dict.fromkeys(existing + [filing["accession"] for filing in filings]))
-    state = {
+    state.update({
         "notified_accessions": accessions,
         "last_notified": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "_comment": "Auto-updated by scripts/sa-lp-13f-check.py after private notification.",
-    }
-    path.write_text(json.dumps(state, indent=2) + "\n")
+    })
+    write_state(fund, state)
+
+
+def write_state(fund: dict, state: dict) -> None:
+    """Atomically preserve progress before the next external action."""
+    path = state_path(fund)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(".json.tmp")
+    temporary.write_text(json.dumps(state, indent=2) + "\n")
+    temporary.replace(path)
 
 
 def check_fund(fund: dict, dry_run: bool) -> int:
     filings = recent_watched_filings(fund)
+    state = load_state(fund)
+    pending = state.setdefault("pending", {})
+    by_accession = {filing["accession"]: filing for filing in filings}
+    for accession, progress in pending.items():
+        by_accession.setdefault(accession, progress["filing"])
+    filings = sorted(by_accession.values(),
+                     key=lambda filing: (filing["filed"], filing["accession"]))
     if not filings:
         print(
             f"No watched filings found in SEC feeds for {fund['name']}.",
@@ -566,7 +625,6 @@ def check_fund(fund: dict, dry_run: bool) -> int:
         )
         return 1
 
-    state = load_state(fund)
     notified = notified_accessions(state, filings)
     new_filings = [filing for filing in filings if filing["accession"] not in notified]
     if not new_filings:
@@ -594,11 +652,22 @@ def check_fund(fund: dict, dry_run: bool) -> int:
         return 0
 
     for filing in new_filings:
-        create_newsletter_draft(filing)
-        send_private_notifications(filing)
+        accession = filing["accession"]
+        progress = pending.setdefault(accession, {"filing": filing, "notifications": []})
+        write_state(fund, state)
+        if "draft_id" not in progress:
+            progress["draft_id"] = ensure_newsletter_draft(filing)
+            write_state(fund, state)
+        send_private_notifications(
+            filing, progress["notifications"], lambda: write_state(fund, state)
+        )
         add_feed_entry(fund, filing)
-    save_state(fund, filings)
-    print(f"{fund['name']}: draft created, notification sent, feed and state saved.")
+        state["notified_accessions"] = sorted(notified | {accession})
+        notified.add(accession)
+        del pending[accession]
+        state["last_notified"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        write_state(fund, state)
+    print(f"{fund['name']}: draft ready, notifications complete, feed and state saved.")
     return 0
 
 
