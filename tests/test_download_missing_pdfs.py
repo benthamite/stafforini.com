@@ -1,247 +1,134 @@
-"""Tests for scripts/download-missing-pdfs.py — bib parsing, scoring, shared Anna's Archive client."""
+"""Legacy book entry point delegates to shared acquisition; it never attaches."""
 
-import sys
-from pathlib import Path
-
+import hashlib
 import importlib.util
 import json
+from pathlib import Path
 
 import pytest
 
-sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
-
-_SCRIPT = Path(__file__).parent.parent / "scripts" / "download-missing-pdfs.py"
+_SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "download-missing-pdfs.py"
 _spec = importlib.util.spec_from_file_location("download_missing_pdfs", _SCRIPT)
 _mod = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_mod)
-
-parse_bib_books = _mod.parse_bib_books
-score_result = _mod.score_result
-select_best_result = _mod.select_best_result
 pf = _mod.paper_fetch
 
 
-class FakeHttp:
-    """Serves canned responses by URL substring and records every request."""
-
-    def __init__(self, routes):
-        self.routes = routes
-        self.calls = []
-
-    def get(self, url, *, params=None, headers=None, timeout=None):
-        self.calls.append((url, params or {}))
-        for needle, response in self.routes:
-            if needle in url:
-                return response
-        return pf.Response(404, b"", url)
-
-
-def html(body, status=200):
-    return pf.Response(status, body.encode(), "https://a.invalid/", "text/html")
-
-
-@pytest.fixture
-def fake_http(monkeypatch):
-    def install(routes):
-        http = FakeHttp(routes)
-        monkeypatch.setattr(_mod, "_http", lambda: http)
-        return http
-    return install
-
-
-class TestParseBibBooks:
-    def test_multiline_title_preserved(self, tmp_bib):
-        path = tmp_bib("""
-@book{Key2020,
-  title = {A Title
-    With Subtitle},
-  author = {Smith, John},
-  isbn = {9781234567890},
-  year = {2020},
+def test_multiline_title_and_editor_are_preserved(tmp_bib):
+    path = tmp_bib("""@book{Example1960,
+ title = {An Example Book:
+   Collected Essays},
+ editor = {Smith, Alice},
+ date = {1960},
+ isbn = {9780262033848},
 }
 """)
-        books = parse_bib_books(path)
-        assert len(books) == 1
-        assert books[0]["title"] == "A Title\n    With Subtitle"
+    original = path.read_bytes()
+    book = _mod.parse_bib_books(path)[0]
+    assert book["title"] == "An Example Book:\n   Collected Essays"
+    assert book["author"] == "Smith, Alice"
+    assert book["edition"] == ""  # no implicit first-edition claim
+    assert path.read_bytes() == original
 
-    def test_editor_used_when_author_missing(self, tmp_bib):
-        path = tmp_bib("""
-@book{Key2020,
-  title = {Collected Essays},
-  editor = {Doe, Jane},
-  year = {2020},
+
+def test_non_pdf_attachment_does_not_hide_a_missing_pdf(tmp_path):
+    html = tmp_path / "book.html"
+    html.write_text("book")
+    book = {"key": "Example1960", "file": str(html)}
+    assert _mod.books_missing_pdf([book]) == [book]
+    pdf = tmp_path / "book.pdf"
+    pdf.write_bytes(b"%PDF-fixture")
+    assert _mod.books_missing_pdf([{**book, "file": str(pdf)}]) == []
+    missing = {**book, "file": str(tmp_path / "missing.pdf")}
+    assert _mod.books_missing_pdf([missing], include_broken=True) == [missing]
+
+
+@pytest.mark.parametrize("arguments", [[], ["--resume"], ["--update-bib"], ["--key", "fixture-private"]])
+def test_legacy_mutating_modes_stop_before_files_services_or_credentials(monkeypatch, capsys, arguments):
+    def forbidden(*args, **kwargs):
+        raise AssertionError("No service, credential or bibliography access permitted")
+    monkeypatch.setattr(pf, "Http", forbidden)
+    monkeypatch.setattr(pf, "annas_secret_key", forbidden)
+    monkeypatch.setattr(_mod, "parse_bib_books", forbidden)
+    assert _mod.main(arguments) == 5
+    result = json.loads(capsys.readouterr().out)
+    assert result["status"] == "needs-review"
+    assert "fixture-private" not in result["message"]
+    assert "Zotra/Ebib" in result["message"]
+
+
+def test_dry_run_delegates_discovery_and_writes_nothing(monkeypatch, tmp_bib, capsys):
+    path = tmp_bib("""@book{Example1960,
+ title = {An Example Book},
+ author = {Smith, Alice},
+ isbn = {9780262033848},
+ date = {1960},
 }
 """)
-        books = parse_bib_books(path)
-        assert books[0]["author"] == "Doe, Jane"
+    original = path.read_bytes()
+    calls = []
+    monkeypatch.setattr(_mod, "BIB_FILE", path)
+    monkeypatch.setattr(pf, "Http", lambda: object())
+    monkeypatch.setattr(pf, "resolve_annas_hosts", lambda *args: ["annas-archive.gl"])
+    def lookup(http, isbn, *, strict):
+        calls.append((isbn, strict))
+        return [{"md5": "a" * 32, "format": "pdf", "scanned": True, "size_bytes": None}]
+    monkeypatch.setattr(pf, "libgen_book_results", lookup)
+    monkeypatch.setattr(pf, "search_annas_books", lambda *args: [])
+    monkeypatch.setattr(pf, "annas_secret_key", lambda: pytest.fail("Discovery read a key"))
+    assert _mod.main(["--dry-run", "--only", "Example1960"]) == 5
+    result = json.loads(capsys.readouterr().out)
+    assert calls == [("9780262033848", True)]
+    assert result["books"][0]["candidates"][0]["scanned"] is True
+    assert "selected" not in result["books"][0]
+    assert path.read_bytes() == original
 
 
-@pytest.mark.parametrize("replay_progress", [False, True])
-def test_broken_attachment_is_repaired_after_download(tmp_path, monkeypatch, replay_progress):
-    """Both download completion and progress replay reconnect the actual PDF."""
-    monkeypatch.setenv("HOME", str(tmp_path))
-    library = tmp_path / "My Drive" / "library-pdf"
-    library.mkdir(parents=True)
-    bib = tmp_path / "old.bib"
-    bib.write_text('''@book{Example2020,
- title = {Example},
- author = {Author, Alice},
- isbn = {9781234567890},
- file = {/missing/old-name.pdf;/missing/supplement.html},
-}
-''')
-    progress = tmp_path / "progress.json"
-    monkeypatch.setattr(_mod, "BIB_FILE", bib)
-    monkeypatch.setattr(_mod, "LIBRARY_DIR", library)
-    monkeypatch.setattr(_mod, "PROGRESS_FILE", progress)
-    dest = library / "Example2020.pdf"
-    if replay_progress:
-        dest.write_bytes(b"%PDF-existing-download")
-        progress.write_text(json.dumps({"downloaded": {"Example2020": {}}}))
-        monkeypatch.setattr(sys, "argv", [str(_SCRIPT), "--update-bib"])
-        with pytest.raises(SystemExit) as exited:
-            _mod.main()
-        assert exited.value.code == 0
-    else:
-        monkeypatch.setattr(_mod, "_http", lambda: object())
-        monkeypatch.setattr(pf, "resolve_annas_hosts", lambda *args: ["annas-archive.gl"])
-        best = {"md5": "a" * 32, "size": "1MB", "format": "pdf", "size_bytes": 1000000}
-        monkeypatch.setattr(_mod, "search_annas_archive", lambda *args, **kwargs: [best])
-        monkeypatch.setattr(_mod, "select_best_result", lambda *args, **kwargs: best)
-        def download(md5, key, base, target, **kwargs):
-            target.write_bytes(b"%PDF-downloaded")
-            return True
-        monkeypatch.setattr(_mod, "download_via_fast_api", download)
-        monkeypatch.setattr(sys, "argv", [str(_SCRIPT), "--include-broken", "--key", "fixture-key"])
-        _mod.main()
-        assert "Example2020" in json.loads(progress.read_text())["downloaded"]
-    book = parse_bib_books(bib)[0]
-    assert _mod.extract_pdf_path(book["file"]) == dest
-    assert _mod.extract_pdf_path(book["file"]).is_file()
-    assert "/missing/old-name.pdf" not in book["file"]
-    assert "/missing/supplement.html" in book["file"]
-    assert _mod.books_missing_pdf([book], include_broken=True) == []
+def test_unknown_provider_response_is_reported_as_unknown(monkeypatch):
+    monkeypatch.setattr(pf, "libgen_book_results", lambda *args, **kwargs: [])
+    def unknown(*args):
+        raise pf.PaperFetchError("Anna's book search returned an unrecognized page")
+    monkeypatch.setattr(pf, "search_annas_books", unknown)
+    book = {"key": "Example1960", "isbn": "9780262033848", "title": "Book", "author": "Smith"}
+    result = _mod.discover_existing_book(object(), book, "annas-archive.gl")
+    assert result["search_complete"] is False
+    assert result["attempts"][1]["status"] == "unknown"
+    assert result["status"] == "needs-review"
 
 
-def test_broken_repair_preserves_working_pdf(tmp_path, monkeypatch):
-    library = tmp_path / "library"
-    library.mkdir()
-    (library / "Example2020.pdf").write_bytes(b"%PDF-downloaded")
-    working = tmp_path / "working.pdf"
-    working.write_bytes(b"%PDF-original")
-    bib = tmp_path / "old.bib"
-    original = f"@book{{Example2020,\n file = {{{working}}},\n}}\n"
-    bib.write_text(original)
-    monkeypatch.setattr(_mod, "LIBRARY_DIR", library)
-    assert not _mod.update_bib_entry(bib, "Example2020", replace_broken=True)
-    assert bib.read_text() == original
+def test_review_selection_is_read_only_and_uses_current_pdf_bytes(tmp_path, monkeypatch, capsys):
+    content = b"%PDF-1.7 disposable test bytes"
+    pdf = tmp_path / "candidate.pdf"
+    pdf.write_bytes(content)
+    md5 = hashlib.md5(content).hexdigest()
+    target = {"title": "An Example Book", "author": "Smith, Alice", "year": "1960",
+              "edition": "first", "language": "english"}
+    inventory = tmp_path / "candidates.json"
+    inventory.write_text(json.dumps({"version": 1, "target": target,
+                                     "candidates": [{"md5": md5, "format": "pdf"}]}))
+    review = {"file": str(pdf), "sha256": hashlib.sha256(content).hexdigest(),
+              "identity": {"status": "verified", "evidence": "Title and author checked."},
+              "edition": {"status": "verified", "evidence": "Copyright page checked."},
+              "language": {"status": "verified", "evidence": "Interior text checked."},
+              "completeness": {"status": "verified", "evidence": "Full extent checked."},
+              "physical_pages": {"status": "verified", "evidence": "Printed pagination checked."}}
+    reviews = tmp_path / "reviews.json"
+    reviews.write_text(json.dumps({"version": 1, "target": target, "candidates": {md5: review}}))
+    monkeypatch.setattr(pf, "Http", lambda: pytest.fail("Selection made a network client"))
+    monkeypatch.setattr(_mod, "parse_bib_books", lambda *args: pytest.fail("Selection read a bibliography"))
+    assert _mod.main(["--candidates", str(inventory), "--reviews", str(reviews)]) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["selected"]["file"] == str(pdf)
+    assert pdf.read_bytes() == content
+    assert sorted(path.name for path in tmp_path.iterdir()) == ["candidate.pdf", "candidates.json", "reviews.json"]
+    pdf.write_bytes(content + b"changed")
+    assert _mod.main(["--candidates", str(inventory), "--reviews", str(reviews)]) == 5
+    assert json.loads(capsys.readouterr().out)["selected"] is None
 
 
-class TestScoreResult:
-    def test_accepts_author_only_match_when_title_missing(self):
-        target = {"title": "", "author": "Smith, John"}
-        result = {
-            "format": "pdf",
-            "size_bytes": 5 * 1024 * 1024,
-            "title": "Different Title",
-            "authors": "John Smith",
-        }
-
-        assert score_result(result, target) == (0, 5 * 1024 * 1024)
-        assert select_best_result([result], target) == result
-
-
-class TestSharedClient:
-    def test_article_mode_is_gone(self):
-        """Papers are paper-fetch's job; this script must not grow a second SciDB client."""
-        source = _SCRIPT.read_text()
-        assert "--article-doi" not in source
-        assert "scidb" not in source.lower()
-        assert not hasattr(_mod, "download_article_by_doi")
-
-    def test_credential_lookup_is_the_shared_one(self, monkeypatch):
-        monkeypatch.setattr(pf, "annas_secret_key", lambda: "fixture-key")
-        assert _mod.get_secret_key() == "fixture-key"
-
-    @pytest.mark.parametrize("body,status", [
-        ("<title>DDoS-Guard</title>", 403), ("Just a moment...", 503), ("<h1>No files found.</h1>", 500),
-    ])
-    def test_blocked_search_is_unknown_not_empty(self, fake_http, capsys, body, status):
-        fake_http([("search", html(body, status))])
-        assert _mod.search_annas_archive("9781234567890", "https://a.invalid/") is None
-        assert "availability unknown" in capsys.readouterr().err.lower()
-
-    def test_empty_search_page_is_an_empty_result(self, fake_http):
-        fake_http([("search", html("<div>No files found.</div>"))])
-        assert _mod.search_annas_archive("9781234567890", "https://a.invalid/") == []
-
-    def test_libgen_isbn_results_feed_the_existing_ranking(self, monkeypatch):
-        monkeypatch.setattr(pf, "libgen_isbn_files", lambda http, isbn: [
-            {"md5": "a" * 32, "extension": "pdf", "size_bytes": 5 * 1024 * 1024, "title": "Introduction to Algorithms",
-             "author": "Cormen, Thomas", "year": "2009", "filename": "Cormen.pdf", "source": "libgen"},
-            {"md5": "b" * 32, "extension": "epub", "size_bytes": 2 * 1024 * 1024, "title": "Introduction to Algorithms",
-             "author": "Cormen, Thomas", "year": "2009", "filename": "Cormen.epub", "source": "libgen"},
-        ])
-        monkeypatch.setattr(_mod, "_http", lambda: object())
-        results = _mod.libgen_results("9780262033848")
-        assert [r["format"] for r in results] == ["pdf", "epub"]
-        assert results[0]["size"] == "5.0MB"
-        best = _mod.select_best_result(results, target_book={"title": "Introduction to Algorithms", "author": "Cormen, Thomas"})
-        assert best["md5"] == "a" * 32
-
-    def test_host_override_must_be_annas_archive(self, monkeypatch, capsys, fake_http):
-        http = fake_http([])
-        monkeypatch.setattr(sys, "argv", [str(_SCRIPT), "--dry-run", "--base-url", "https://evil.invalid/"])
-        with pytest.raises(SystemExit) as exited:
-            _mod.main()
-        assert exited.value.code == 1
-        assert "refusing" in capsys.readouterr().err.lower()
-        assert http.calls == []
-
-
-class TestDownloadLogging:
-    def test_verbose_success_does_not_print_api_key_or_signed_url(self, fake_http, capsys, tmp_path):
-        credential = "fixture-private-key"
-        signed = "https://example.invalid/private-path?token=fixture-signed-token"
-        http = fake_http([
-            ("fast_download", html(json.dumps({"download_url": signed}))),
-            ("private-path", pf.Response(200, b"%PDF-1.7 fixture" + b" " * 3000, signed, "application/pdf")),
-        ])
-        assert _mod._download_once("0" * 32, credential, "https://annas-archive.gl/", tmp_path / "a.pdf", verbose=True)
-        assert (tmp_path / "a.pdf").read_bytes().startswith(b"%PDF-")
-        output = capsys.readouterr().err
-        assert credential not in output
-        assert "key=" not in output
-        assert "private-path" not in output
-        assert "fixture-signed-token" not in output
-        api_calls = [p for u, p in http.calls if "fast_download" in u]
-        assert api_calls and api_calls[0]["key"] == credential
-
-    @pytest.mark.parametrize("phase", ["api-error", "download-html", "not-member"])
-    def test_remote_errors_do_not_echo_sensitive_urls(self, fake_http, capsys, tmp_path, phase):
-        private = "https://example.invalid/private-path?key=fixture-private-key"
-        if phase == "api-error":
-            routes = [("fast_download", html(json.dumps({"download_url": None, "error": private}), 500))]
-        elif phase == "not-member":
-            routes = [("fast_download", html(json.dumps({"download_url": None, "error": "Not a member"}), 403))]
-        else:
-            routes = [("fast_download", html(json.dumps({"download_url": private}))),
-                      ("private-path", html("<html>challenge</html>"))]
-        fake_http(routes)
-        assert not _mod._download_once(
-            "0" * 32, "fixture-private-key", "https://annas-archive.gl/", tmp_path / "a.pdf", verbose=True
-        )
-        output = capsys.readouterr().err
-        assert "private-path" not in output
-        assert "fixture-private-key" not in output
-        assert not (tmp_path / "a.pdf").exists()
-
-    def test_quota_raises_rate_limit(self, fake_http, tmp_path):
-        fake_http([("fast_download", html(json.dumps({"download_url": None, "error": "Daily quota exceeded"}), 429))])
-        with pytest.raises(_mod.RateLimitError):
-            _mod._download_once("0" * 32, "k", "https://annas-archive.gl/", tmp_path / "a.pdf")
-
-    def test_key_never_leaves_annas_archive_hosts(self, fake_http, tmp_path, capsys):
-        fake_http([])
-        assert not _mod._download_once("0" * 32, "k", "https://evil.invalid/", tmp_path / "a.pdf")
-        assert "refused" in capsys.readouterr().err.lower()
+def test_no_second_downloader_or_bib_writer_remains():
+    source = _SCRIPT.read_text()
+    for old_definition in ("def score_result", "def _parse_search_results", "def update_bib_entry", "def _download_once"):
+        assert old_definition not in source
+    assert "paper_fetch.select_book_candidate" in source
+    assert "paper_fetch.search_annas_books" in source
