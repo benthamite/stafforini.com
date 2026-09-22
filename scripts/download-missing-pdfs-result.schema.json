@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "properties": {
+    "key": {"type": "string"},
+    "status": {"type": "string", "enum": ["attached", "deferred", "error"]},
+    "reason": {"type": "string"},
+    "file": {"type": "string"},
+    "sha256": {"type": "string"},
+    "operation_id": {"type": "string"},
+    "evidence": {"type": "string"}
+  },
+  "required": ["key", "status", "reason", "file", "sha256", "operation_id", "evidence"],
+  "additionalProperties": false
+}

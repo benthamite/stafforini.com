@@ -1,31 +1,18 @@
 #!/usr/bin/env bash
-# Scheduled wrapper for download-missing-pdfs.py
-# Run by launchd daily; downloads PDFs and commits bib changes.
+# Scheduled wrapper for reviewed, unattended PDF acquisition.
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-PYTHON="/Users/pablostafforini/.pyenv/versions/3.11.9/bin/python3"
-BIB_DIR="$HOME/My Drive/bibliography"
+PYTHON="$HOME/.local/share/paper-fetch/venv/bin/python"
 LOG="$SCRIPT_DIR/download-missing-pdfs-cron.log"
 
 {
   echo "===== $(date '+%Y-%m-%d %H:%M:%S') ====="
 
-  # Run the download script
-  "$PYTHON" "$SCRIPT_DIR/download-missing-pdfs.py" \
-    --resume --retry-errors --delay 3 2>&1
-
-  # Commit bib changes if any
-  cd "$BIB_DIR"
-  if ! git diff --quiet old.bib 2>/dev/null; then
-    git add old.bib
-    git commit -m "Add file fields for downloaded PDFs"
-    echo "Committed bib changes."
-  else
-    echo "No bib changes to commit."
+  if [[ ! -x "$PYTHON" ]]; then
+    echo "Dedicated paper-fetch runtime missing: $PYTHON" >&2
+    exit 1
   fi
-
-  echo "===== done ====="
-  echo
+  exec "$PYTHON" -B "$SCRIPT_DIR/download-missing-pdfs-batch.py" "$@"
 } >> "$LOG" 2>&1
