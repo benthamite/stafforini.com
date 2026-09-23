@@ -21,6 +21,51 @@ _spec.loader.exec_module(batch)
 _real_adapter = batch.adapter
 
 
+def test_launchd_pool_selection_uses_configured_emacs_home(tmp_path, monkeypatch):
+    (tmp_path / ".codex-current-account").write_text("epoch-pool\n")
+    selected = tmp_path / "configured-account"
+    selected.mkdir()
+    calls = []
+
+    def emacs(command, **kwargs):
+        calls.append((command, kwargs))
+        return SimpleNamespace(returncode=0, stdout=json.dumps(
+            {"ok": True, "result": json.dumps(str(selected)), "truncated": False}))
+
+    monkeypatch.setattr(batch.subprocess, "run", emacs)
+    env = batch.agent_environment({"HOME": str(tmp_path), "CODEX_BUFFER_NAME": "parent"})
+    assert env["CODEX_HOME"] == str(selected)
+    assert "CODEX_BUFFER_NAME" not in env
+    expression = calls[0][0][-1]
+    assert 'selection "epoch-pool"' in expression
+    assert "agent-account-route" in expression
+    assert "agent-account-home" in expression
+    assert "CODEX_BUFFER_NAME" not in calls[0][1]["env"]
+
+
+def test_explicit_account_does_not_consult_marker_or_emacs(tmp_path, monkeypatch):
+    (tmp_path / ".codex-current-account").write_text("epoch-pool\n")
+    monkeypatch.setattr(batch.subprocess, "run", lambda *a, **kw: pytest.fail("Resolver called"))
+    env = {"HOME": str(tmp_path), "CODEX_HOME": str(tmp_path / "pinned")}
+    assert batch.agent_environment(env) == env
+
+
+@pytest.mark.parametrize("reply", [
+    {"ok": False, "result": '"/tmp"', "truncated": False},
+    {"ok": True, "result": '"/tmp"', "truncated": True},
+    {"ok": True, "result": "nil", "truncated": False},
+    {"ok": True, "result": '"relative"', "truncated": False},
+    {"ok": True, "result": "42", "truncated": False},
+    {},
+])
+def test_account_resolution_fails_closed(tmp_path, monkeypatch, reply):
+    (tmp_path / ".codex-current-account").write_text("epoch-pool\n")
+    monkeypatch.setattr(batch.subprocess, "run", lambda *a, **kw:
+                        SimpleNamespace(returncode=0, stdout=json.dumps(reply)))
+    with pytest.raises(ValueError):
+        batch.agent_environment({"HOME": str(tmp_path)})
+
+
 @pytest.fixture
 def job(tmp_path, monkeypatch):
     """Isolate account selection, bibliography and worker effects from real data."""

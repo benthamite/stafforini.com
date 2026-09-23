@@ -81,15 +81,36 @@ def agent_environment(environ=None):
             "CLAUDECODE", "CODEX_INTERNAL_ORIGINATOR_OVERRIDE",
         }:
             env.pop(name, None)
-    # launchd's bash wrapper does not source the account selector in .zshenv.
+    # A persisted selection can name a pool, not a physical account directory.
+    # Use the same configured routing as Emacs, which this job needs for Ebib.
     home = Path(env.get("HOME", str(Path.home())))
     marker = home / ".codex-current-account"
     if not env.get("CODEX_HOME") and marker.exists():
         account = "".join(marker.read_text().split())
         if not re.fullmatch(r"[A-Za-z0-9_-]+", account):
             raise ValueError("Invalid Codex account selector")
-        selected = home / f".codex-{account}"
-        if not selected.is_dir():
+        expression = (
+            f"(let* ((selection {json.dumps(account)}) "
+            "(account (if (agent-account-pool-p 'codex selection) "
+            "(agent-account-route 'codex selection) selection))) "
+            "(agent-account-home 'codex account))")
+        completed = subprocess.run(
+            [sys.executable, str(EMACS_EVAL), expression],
+            capture_output=True, text=True, timeout=20, env=env)
+        if completed.returncode:
+            raise ValueError("Could not resolve Codex account through Emacs")
+        reply = json.loads(completed.stdout)
+        if (not isinstance(reply, dict) or reply.get("ok") is not True
+                or reply.get("truncated") is not False
+                or not isinstance(reply.get("result"), str)):
+            raise ValueError("Invalid Codex account response from Emacs")
+        # emacs-eval returns a printed Lisp string; paths use JSON-compatible
+        # quoting. Non-string replies (including nil) must fail closed.
+        selected_path = json.loads(reply["result"])
+        if not isinstance(selected_path, str) or not selected_path:
+            raise ValueError("Codex account has no configured home")
+        selected = Path(selected_path)
+        if not selected.is_absolute() or not selected.is_dir():
             raise ValueError(f"Selected Codex account directory is missing: {selected}")
         env["CODEX_HOME"] = str(selected)
     return env
