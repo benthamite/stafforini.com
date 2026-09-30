@@ -46,7 +46,6 @@ def test_generated_script_is_valid_and_portable(profile):
         assert forbidden not in text
     assert "Pablo Stafforini" not in text
     assert "import subprocess" not in text
-    assert "['pass', 'show'" not in text
     assert "SEC_USER_AGENT must identify you" in text
     assert text.count("def _marketdata_key") == (
         2 if profile.prefix == "vara" else 1

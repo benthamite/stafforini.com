@@ -53,11 +53,9 @@ on_exit() {
 
 trap on_exit EXIT
 
-# Fetch the MarketData token from pass. If gpg-agent doesn't have the
-# passphrase cached, this will fail and the job exits cleanly — the next
-# interactive pass usage will re-warm the cache.
-if ! MARKETDATA_KEY="$(pass env/marketdata-token 2>/dev/null)"; then
-  echo "Error: could not read env/marketdata-token from pass. Is gpg-agent warm?" >&2
+# Fetch the MarketData token from the personal 1Password Automation vault.
+if ! MARKETDATA_KEY="$("$HOME/bin/op-automations" @personal read 'op://Automation/marketdata-token/credential')"; then
+  echo "Error: could not read marketdata-token from 1Password." >&2
   exit 1
 fi
 export MARKETDATA_KEY
