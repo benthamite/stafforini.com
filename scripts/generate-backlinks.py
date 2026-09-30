@@ -52,6 +52,41 @@ def discover_exported_slugs(content_dirs):
     return exported_slugs, listed_source_slugs
 
 
+def resolve_page_nodes(rows):
+    """Map every org-roam node id to the page-level node of its file.
+
+    ROWS are (id, file, level, title, pos) tuples.  A file's page node is
+    its level-0 (file-level) node when it has one; otherwise it is the
+    first level-1 heading, which is where the note's ID sits in "tags"
+    files and in notes whose ID is on the first heading.  Later level-1
+    headings with their own IDs (e.g. a "Footnotes" heading) are sections
+    of that page, not the page itself, so they must not supply its title.
+
+    Returns {node_id: {"file", "title", "slug"}}.
+    """
+    rows = [
+        (strip_elisp_quotes(node_id), file, level, strip_elisp_quotes(title), pos)
+        for node_id, file, level, title, pos in rows
+    ]
+    page_rows = {}
+    for row in rows:
+        _, file, level, _, pos = row
+        if level > 1:
+            continue
+        best = page_rows.get(file)
+        if best is None or (level, pos) < (best[2], best[4]):
+            page_rows[file] = row
+    pages = {
+        file: {"file": file, "title": title, "slug": file_to_slug(file)}
+        for file, (_, _, _, title, _) in page_rows.items()
+    }
+    return {
+        node_id: pages[file]
+        for node_id, file, _, _, _ in rows
+        if file in pages
+    }
+
+
 def main():
     if not ORGROAM_DB_PATH.exists():
         print(f"Error: org-roam database not found at {ORGROAM_DB_PATH}", file=sys.stderr)
@@ -66,37 +101,11 @@ def main():
     conn = sqlite3.connect(f"file:{ORGROAM_DB_PATH}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
 
-    # Get ALL page-level nodes.  In org-roam, level 0 = file-level node (most
-    # files), level 1 = first heading (used when the file node is a "tags" file
-    # or the note's ID sits on the first heading instead of the file property
-    # drawer).  Both levels represent "the page" for backlink purposes.
-    # No directory filter — we use exported_slugs to filter the output instead.
-    page_nodes = {}
-    cursor = conn.execute(
-        "SELECT id, file, level, title FROM nodes WHERE level <= 1",
+    cursor = conn.execute("SELECT id, file, level, title, pos FROM nodes")
+    node_to_page = resolve_page_nodes(
+        (row["id"], row["file"], row["level"], row["title"], row["pos"])
+        for row in cursor
     )
-    for row in cursor:
-        node_id = strip_elisp_quotes(row["id"])
-        page_nodes[node_id] = {
-            "file": row["file"],
-            "title": strip_elisp_quotes(row["title"]),
-            "slug": file_to_slug(row["file"]),
-        }
-
-    # Get all sub-heading nodes so we can map them back to their parent
-    # page-level node (by file).
-    subheading_to_page = {}
-    cursor = conn.execute(
-        "SELECT id, file FROM nodes WHERE level > 1",
-    )
-    for row in cursor:
-        node_id = strip_elisp_quotes(row["id"])
-        subheading_to_page[node_id] = row["file"]
-
-    # Build a file-to-page-node lookup for resolving sub-heading parents.
-    file_to_page = {}
-    for node_id, info in page_nodes.items():
-        file_to_page[info["file"]] = node_id
 
     # Get all id-type links.
     # The nested quoting ('"id"') is because org-roam stores the link type
@@ -113,28 +122,10 @@ def main():
         src_id = strip_elisp_quotes(row["source"])
         dest_id = strip_elisp_quotes(row["dest"])
 
-        # Resolve source to a page-level node.
-        if src_id in page_nodes:
-            src_info = page_nodes[src_id]
-        elif src_id in subheading_to_page:
-            src_file = subheading_to_page[src_id]
-            parent_id = file_to_page.get(src_file)
-            if parent_id is None:
-                continue
-            src_info = page_nodes[parent_id]
-        else:
-            continue
-
-        # Resolve destination to a page-level node.
-        if dest_id in page_nodes:
-            dest_info = page_nodes[dest_id]
-        elif dest_id in subheading_to_page:
-            dest_file = subheading_to_page[dest_id]
-            parent_id = file_to_page.get(dest_file)
-            if parent_id is None:
-                continue
-            dest_info = page_nodes[parent_id]
-        else:
+        # Resolve both ends to their file's page-level node.
+        src_info = node_to_page.get(src_id)
+        dest_info = node_to_page.get(dest_id)
+        if src_info is None or dest_info is None:
             continue
 
         dest_slug = dest_info["slug"]

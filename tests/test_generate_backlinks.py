@@ -1,6 +1,6 @@
 """Tests for scripts/generate-backlinks.py — utility functions.
 
-Covers: strip_elisp_quotes, file_to_slug.
+Covers: strip_elisp_quotes, file_to_slug, resolve_page_nodes.
 """
 
 import sys
@@ -19,6 +19,7 @@ _spec.loader.exec_module(_mod)
 strip_elisp_quotes = _mod.strip_elisp_quotes
 file_to_slug = _mod.file_to_slug
 discover_exported_slugs = _mod.discover_exported_slugs
+resolve_page_nodes = _mod.resolve_page_nodes
 
 
 # ---------------------------------------------------------------------------
@@ -92,3 +93,34 @@ class TestDiscoverExportedSlugs:
 
         assert exported_slugs == {"listed", "unlisted"}
         assert listed_source_slugs == {"listed"}
+
+
+# ---------------------------------------------------------------------------
+# page-node resolution
+# ---------------------------------------------------------------------------
+
+class TestResolvePageNodes:
+    def test_later_level_one_heading_does_not_become_page(self):
+        # Regression: a note whose ID is on its first heading and that also
+        # has an ID'd "Footnotes" heading was credited as "Footnotes".
+        rows = [
+            ('"footnotes"', '"/n/sa.org"', 1, '"Footnotes"', 900),
+            ('"page"', '"/n/sa.org"', 1, '"Situational Awareness LP"', 100),
+            ('"section"', '"/n/sa.org"', 2, '"Staying updated"', 800),
+        ]
+        pages = resolve_page_nodes(rows)
+        assert {pages[i]["title"] for i in ("page", "footnotes", "section")} == {
+            "Situational Awareness LP"
+        }
+        assert pages["section"]["slug"] == "sa"
+
+    def test_file_level_node_wins_over_headings(self):
+        rows = [
+            ('"h1"', '"/n/x.org"', 1, '"First heading"', 50),
+            ('"file"', '"/n/x.org"', 0, '"File title"', 1),
+        ]
+        assert resolve_page_nodes(rows)["h1"]["title"] == "File title"
+
+    def test_file_without_page_node_is_dropped(self):
+        rows = [('"deep"', '"/n/y.org"', 2, '"Deep"', 10)]
+        assert resolve_page_nodes(rows) == {}
