@@ -43,6 +43,20 @@ def test_launchd_pool_selection_uses_configured_emacs_home(tmp_path, monkeypatch
     assert "CODEX_BUFFER_NAME" not in calls[0][1]["env"]
 
 
+@pytest.mark.parametrize("stdout,stderr,expected", [
+    (json.dumps({"ok": False, "error": "Connection refused"}), "", "Connection refused"),
+    ("", "cannot start emacs-eval", "cannot start emacs-eval"),
+    ("", "", "no diagnostic output"),
+])
+def test_account_resolution_retains_failure_cause(tmp_path, monkeypatch, stdout, stderr, expected):
+    (tmp_path / ".codex-current-account").write_text("epoch-pool\n")
+    monkeypatch.setattr(batch.subprocess, "run", lambda *a, **kw:
+                        SimpleNamespace(returncode=1, stdout=stdout, stderr=stderr))
+    with pytest.raises(ValueError, match="exit 1") as failure:
+        batch.agent_environment({"HOME": str(tmp_path)})
+    assert expected in str(failure.value)
+
+
 def test_explicit_account_does_not_consult_marker_or_emacs(tmp_path, monkeypatch):
     (tmp_path / ".codex-current-account").write_text("epoch-pool\n")
     monkeypatch.setattr(batch.subprocess, "run", lambda *a, **kw: pytest.fail("Resolver called"))

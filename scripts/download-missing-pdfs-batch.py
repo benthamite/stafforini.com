@@ -98,7 +98,13 @@ def agent_environment(environ=None):
             [sys.executable, str(EMACS_EVAL), expression],
             capture_output=True, text=True, timeout=20, env=env)
         if completed.returncode:
-            raise ValueError("Could not resolve Codex account through Emacs")
+            # emacs-eval reports connection, timeout and Lisp errors as JSON
+            # on stdout. Retain that cause instead of collapsing every failure
+            # into an account-routing error that cannot be diagnosed later.
+            detail = completed.stdout.strip() or completed.stderr.strip() or "no diagnostic output"
+            raise ValueError(
+                f"Could not resolve Codex account through Emacs "
+                f"(exit {completed.returncode}): {detail[:2000]}")
         reply = json.loads(completed.stdout)
         if (not isinstance(reply, dict) or reply.get("ok") is not True
                 or reply.get("truncated") is not False
