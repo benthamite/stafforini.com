@@ -245,6 +245,29 @@ def validate_review(result, attempt, inspection):
             raise ValueError(f"Saved selection disagrees with retained reviewed PDF: {name}")
 
 
+# A refused or challenged acquisition route is a per-book outcome: the task
+# prompt says so, but workers still report some as "error", which stops the
+# queue. The driver applies the rule. A reason that also names a systemic
+# failure (credentials, Emacs, crashes, the agent's own guard or runtime) stays
+# an error, so the reclassification can only err toward stopping.
+ROUTE_REFUSAL_RE = re.compile(
+    r"security policy|browser policy|access (?:was )?(?:denied|refused|rejected|blocked)"
+    r"|(?:denied|refused|rejected|blocked)\b[^.]*\baccess|needs-browser|browser challenge|ddos-guard"
+    r"|http 403|required approval|approval forbidden|browser (?:tools|access|route)", re.I)
+SYSTEMIC_FAILURE_RE = re.compile(
+    r"credential|secret key|authenticat|1password|emacs|crash|traceback|runtime|agent-guard"
+    r"|tool calls?\b|hook|sandbox|permission profile", re.I)
+
+
+def outcome_status(result):
+    """The ledger status for a validated worker result."""
+    if (result["status"] == "error" and not result["operation_id"] and not result["file"]
+            and ROUTE_REFUSAL_RE.search(result["reason"])
+            and not SYSTEMIC_FAILURE_RE.search(result["reason"])):
+        return "deferred"
+    return result["status"]
+
+
 def validate_result(result, book, bib, attempt, inspection):
     fields = {"status", "key", "reason", "file", "sha256", "operation_id", "evidence"}
     if (not isinstance(result, dict) or set(result) != fields
@@ -316,7 +339,11 @@ def execute(args, inspection, state):
             record.update(operation_id=result["operation_id"], reason=result["reason"])
             write_json(args.state_dir / "state.json", state)
             raise RuntimeError(f"Unfinished attachment operation for {book['key']}; reconcile {attempt}")
-        record.update(status=result["status"], reason=result["reason"], operation_id=result["operation_id"])
+        status = outcome_status(result)
+        if status != result["status"]:
+            record["worker_status"] = result["status"]
+            result = {**result, "status": status, "worker_status": record["worker_status"]}
+        record.update(status=status, reason=result["reason"], operation_id=result["operation_id"])
         write_json(args.state_dir / "state.json", state)
         print(json.dumps(result), flush=True)
         if result["status"] == "error":

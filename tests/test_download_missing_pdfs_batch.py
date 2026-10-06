@@ -446,3 +446,67 @@ def test_worker_uses_runtime_and_named_policy_without_legacy_override(job, monke
     assert not any("sandbox_workspace_write" in part for part in command)
     assert 'approval_policy="never"' in command
     assert command.count("--add-dir") == 3
+
+
+REFUSED_ROUTE_REASONS = [
+    "Browser security policy rejected Anna's Archive access. Other searched sources yielded no eligible PDF.",
+    "Required Playwright browser tools are missing, blocking Anna's Archive search. Availability remains unresolved.",
+    "paper-fetch book-candidates returned needs-browser; no other source had a PDF.",
+    "Anna's Archive returned HTTP 403 (DDoS-Guard browser challenge).",
+]
+SYSTEMIC_REASONS = [
+    "Reconciled: the agent-guard locale bug denied every worker tool call, so nothing ran.",
+    "Anna's Archive access was denied and the CLI staging lacked its secret key.",
+    "Emacs was unavailable, so the browser route could not be recorded.",
+    "paper-fetch: dedicated runtime missing; Anna's search needs-browser.",
+    "No acceptable candidate",
+]
+
+
+def run_one(job, monkeypatch, status, reason, limit=3):
+    args, inspection, state = job
+    args.limit = limit
+    visited = []
+
+    def worker(command, prompt, attempt, timeout, env):
+        key = json.loads((attempt / "input.json").read_text())["book"]["key"]
+        visited.append(key)
+        result = result_for(attempt, key, status)
+        result["reason"] = reason
+        batch.write_json(attempt / "result.json", result)
+
+    monkeypatch.setattr(batch, "run_agent", worker)
+    code = batch.execute(args, inspection, state)
+    return code, visited, batch.read_state(args.state_dir / "state.json")
+
+
+@pytest.mark.parametrize("reason", REFUSED_ROUTE_REASONS)
+def test_refused_route_reported_as_error_is_a_deferral_that_does_not_stop_the_queue(job, monkeypatch, reason):
+    code, visited, state = run_one(job, monkeypatch, "error", reason)
+    assert code == 0
+    assert visited == ["Alpha", "Beta", "Gamma"]
+    record = state["books"]["Alpha"]
+    assert record["status"] == "deferred"
+    assert record["worker_status"] == "error"
+    assert record["reason"] == reason
+
+
+@pytest.mark.parametrize("reason", SYSTEMIC_REASONS)
+def test_systemic_worker_error_still_fails_and_stops_the_queue(job, monkeypatch, reason):
+    code, visited, state = run_one(job, monkeypatch, "error", reason)
+    assert code == 1
+    assert visited == ["Alpha"]
+    assert state["books"]["Alpha"]["status"] == "error"
+    assert "worker_status" not in state["books"]["Alpha"]
+
+
+def test_worker_deferral_is_never_promoted_or_relabelled(job, monkeypatch):
+    code, visited, state = run_one(job, monkeypatch, "deferred", REFUSED_ROUTE_REASONS[0], limit=1)
+    assert code == 0
+    assert state["books"]["Alpha"]["status"] == "deferred"
+    assert "worker_status" not in state["books"]["Alpha"]
+
+
+def test_refused_route_with_a_started_operation_still_requires_reconciliation():
+    result = {"status": "error", "reason": REFUSED_ROUTE_REASONS[0], "operation_id": "op-1", "file": ""}
+    assert batch.outcome_status(result) == "error"
