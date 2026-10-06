@@ -500,11 +500,38 @@ def test_systemic_worker_error_still_fails_and_stops_the_queue(job, monkeypatch,
     assert "worker_status" not in state["books"]["Alpha"]
 
 
-def test_worker_deferral_is_never_promoted_or_relabelled(job, monkeypatch):
-    code, visited, state = run_one(job, monkeypatch, "deferred", REFUSED_ROUTE_REASONS[0], limit=1)
+@pytest.mark.parametrize("reason", [
+    *REFUSED_ROUTE_REASONS,
+    "No acceptable candidate",
+    "Edition unresolved: the entry credits Sidney Hook as editor; no attachment began.",
+    "Contradictory record for The Crash of 1929; bibliography unchanged.",
+])
+def test_per_book_deferral_stays_deferred(job, monkeypatch, reason):
+    code, visited, state = run_one(job, monkeypatch, "deferred", reason)
     assert code == 0
+    assert visited == ["Alpha", "Beta", "Gamma"]
     assert state["books"]["Alpha"]["status"] == "deferred"
     assert "worker_status" not in state["books"]["Alpha"]
+
+
+@pytest.mark.parametrize("reason", [
+    "Anna's Archive browser access was denied by security policy; CLI staging lacked its secret key.",
+    "No verified PDF. Browser policy denied Anna's Archive access; download credentials were unavailable.",
+    "Remote staging lacked a member key; independent searches found no copy.",
+    "1Password authentication timed out before staging.",
+    "Emacs was unavailable, so the attachment could not be prepared.",
+    "The paper-fetch runtime is missing.",
+    "Worker shell commands were refused by the sandbox.",
+    "A security-hook import crash blocked every command.",
+])
+def test_deferral_naming_a_systemic_failure_fails_the_job(job, monkeypatch, reason):
+    code, visited, state = run_one(job, monkeypatch, "deferred", reason)
+    assert code == 1
+    assert visited == ["Alpha"]
+    record = state["books"]["Alpha"]
+    assert record["status"] == "error"
+    assert record["worker_status"] == "deferred"
+    assert record["reason"] == reason
 
 
 def test_refused_route_with_a_started_operation_still_requires_reconciliation():

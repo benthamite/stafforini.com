@@ -245,25 +245,32 @@ def validate_review(result, attempt, inspection):
             raise ValueError(f"Saved selection disagrees with retained reviewed PDF: {name}")
 
 
-# A refused or challenged acquisition route is a per-book outcome: the task
-# prompt says so, but workers still report some as "error", which stops the
-# queue. The driver applies the rule. A reason that also names a systemic
-# failure (credentials, Emacs, crashes, the agent's own guard or runtime) stays
-# an error, so the reclassification can only err toward stopping.
+# The task prompt separates per-book outcomes from systemic failures, but
+# workers blur them, so the driver applies the rule to the reason. A refused or
+# challenged acquisition route is a deferral, so one book cannot stop the
+# queue. A reason naming a systemic failure (credentials, Emacs, a crash, the
+# runtime, the agent's own guard or sandbox) is an error even when the worker
+# said "deferred", so a broken credential path fails the job visibly. A reason
+# naming both is an error. Systemic terms are phrased narrowly enough that
+# bibliographic text such as "Sidney Hook" or "The Crash of 1929" does not match.
 ROUTE_REFUSAL_RE = re.compile(
     r"security policy|browser policy|access (?:was )?(?:denied|refused|rejected|blocked)"
     r"|(?:denied|refused|rejected|blocked)\b[^.]*\baccess|needs-browser|browser challenge|ddos-guard"
     r"|http 403|required approval|approval forbidden|browser (?:tools|access|route)", re.I)
 SYSTEMIC_FAILURE_RE = re.compile(
-    r"credential|secret key|authenticat|1password|emacs|crash|traceback|runtime|agent-guard"
-    r"|tool calls?\b|hook|sandbox|permission profile", re.I)
+    r"credential|secret key|member key|api key|authentication|1password|\bemacs\b|traceback"
+    r"|\bcrashed\b|\b(?:import|worker|agent|process|helper|tool|hook) crash|runtime|agent-guard"
+    r"|tool calls?\b|security-hook|\bhooks? (?:crash|fail|error|denied|blocked)|sandbox|permission profile",
+    re.I)
 
 
 def outcome_status(result):
     """The ledger status for a validated worker result."""
+    reason = result["reason"]
+    if result["status"] == "deferred" and SYSTEMIC_FAILURE_RE.search(reason):
+        return "error"
     if (result["status"] == "error" and not result["operation_id"] and not result["file"]
-            and ROUTE_REFUSAL_RE.search(result["reason"])
-            and not SYSTEMIC_FAILURE_RE.search(result["reason"])):
+            and ROUTE_REFUSAL_RE.search(reason) and not SYSTEMIC_FAILURE_RE.search(reason)):
         return "deferred"
     return result["status"]
 
