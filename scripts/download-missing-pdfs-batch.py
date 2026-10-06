@@ -23,7 +23,8 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 DEFAULT_STATE = Path.home() / ".local/state/download-missing-pdfs"
 DEFAULT_BIB = Path.home() / "My Drive/bibliography/old.bib"
 LIBRARY = Path.home() / "My Drive/library-pdf"
-CODEX = "/opt/homebrew/bin/codex"
+CODEX = str(Path.home() / "My Drive/dotfiles/bin/codex-runtime")
+OP_SANDBOX_HELPER = Path.home() / "My Drive/dotfiles/bin/op_automations_sandbox.py"
 EMACS_EVAL = Path.home() / "My Drive/dotfiles/bin/emacs-eval"
 
 
@@ -120,6 +121,28 @@ def agent_environment(environ=None):
             raise ValueError(f"Selected Codex account directory is missing: {selected}")
         env["CODEX_HOME"] = str(selected)
     return env
+
+
+def worker_permission_flags():
+    """Compose the broker's app-data denial with the worker's write limits.
+
+    macOS refuses nested Seatbelt initialization. The broker can reuse this
+    sandbox only after its own policy checker confirms all container denials.
+    Discover those paths through the broker's maintained implementation.
+    """
+    spec = importlib.util.spec_from_file_location("pdf_broker_sandbox", OP_SANDBOX_HELPER)
+    if spec is None or spec.loader is None:
+        raise ValueError("Cannot load the credential broker's sandbox policy")
+    policy = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(policy)
+    filesystem = {":root": "read", ":workspace_roots": "write",
+                  ":tmpdir": "write", ":slash_tmp": "write"}
+    filesystem.update({str(path): "deny" for path in policy.container_paths(Path.home())})
+    rules = ",".join(f"{json.dumps(path)}={json.dumps(access)}"
+                     for path, access in filesystem.items())
+    return ["-c", 'default_permissions="pdf_acquisition"',
+            "-c", f"permissions.pdf_acquisition.filesystem={{{rules}}}",
+            "-c", "permissions.pdf_acquisition.network.enabled=true"]
 
 
 def run_agent(command, prompt, attempt, timeout, env):
@@ -270,6 +293,7 @@ def execute(args, inspection, state):
         print(json.dumps({"books": queue}, indent=2))
         return 0
     env = agent_environment()
+    permission_flags = worker_permission_flags()
     template = (SCRIPT_DIR / "download-missing-pdfs-task.md").read_text()
     for book in queue:
         attempt = Path(tempfile.mkdtemp(prefix="attempt-", dir=args.state_dir))
@@ -279,8 +303,8 @@ def execute(args, inspection, state):
         write_json(args.state_dir / "state.json", state)
         prompt = template + "\n\nRead the exact job input at: " + str(attempt / "input.json") + "\n"
         (attempt / "prompt.md").write_text(prompt)
-        command = [CODEX, "exec", "--sandbox", "workspace-write", "-c", 'approval_policy="never"',
-                   "-c", "sandbox_workspace_write.network_access=true", "--skip-git-repo-check",
+        command = [CODEX, "exec", *permission_flags, "-c", 'approval_policy="never"',
+                   "--skip-git-repo-check",
                    "--cd", str(attempt), "--add-dir", str(args.state_dir),
                    "--add-dir", str(args.bib.parent), "--add-dir", str(LIBRARY),
                    "--json", "--output-schema", str(SCRIPT_DIR / "download-missing-pdfs-result.schema.json"),

@@ -9,6 +9,7 @@ from pathlib import Path
 import signal
 import sys
 import time
+import tomllib
 from types import SimpleNamespace
 
 import pytest
@@ -402,3 +403,46 @@ def test_timeout_kills_term_ignoring_descendant_after_group_leader_exits(tmp_pat
                 os.kill(int(ready.read_text()), signal.SIGKILL)
             except ProcessLookupError:
                 pass
+
+
+def test_worker_policy_composes_every_broker_container_deny(tmp_path, monkeypatch):
+    helper = tmp_path / "broker_policy.py"
+    paths = [str(tmp_path / name) for name in ("one", "two", "three")]
+    helper.write_text(f"def container_paths(home):\n    return {paths!r}\n")
+    monkeypatch.setattr(batch, "OP_SANDBOX_HELPER", helper)
+    flags = batch.worker_permission_flags()
+    assert flags[::2] == ["-c"] * 3
+    config = tomllib.loads("\n".join(flags[1::2]))
+    assert config["default_permissions"] == "pdf_acquisition"
+    policy = config["permissions"]["pdf_acquisition"]
+    assert policy["network"]["enabled"] is True
+    assert policy["filesystem"] == {
+        ":root": "read", ":workspace_roots": "write",
+        ":tmpdir": "write", ":slash_tmp": "write",
+        **{path: "deny" for path in paths},
+    }
+
+
+def test_missing_broker_policy_stops_before_worker_or_ledger(job, monkeypatch):
+    args, inspection, state = job
+    monkeypatch.setattr(batch, "OP_SANDBOX_HELPER", args.state_dir / "missing.py")
+    monkeypatch.setattr(batch, "run_agent", lambda *a: pytest.fail("Worker launched"))
+    assert batch.main(cli_args(args)) == 1
+    assert not (args.state_dir / "state.json").exists()
+
+
+def test_worker_uses_runtime_and_named_policy_without_legacy_override(job, monkeypatch):
+    args, inspection, state = job
+    commands = []
+    def worker(command, prompt, attempt, timeout, env):
+        commands.append(command)
+        batch.write_json(attempt / "result.json", result_for(attempt))
+    monkeypatch.setattr(batch, "run_agent", worker)
+    assert batch.execute(args, inspection, state) == 0
+    command = commands[0]
+    assert command[0] == str(Path.home() / "My Drive/dotfiles/bin/codex-runtime")
+    assert 'default_permissions="pdf_acquisition"' in command
+    assert "--sandbox" not in command
+    assert not any("sandbox_workspace_write" in part for part in command)
+    assert 'approval_policy="never"' in command
+    assert command.count("--add-dir") == 3
