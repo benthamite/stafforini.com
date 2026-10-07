@@ -1,24 +1,19 @@
 # Book acquisition
 
-`scripts/download-missing-pdfs.py` is an inspection adapter to the shared
-dotfiles acquisition library. It does not accept an automatically ranked book,
-write `old.bib`, or replay old progress into bibliography attachments. Its
-legacy mutating modes stop with `needs-review` (exit 5). The scheduled wrapper
-uses the reviewed acquisition workflow below instead of those retired modes.
+The website has no book-acquisition command of its own. The legacy
+`scripts/download-missing-pdfs.py` entry point was retired: its separate
+discovery bypassed paper-fetch's own candidate routes. The scheduled batch below
+uses `scripts/missing_pdf_inventory.py` only to list existing `old.bib` books
+whose PDF is missing or broken, and to read attachments back.
 
-`--dry-run` still inventories candidates for books in `old.bib`. It preserves
-unknown edition/language fields and provider errors. Search observations,
-filenames, scan flags and reported sizes do not approve a file.
-
-Use dotfiles `bin/paper-fetch` for the complete candidate workflow:
-`book-candidates`, `book-stage`, `book-inspect`, and `book-select`. Its maintained
-command and manifest contract is in `~/My Drive/dotfiles/docs/book-acquisition.md`.
-Bibliographic and attachment decisions belong to the single shared policy at
-`~/My Drive/dotfiles/agents/bibliography-policy.md`.
-
-The website adapter accepts `--candidates CANDIDATES.json --reviews REVIEWS.json`
-to report the same reviewed selection. That operation is read-only. The selected
-file goes through Zotra/Ebib for attachment and bibliography persistence. A
+For manual work, use dotfiles `bin/paper-fetch` for the complete candidate
+workflow: `book-candidates`, `book-stage`, `book-inspect`, and `book-select`.
+Its maintained command and manifest contract is in
+`~/My Drive/dotfiles/docs/book-acquisition.md`. Bibliographic and attachment
+decisions belong to the single shared policy at
+`~/My Drive/dotfiles/agents/bibliography-policy.md`. Search observations,
+filenames, scan flags and reported sizes do not approve a file. A selected file
+goes through Zotra/Ebib for attachment and bibliography persistence; a
 successful selection is not an attached file, a published PDF, or proof that
 every provider and candidate was searched.
 
