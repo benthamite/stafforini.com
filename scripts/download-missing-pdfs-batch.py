@@ -30,7 +30,7 @@ EMACS_EVAL = Path.home() / "My Drive/dotfiles/bin/emacs-eval"
 
 def adapter():
     spec = importlib.util.spec_from_file_location(
-        "missing_pdf_inspection", SCRIPT_DIR / "download-missing-pdfs.py")
+        "missing_pdf_inventory", SCRIPT_DIR / "missing_pdf_inventory.py")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
