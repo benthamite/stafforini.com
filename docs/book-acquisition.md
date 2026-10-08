@@ -49,6 +49,11 @@ an attachment. Interrupted operations retain their evidence for reconciliation;
 file existence alone cannot turn them into successes. Never delete that state
 to hide a failed operation.
 
+The one exception is a worker whose turn failed before the model acted, as when
+the network is down at the scheduled time. Its saved events hold only the
+session start, connection retries and the failed turn, so no Ebib operation can
+be pending. The next batch releases that record and retries the book first.
+
 Codex uses the selected local account and normal configuration/hooks, with
 explicit workspace-write permissions and network access. Its writable work
 directory is the attempt directory, with the bibliography and PDF library added

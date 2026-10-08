@@ -176,6 +176,88 @@ def test_incomplete_worker_output_stops_and_preserves_running_ledger(job, monkey
     assert len(visited) == 1
 
 
+IDLE_FAILURE = [
+    {"type": "thread.started", "thread_id": "fixture"},
+    {"type": "turn.started"},
+    {"type": "error", "message": "Reconnecting... 5/5 (workspace routing discovery failed)"},
+    {"type": "item.completed", "item": {"id": "item_0", "type": "error", "message": "Falling back"}},
+    {"type": "turn.failed", "error": {"message": "workspace routing discovery failed"}},
+]
+
+
+def stranded_attempt(args, events, text=None):
+    attempt = args.state_dir / "attempt-stranded"
+    attempt.mkdir()
+    lines = "".join(json.dumps(event) + "\n" for event in events)
+    (attempt / "events.jsonl").write_text(lines if text is None else text)
+    record = {"last_attempt": 1, "status": "running", "attempt": str(attempt)}
+    batch.write_json(args.state_dir / "state.json", {"version": 1, "books": {"Alpha": record}})
+    return attempt
+
+
+def test_turn_that_failed_before_acting_does_not_block_the_next_batch(job, monkeypatch):
+    args, inspection, state = job
+    stranded_attempt(args, IDLE_FAILURE)
+    visited = []
+
+    def worker(command, prompt, attempt, timeout, env):
+        key = json.loads((attempt / "input.json").read_text())["book"]["key"]
+        visited.append(key)
+        batch.write_json(attempt / "result.json", result_for(attempt, key))
+
+    monkeypatch.setattr(batch, "run_agent", worker)
+    assert batch.main(cli_args(args)) == 0
+    assert visited == ["Alpha"]
+    saved = batch.read_state(args.state_dir / "state.json")
+    assert saved["books"]["Alpha"]["status"] == "deferred"
+
+
+def test_dry_run_reports_a_released_attempt_without_writing_state(job, capsys):
+    args, inspection, state = job
+    stranded_attempt(args, IDLE_FAILURE)
+    before = (args.state_dir / "state.json").read_text()
+    assert batch.main([*cli_args(args), "--dry-run"]) == 0
+    assert '"Alpha"' in capsys.readouterr().out
+    assert (args.state_dir / "state.json").read_text() == before
+
+
+@pytest.mark.parametrize("events,text", [
+    ([], None),
+    (IDLE_FAILURE[:3], None),
+    ([*IDLE_FAILURE[:2], {"type": "item.started", "item": {"type": "command_execution"}},
+      IDLE_FAILURE[-1]], None),
+    ([*IDLE_FAILURE[:2], {"type": "item.completed", "item": {"type": "agent_message"}},
+      IDLE_FAILURE[-1]], None),
+    ([*IDLE_FAILURE[:2], {"type": "turn.completed"}, IDLE_FAILURE[-1]], None),
+    ([], json.dumps(IDLE_FAILURE[-1]) + "\n{truncated"),
+    ([], "[]\n" + json.dumps(IDLE_FAILURE[-1]) + "\n"),
+])
+def test_attempt_that_may_have_acted_still_blocks_retry(job, monkeypatch, events, text):
+    args, inspection, state = job
+    stranded_attempt(args, events, text)
+    monkeypatch.setattr(batch, "run_agent", lambda *a, **kw: pytest.fail("worker started"))
+    assert batch.main(cli_args(args)) == 1
+    assert batch.read_state(args.state_dir / "state.json")["books"]["Alpha"]["status"] == "running"
+
+
+@pytest.mark.parametrize("change", ["result", "operation", "missing-events", "no-attempt"])
+def test_idle_failure_with_other_signs_of_work_still_blocks_retry(job, monkeypatch, change):
+    args, inspection, state = job
+    attempt = stranded_attempt(args, IDLE_FAILURE)
+    saved = json.loads((args.state_dir / "state.json").read_text())
+    if change == "result":
+        (attempt / "result.json").write_text("{}")
+    elif change == "operation":
+        saved["books"]["Alpha"]["operation_id"] = "bib-operation-1"
+    elif change == "missing-events":
+        (attempt / "events.jsonl").unlink()
+    else:
+        del saved["books"]["Alpha"]["attempt"]
+    batch.write_json(args.state_dir / "state.json", saved)
+    monkeypatch.setattr(batch, "run_agent", lambda *a, **kw: pytest.fail("worker started"))
+    assert batch.main(cli_args(args)) == 1
+
+
 @pytest.mark.parametrize("failure", ["nonzero", "timeout"])
 def test_real_child_failure_stops_queue_and_retains_evidence(job, monkeypatch, failure):
     args, inspection, state = job

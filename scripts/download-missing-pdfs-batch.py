@@ -311,7 +311,55 @@ def validate_result(result, book, bib, attempt, inspection):
         raise ValueError("Saved attachment SHA-256 does not match reviewed bytes")
 
 
+# Events a worker emits when its turn fails before the model acts: the session
+# opens, the connection is retried and the turn fails. Any other event (a
+# message, a command, a tool call, a file change) means work may have begun.
+IDLE_EVENTS = {"thread.started", "turn.started", "error", "turn.failed"}
+
+
+def attempt_never_acted(record):
+    """Whether a running record's saved events prove its worker did nothing.
+
+    A worker that cannot reach the model exits nonzero without running a tool,
+    so no Ebib operation can be pending. Anything unreadable, unexpected or
+    absent leaves the record unfinished.
+    """
+    if record.get("operation_id") or not isinstance(record.get("attempt"), str):
+        return False
+    attempt = Path(record["attempt"])
+    if (attempt / "result.json").exists():
+        return False
+    try:
+        events = [json.loads(line) for line in (attempt / "events.jsonl").read_text().splitlines()]
+    except (OSError, ValueError):
+        return False
+    failed = False
+    for event in events:
+        if not isinstance(event, dict):
+            return False
+        kind = event.get("type")
+        if kind in {"item.started", "item.completed"}:
+            item = event.get("item")
+            if not isinstance(item, dict) or item.get("type") != "error":
+                return False
+        elif kind not in IDLE_EVENTS:
+            return False
+        failed = failed or kind == "turn.failed"
+    return failed
+
+
 def execute(args, inspection, state):
+    # A turn that failed before acting must not block every later batch. The
+    # released book returns to the front of the queue as unattempted.
+    released = [key for key, record in state["books"].items()
+                if record.get("status") == "running" and attempt_never_acted(record)]
+    for key in released:
+        del state["books"][key]
+    if released:
+        print("Released attempts that failed before the worker acted: " + ", ".join(released),
+              file=sys.stderr)
+        if not args.dry_run:
+            write_json(args.state_dir / "state.json", state)
     unfinished = [key for key, record in state["books"].items()
                   if record.get("status") == "running"
                   or (record.get("status") in {"error", "deferred"} and record.get("operation_id"))]
