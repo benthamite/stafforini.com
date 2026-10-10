@@ -7,6 +7,16 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PYTHON="$HOME/.local/share/paper-fetch/venv/bin/python"
 LOG="$SCRIPT_DIR/download-missing-pdfs-cron.log"
 
+# The launchd environment check runs this side-effect-free mode; it must not
+# write the run log or start a worker.
+if [[ "${1:-}" == --preflight ]]; then
+  if [[ ! -x "$PYTHON" ]]; then
+    echo "Dedicated paper-fetch runtime missing: $PYTHON" >&2
+    exit 1
+  fi
+  exec "$PYTHON" -B "$SCRIPT_DIR/download-missing-pdfs-batch.py" "$@"
+fi
+
 {
   echo "===== $(date '+%Y-%m-%d %H:%M:%S') ====="
 

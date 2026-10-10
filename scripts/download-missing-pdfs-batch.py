@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Run bounded, serial agent reviews for existing books missing their PDF."""
+"""Run bounded, serial agent reviews for existing books missing their PDF.
+
+Workers acquire, review and select a PDF, then stop at `staged`: they never
+touch the bibliography or Pablo's running Emacs. Emacs attaches staged PDFs
+itself (`ebib-extras-pdf-queue-drain' in dotfiles), pulling work from this
+job's state directory; this job never calls Emacs.
+"""
 
 from __future__ import annotations
 
@@ -8,7 +14,6 @@ import fcntl
 import hashlib
 import importlib.util
 import json
-import math
 import os
 from pathlib import Path
 import re
@@ -22,10 +27,11 @@ sys.dont_write_bytecode = True
 SCRIPT_DIR = Path(__file__).resolve().parent
 DEFAULT_STATE = Path.home() / ".local/state/download-missing-pdfs"
 DEFAULT_BIB = Path.home() / "My Drive/bibliography/old.bib"
-LIBRARY = Path.home() / "My Drive/library-pdf"
 CODEX = str(Path.home() / "My Drive/dotfiles/bin/codex-runtime")
 OP_SANDBOX_HELPER = Path.home() / "My Drive/dotfiles/bin/op_automations_sandbox.py"
-EMACS_EVAL = Path.home() / "My Drive/dotfiles/bin/emacs-eval"
+ACCOUNT_HOME = Path.home() / "My Drive/dotfiles/bin/agent-account-home"
+QUEUE_LIBRARY = Path.home() / "My Drive/dotfiles/lib/python/pdf_queue_state.py"
+IDENTITY_FIELDS = ("title", "edition", "date", "isbn", "language")
 
 
 def adapter():
@@ -36,19 +42,38 @@ def adapter():
     return module
 
 
+def queue_state():
+    """The ledger rules shared with the Emacs drain (dotfiles pdf_queue_state)."""
+    module = sys.modules.get("pdf_queue_state")
+    if module is None:
+        spec = importlib.util.spec_from_file_location("pdf_queue_state", QUEUE_LIBRARY)
+        if spec is None or spec.loader is None:
+            raise ValueError(f"Cannot load the PDF queue ledger library: {QUEUE_LIBRARY}")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        sys.modules["pdf_queue_state"] = module
+    return module
+
+
 def read_state(path):
     if not path.exists():
         return {"version": 1, "books": {}}
-    state = json.loads(path.read_text())
-    if not isinstance(state, dict) or state.get("version") != 1 or not isinstance(state.get("books"), dict):
-        raise ValueError(f"Invalid queue state: {path}")
-    for key, record in state["books"].items():
-        if (not isinstance(record, dict)
-                or not isinstance(record.get("last_attempt"), (int, float))
-                or not math.isfinite(record["last_attempt"])
-                or record.get("status") not in {"running", "attached", "deferred", "error"}):
-            raise ValueError(f"Invalid queue record: {key}")
-    return state
+    return queue_state().validate(json.loads(path.read_text()), str(path))
+
+
+def save_record(args, state, key, record):
+    """Write KEY's record (None deletes it) without touching other records.
+
+    The drain changes staged records concurrently, so the ledger is re-read
+    under its shared lock and only KEY changes. STATE is refreshed in place.
+    """
+    if record is None:
+        fresh = queue_state().update_record(args.state_dir, key, delete=True)
+    else:
+        fresh = queue_state().update_record(args.state_dir, key, record=record)
+    state["books"] = fresh["books"]
+    if record is not None:
+        state["books"][key] = record
 
 
 def write_json(path, value):
@@ -68,8 +93,15 @@ def write_json(path, value):
 
 
 def select_books(books, state, limit, only=""):
+    """Choose the least recently attempted books the drain does not own.
+
+    Staged, claimed (attaching) and attach-error records wait for Emacs or for
+    Pablo; acquiring them again would duplicate a reviewed PDF.
+    """
     records = state["books"]
-    selected = [book for book in books if not only or book["key"] == only]
+    owned = queue_state().DRAIN_OWNED
+    selected = [book for book in books if (not only or book["key"] == only)
+                and records.get(book["key"], {}).get("status") not in owned]
     return sorted(selected, key=lambda book: (
         records.get(book["key"], {}).get("last_attempt", 0), book["key"]))[:limit]
 
@@ -82,41 +114,26 @@ def agent_environment(environ=None):
             "CLAUDECODE", "CODEX_INTERNAL_ORIGINATOR_OVERRIDE",
         }:
             env.pop(name, None)
-    # A persisted selection can name a pool, not a physical account directory.
-    # Use the same configured routing as Emacs, which this job needs for Ebib.
+    # The persisted selection must name a plain account: pool routing needs
+    # the running Emacs, which an unattended job must not consult.
     home = Path(env.get("HOME", str(Path.home())))
     marker = home / ".codex-current-account"
     if not env.get("CODEX_HOME") and marker.exists():
         account = "".join(marker.read_text().split())
         if not re.fullmatch(r"[A-Za-z0-9_-]+", account):
             raise ValueError("Invalid Codex account selector")
-        expression = (
-            f"(let* ((selection {json.dumps(account)}) "
-            "(account (if (agent-account-pool-p 'codex selection) "
-            "(agent-account-route 'codex selection) selection))) "
-            "(agent-account-home 'codex account))")
         completed = subprocess.run(
-            [sys.executable, str(EMACS_EVAL), expression],
+            [sys.executable, str(ACCOUNT_HOME), "codex", account],
             capture_output=True, text=True, timeout=20, env=env)
         if completed.returncode:
-            # emacs-eval reports connection, timeout and Lisp errors as JSON
-            # on stdout. Retain that cause instead of collapsing every failure
-            # into an account-routing error that cannot be diagnosed later.
-            detail = completed.stdout.strip() or completed.stderr.strip() or "no diagnostic output"
+            detail = completed.stderr.strip() or completed.stdout.strip() or "no diagnostic output"
             raise ValueError(
-                f"Could not resolve Codex account through Emacs "
+                f"Could not resolve Codex account {account} "
                 f"(exit {completed.returncode}): {detail[:2000]}")
-        reply = json.loads(completed.stdout)
-        if (not isinstance(reply, dict) or reply.get("ok") is not True
-                or reply.get("truncated") is not False
-                or not isinstance(reply.get("result"), str)):
-            raise ValueError("Invalid Codex account response from Emacs")
-        # emacs-eval returns a printed Lisp string; paths use JSON-compatible
-        # quoting. Non-string replies (including nil) must fail closed.
-        selected_path = json.loads(reply["result"])
-        if not isinstance(selected_path, str) or not selected_path:
+        lines = completed.stdout.splitlines()
+        if len(lines) != 1 or not lines[0]:
             raise ValueError("Codex account has no configured home")
-        selected = Path(selected_path)
+        selected = Path(lines[0])
         if not selected.is_absolute() or not selected.is_dir():
             raise ValueError(f"Selected Codex account directory is missing: {selected}")
         env["CODEX_HOME"] = str(selected)
@@ -154,8 +171,8 @@ def run_agent(command, prompt, attempt, timeout, env):
         try:
             process.communicate(prompt, timeout=timeout)
         except BaseException as exc:
-            # Only this process group was created by this invocation. An Ebib
-            # operation may still be pending: the unfinished ledger blocks retry.
+            # Only this process group was created by this invocation. The
+            # running record stays unfinished and blocks retry until reconciled.
             try:
                 os.killpg(process.pid, signal.SIGTERM)
             except ProcessLookupError:
@@ -179,27 +196,6 @@ def run_agent(command, prompt, attempt, timeout, env):
         raise RuntimeError(f"Agent exited {process.returncode}; see {attempt / 'stderr.log'}")
 
 
-def verify_operation(operation_id, key, bib):
-    """Read the actual retained Ebib operation, independently of model output."""
-    operation = json.dumps(operation_id)
-    target = json.dumps(key)
-    bibliography = json.dumps(str(bib.resolve()))
-    expression = (
-        f"(let ((s (ebib-extras-operation-status-for-id {operation}))) "
-        f"(and (equal (plist-get s :key) {target}) "
-        f"(equal (file-truename (plist-get s :bibfile)) {bibliography}) "
-        "(eq (plist-get s :status) 'complete) "
-        "(zerop (plist-get s :pending)) (null (plist-get s :errors))))")
-    completed = subprocess.run([sys.executable, str(EMACS_EVAL), expression],
-                               capture_output=True, text=True, timeout=20)
-    if completed.returncode:
-        raise ValueError("Could not verify the retained Ebib operation")
-    actual = json.loads(completed.stdout)
-    if (not isinstance(actual, dict) or actual.get("ok") is not True
-            or actual.get("result") != "t" or actual.get("truncated") is not False):
-        raise ValueError("Ebib operation is not complete for this exact entry and bibliography")
-
-
 def artifact_path(value, attempt):
     if not isinstance(value, str) or not value:
         raise ValueError("Review artifact path is missing")
@@ -210,14 +206,23 @@ def artifact_path(value, attempt):
     return path
 
 
-def validate_review(result, attempt, inspection):
+def identity(book):
+    """The bibliographic identity a staged PDF was reviewed against.
+
+    The drain compares it with the entry before attaching, so an entry edited
+    in the meantime is not given a PDF reviewed for different metadata.
+    """
+    fields = {name: " ".join(str(book.get(name) or "").split()) for name in IDENTITY_FIELDS}
+    return {"key": book["key"], "type": "book", **fields}
+
+
+def validate_review(result, attempt, inspection, book):
     """Recheck retained byte-bound review structure, not semantic judgments."""
     evidence = json.loads(artifact_path(result["evidence"], attempt).read_text())
     if not isinstance(evidence, dict):
         raise ValueError("Review evidence must be a JSON object")
-    for name, expected in (("installed_file", result["file"]),
-                           ("installed_sha256", result["sha256"]),
-                           ("operation_id", result["operation_id"])):
+    for name, expected in (("staged_file", result["file"]),
+                           ("staged_sha256", result["sha256"])):
         if evidence.get(name) != expected:
             raise ValueError(f"Review evidence disagrees with result: {name}")
     inventory_path = artifact_path(evidence.get("inventory"), attempt)
@@ -229,7 +234,16 @@ def validate_review(result, attempt, inspection):
             or not isinstance(selection.get("selected"), dict)):
         raise ValueError("Saved book selection is not successful")
     selected = selection["selected"]
-    artifact_path(selected.get("file"), attempt)
+    original = artifact_path(selected.get("file"), attempt)
+    if original.resolve() == Path(result["file"]).resolve():
+        raise ValueError("Staged copy must be separate from the reviewed original")
+    if selected.get("sha256") != result["sha256"]:
+        raise ValueError("Staged copy is not byte-identical to the selected PDF")
+    if selection.get("identity") != identity(book):
+        raise ValueError("Saved selection identity does not match the entry it was reviewed for")
+    language = selection.get("language")
+    if not isinstance(language, str) or not re.fullmatch(r"[a-z][a-z-]*", language):
+        raise ValueError("Saved selection lacks the verified document language")
     library = inspection.paper_fetch
     try:
         inventory = library.read_book_candidates(inventory_path)
@@ -275,40 +289,34 @@ def outcome_status(result):
     return result["status"]
 
 
-def validate_result(result, book, bib, attempt, inspection):
+def validate_result(result, book, attempt, inspection):
     fields = {"status", "key", "reason", "file", "sha256", "operation_id", "evidence"}
     if (not isinstance(result, dict) or set(result) != fields
             or any(not isinstance(result[field], str) for field in fields)):
         raise ValueError("Agent result has invalid fields")
-    if result["key"] != book["key"] or result["status"] not in {"attached", "deferred", "error"}:
+    if result["key"] != book["key"] or result["status"] not in {"staged", "deferred", "error"}:
         raise ValueError("Agent result has wrong key or status")
     if not result["reason"].strip():
         raise ValueError("Agent result requires an explicit reason")
     evidence = Path(result["evidence"])
     if not evidence.is_absolute() or not evidence.resolve().is_relative_to(attempt.resolve()) or not evidence.is_file():
         raise ValueError("Agent evidence must be a real file inside this attempt")
-    if result["status"] != "attached":
+    if result["status"] != "staged":
         return
+    if result["operation_id"]:
+        raise ValueError("A staged result must not start an Ebib operation")
     pdf = Path(result["file"])
-    if not pdf.is_absolute() or pdf.suffix.lower() != ".pdf" or not pdf.is_file() or pdf.stat().st_size == 0:
-        raise ValueError("Attachment is not a nonempty absolute PDF path")
-    if not result["operation_id"].strip():
-        raise ValueError("Attached result lacks an Ebib operation ID")
-    validate_review(result, attempt, inspection)
-    verify_operation(result["operation_id"], book["key"], bib)
-    current = [entry for entry in inspection.parse_bib_books(bib) if entry["key"] == book["key"]]
-    if len(current) != 1:
-        raise ValueError("Cannot read back exactly one bibliography entry")
-    attached = inspection.extract_pdf_path(current[0]["file"])
-    if attached is None or attached.resolve() != pdf.resolve():
-        raise ValueError("Saved bibliography attachment does not match agent result")
+    if (not pdf.is_absolute() or pdf.suffix.lower() != ".pdf" or not pdf.is_file()
+            or pdf.stat().st_size == 0 or not pdf.resolve().is_relative_to(attempt.resolve())):
+        raise ValueError("Staged copy is not a nonempty PDF inside this attempt")
     with pdf.open("rb") as handle:
         if handle.read(5) != b"%PDF-":
-            raise ValueError("Attachment lacks a PDF header")
+            raise ValueError("Staged copy lacks a PDF header")
         handle.seek(0)
         digest = hashlib.file_digest(handle, "sha256").hexdigest()
     if digest != result["sha256"]:
-        raise ValueError("Saved attachment SHA-256 does not match reviewed bytes")
+        raise ValueError("Staged copy SHA-256 does not match the reported hash")
+    validate_review(result, attempt, inspection, book)
 
 
 # Events a worker emits when its turn fails before the model acts: the session
@@ -353,13 +361,14 @@ def execute(args, inspection, state):
     # released book returns to the front of the queue as unattempted.
     released = [key for key, record in state["books"].items()
                 if record.get("status") == "running" and attempt_never_acted(record)]
-    for key in released:
-        del state["books"][key]
     if released:
         print("Released attempts that failed before the worker acted: " + ", ".join(released),
               file=sys.stderr)
-        if not args.dry_run:
-            write_json(args.state_dir / "state.json", state)
+    for key in released:
+        if args.dry_run:
+            del state["books"][key]
+        else:
+            save_record(args, state, key, None)
     unfinished = [key for key, record in state["books"].items()
                   if record.get("status") == "running"
                   or (record.get("status") in {"error", "deferred"} and record.get("operation_id"))]
@@ -375,34 +384,59 @@ def execute(args, inspection, state):
     template = (SCRIPT_DIR / "download-missing-pdfs-task.md").read_text()
     for book in queue:
         attempt = Path(tempfile.mkdtemp(prefix="attempt-", dir=args.state_dir))
-        write_json(attempt / "input.json", {"book": book, "bibliography": str(args.bib), "attempt": str(attempt)})
+        write_json(attempt / "input.json", {"book": book, "identity": identity(book),
+                                            "bibliography": str(args.bib), "attempt": str(attempt)})
         record = {"last_attempt": time.time(), "status": "running", "attempt": str(attempt)}
-        state["books"][book["key"]] = record
-        write_json(args.state_dir / "state.json", state)
+        save_record(args, state, book["key"], record)
         prompt = template + "\n\nRead the exact job input at: " + str(attempt / "input.json") + "\n"
         (attempt / "prompt.md").write_text(prompt)
+        # The worker writes only its attempt directory: attachment, and with it
+        # every bibliography and library write, belongs to the Emacs drain.
         command = [CODEX, "exec", *permission_flags, "-c", 'approval_policy="never"',
                    "--skip-git-repo-check",
                    "--cd", str(attempt), "--add-dir", str(args.state_dir),
-                   "--add-dir", str(args.bib.parent), "--add-dir", str(LIBRARY),
                    "--json", "--output-schema", str(SCRIPT_DIR / "download-missing-pdfs-result.schema.json"),
                    "--output-last-message", str(attempt / "result.json"), "-"]
         run_agent(command, prompt, attempt, args.timeout, env)
         result = json.loads((attempt / "result.json").read_text())
-        validate_result(result, book, args.bib, attempt, inspection)
-        if result["status"] != "attached" and result["operation_id"]:
+        validate_result(result, book, attempt, inspection)
+        if result["operation_id"]:
             record.update(operation_id=result["operation_id"], reason=result["reason"])
-            write_json(args.state_dir / "state.json", state)
-            raise RuntimeError(f"Unfinished attachment operation for {book['key']}; reconcile {attempt}")
+            save_record(args, state, book["key"], record)
+            raise RuntimeError(f"Unexpected Ebib operation for {book['key']}; reconcile {attempt}")
         status = outcome_status(result)
         if status != result["status"]:
             record["worker_status"] = result["status"]
             result = {**result, "status": status, "worker_status": record["worker_status"]}
         record.update(status=status, reason=result["reason"], operation_id=result["operation_id"])
-        write_json(args.state_dir / "state.json", state)
+        save_record(args, state, book["key"], record)
         print(json.dumps(result), flush=True)
         if result["status"] == "error":
             return 1
+    return 0
+
+
+def preflight(args):
+    """Resolve everything a run needs without starting a worker or writing.
+
+    Imports the inventory and paper-fetch modules, reads the bibliography and
+    ledger, resolves the Codex account home and runtime, and composes the
+    worker's sandbox policy. Exit 0 when ready.
+    """
+    inspection = adapter()
+    books = inspection.books_missing_pdf(inspection.parse_bib_books(args.bib), include_broken=True)
+    state = read_state(args.state_dir / "state.json")
+    env = agent_environment()
+    if not os.access(CODEX, os.X_OK):
+        raise ValueError(f"Codex runtime is not executable: {CODEX}")
+    worker_permission_flags()
+    for name in ("download-missing-pdfs-task.md", "download-missing-pdfs-result.schema.json"):
+        if not (SCRIPT_DIR / name).is_file():
+            raise ValueError(f"Missing worker input: {SCRIPT_DIR / name}")
+    print(json.dumps({"ready": True, "missing_books": len(books),
+                      "eligible_books": len(select_books(books, state, len(books) or 1)),
+                      "codex_home": env.get("CODEX_HOME", ""),
+                      "python": sys.executable}))
     return 0
 
 
@@ -414,6 +448,8 @@ def main(argv=None):
     parser.add_argument("--only", default="")
     parser.add_argument("--timeout", type=float, default=1200)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--preflight", action="store_true",
+                        help="check the runtime without starting a worker or writing state")
     args = parser.parse_args(argv)
     if args.limit < 1 or args.timeout <= 0:
         parser.error("--limit and --timeout must be positive")
@@ -422,6 +458,8 @@ def main(argv=None):
     if args.state_dir.is_relative_to((Path.home() / "My Drive").resolve()):
         parser.error("--state-dir must be outside Google Drive")
     try:
+        if args.preflight:
+            return preflight(args)
         inspection = adapter()
         if args.dry_run:
             return execute(args, inspection, read_state(args.state_dir / "state.json"))

@@ -2,7 +2,7 @@
   "type": "object",
   "properties": {
     "key": {"type": "string"},
-    "status": {"type": "string", "enum": ["attached", "deferred", "error"]},
+    "status": {"type": "string", "enum": ["staged", "deferred", "error"]},
     "reason": {"type": "string"},
     "file": {"type": "string"},
     "sha256": {"type": "string"},
