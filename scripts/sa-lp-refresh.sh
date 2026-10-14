@@ -44,8 +44,45 @@ notify_failure() {
     >/dev/null 2>&1 || true
 }
 
+# The SA-LP and VARA refreshes each regenerate both public scripts, export
+# every note and commit both repos, so they must never overlap: on 2026-10-14
+# a delayed pair ran together and one export failed on the other's Emacs lock.
+# Both scripts take this lock, following acquire_public_tree_lock in common.sh.
+REFRESH_LOCK="${XDG_STATE_HOME:-$HOME/.local/state}/stafforini.com/model-refresh.lock"
+REFRESH_LOCK_HELD=0
+
+release_refresh_lock() {
+  rm -f "$REFRESH_LOCK/pid"
+  rmdir "$REFRESH_LOCK" 2>/dev/null || true
+}
+
+acquire_refresh_lock() {
+  mkdir -p "$(dirname "$REFRESH_LOCK")"
+  local pid announced=
+  while ! mkdir "$REFRESH_LOCK" 2>/dev/null; do
+    pid="$(cat "$REFRESH_LOCK/pid" 2>/dev/null || true)"
+    if [[ -n "$pid" ]] && ! kill -0 "$pid" 2>/dev/null; then
+      release_refresh_lock
+      continue
+    fi
+    if [[ "$pid" != "$announced" ]]; then
+      echo "[$(date '+%Y-%m-%d %H:%M:%S')] waiting for another SA-LP/VARA refresh (pid ${pid:-unknown}) to finish"
+      announced="$pid"
+    fi
+    sleep 5
+  done
+  if [[ -n "$announced" ]]; then
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] took the refresh lock"
+  fi
+  printf '%s\n' "$$" > "$REFRESH_LOCK/pid"
+  REFRESH_LOCK_HELD=1
+}
+
 on_exit() {
   local status="$?"
+  if [[ "$REFRESH_LOCK_HELD" -eq 1 ]]; then
+    release_refresh_lock
+  fi
   if [[ "$status" -ne 0 ]]; then
     notify_failure "$status"
   fi
@@ -53,9 +90,22 @@ on_exit() {
 
 trap on_exit EXIT
 
+acquire_refresh_lock
+
 # Fetch the MarketData token from the personal 1Password Automation vault.
-if ! MARKETDATA_KEY="$("$HOME/bin/op-automations" @personal read 'op://Automation/marketdata-token/credential')"; then
-  echo "Error: could not read marketdata-token from 1Password." >&2
+# The read is bounded and logged first: on 2026-10-14 it hung for about six
+# hours, with the network up, before the run printed anything.
+CREDENTIAL_TIMEOUT_SECONDS="${REFRESH_CREDENTIAL_TIMEOUT_SECONDS:-300}"
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] reading marketdata-token from 1Password"
+if MARKETDATA_KEY="$(timeout -k 10 "$CREDENTIAL_TIMEOUT_SECONDS" "$HOME/bin/op-automations" @personal read 'op://Automation/marketdata-token/credential')"; then
+  :
+else
+  read_status=$?
+  if [[ "$read_status" -eq 124 ]]; then
+    echo "Error: reading marketdata-token from 1Password timed out after ${CREDENTIAL_TIMEOUT_SECONDS}s." >&2
+  else
+    echo "Error: could not read marketdata-token from 1Password (exit ${read_status})." >&2
+  fi
   exit 1
 fi
 export MARKETDATA_KEY
