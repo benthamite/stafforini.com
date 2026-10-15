@@ -49,7 +49,8 @@ Precedents: `git log --oneline --grep='take down'`.
    code; the deploy can fail without publishing anything.
 9. **Verify** each slug:
    - `curl -sI https://stafforini.com/works/<slug>/` → 404
-   - `curl -sI "https://pdf.stafforini.com/<slug>.pdf?nocache=1"` and the
-     `.png` thumbnail → 404. Without the query string, Cloudflare's edge can
-     still serve 200 from cache; that needs no purge.
+   - `curl -sI "https://pdf.stafforini.com/<slug>.pdf?v=$(date +%s%N)"` and
+     the `.png` thumbnail → 404. Use a unique query string each time.
+     Cloudflare caches per URL, so a fixed `?nocache=1` that was requested
+     before the deploy still returns the cached 200. No purge is needed.
    - `npm test` passes.
