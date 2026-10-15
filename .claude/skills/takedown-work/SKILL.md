@@ -37,12 +37,17 @@ Precedents: `git log --oneline --grep='take down'`.
 6. **Commit** only those two files:
    `works: take down <CiteKey> at <who>'s request`. Leave unrelated dirty
    `data/*.json` files alone; the deploy regenerates them.
-7. **Run the full deploy:** `bash scripts/deploy.sh`, never `--quick` (quick
-   skips the export and R2 steps that do the removal). Before the deploy,
-   `npm test` fails `test_dev_site_smoke_check_passes` with "takedown-blocked
-   … still in source". That's expected: the deploy's export and
-   `process-pdfs.py` remove those files. After the deploy, the test must pass.
-8. **Verify** each slug:
+7. **Remove the local generated copies:** run
+   `python3 scripts/generate-work-pages.py` (deletes `content/works/<slug>.md`;
+   expect "Takedown pages removed: N"), then `python3 scripts/process-pdfs.py`
+   (deletes `static/pdfs/<slug>.pdf` and the thumbnail as stale). `deploy.sh`
+   does not run the work-page generator, and its note export runs
+   `verify-site.py`, which aborts the deploy while these files exist.
+   `python3 scripts/verify-site.py --build dev` must print OK before step 8.
+8. **Run the full deploy:** `bash scripts/deploy.sh`, never `--quick` (quick
+   skips the R2 step that deletes the PDF and thumbnail). Check the exit
+   code; the deploy can fail without publishing anything.
+9. **Verify** each slug:
    - `curl -sI https://stafforini.com/works/<slug>/` → 404
    - `curl -sI "https://pdf.stafforini.com/<slug>.pdf?nocache=1"` and the
      `.png` thumbnail → 404. Without the query string, Cloudflare's edge can
