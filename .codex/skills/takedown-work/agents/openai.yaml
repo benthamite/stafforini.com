@@ -1,0 +1,4 @@
+interface:
+  display_name: "Take Down Work"
+  short_description: "Remove a work page from stafforini.com on request"
+  default_prompt: "Use $takedown-work to take down the given stafforini.com work and list the decisions needed before acting."

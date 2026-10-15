@@ -62,6 +62,17 @@ commit/push/deploy are suppressed. A filing refresh must verify all three proxy
 modes and both generated standalone scripts. Filing-related date/link/citation
 changes do not qualify for the limited =--fast-note= deployment path.
 
+** takedown-work
+
+The project-local =takedown-work= skill removes a work from the site when an
+author, co-author or person named in it asks. It adds the cite key to
+=data/excluded-works.json=, removes redirects to the page, and runs a full
+deploy. It then checks that the page, PDF and thumbnail return 404, checking
+the PDF and thumbnail at the R2 origin. Bibliography entries and source PDFs
+stay untouched. Before asking for approval, it looks for sibling entries of
+the same work, such as a talk and its forum transcript. The skill is mirrored
+under both =.claude/skills/= and =.codex/skills/=.
+
 * Note Export
 :PROPERTIES:
 :ID:       526CD116-FDDA-4436-BDF6-35611338B920
