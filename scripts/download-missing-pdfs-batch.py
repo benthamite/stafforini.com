@@ -26,11 +26,11 @@ import time
 sys.dont_write_bytecode = True
 SCRIPT_DIR = Path(__file__).resolve().parent
 DEFAULT_STATE = Path.home() / ".local/state/download-missing-pdfs"
-DEFAULT_BIB = Path.home() / "My Drive/bibliography/old.bib"
-CODEX = str(Path.home() / "My Drive/dotfiles/bin/codex-runtime")
-OP_SANDBOX_HELPER = Path.home() / "My Drive/dotfiles/bin/op_automations_sandbox.py"
-ACCOUNT_HOME = Path.home() / "My Drive/dotfiles/bin/agent-account-home"
-QUEUE_LIBRARY = Path.home() / "My Drive/dotfiles/lib/python/pdf_queue_state.py"
+DEFAULT_BIB = Path.home() / "repos/bibliography/old.bib"
+CODEX = str(Path.home() / "repos/dotfiles/bin/codex-runtime")
+OP_SANDBOX_HELPER = Path.home() / "repos/dotfiles/bin/op_automations_sandbox.py"
+ACCOUNT_HOME = Path.home() / "repos/dotfiles/bin/agent-account-home"
+QUEUE_LIBRARY = Path.home() / "repos/dotfiles/lib/python/pdf_queue_state.py"
 IDENTITY_FIELDS = ("title", "edition", "date", "isbn", "language")
 
 

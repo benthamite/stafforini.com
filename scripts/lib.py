@@ -21,8 +21,8 @@ import tomllib
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
-BIBLIO_NOTES_DIR = Path.home() / "My Drive" / "bibliographic-notes"
-NOTES_DIR = Path.home() / "My Drive" / "notes"
+BIBLIO_NOTES_DIR = Path.home() / "repos" / "bibliographic-notes"
+NOTES_DIR = Path.home() / "repos" / "notes"
 
 ORGROAM_DB_PATH = Path(os.environ.get(
     "ORGROAM_DB",
@@ -39,9 +39,9 @@ ORG_EXPORT_EXCLUDED_TAGS = ("noexport", "ARCHIVE")
 # Individual scripts select subsets as needed.
 BIB_FILES = [
     # Personal bibliography: actively maintained entries
-    Path.home() / "My Drive/bibliography/new.bib",
+    Path.home() / "repos/bibliography/new.bib",
     # Personal bibliography: older/archival entries
-    Path.home() / "My Drive/bibliography/old.bib",
+    Path.home() / "repos/bibliography/old.bib",
     # Shared bibliography (babel-refs): entries still being edited
     Path.home() / "repos/babel-refs/bib/fluid.bib",
     # Shared bibliography (babel-refs): stable/finalized entries
@@ -49,7 +49,7 @@ BIB_FILES = [
     # Shared bibliography (babel-refs): database-sourced entries
     Path.home() / "repos/babel-refs/bib/db.bib",
     # Auto-generated entries from WordPress quote migration
-    Path.home() / "My Drive/bibliography/migration.bib",
+    Path.home() / "repos/bibliography/migration.bib",
 ]
 
 # BIB_FILES minus auto-generated migration entries. Most scripts want
@@ -445,7 +445,7 @@ def parse_bib_entries(
 
 # === Org file discovery ===
 
-# Subdirectories typically skipped when scanning ~/My Drive/notes/ for content.
+# Subdirectories typically skipped when scanning ~/repos/notes/ for content.
 NOTES_SKIP_DIRS = frozenset({"people", "claude-logs"})
 
 

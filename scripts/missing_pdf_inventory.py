@@ -20,7 +20,7 @@ __all__ = ["paper_fetch", "parse_bib_books", "books_missing_pdf", "extract_pdf_p
 sys.dont_write_bytecode = True
 
 _PAPER_FETCH_LIB = Path(
-    os.environ.get("DOTFILES_DIR", str(Path.home() / "My Drive" / "dotfiles"))
+    os.environ.get("DOTFILES_DIR", str(Path.home() / "repos" / "dotfiles"))
 ) / "lib" / "python" / "paper_fetch.py"
 _spec = importlib.util.spec_from_file_location("paper_fetch", _PAPER_FETCH_LIB)
 if _spec is None or _spec.loader is None:

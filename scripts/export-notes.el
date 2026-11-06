@@ -153,7 +153,7 @@ notes with custom URLs resolve to the real page."
   "Export all blog org files from notes to Hugo."
   (let* ((file-list-path (getenv "EXPORT_FILE_LIST"))
          (notes-dir (expand-file-name
-                     "~/My Drive/notes/"))
+                     "~/repos/notes/"))
          (exportable
           (if file-list-path
               ;; Batch wrapper passes the full exportable file list.

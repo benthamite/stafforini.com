@@ -10,7 +10,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 GENERATOR_PATH = ROOT / "scripts/generate-copycat-scripts.py"
-NOTES_DIR = Path.home() / "My Drive/notes/public"
+NOTES_DIR = Path.home() / "repos/notes/public"
 OUTPUT_DIR = ROOT / "static/code"
 
 spec = importlib.util.spec_from_file_location("copycat_script_generator", GENERATOR_PATH)

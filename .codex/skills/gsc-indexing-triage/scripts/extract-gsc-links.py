@@ -26,7 +26,7 @@ from pathlib import Path
 from typing import Any
 
 
-GMAIL = Path.home() / "My Drive/dotfiles/claude/bin/gmail.py"
+GMAIL = Path.home() / "repos/dotfiles/claude/bin/gmail.py"
 RAW_TIMEOUT = 30
 LINK_TIMEOUT = 20  # urllib blocking-operation timeout, not a total batch deadline.
 MAX_RAW_BYTES = 32 * 1024 * 1024

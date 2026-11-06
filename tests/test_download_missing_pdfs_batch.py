@@ -390,7 +390,7 @@ def test_worker_uses_runtime_and_named_policy_without_legacy_override(job, monke
     monkeypatch.setattr(batch, "run_agent", worker)
     assert batch.execute(args, inspection, state) == 0
     command = commands[0]
-    assert command[0] == str(Path.home() / "My Drive/dotfiles/bin/codex-runtime")
+    assert command[0] == str(Path.home() / "repos/dotfiles/bin/codex-runtime")
     assert 'default_permissions="pdf_acquisition"' in command
     assert "--sandbox" not in command
     assert not any("sandbox_workspace_write" in part for part in command)
@@ -581,7 +581,7 @@ def test_overlapping_drain_update_survives_batch_writes(job, monkeypatch):
         # The Emacs drain claims and finishes its own record while a worker runs.
         for change in ({"status": "attaching"}, {"status": "attached", "file": "/library/zeta.pdf"}):
             completed = subprocess.run(
-                [sys.executable, str(Path.home() / "My Drive/dotfiles/bin/pdf-queue-lock"),
+                [sys.executable, str(Path.home() / "repos/dotfiles/bin/pdf-queue-lock"),
                  "--state-dir", str(args.state_dir), "merge", "Zeta", json.dumps(change)],
                 capture_output=True, text=True, timeout=60)
             assert completed.returncode == 0, completed.stderr

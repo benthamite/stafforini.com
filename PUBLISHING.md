@@ -44,8 +44,8 @@ hugo server --buildDrafts --navigateToChanged
 
 | Content type | Source directory                                                                 | Hugo section      |
 |--------------|----------------------------------------------------------------------------------|-------------------|
-| Notes        | `~/My Drive/notes/*.org`                                     | `content/notes/`  |
-| Quotes       | `~/My Drive/bibliographic-notes/*.org` (`:public:` subtrees) | `content/quotes/` |
+| Notes        | `~/repos/notes/*.org`                                     | `content/notes/`  |
+| Quotes       | `~/repos/bibliographic-notes/*.org` (`:public:` subtrees) | `content/quotes/` |
 | Works        | `.bib` files (see SPEC.md for paths)                                             | `content/works/`  |
 
 ## Pipeline overview

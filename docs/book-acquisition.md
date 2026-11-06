@@ -9,9 +9,9 @@ whose PDF is missing or broken, and to read attachments back.
 For manual work, use dotfiles `bin/paper-fetch` for the complete candidate
 workflow: `book-candidates`, `book-stage`, `book-inspect`, and `book-select`.
 Its maintained command and manifest contract is in
-`~/My Drive/dotfiles/docs/book-acquisition.md`. Bibliographic and attachment
+`~/repos/dotfiles/docs/book-acquisition.md`. Bibliographic and attachment
 decisions belong to the single shared policy at
-`~/My Drive/dotfiles/agents/bibliography-policy.md`. Search observations,
+`~/repos/dotfiles/agents/bibliography-policy.md`. Search observations,
 filenames, scan flags and reported sizes do not approve a file. A selected file
 goes through Zotra/Ebib for attachment and bibliography persistence; a
 successful selection is not an attached file, a published PDF, or proof that

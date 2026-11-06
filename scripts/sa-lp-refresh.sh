@@ -29,11 +29,11 @@ esac
 # launchd runs with a minimal PATH; make sure Homebrew + pyenv are findable.
 export PATH="/opt/homebrew/bin:$HOME/.pyenv/shims:$PATH"
 
-ORG_FILE="$HOME/My Drive/notes/public/situational-awareness-lp.org"
-NOTES_REPO="$HOME/My Drive/notes"
+ORG_FILE="$HOME/repos/notes/public/situational-awareness-lp.org"
+NOTES_REPO="$HOME/repos/notes"
 STAFFORINI_REPO="$HOME/repos/stafforini.com"
 NOTES_ORG_PATH="public/situational-awareness-lp.org"
-DEPENDENCY_ORG_FILE="$HOME/My Drive/notes/public/value-aligned-research-advisors.org"
+DEPENDENCY_ORG_FILE="$HOME/repos/notes/public/value-aligned-research-advisors.org"
 DEPENDENCY_ORG_PATH="public/value-aligned-research-advisors.org"
 LOG_PATH="$HOME/.cache/sa-lp-refresh.log"
 

@@ -450,9 +450,9 @@ so that transcluded content is included in the export."
   ;; Use a temp file for the ID locations database (avoid polluting the user's real one)
   (setq org-id-locations-file (expand-file-name "/tmp/org-id-locations-batch-export"))
 
-  (let ((notes-dir (expand-file-name "~/My Drive/notes/"))
-        (people-dir (expand-file-name "~/My Drive/people/"))
-        (bib-dir   (expand-file-name "~/My Drive/bibliographic-notes/")))
+  (let ((notes-dir (expand-file-name "~/repos/notes/"))
+        (people-dir (expand-file-name "~/repos/people/"))
+        (bib-dir   (expand-file-name "~/repos/bibliographic-notes/")))
     ;; SILENT: otherwise this prints one progress line per file (10k+ lines),
     ;; which swamps export logs and any batch check that loads this file.
     (org-id-update-id-locations

@@ -7,7 +7,7 @@ or via stdin (one ``old<TAB>new`` per line). The script:
 
   1. Renames every ``@<type>{old,`` to ``@<type>{new,`` across the bib
      files and updates ``crossref = {old}`` → ``crossref = {new}``.
-  2. Renames the matching ``~/My Drive/bibliographic-notes/<old>.org``
+  2. Renames the matching ``~/repos/bibliographic-notes/<old>.org``
      file to ``<new>.org`` and replaces every ``[cite:@old]`` and
      ``Custom_ID: old`` inside it.
   3. Updates ``:work "<old-slug>"`` properties in the org file.
@@ -32,15 +32,15 @@ sys.path.insert(0, str(REPO / "scripts"))
 from lib import cite_key_to_slug  # noqa: E402
 
 BIB_FILES = [
-    Path.home() / "My Drive/bibliography/new.bib",
-    Path.home() / "My Drive/bibliography/old.bib",
-    Path.home() / "My Drive/bibliography/migration.bib",
+    Path.home() / "repos/bibliography/new.bib",
+    Path.home() / "repos/bibliography/old.bib",
+    Path.home() / "repos/bibliography/migration.bib",
     Path.home() / "repos/babel-refs/bib/fluid.bib",
     Path.home() / "repos/babel-refs/bib/stable.bib",
     Path.home() / "repos/babel-refs/bib/db.bib",
 ]
-BIBNOTES = Path.home() / "My Drive/bibliographic-notes"
-NOTES = Path.home() / "My Drive/notes"
+BIBNOTES = Path.home() / "repos/bibliographic-notes"
+NOTES = Path.home() / "repos/notes"
 REDIRECTS = REPO / "static/_redirects"
 QUOTES = REPO / "content/quotes"
 
@@ -256,7 +256,7 @@ def apply_rename(old: str, new: str) -> dict:
         new_org.write_text(new_text, encoding="utf-8")
         stats["org_changes"] = n
 
-    # ~/My Drive/notes/**/*.org — replace citation references anywhere in the
+    # ~/repos/notes/**/*.org — replace citation references anywhere in the
     # user's note tree. Skip the claude-logs/ directory (transcripts).
     if NOTES.exists():
         for org in NOTES.rglob("*.org"):

@@ -7,7 +7,7 @@ Migrating ~1,643 quotes from the WordPress blog (stafforini.com/quotes, aka "not
 ## Architecture
 
 - **Source**: WordPress WXR XML export (`~/Downloads/notatudignum.WordPress.2026-02-15.xml`)
-- **Target**: Org-roam bibliographic notes (`~/My Drive/bibliographic-notes/`)
+- **Target**: Org-roam bibliographic notes (`~/repos/bibliographic-notes/`)
 - **Publication**: Hugo static site via ox-hugo export of `:public:`-tagged subheadings
 - **Citations**: Org-cite with CSL, referencing biblatex entries
 
@@ -15,8 +15,8 @@ Migrating ~1,643 quotes from the WordPress blog (stafforini.com/quotes, aka "not
 
 Five `.bib` files are used for matching:
 
-1. `~/My Drive/bibliography/new.bib` (493 entries)
-2. `~/My Drive/bibliography/old.bib` (14,454 entries)
+1. `~/repos/bibliography/new.bib` (493 entries)
+2. `~/repos/bibliography/old.bib` (14,454 entries)
 3. `~/repos/babel-refs/bib/fluid.bib` (158 entries)
 4. `~/repos/babel-refs/bib/stable.bib` (6,195 entries)
 5. `~/repos/babel-refs/bib/db.bib` (2,112 entries)
@@ -88,7 +88,7 @@ All 154 weak matches were reviewed: 44 confirmed correct, 97 confirmed no-match,
 ### Phase 3: Create missing bib entries — DONE
 
 **Script**: `scripts/create-bib-entries.py`
-**Output**: `~/My Drive/bibliography/migration.bib` (644 entries)
+**Output**: `~/repos/bibliography/migration.bib` (644 entries)
 
 Five-tier lookup strategy for 644 unique works (727 unmatched quotes):
 
@@ -127,7 +127,7 @@ Five-tier lookup strategy for 644 unique works (727 unmatched quotes):
 ### Phase 4: Write quotes to org files — DONE
 
 **Script**: `scripts/write-quotes-to-org.py`
-**Output**: 1,324 org files in `~/My Drive/bibliographic-notes/`
+**Output**: 1,324 org files in `~/repos/bibliographic-notes/`
 
 For each of the 1,643 quotes:
 1. Determined cite key (matched: from bib_match, unmatched: from new_cite_key)
@@ -229,7 +229,7 @@ WP tags should eventually link to corresponding org notes (e.g., "emacs" tag →
 Migrating ~119 blog posts from individual org files (originally extracted from
 a monolithic `pablos-miscellany.org`) into Hugo notes via ox-hugo.
 
-**Source**: `~/My Drive/notes/*.org`
+**Source**: `~/repos/notes/*.org`
 **Target**: `content/notes/*.md` in the Hugo site
 
 ## Architecture

@@ -30,7 +30,7 @@ import sys
 import unicodedata
 from pathlib import Path
 
-BIB_DIR = Path("/Users/pablostafforini/My Drive/bibliography")
+BIB_DIR = Path("/Users/pablostafforini/repos/bibliography")
 
 # Phrases that only appear when a summariser was asked to summarise nothing.
 # Matching is on a normalised copy, so LaTeX escapes and zero-width characters

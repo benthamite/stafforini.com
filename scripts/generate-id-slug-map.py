@@ -3,7 +3,7 @@
 
 Covers two sources of published notes:
 
-1. Published notes under ~/My Drive/notes/ — slug = EXPORT_FILE_NAME value.
+1. Published notes under ~/repos/notes/ — slug = EXPORT_FILE_NAME value.
    Discovered by querying the org-roam SQLite database for all nodes whose
    files live under the notes directory, then reading each unique file to
    check for :EXPORT_FILE_NAME:. Sub-heading IDs map to their nearest exported
@@ -116,7 +116,7 @@ def scan_published_notes() -> tuple[dict[str, str], dict[str, str]]:
 def scan_notes_filesystem() -> tuple[dict[str, str], dict[str, str]]:
     """Direct filesystem scan for published notes not tracked by org-roam.
 
-    Recursively scans ~/My Drive/notes/ for .org files with EXPORT_FILE_NAME,
+    Recursively scans ~/repos/notes/ for .org files with EXPORT_FILE_NAME,
     maps each :ID: property to its owning exported subtree.
 
     Returns (slug_map, url_overrides), matching scan_published_notes.

@@ -53,7 +53,7 @@ hand back work that is both authorized and feasible.
 ## Gather alerts and browser evidence
 
 Use the local service/account routing in
-`/Users/pablostafforini/My Drive/dotfiles/claude/context/service-access.md` and
+`/Users/pablostafforini/repos/dotfiles/claude/context/service-access.md` and
 `google-services.md`. Before credential handling read `secrets.md`; do not
 repair auth, switch accounts, install tools or request new grants as an implicit
 part of triage. Existing read access failing is an evidence gap, not an empty
@@ -63,7 +63,7 @@ For requested inbox triage, this is a bounded starting query, not a complete
 mailbox inventory:
 
 ```bash
-python3 "/Users/pablostafforini/My Drive/dotfiles/claude/bin/gmail.py" query \
+python3 "/Users/pablostafforini/repos/dotfiles/claude/bin/gmail.py" query \
   'from:(sc-noreply@google.com) ("Page indexing" OR "Search Console") newer_than:45d' \
   --account personal --max 20
 ```
@@ -75,7 +75,7 @@ coverage limits. A zero-result query does not establish that GSC has no issues.
 Prioritize recent failures but inspect each message for the correct property.
 
 ```bash
-python3 "/Users/pablostafforini/My Drive/dotfiles/claude/bin/gmail.py" get MESSAGE_ID --account personal
+python3 "/Users/pablostafforini/repos/dotfiles/claude/bin/gmail.py" get MESSAGE_ID --account personal
 python3 "$skill_dir/scripts/extract-gsc-links.py" --account personal --json MESSAGE_ID
 ```
 
@@ -133,9 +133,9 @@ For relevant examples, compare intended behavior with present evidence:
 
 Only for authorized fixes, change the owning source and relevant generator:
 
-- Notes: `/Users/pablostafforini/My Drive/notes/*.org`, then
+- Notes: `/Users/pablostafforini/repos/notes/*.org`, then
   `bash scripts/export-notes.sh` from the site repo.
-- Quotes: `/Users/pablostafforini/My Drive/bibliographic-notes/*.org`, then
+- Quotes: `/Users/pablostafforini/repos/bibliographic-notes/*.org`, then
   `bash scripts/export-quotes.sh`. Follow applicable Org-note conventions.
 - Works: the actual `.bib` source, then
   `python3 scripts/generate-work-pages.py`; inspect its dry-run and required

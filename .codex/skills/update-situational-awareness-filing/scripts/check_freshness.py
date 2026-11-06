@@ -16,7 +16,7 @@ import sys
 
 
 DEFAULT_NOTE = Path(
-    "/Users/pablostafforini/My Drive/notes/public/situational-awareness-lp.org"
+    "/Users/pablostafforini/repos/notes/public/situational-awareness-lp.org"
 )
 DEFAULT_SITE = Path("/Users/pablostafforini/repos/stafforini.com")
 QUARTER = r"Q[1-4]_[0-9]{4}"

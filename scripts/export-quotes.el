@@ -67,7 +67,7 @@
 (defun export-quotes-batch ()
   "Export all :public:-tagged subheadings from bibliographic notes."
   (let* ((file-list-path (getenv "EXPORT_FILE_LIST"))
-         (notes-dir (expand-file-name "~/My Drive/bibliographic-notes/"))
+         (notes-dir (expand-file-name "~/repos/bibliographic-notes/"))
          (public-files
           (if file-list-path
               ;; Batch wrapper passes the full exportable file list.

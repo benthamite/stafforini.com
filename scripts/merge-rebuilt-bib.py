@@ -3,9 +3,9 @@
 cite keys from migration.bib.
 
 Workflow:
-  1. Read every entry from ~/My Drive/bibliography/migration-rebuilt.bib.
+  1. Read every entry from ~/repos/bibliography/migration-rebuilt.bib.
   2. For each entry, ensure the same cite key isn't already present in
-     ~/My Drive/bibliography/new.bib (avoid silent collisions).
+     ~/repos/bibliography/new.bib (avoid silent collisions).
   3. Append the rebuilt entry to new.bib.
   4. Remove the same key from migration.bib (skip silently if absent —
      manual additions like Borges1949Teologos won't be in migration.bib).
@@ -18,9 +18,9 @@ import shutil
 import sys
 from pathlib import Path
 
-REBUILT = Path.home() / "My Drive/bibliography/migration-rebuilt.bib"
-NEW = Path.home() / "My Drive/bibliography/new.bib"
-MIGRATION = Path.home() / "My Drive/bibliography/migration.bib"
+REBUILT = Path.home() / "repos/bibliography/migration-rebuilt.bib"
+NEW = Path.home() / "repos/bibliography/new.bib"
+MIGRATION = Path.home() / "repos/bibliography/migration.bib"
 
 KEY_RE = re.compile(r"^@(\w+)\s*\{\s*([^,\s]+)\s*,", re.MULTILINE)
 ENTRY_SPLIT_RE = re.compile(r"(?=^@\w+\s*\{)", re.MULTILINE)

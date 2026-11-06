@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Extract non-diary blockquotes from org files and write Hugo markdown.
 
-Parses all org files in ~/My Drive/bibliographic-notes/, finds blockquotes
+Parses all org files in ~/repos/bibliographic-notes/, finds blockquotes
 that are NOT already exported as diary quotes (i.e. their enclosing heading
 lacks :EXPORT_FILE_NAME:), and generates markdown files in content/quotes/.
 

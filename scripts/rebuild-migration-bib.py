@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Rebuild migration.bib entries from the original WordPress export.
 
-The auto-generated entries in ``~/My Drive/bibliography/migration.bib`` were
+The auto-generated entries in ``~/repos/bibliography/migration.bib`` were
 populated by an earlier OCLC-based lookup that often returned the wrong
 record. The original WordPress quotes export (preserved at
 ``scripts/wp-quotes-matched.json``) carries the authoritative attribution
@@ -15,7 +15,7 @@ that are merely sparse but plausibly correct are preserved, since they
 often carry later enrichment (URL, ISBN, file path) that we don't want to
 discard.
 
-Output is staged to ``~/My Drive/bibliography/migration-rebuilt.bib`` and a
+Output is staged to ``~/repos/bibliography/migration-rebuilt.bib`` and a
 side-by-side report is written to ``scripts/migration-rebuild-report.txt``
 so the diff can be reviewed before anything is moved into ``new.bib``.
 """
@@ -32,8 +32,8 @@ from lib import BIB_FILES, cite_key_to_slug  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 WP_MATCHED = REPO_ROOT / "scripts" / "wp-quotes-matched.json"
-MIGRATION_BIB = Path.home() / "My Drive/bibliography/migration.bib"
-STAGED_BIB = Path.home() / "My Drive/bibliography/migration-rebuilt.bib"
+MIGRATION_BIB = Path.home() / "repos/bibliography/migration.bib"
+STAGED_BIB = Path.home() / "repos/bibliography/migration-rebuilt.bib"
 REPORT = REPO_ROOT / "scripts" / "migration-rebuild-report.txt"
 
 BIB_KEY_RE = re.compile(r"^@(\w+)\s*\{\s*([^,\s]+)\s*,", re.MULTILINE)

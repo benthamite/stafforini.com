@@ -97,8 +97,8 @@ All source content is authored in org-mode files and exported to Hugo-compatible
 
 The `.bib` files are
 
-"~/My Drive/bibliography/new.bib"
-"~/My Drive/bibliography/old.bib"
+"~/repos/bibliography/new.bib"
+"~/repos/bibliography/old.bib"
 "~/repos/babel-refs/bib/fluid.bib"
 "~/repos/babel-refs/bib/stable.bib"
 

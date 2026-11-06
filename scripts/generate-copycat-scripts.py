@@ -11,7 +11,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_NOTES_DIR = Path.home() / "My Drive" / "notes" / "public"
+DEFAULT_NOTES_DIR = Path.home() / "repos" / "notes" / "public"
 COMMANDS = (
     "data",
     "performance",
@@ -57,7 +57,7 @@ PROFILES = (
         comparison_label="AIS",
         option_cache_literal=(
             "OPTION_CACHE_DIR = os.path.expanduser("
-            "'~/My Drive/notes/.sa-lp-option-cache')"
+            "'~/repos/notes/.sa-lp-option-cache')"
         ),
     ),
     Profile(
@@ -68,7 +68,7 @@ PROFILES = (
         comparison_label="SALP",
         option_cache_literal=(
             "OPTION_CACHE_DIR = os.path.expanduser("
-            "'~/My Drive/notes/.value-aligned-research-advisors-option-cache')"
+            "'~/repos/notes/.value-aligned-research-advisors-option-cache')"
         ),
     ),
 )

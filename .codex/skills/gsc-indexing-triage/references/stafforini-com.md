@@ -3,11 +3,11 @@
 ## Maintained locations
 
 - Site: `/Users/pablostafforini/repos/stafforini.com`.
-- Notes: `/Users/pablostafforini/My Drive/notes`.
-- Quotes: `/Users/pablostafforini/My Drive/bibliographic-notes`.
+- Notes: `/Users/pablostafforini/repos/notes`.
+- Quotes: `/Users/pablostafforini/repos/bibliographic-notes`.
 - Bibliographies: resolve `scripts/lib.py:BIB_FILES`; don't infer paths from
   old repository layouts. Some are in shared `babel-refs`.
-- Service routing: `/Users/pablostafforini/My Drive/dotfiles/claude/context/service-access.md`
+- Service routing: `/Users/pablostafforini/repos/dotfiles/claude/context/service-access.md`
   and `google-services.md`. Gmail uses the local `gmail.py --account personal`.
 - Run history: `logs/gsc-indexing.md`, relative to the site. Read as dated
   evidence; append only for requested logging/closeout.
