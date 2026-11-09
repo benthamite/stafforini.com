@@ -172,7 +172,7 @@ def run_agent(command, prompt, attempt, timeout, env):
             process.communicate(prompt, timeout=timeout)
         except BaseException as exc:
             # Only this process group was created by this invocation. The
-            # running record stays unfinished and blocks retry until reconciled.
+            # caller records the book as an error; its attempt is retained.
             try:
                 os.killpg(process.pid, signal.SIGTERM)
             except ProcessLookupError:
@@ -190,7 +190,7 @@ def run_agent(command, prompt, attempt, timeout, env):
                 pass
             process.wait()
             if isinstance(exc, subprocess.TimeoutExpired):
-                raise RuntimeError(f"Agent timed out after {timeout}s; reconcile pending Ebib operation") from exc
+                raise RuntimeError(f"Agent timed out after {timeout}s") from exc
             raise
     if process.returncode:
         raise RuntimeError(f"Agent exited {process.returncode}; see {attempt / 'stderr.log'}")
@@ -369,6 +369,24 @@ def execute(args, inspection, state):
             del state["books"][key]
         else:
             save_record(args, state, key, None)
+    # Any other running record without an operation is an attempt whose batch
+    # ended without a result (a timeout, a crash, a killed batch). The batch
+    # lock proves no worker still owns it, and workers only write their attempt
+    # directory, so no Ebib operation can be pending: record the attempt as a
+    # per-book error (it rotates to the back of the queue) and go on. A record
+    # that names an operation still blocks until reconciled.
+    interrupted = [key for key, record in state["books"].items()
+                   if record.get("status") == "running" and not record.get("operation_id")]
+    if interrupted:
+        print("Recorded interrupted attempts as errors: " + ", ".join(interrupted),
+              file=sys.stderr)
+    for key in interrupted:
+        record = {**state["books"][key], "status": "error",
+                  "reason": "Attempt ended without a worker result; attempt directory retained"}
+        if args.dry_run:
+            state["books"][key] = record
+        else:
+            save_record(args, state, key, record)
     unfinished = [key for key, record in state["books"].items()
                   if record.get("status") == "running"
                   or (record.get("status") in {"error", "deferred"} and record.get("operation_id"))]
@@ -397,9 +415,22 @@ def execute(args, inspection, state):
                    "--cd", str(attempt), "--add-dir", str(args.state_dir),
                    "--json", "--output-schema", str(SCRIPT_DIR / "download-missing-pdfs-result.schema.json"),
                    "--output-last-message", str(attempt / "result.json"), "-"]
-        run_agent(command, prompt, attempt, args.timeout, env)
-        result = json.loads((attempt / "result.json").read_text())
-        validate_result(result, book, attempt, inspection)
+        result = None
+        try:
+            run_agent(command, prompt, attempt, args.timeout, env)
+            result = json.loads((attempt / "result.json").read_text())
+            validate_result(result, book, attempt, inspection)
+        except Exception as exc:
+            # The worker failed or its output is unusable: a per-book error
+            # that must not block later batches, while this run still fails
+            # visibly. A result that claims an operation keeps blocking.
+            operation = result.get("operation_id") if isinstance(result, dict) else None
+            if operation:
+                record.update(operation_id=str(operation), reason=f"Invalid result: {exc}"[:2000])
+            else:
+                record.update(status="error", reason=f"Worker failed: {exc}"[:2000])
+            save_record(args, state, book["key"], record)
+            raise
         if result["operation_id"]:
             record.update(operation_id=result["operation_id"], reason=result["reason"])
             save_record(args, state, book["key"], record)
