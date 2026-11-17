@@ -16,8 +16,10 @@
     "0001963565-25-000005",
     "0001963565-26-000002",
     "0001963565-26-000003",
-    "0001963565-26-000005"
+    "0001963565-26-000005",
+    "0001963565-26-000006"
   ],
-  "last_notified": "2026-08-21T23:19:01+00:00",
-  "_comment": "Auto-updated by scripts/sa-lp-13f-check.py after private notification. Seeded 2026-08-21 with all historical VARA 13F accessions."
+  "last_notified": "2026-11-17T02:24:24+00:00",
+  "_comment": "Auto-updated by scripts/sa-lp-13f-check.py after private notification. Seeded 2026-08-21 with all historical VARA 13F accessions.",
+  "pending": {}
 }
