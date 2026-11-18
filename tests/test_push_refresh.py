@@ -21,7 +21,6 @@ SPEC.loader.exec_module(push_refresh)
     ("fatal: unable to access 'https://example.invalid/': Failed to connect to example.invalid port 443", 3),
     ("fatal: unable to access 'https://example.invalid/': The requested URL returned error: 403", 0),
     ("fatal: Authentication failed for 'https://example.invalid/'", 0),
-    (" ! [rejected] main -> main (non-fast-forward)", 0),
     ("fatal: not a git repository", 0),
 ])
 def test_retry_policy(monkeypatch, diagnostic, retries):
@@ -108,6 +107,84 @@ def test_real_http_push_recovers_after_unavailable_response(tmp_path, monkeypatc
         server.shutdown()
         thread.join()
         server.server_close()
+
+
+def make_repos(tmp_path):
+    """A bare remote, a clone holding a refresh commit, and a second writer."""
+    env = dict(os.environ, GIT_CONFIG_GLOBAL=os.devnull, GIT_CONFIG_NOSYSTEM="1")
+
+    def git(*args):
+        return subprocess.check_output(["git", *map(str, args)], env=env, stderr=subprocess.PIPE).strip()
+
+    remote = tmp_path / "remote.git"
+    git("init", "--bare", "-b", "main", remote)
+    clones = []
+    for name in ("local", "bot"):
+        clone = tmp_path / name
+        if not clones:
+            git("init", "-b", "main", clone)
+        else:
+            git("clone", remote, clone)
+        git("-C", clone, "config", "user.name", "Fixture")
+        git("-C", clone, "config", "user.email", "fixture@example.invalid")
+        git("-C", clone, "config", "core.hooksPath", os.devnull)
+        if not clones:
+            (clone / "shared.txt").write_text("base\n")
+            git("-C", clone, "add", "shared.txt")
+            git("-C", clone, "commit", "-m", "Base")
+            git("-C", clone, "remote", "add", "origin", remote)
+            git("-C", clone, "push", "-u", "origin", "main")
+        clones.append(clone)
+    return env, git, remote, *clones
+
+
+def commit(git, repo, name, text, message):
+    (repo / name).write_text(text)
+    git("-C", repo, "add", name)
+    git("-C", repo, "commit", "-m", message)
+
+
+def test_rejected_push_rebases_onto_concurrent_writer(tmp_path, monkeypatch):
+    env, git, remote, local, bot = make_repos(tmp_path)
+    commit(git, bot, "filing.json", "new filing\n", "filings: record new filing")
+    git("-C", bot, "push")
+    commit(git, local, "refresh.txt", "refreshed\n", "Refresh")
+    (local / "shared.txt").write_text("uncommitted generated data\n")
+    for key in ("GIT_CONFIG_GLOBAL", "GIT_CONFIG_NOSYSTEM"):
+        monkeypatch.setenv(key, env[key])
+    assert push_refresh.push_refresh(local) == 0
+    assert git("-C", remote, "rev-parse", "main") == git("-C", local, "rev-parse", "HEAD")
+    assert git("-C", remote, "log", "--format=%s", "main").split(b"\n") == [
+        b"Refresh", b"filings: record new filing", b"Base"]
+    assert (local / "shared.txt").read_text() == "uncommitted generated data\n"
+
+
+def test_conflicting_rebase_is_aborted_and_fails(tmp_path, monkeypatch):
+    env, git, remote, local, bot = make_repos(tmp_path)
+    commit(git, bot, "shared.txt", "bot\n", "Bot edit")
+    git("-C", bot, "push")
+    commit(git, local, "shared.txt", "refresh\n", "Refresh")
+    head = git("-C", local, "rev-parse", "HEAD")
+    for key in ("GIT_CONFIG_GLOBAL", "GIT_CONFIG_NOSYSTEM"):
+        monkeypatch.setenv(key, env[key])
+    assert push_refresh.push_refresh(local) != 0
+    assert git("-C", local, "rev-parse", "HEAD") == head
+    assert not (local / ".git" / "rebase-merge").exists()
+    assert git("-C", remote, "log", "-1", "--format=%s", "main") == b"Bot edit"
+
+
+def test_second_rejection_is_not_rebased_again(monkeypatch):
+    calls = []
+    rejected = " ! [rejected]        main -> main (fetch first)\n"
+
+    def run(command, **kwargs):
+        calls.append(command[3:])
+        code = 0 if command[3] == "pull" else 1
+        return subprocess.CompletedProcess(command, code, "", "" if code == 0 else rejected)
+
+    monkeypatch.setattr(push_refresh.subprocess, "run", run)
+    assert push_refresh.push_refresh("/fixture") == 1
+    assert calls == [["push"], ["pull", "--rebase", "--autostash"], ["push"]]
 
 
 @pytest.mark.parametrize("name", ["sa-lp-refresh", "vara-refresh"])
