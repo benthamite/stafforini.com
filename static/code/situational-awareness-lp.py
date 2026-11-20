@@ -55,7 +55,8 @@ def _load_data():
         '17253JAA4': 'CIFR',
         '18452B209': 'CLSK', '19247G107': 'COHR', '21037T109': 'CEG',
         '21873S108': 'CRWV', '21874A106': 'CORZ', '26884L109': 'EQT',
-        '219350105': 'GLW',  '35834F104': 'TE',   '36168Q104': 'GLXY',
+        '219350105': 'GLW',  '314911108': 'FRMI', '35834F104': 'TE',
+        '36168Q104': 'GLXY',
         '36317J209': 'GLXY', '433921103': 'HIVE', '44282L109': 'HUT',
         '44812J104': 'HUT',  '456788108': 'INFY', '458140100': 'INTC',
         '486917107': 'KEEL', '49338L103': 'KRC',  '49427F108': 'KRC',
@@ -67,6 +68,7 @@ def _load_data():
         '73933G202': 'PSIX',
         '73933H100': 'PSIX', '743344109': 'PUMP', '74347M108': 'PUMP',
         '76754A103': 'RIOT', '767292105': 'RIOT', '778920306': 'SHAZ',
+        '77926X320': 'DRAM',
         '80004C200': 'SNDK',
         '80106M109': 'SNDK', '83418M103': 'SEI',  '861012102': 'STM',
         '87422Q109': 'TLN',  '87425V106': 'TLN',  '874039100': 'TSM',
@@ -112,6 +114,14 @@ def _load_data():
             pass
         return None
 
+    class UnknownCusipError(RuntimeError):
+        """A filing holds a CUSIP missing from CUSIP_TICKER.
+
+        Unlike an SEC fetch failure, this never falls back to the cache: doing so
+        silently kept the previous quarter's portfolio for days after the Q3 2026
+        13F introduced FRMI and DRAM.
+        """
+
     def parse_infotable(xml_data):
         root = ET.fromstring(xml_data)
         holdings = []
@@ -122,7 +132,7 @@ def _load_data():
             ticker = CUSIP_TICKER.get(cusip, '')
             if not ticker:
                 issuer = info.findtext('ns:nameOfIssuer', '', NS)
-                raise RuntimeError(
+                raise UnknownCusipError(
                     f"Unknown CUSIP {cusip} ({issuer}); add it to CUSIP_TICKER")
             pos_type = 'put' if putcall == 'put' else 'call' if putcall == 'call' else 'long'
             holdings.append({"ticker": ticker, "type": pos_type, "value": value})
@@ -218,6 +228,8 @@ def _load_data():
             cached_by_quarter.values(),
             key=lambda f: f.get("quarter_end", f["filing_date"]))
         save_cache(result)
+    except UnknownCusipError:
+        raise
     except Exception as e:
         if result["filings"]:
             print(f"SEC fetch error ({e}); using cache", file=sys.stderr)
@@ -260,7 +272,9 @@ def _run(command, args):
     # 2026-09-17 amendment, whose 8,070,950 total equals the warrant-adjusted
     # Q2 2026 13F below. The amendment reports the September 15 exercise of the
     # last pre-funded warrants, which converts that adjustment into shares without
-    # changing the total.
+    # changing the total. Also omitted: the 2026-11-16 NBIS 13G/A, whose
+    # September 30 holdings are no newer than the Q3 2026 13F filed 18 minutes
+    # later.
     SA_ISSUER_DISCLOSURES = [
         {
             "quarter": "13D_2025_08_19", "ticker": "CORZ", "type": "long",
