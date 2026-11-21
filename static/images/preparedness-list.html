@@ -118,6 +118,8 @@ th[data-help], .field > label, .pflags label, .pimp label, .prow .hour { cursor:
        background: #333; color: #fff; font-size: 12px; line-height: 1.4; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
        pointer-events: none; text-transform: none; letter-spacing: 0; font-weight: 400; }
 body.dark #tip { background: #e5e5e5; color: #222; }
+td.who { font-size: 12px; color: #666; white-space: nowrap; }
+body.dark td.who { color: #999; }
 </style>
 </head>
 <body>
@@ -1876,6 +1878,7 @@ const COLUMN_HELP = {
   micromorts: 'Micromorts (one-in-a-million chances of death) it averts a year, summed over members.',
   ratio: 'Yearly benefit (hardship averted plus the value of micromorts averted) divided by yearly cost. Above 1, it pays.',
   chance: 'The share of plausible sets of inputs under which the benefit exceeds the cost: how sure the model is that it pays.',
+  who: 'Household: one for everyone who lives here. A name: that member\'s own, since each person needs one (a respirator, a vaccination). Everyone: one each for every member.',
   for: 'The hazard or need that accounts for most of its benefit.',
 };
 const PLACES = DATA.places || { countries: {}, cities: [], hazardOrder: [] };
@@ -2127,19 +2130,70 @@ function ownerName(key) {
   const i = settings.people.findIndex((p, j) => String(p.id !== undefined ? p.id : j + 1) === String(key));
   return i < 0 ? '' : personName(settings.people[i], i);
 }
-function entryName(e) {
-  return e.items.map((x) => {
-    const it = ITEM[x.id];
-    return esc(it.name) + (x.label ? ` <span class="sub">(${esc(x.label)})</span>` : '') + (x.person !== null && x.person !== undefined ? ` <span class="who">for ${esc(ownerName(x.person))}</span>` : '');
-  }).join(' + ');
+// Whom a set of members' copies is for: "Everyone" when it covers the whole
+// household, otherwise their names.
+function whoText(keys) {
+  if (!keys.length) return 'Household';
+  if (settings.people.length > 1 && keys.length === settings.people.length) return 'Everyone';
+  return keys.map(ownerName).join(', ');
 }
-const plainName = (e) => e.items.map((x) => ITEM[x.id].name + (x.label ? ` (${x.label})` : '') + (x.person !== null && x.person !== undefined ? `, for ${ownerName(x.person)}` : '')).join(' + ');
+const isPersonal = (x) => x.person !== null && x.person !== undefined;
+function entryName(e) {
+  return e.items.map((x) => esc(ITEM[x.id].name) + (x.label ? ` <span class="sub">(${esc(x.label)})</span>` : '')).join(' + ');
+}
+const plainName = (e) => e.items.map((x) => ITEM[x.id].name + (x.label ? ` (${x.label})` : '')).join(' + ');
+
+// The rows of the list. Each member's copy of a personal item is its own
+// entry in the ranking; copies of the same item that rank one after another
+// are shown as one row, for the members they cover. Rows never straddle the
+// budget line or the line where benefit falls below cost.
+function listRows(r, lines) {
+  const rows = [];
+  r.entries.forEach((e, i) => {
+    const personal = e.items.every(isPersonal);
+    const sig = personal ? e.items.map((x) => `${x.id}|${x.label || ''}`).join('+') : null;
+    const side = lines.filter((l) => i >= l).length;
+    const who = personal ? String(e.items[0].person) : null;
+    const last = rows[rows.length - 1];
+    if (sig && last && last.sig === sig && last.side === side && !last.who.includes(who)) {
+      last.idx.push(i);
+      last.who.push(who);
+      last.entries.push(e);
+    } else rows.push({ sig, side, idx: [i], who: who === null ? [] : [who], entries: [e] });
+  });
+  for (const row of rows) {
+    const sum = (f) => row.entries.reduce((s, e) => s + e[f], 0);
+    const last = row.entries[row.entries.length - 1];
+    Object.assign(row, {
+      first: row.entries[0], upfrontUsd: sum('upfrontUsd'), annualCostUsd: sum('annualCostUsd'),
+      hardshipUsd: sum('hardshipUsd'), micromorts: sum('micromorts'), valueUsd: sum('valueUsd'),
+      cumulativeUpfrontUsd: last.cumulativeUpfrontUsd, cumulativeAnnualUsd: last.cumulativeAnnualUsd,
+      key: row.entries.map((e) => e.add.map((a) => a.join(':')).join('+')).join(','),
+    });
+    row.ratio = row.entries.length === 1 ? row.first.ratio : (row.annualCostUsd > 0 ? row.valueUsd / row.annualCostUsd : (row.valueUsd > 0 ? Infinity : 0));
+  }
+  return rows;
+}
 // An owned key is an item id, or an item id, "@" and a member's key.
 function ownedName(key, lv) {
-  const [id, who] = key.split('@');
-  const it = ITEM[id];
+  const it = ITEM[key.split('@')[0]];
   if (!it) return null;
-  return `${it.name}${it.ladder ? ` (${it.ladder[lv - 1].label})` : ''}${who ? `, for ${ownerName(who)}` : ''}`;
+  return `${it.name}${it.ladder ? ` (${it.ladder[lv - 1].label})` : ''}`;
+}
+// What the household already has, with each member's copies of one item
+// together: [name, whom it is for, the owned keys].
+function ownedGroups() {
+  const groups = new Map();
+  for (const [key, lv] of Object.entries(settings.owned || {})) {
+    const name = lv > 0 && ownedName(key, lv);
+    if (!name) continue;
+    const [id, who] = key.split('@');
+    const g = groups.get(`${id}|${lv}`) || { name, who: [], keys: [] };
+    g.keys.push(key);
+    if (who) g.who.push(who);
+    groups.set(`${id}|${lv}`, g);
+  }
+  return [...groups.values()];
 }
 function peopleText() {
   return settings.people.map((p, i) => {
@@ -2184,12 +2238,16 @@ function listText() {
   if (cutoff < 0) cutoff = r.entries.length;
   const ticks = TICKS.filter(([k]) => s.ticks && s.ticks[k]).map(([, label]) => label.toLowerCase()).join(', ');
   const timeline = !AI || !s.ai || s.ai.timeline === 'none' ? 'left out' : (AI.timelines && AI.timelines[s.ai.timeline] ? AI.timelines[s.ai.timeline].label : s.ai.timeline);
-  const name = plainName;
-  const line = (e, i) => {
+  const rows = listRows(r, [cutoff]);
+  const above = rows.filter((row) => row.side === 0).length;
+  const several = s.people.length > 1;
+  const line = (row, i) => {
+    const e = row.first;
     const specs = e.items.map((x) => ITEM[x.id].spec).filter(Boolean).join(' ');
     const main = e.byHazard[0];
-    const forText = main && e.valueUsd > 0 && main.value > 0 ? `; mostly for: ${HAZARD_LABEL(main.id)}` : '';
-    return `${i + 1}. **${name(e)}**: ${whole(e.upfrontUsd)} upfront, ${money(e.annualCostUsd)} a year; benefit ÷ cost ${ratioText(e.ratio)}${forText}.${specs ? `\n   ${specs}` : ''}`;
+    const forText = main && e.valueUsd > 0 && main.value > 0 ? `; mostly against: ${HAZARD_LABEL(main.id)}` : '';
+    const who = several ? `For: ${whoText(row.who)}. ` : '';
+    return `${i + 1}. **${plainName(e)}**. ${who}${whole(row.upfrontUsd)} upfront, ${money(row.annualCostUsd)} a year; benefit ÷ cost ${ratioText(row.ratio)}${forText}.${specs ? `\n   ${specs}` : ''}`;
   };
   const out = [
     '# My preparedness list',
@@ -2201,16 +2259,16 @@ function listText() {
     `- Deaths valued by ${s.deathValue === 'equal' ? 'equal values for everyone' : 'remaining life-years'}`,
     `- Artificial intelligence: ${timeline}`,
     '',
-    `## Worth buying or doing (${cutoff} entries, ${whole(cutoff ? r.entries[cutoff - 1].cumulativeUpfrontUsd : 0)} upfront)`,
+    `## Worth buying or doing (${above} entries, ${whole(cutoff ? r.entries[cutoff - 1].cumulativeUpfrontUsd : 0)} upfront)`,
     '',
-    ...r.entries.slice(0, cutoff).map(line),
+    ...rows.slice(0, above).map(line),
     '',
     '## Next in line (benefit below cost)',
     '',
-    ...r.entries.slice(cutoff, cutoff + 10).map((e, j) => line(e, cutoff + j)),
+    ...rows.slice(above, above + 10).map((row, j) => line(row, above + j)),
   ];
-  const owned = Object.entries(s.owned || {}).filter(([id, lv]) => lv > 0 && ownedName(id, lv));
-  if (owned.length) out.push('', '## Already have', '', ...owned.map(([id, lv]) => `- ${ownedName(id, lv)}`));
+  const owned = ownedGroups();
+  if (owned.length) out.push('', '## Already have', '', ...owned.map((g) => `- ${g.name}${several && g.who.length ? ` (for: ${whoText(g.who)})` : ''}`));
   out.push('', `Settings link: ${shareLink()}`, '');
   return out.join('\n');
 }
@@ -2243,6 +2301,9 @@ function render() {
     if (within < 0) within = r.entries.length;
   }
   const stop = Math.min(cutoff, within);
+  const rows = listRows(r, [...new Set([stop, cutoff])]);
+  const several = settings.people.length > 1;
+  const nAbove = rows.filter((row) => row.idx[0] < stop).length;
   const picked = r.entries.slice(0, stop);
   const averted$ = picked.reduce((s, e) => s + e.hardshipUsd, 0);
   const avertedM = picked.reduce((s, e) => s + e.micromorts, 0);
@@ -2250,7 +2311,7 @@ function render() {
   const annual = picked.length ? picked[picked.length - 1].cumulativeAnnualUsd : 0;
 
   $('summary').innerHTML = picked.length
-    ? `The <b>${picked.length} entries above the line</b> cost <b>${whole(upfront)} upfront</b>, or ${whole(annual)} a year with upkeep and your time. Each year they avert, in expectation, <b>${whole(averted$)} of hardship and loss and ${num(avertedM, avertedM >= 10 ? 0 : 1)} micromorts</b>: worth ${whole(picked.reduce((s, e) => s + e.valueUsd, 0))} in all, with deaths valued as shown for each member.`
+    ? `The <b>${nAbove} entries above the line</b> cost <b>${whole(upfront)} upfront</b>, or ${whole(annual)} a year with upkeep and your time. Each year they avert, in expectation, <b>${whole(averted$)} of hardship and loss and ${num(avertedM, avertedM >= 10 ? 0 : 1)} micromorts</b>: worth ${whole(picked.reduce((s, e) => s + e.valueUsd, 0))} in all, with deaths valued as shown for each member.`
     : 'Nothing on the list pays for itself at these settings.';
   if (AI) {
     const on = settings.ai && settings.ai.timeline && settings.ai.timeline !== 'none';
@@ -2258,35 +2319,41 @@ function render() {
       : `The probabilities below now reflect your timeline.${r.survival < 0.995 ? ` Every value is scaled by ${num(r.survival, 2)}: the chance, over your horizon, that no existential catastrophe has made preparation moot.` : ''}`;
   }
 
-  const owned = Object.entries(settings.owned || {}).filter(([id, lv]) => lv > 0 && ownedName(id, lv));
+  const owned = ownedGroups();
   $('owned').innerHTML = owned.length
-    ? 'Already have: ' + owned.map(([id, lv]) => `<span>${esc(ownedName(id, lv))}<a data-unown="${esc(id)}" title="Remove">×</a></span>`).join('')
+    ? 'Already have: ' + owned.map((g) => `<span>${esc(g.name)}${several && g.who.length ? ` <span class="who">${esc(whoText(g.who))}</span>` : ''}<a data-unown="${esc(g.keys.join(' '))}" title="Remove">×</a></span>`).join('')
     : '';
 
   const maxRatio = Math.max(1, ...r.entries.map((e) => (isFinite(e.ratio) ? e.ratio : 0)));
   const barw = (x) => (x > 0 ? Math.max(2, Math.round(36 * Math.log10(1 + x) / Math.log10(1 + maxRatio))) : 0);
   const th = (cls, key, text) => `<th class="${cls}" data-help="${esc(COLUMN_HELP[key] || '')}">${text}</th>`;
-  let html = `<table><thead><tr>${th('cb', 'have', 'Have')}<th class="r">#</th><th data-help="Click an item to see how its figures were reached.">What</th>${th('r', 'upfront', 'Upfront')}${th('r', 'annual', 'Cost<br>a year')}${th('r', 'hardship', 'Hardship<br>averted')}${th('r', 'micromorts', 'Micro&shy;morts<br>averted')}${th('r', 'ratio', 'Benefit<br>÷ cost')}${th('r', 'chance', 'Chance<br>it pays')}${th('for', 'for', 'Mostly for')}</tr></thead><tbody>`;
+  let html = `<table><thead><tr>${th('cb', 'have', 'Have')}<th class="r">#</th><th data-help="Click an item to see how its figures were reached.">What</th>${several ? th('who', 'who', 'For') : ''}${th('r', 'upfront', 'Upfront')}${th('r', 'annual', 'Cost<br>a year')}${th('r', 'hardship', 'Hardship<br>averted')}${th('r', 'micromorts', 'Micro&shy;morts<br>averted')}${th('r', 'ratio', 'Benefit<br>÷ cost')}${th('r', 'chance', 'Chance<br>it pays')}${th('for', 'for', 'Mostly against')}</tr></thead><tbody>`;
   // The list shows its first entries until the reader asks for all.
-  const shown = showAll ? r.entries.length : Math.max(SHORT_LIST, 0);
-  r.entries.forEach((e, i) => {
-    if (i >= shown) return;
+  const shown = showAll ? rows.length : SHORT_LIST;
+  const cols = several ? 11 : 10;
+  rows.forEach((row, n) => {
+    if (n >= shown) return;
+    const i = row.idx[0];
     if (i === stop) {
       const why = within < cutoff ? 'Your budget ends here.' : 'Below this line, expected benefit is less than cost.';
-      html += `<tr class="rule"><td colspan="10">${why}</td></tr>`;
+      html += `<tr class="rule"><td colspan="${cols}">${why}</td></tr>`;
     } else if (i === cutoff && cutoff > within) {
-      html += '<tr class="rule"><td colspan="10">Below this line, expected benefit is less than cost.</td></tr>';
+      html += `<tr class="rule"><td colspan="${cols}">Below this line, expected benefit is less than cost.</td></tr>`;
     }
-    const key = e.add.map((a) => a.join(':')).join('+');
+    const e = row.first;
+    const key = row.key;
     const main = e.byHazard[0];
     const mainText = main && e.valueUsd > 0 && main.value > 0 ? `${esc(HAZARD_LABEL(main.id))} ${Math.round(100 * main.value / e.valueUsd)}%` : '';
-    const s = sure && sure[i] ? `${Math.round(100 * sure[i].pAbove1)}%` : '…';
-    html += `<tr class="entry${i >= cutoff ? ' below' : ''}" data-key="${key}"><td class="cb"><input type="checkbox" data-own="${i}" title="I already have this"></td><td class="r">${i + 1}</td><td class="name" data-toggle="${key}">${entryName(e)}<div class="sub">${esc(ITEM[e.items[0].id].group || '')}</div></td><td class="r">${whole(e.upfrontUsd)}</td><td class="r">${money(e.annualCostUsd)}</td><td class="r">${money(e.hardshipUsd)}</td><td class="r">${num(e.micromorts, Math.abs(e.micromorts) >= 10 ? 0 : 2)}</td><td class="r"><span class="bar" style="width:${barw(e.ratio)}px"></span>${ratioText(e.ratio)}</td><td class="r">${s}</td><td class="for">${mainText}</td></tr>`;
-    if (open[key]) html += `<tr class="detail"><td colspan="10">${detail(e)}</td></tr>`;
+    const chances = row.idx.map((j) => sure && sure[j] ? Math.round(100 * sure[j].pAbove1) : null);
+    const lo = Math.min(...chances), hi = Math.max(...chances);
+    const chance = chances.includes(null) ? '…' : lo === hi ? `${lo}%` : `${lo}–${hi}%`;
+    const who = several ? `<td class="who">${esc(whoText(row.who))}</td>` : '';
+    html += `<tr class="entry${i >= cutoff ? ' below' : ''}" data-key="${key}"><td class="cb"><input type="checkbox" data-own="${row.idx.join(',')}" title="I already have this"></td><td class="r">${n + 1}</td><td class="name" data-toggle="${key}">${entryName(e)}<div class="sub">${esc(ITEM[e.items[0].id].group || '')}</div></td>${who}<td class="r">${whole(row.upfrontUsd)}</td><td class="r">${money(row.annualCostUsd)}</td><td class="r">${money(row.hardshipUsd)}</td><td class="r">${num(row.micromorts, Math.abs(row.micromorts) >= 10 ? 0 : 2)}</td><td class="r"><span class="bar" style="width:${barw(row.ratio)}px"></span>${ratioText(row.ratio)}</td><td class="r">${chance}</td><td class="for">${mainText}</td></tr>`;
+    if (open[key]) html += `<tr class="detail"><td colspan="${cols}">${detail(e)}</td></tr>`;
   });
   html += '</tbody></table>';
-  if (r.entries.length > SHORT_LIST) {
-    html += `<div class="more"><button type="button" id="show-all">${showAll ? `Show the first ${SHORT_LIST}` : `Show all ${r.entries.length} entries`}</button>${!showAll && stop > SHORT_LIST ? ` <span class="meta">${stop - SHORT_LIST} more above the line.</span>` : ''}</div>`;
+  if (rows.length > SHORT_LIST) {
+    html += `<div class="more"><button type="button" id="show-all">${showAll ? `Show the first ${SHORT_LIST}` : `Show all ${rows.length} entries`}</button>${!showAll && nAbove > SHORT_LIST ? ` <span class="meta">${nAbove - SHORT_LIST} more above the line.</span>` : ''}</div>`;
   }
   $('output').innerHTML = html;
   fit();
@@ -2468,7 +2535,7 @@ $('output').addEventListener('change', (ev) => {
   const i = ev.target.dataset && ev.target.dataset.own;
   if (i === undefined) return;
   settings.owned = settings.owned || {};
-  for (const [id, lv] of result.entries[Number(i)].add) settings.owned[id] = Math.max(settings.owned[id] || 0, lv);
+  for (const j of i.split(',')) for (const [id, lv] of result.entries[Number(j)].add) settings.owned[id] = Math.max(settings.owned[id] || 0, lv);
   settingsTouched = true;
   compute();
 });
@@ -2486,9 +2553,9 @@ $('export').addEventListener('click', (ev) => {
   }
 });
 $('owned').addEventListener('click', (ev) => {
-  const id = ev.target.dataset && ev.target.dataset.unown;
-  if (!id) return;
-  delete settings.owned[id];
+  const keys = ev.target.dataset && ev.target.dataset.unown;
+  if (!keys) return;
+  for (const id of keys.split(' ')) delete settings.owned[id];
   settingsTouched = true;
   compute();
 });
