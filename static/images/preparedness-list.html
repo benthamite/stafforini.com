@@ -112,6 +112,12 @@ body.dark .citylist span.on, body.dark .citylist span:hover { background: #3b4a5
 .more { margin: 10px 0; }
 @media (max-width: 600px) { .prow .pname { width: 90px; } }
 .ticknote { margin: -4px 0 6px 22px; }
+/* Hover help. */
+th[data-help], .field > label, .pflags label, .pimp label, .prow .hour { cursor: help; }
+#tip { position: fixed; z-index: 10; display: none; max-width: 300px; padding: 6px 9px; border-radius: 4px;
+       background: #333; color: #fff; font-size: 12px; line-height: 1.4; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+       pointer-events: none; text-transform: none; letter-spacing: 0; font-weight: 400; }
+body.dark #tip { background: #e5e5e5; color: #222; }
 </style>
 </head>
 <body>
@@ -1810,6 +1816,68 @@ const TICKS = [
   ['flood', 'Flood zone'],
 ];
 const HOME = ['cooking', 'heating', 'airConditioning', 'pumpedWater', 'car'];
+
+// What each control does, shown on hover or focus. Keys are element ids, or
+// 'p.' plus a member field.
+const HELP = {
+  'p.name': 'A name for this member, used in the list ("for Ana"). Optional.',
+  'p.age': 'Sets the member\'s risk of dying from most hazards (older people are more vulnerable to heat, cold and infection) and, under "remaining life-years", how much a death costs.',
+  'p.valuation': 'Personal: the member\'s death and hardship are valued at what they would pay to avoid them, the standard of government cost-benefit analysis. Impartial: at what their work would achieve for others, so lost working days count and their own comfort counts little. Children are always valued personally.',
+  'p.hourValue': 'What an hour of this member\'s time is worth to them, in US dollars. It prices the time items take to buy and maintain and, under the personal standard, scales the value of a micromort (a member earning twice as much values a risk of death twice as much). Empty: the local average, shown in grey.',
+  'p.onMedication': 'Takes a prescription drug every day. Adds a spare supply of it to the list, which matters when pharmacies close or supply chains break.',
+  'p.criticalDrug': 'Missing the drug for days could be dangerous (insulin, anti-epileptics, transplant drugs). Raises the harm of running out.',
+  'p.powerDependent': 'Relies on a device that needs electricity, such as an oxygen concentrator or a CPAP machine. Adds a battery and a power plan for it.',
+  'p.infant': 'Under about one year old, so needs formula or other infant food that the household\'s ordinary food can\'t replace.',
+  'p.hoursPerYear': 'Hours this member works a year. With the hour value and the counterfactual share it sets what a lost working day costs others.',
+  'p.counterfactual': 'The share of this member\'s impact that would be lost if they could not work: 100% if no one would take up the slack, lower if others would. Default 50%.',
+  'p.impactEndYear': 'The year after which this member\'s work no longer matters for the impartial valuation, for example because transformative AI will have made it moot. Empty: their remaining working life, or the end of the AI horizon.',
+  'add-person': 'Add another member. Shared items (water, food, a stove) are bought once for the household; personal items (respirators, vaccinations, a go-bag) become one entry per member.',
+  'hh-pets': 'Pets need food and water in an emergency too. Adds pet supplies to the list.',
+  city: 'Type a city of 50,000 people or more. It brings in the country\'s own figures where the model has them (power cuts, crime, prices, the value of a micromort and others) and fills in the local hazards below. The list of cities is built into the page: nothing you type leaves your browser.',
+  dwelling: 'A house is more exposed than a flat in a large block: to fire, to carbon monoxide and to fallout, which thick walls and neighbouring floors partly block. It also changes how long you could cook without a stove.',
+  cooking: 'What your cooker runs on. A gas cooker keeps working in a power cut but not when the gas is cut; an electric one the reverse. Decides which outages leave you unable to cook.',
+  heating: 'What keeps you warm in winter. Most gas boilers need electricity for their pumps and controls, so they fail in a power cut too. "Works without utilities" means a wood stove or similar.',
+  airConditioning: 'Whether you have air conditioning. Without it a heat wave is more dangerous; with it, a power cut during a heat wave is.',
+  pumpedWater: 'Tick if your tap water depends on an electric pump (a building pump or tank, a well). A power cut then also cuts water and sanitation.',
+  car: 'A car can charge phones and small devices for weeks in a power cut, and get you out in an evacuation.',
+  pantryDays: 'How many days your household could eat from what is already in the kitchen, without shopping. Food stocks only count beyond this.',
+  'ticks-panel': 'Hazards that depend on where you live. Filled in from your city; untick or tick to correct for your own street.',
+  'tick-coldWinters': 'Winters cold enough that losing heat for days is dangerous. Ticked where the coldest month averages 6 °C or less.',
+  'tick-hotSummers': 'Summers hot enough for dangerous heat waves. Ticked on a medium or high ThinkHazard heat rating, or where the warmest month averages 25 °C or more.',
+  'tick-hurricane': 'Tropical cyclones (hurricanes, typhoons) reach the area. A medium rating counts at 30% of a high one.',
+  'tick-earthquake': 'A damaging earthquake is plausible. A medium rating counts at 30% of a high one.',
+  'tick-wildfire': 'Your home is near wildland that burns. Never ticked automatically, because ThinkHazard\'s rating measures fire weather, which is high even in Paris and London.',
+  'tick-flood': 'Your home is in a river or coastal flood zone. Ticked only on a high rating; untick it if you live well above the flood plain.',
+  'ai-timeline': 'When you expect artificial general intelligence. Several risks (pandemics from AI-assisted bioweapons, cyberattacks, war, unrest, scams) rise in the years around its arrival. "Leave AI out" assumes today\'s rates continue. "My own numbers" lets you give your own probabilities.',
+  'ai-concern': 'Picks between a careful sceptic\'s view of how much AI raises each risk (left), the central view (middle) and a highly concerned view (right).',
+  'ai-horizon': 'How many years ahead you are preparing for. The AI-driven rates are averaged over this period.',
+  rankOn: 'Averages weigh rare catastrophes fully, which is what expected value means; middle values use the median of each uncertain input and so favour items that pay in ordinary years.',
+  outlook: 'The probabilities of risks other than those driven by AI: base rates and public forecasts, or the view of a well-informed pessimist. A chosen AI timeline replaces this for the hazards it covers.',
+  deathValue: 'Remaining life-years: a death costs more the younger the person, in proportion to the (discounted) years they lose. Equal for everyone: every death costs the same, as in US government practice.',
+  'p-micromort': 'A micromort is a one-in-a-million chance of dying. This is what avoiding one is worth to an adult on the local wage, in US dollars: the value of a statistical life divided by a million. Each personal member\'s value is scaled from this by their hour value and, by default, their age. Empty: the country\'s figure.',
+  budget: 'How much you are willing to spend upfront. A line in the list marks where the running total crosses it.',
+  reset: 'Go back to the default settings. Your city and everything else you changed will be cleared.',
+  'haz-panel': 'The yearly chance of each hazard the model uses, after your city, outlook and AI settings. Type over any number to use your own; an asterisk marks the ones you changed.',
+  'copy-probs': 'Copy the probabilities as text, to keep or to compare with someone else\'s.',
+  'copy-list': 'Copy the ranked list, with your settings, as plain text.',
+  'download-list': 'Save the ranked list, with your settings, as a text file.',
+  'copy-link': 'Copy a link that opens this page with your current settings. The settings travel in the link itself.',
+  'show-all': 'The list shows the top 20 entries by default. This shows every item, including those that cost more than they return.',
+};
+
+for (const y of CUSTOM_YEARS) HELP[`ai-p-${y}`] = `Your probability that AGI will have arrived by the end of ${y}. The model interpolates between the three years.`;
+
+// Column headings of the list.
+const COLUMN_HELP = {
+  have: 'Tick what you already have. It drops out of the list and the rest is re-ranked around it.',
+  upfront: 'What it costs to buy, in US dollars at local prices. For a ladder (a larger stock), the cost of this step over the last.',
+  annual: 'Its yearly cost: spreading the purchase over its lifetime, replacing what expires, and the time it takes to buy and keep up, at your hour value.',
+  hardship: 'The yearly value of the hardship, loss and, for members valued impartially, lost work it averts, in US dollars, averaged over how likely each hazard is.',
+  micromorts: 'Micromorts (one-in-a-million chances of death) it averts a year, summed over members.',
+  ratio: 'Yearly benefit (hardship averted plus the value of micromorts averted) divided by yearly cost. Above 1, it pays.',
+  chance: 'The share of plausible sets of inputs under which the benefit exceeds the cost: how sure the model is that it pays.',
+  for: 'The hazard or need that accounts for most of its benefit.',
+};
 const PLACES = DATA.places || { countries: {}, cities: [], hazardOrder: [] };
 const CURRENT_YEAR = DATA.currentYear || 2026;
 const FAMILY_TEXT = {
@@ -1997,7 +2065,7 @@ function hazardInputs() {
     const on = id in live;
     const custom = settings.probabilities && settings.probabilities[id] !== undefined;
     const value = on ? pct(live[id]).replace(/,/g, '') : '';
-    return `<div class="field${on ? '' : ' off'}"><label for="hz-${id}" title="${esc(DATA.hazards[id].definition || '')}">${esc(HAZARD_LABEL(id))}${custom ? ' *' : ''}</label><span><input type="number" id="hz-${id}" data-hazard="${id}" min="0" max="100" step="any" value="${value}"${on ? '' : ' disabled'}> %</span></div>`;
+    return `<div class="field${on ? '' : ' off'}"><label for="hz-${id}" data-help="${esc(DATA.hazards[id].definition || '')}">${esc(HAZARD_LABEL(id))}${custom ? ' *' : ''}</label><span><input type="number" id="hz-${id}" data-hazard="${id}" min="0" max="100" step="any" value="${value}"${on ? '' : ' disabled'}> %</span></div>`;
   }).join('');
 }
 
@@ -2197,7 +2265,8 @@ function render() {
 
   const maxRatio = Math.max(1, ...r.entries.map((e) => (isFinite(e.ratio) ? e.ratio : 0)));
   const barw = (x) => (x > 0 ? Math.max(2, Math.round(36 * Math.log10(1 + x) / Math.log10(1 + maxRatio))) : 0);
-  let html = `<table><thead><tr><th class="cb" title="Tick what you already have">Have</th><th class="r">#</th><th>What</th><th class="r">Upfront</th><th class="r">Cost<br>a year</th><th class="r" title="Hardship, loss and, for members valued impartially, lost work averted a year, in dollars">Hardship<br>averted</th><th class="r" title="Micromorts averted a year">Micro&shy;morts<br>averted</th><th class="r">Benefit<br>÷ cost</th><th class="r" title="Share of plausible parameter sets under which benefit exceeds cost">Chance<br>it pays</th><th class="for">Mostly for</th></tr></thead><tbody>`;
+  const th = (cls, key, text) => `<th class="${cls}" data-help="${esc(COLUMN_HELP[key] || '')}">${text}</th>`;
+  let html = `<table><thead><tr>${th('cb', 'have', 'Have')}<th class="r">#</th><th data-help="Click an item to see how its figures were reached.">What</th>${th('r', 'upfront', 'Upfront')}${th('r', 'annual', 'Cost<br>a year')}${th('r', 'hardship', 'Hardship<br>averted')}${th('r', 'micromorts', 'Micro&shy;morts<br>averted')}${th('r', 'ratio', 'Benefit<br>÷ cost')}${th('r', 'chance', 'Chance<br>it pays')}${th('for', 'for', 'Mostly for')}</tr></thead><tbody>`;
   // The list shows its first entries until the reader asks for all.
   const shown = showAll ? r.entries.length : Math.max(SHORT_LIST, 0);
   r.entries.forEach((e, i) => {
@@ -2423,6 +2492,69 @@ $('owned').addEventListener('click', (ev) => {
   settingsTouched = true;
   compute();
 });
+
+// ---- hover help ----
+
+// The help for whatever the pointer or focus is on: the element's own text,
+// or that of the control inside the row or label it belongs to. A panel or
+// details box shows its help only from its heading, and the city
+// suggestions show none.
+const ownHelp = (el) => (el.dataset && el.dataset.help) || HELP[el.id] || (el.dataset && el.dataset.f && HELP['p.' + el.dataset.f]) || '';
+function helpAt(target) {
+  for (let el = target; el && el !== document.body; el = el.parentElement) {
+    if (el.tagName === 'DETAILS' || el.classList.contains('panel') || el.classList.contains('citylist')) return null;
+    const text = el.tagName === 'SUMMARY' ? HELP[el.parentElement.id] : ownHelp(el);
+    if (text) return [el, text];
+    if (el.matches('.field, label')) {
+      for (const c of el.querySelectorAll('[data-help], [id], [data-f]')) {
+        const t = ownHelp(c);
+        if (t) return [el, t];
+      }
+    }
+  }
+  return null;
+}
+
+const tip = document.createElement('div');
+tip.id = 'tip';
+tip.setAttribute('role', 'tooltip');
+document.body.appendChild(tip);
+let tipFor = null;
+let tipTimer = 0;
+function hideTip() {
+  clearTimeout(tipTimer);
+  tipFor = null;
+  tip.style.display = 'none';
+}
+function showTip(el, text, delay) {
+  if (el === tipFor) return;
+  hideTip();
+  tipFor = el;
+  tipTimer = setTimeout(() => {
+    tip.textContent = text;
+    tip.style.display = 'block';
+    // Below the element, or above it if there is no room; never off the sides.
+    const r = el.getBoundingClientRect();
+    const w = tip.offsetWidth;
+    const h = tip.offsetHeight;
+    tip.style.left = `${Math.max(4, Math.min(r.left, window.innerWidth - w - 4))}px`;
+    tip.style.top = `${r.bottom + 6 + h <= window.innerHeight || r.top - 6 - h < 0 ? r.bottom + 6 : r.top - 6 - h}px`;
+  }, delay);
+}
+document.addEventListener('mouseover', (ev) => {
+  const found = helpAt(ev.target);
+  if (found) showTip(found[0], found[1], 300);
+  else hideTip();
+});
+document.addEventListener('focusin', (ev) => {
+  const found = helpAt(ev.target);
+  if (found) showTip(found[0], found[1], 0);
+});
+document.addEventListener('focusout', hideTip);
+document.addEventListener('mouseleave', hideTip);
+document.addEventListener('mousedown', hideTip);
+document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') hideTip(); });
+window.addEventListener('scroll', hideTip, true);
 
 function isDark() {
   try { return parent.document.documentElement.getAttribute('data-theme') === 'dark'; }
