@@ -1,6 +1,7 @@
 ;;; export-notes.el --- Batch export blog org files to Hugo markdown -*- lexical-binding: t; -*-
 
-;; Run via: emacs --batch -l scripts/export-notes.el
+;; Run via: EXPORT_FILE_LIST=<file> emacs --batch -l scripts/export-notes.el
+;; (a bare run refuses its full scan unless EXPORT_NOTES_FULL_SCAN=1)
 ;;
 ;; Exports all org files in the notes directory to Hugo
 ;; markdown in content/notes/, using ox-hugo per-subtree export.
@@ -169,8 +170,13 @@ notes with custom URLs resolve to the real page."
                        (message "SKIP dataless: %s" (file-name-nondirectory f))
                        t))
                    files)))
-            ;; Full: scan recursively and pre-filter
-            (let* ((all-files (directory-files-recursively notes-dir "\\.org$"))
+            ;; Full: scan recursively and pre-filter.  Opening every note
+            ;; from a process under Pablo's Emacs gets Emacs killed by
+            ;; XProtect (decision 025; 2026-11-20), so a bare run refuses.
+            (let* ((_ (unless (equal (getenv "EXPORT_NOTES_FULL_SCAN") "1")
+                        (error "Refusing a full scan of %s: use `bash scripts/export-notes.sh' for a full export, EXPORT_FILE_LIST=<file of paths> for some notes, or EXPORT_NOTES_FULL_SCAN=1 outside Emacs (see decisions/025.md)"
+                               notes-dir)))
+                   (all-files (directory-files-recursively notes-dir "\\.org$"))
                    (files (seq-remove
                            ;; pablos-miscellany.org is the org-roam index file, not a blog post
                            (lambda (f) (string= (file-name-nondirectory f) "pablos-miscellany.org"))

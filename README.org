@@ -107,6 +107,12 @@ discovery encounters cloud-evicted files, unreadable files or unreadable
 directories. The Emacs exporters also reject files evicted after Python's
 scan, so an incomplete export cannot be reported as successful.
 
+Run =scripts/export-notes.el= with =EXPORT_FILE_LIST= naming the notes to
+export; =scripts/export-notes.sh= builds that list for a full export. A bare run
+refuses to scan the whole notes tree unless =EXPORT_NOTES_FULL_SCAN=1=, because a
+scan that opens every note from a process under Emacs gets Emacs killed by
+XProtect (decision 025).
+
 ** SA LP Refresh
 :PROPERTIES:
 :ID:       8431CA99-D3B5-4497-8E2F-BDECC669517C

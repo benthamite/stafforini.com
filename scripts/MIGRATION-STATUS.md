@@ -298,7 +298,7 @@ To rebuild the site from scratch (e.g. after editing org files):
 ```bash
 # 1. Export org to Hugo markdown via ox-hugo
 #    (new notes must first be published via M-x stafforini-publish-note)
-emacs --batch -l scripts/export-notes.el
+EXPORT_FILE_LIST=<file> emacs --batch -l scripts/export-notes.el   # bare full scan refuses; use scripts/export-notes.sh
 
 # 2. Generate work pages for any new cite keys in notes
 #    (run the inline script or extend generate-work-pages.py)
