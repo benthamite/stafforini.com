@@ -833,8 +833,8 @@ function buildWorld(m, settings) {
     // Cash is priced in dollars everywhere, and its cost is given whole as
     // upkeep, so it carries no price index and no charge for capital.
     const unitUsd = it.price * (it.capitalFree ? 1 : priceIndex);
-    const perUnit = (it.capitalFree ? 0 : unitUsd * capital)
-      + (it.upkeepUsdPerUnitYear || 0) + (it.volumeLitres || 0) * storage;
+    const perUnitCapital = it.capitalFree ? 0 : unitUsd * capital;
+    const perUnit = perUnitCapital + (it.upkeepUsdPerUnitYear || 0) + (it.volumeLitres || 0) * storage;
     // A fixed price is paid once, with the first level (a heater, as against
     // the fuel that is the item's ladder), and once for all the members'
     // copies of a personal item (the kit for checking a mask's fit).
@@ -844,9 +844,15 @@ function buildWorld(m, settings) {
     // person must spend it; and, like money upkeep, cut by the everyday
     // share where the upkeep is itself everyday use. An hour is the owner's,
     // or for shared things that of the member whose hour is valued least.
-    const hours = ((it.setupHours || 0) * crf(rate, it.setupLifeYears || life) + (it.upkeepHoursPerYear || 0))
-      * (owner ? owner.hv : sharedHour) * (it.hoursPerPerson ? scale : 1);
-    const running = (hours + (it.upkeepUsdPerYear || 0)) * (it.everydayUpkeep ? 1 - e : 1);
+    const hourUsd = (owner ? owner.hv : sharedHour) * (it.hoursPerPerson ? scale : 1);
+    const upkeepShare = it.everydayUpkeep ? 1 - e : 1;
+    // The running cost in its three parts, for the item's details.
+    const runningParts = {
+      setupTime: (it.setupHours || 0) * crf(rate, it.setupLifeYears || life) * hourUsd * upkeepShare,
+      upkeepTime: (it.upkeepHoursPerYear || 0) * hourUsd * upkeepShare,
+      money: (it.upkeepUsdPerYear || 0) * upkeepShare,
+    };
+    const running = runningParts.setupTime + runningParts.upkeepTime + runningParts.money;
     const item = {
       i, id: owner ? `${it.id}@${owner.key}` : it.id, baseId: it.id, person, spec: it, applicable, ladder, scale,
       maxLevel: ladder ? ladder.length : 1,
@@ -857,9 +863,10 @@ function buildWorld(m, settings) {
       reliability: it.reliability === undefined ? 1 : it.reliability,
       lateClass: it.lateBuyClass || 'none',
       requires: it.requires || [],
-      unitUsd, perUnit, fixedCapital: fixedUsd * capital, running, fixedUsd,
+      unitUsd, perUnit, perUnitCapital, fixedCapital: fixedUsd * capital, running, runningParts, fixedUsd,
       siblings: [],
       setupHours: (it.setupHours || 0) * (it.hoursPerPerson ? scale : 1),
+      upkeepHours: (it.upkeepHoursPerYear || 0) * (it.hoursPerPerson ? scale : 1),
       leave: false,
       needSet: new Set(),
       chanSet: new Set(),
@@ -1501,11 +1508,24 @@ function buildWorld(m, settings) {
     const units = (it.unitsAt(to) - it.unitsAt(from)) * it.scale;
     const first = from === 0;
     const fixed = first && !(level && it.siblings.some((s) => level[s] > 0));
+    const capital = units * it.perUnitCapital + (fixed ? it.fixedCapital : 0);
+    const rp = it.runningParts;
+    // The yearly cost, split: the purchase spread over its life; money spent
+    // on upkeep and storage; and time, to set up (spread over its life) and
+    // to keep up.
+    const parts = {
+      capital,
+      money: units * (it.perUnit - it.perUnitCapital) + (first ? rp.money : 0),
+      setupTime: first ? rp.setupTime : 0,
+      upkeepTime: first ? rp.upkeepTime : 0,
+      upkeepHours: first ? it.upkeepHours : 0,
+    };
     return {
       annual: units * it.perUnit + (first ? it.running : 0) + (fixed ? it.fixedCapital : 0),
       upfront: units * it.unitUsd + (fixed ? it.fixedUsd : 0),
       hours: first ? it.setupHours : 0,
       units,
+      parts,
     };
   }
 
@@ -1570,10 +1590,11 @@ function candidates(W, level) {
 }
 
 function costOf(W, level, add) {
-  const c = { annual: 0, upfront: 0, hours: 0 };
+  const c = { annual: 0, upfront: 0, hours: 0, parts: { capital: 0, money: 0, setupTime: 0, upkeepTime: 0, upkeepHours: 0 } };
   for (const [i, lv] of add) {
     const x = W.cost(i, level[i], lv, level);
     c.annual += x.annual; c.upfront += x.upfront; c.hours += x.hours;
+    for (const k in c.parts) c.parts[k] += x.parts[k];
   }
   return c;
 }
@@ -1655,7 +1676,7 @@ function rank(data, settings) {
         return { id: it.baseId, key: it.id, person: it.person === undefined ? null : W.people[it.person].key, level: lv, label: it.ladder ? it.ladder[lv - 1].label : null, units: it.unitsAt(lv) * it.scale };
       }),
       add: add.map(([i, lv]) => [W.items[i].id, lv]),
-      upfrontUsd: c.upfront, setupHours: c.hours, annualCostUsd: c.annual,
+      upfrontUsd: c.upfront, setupHours: c.hours, annualCostUsd: c.annual, annualCostParts: c.parts,
       hardshipUsd: d.usd, micromorts: d.mm, valueUsd: value,
       ratio: ratioOf(value, c.annual),
       byHazard, breakEven,
@@ -2203,7 +2224,7 @@ function peopleText() {
   }).join('; ');
 }
 
-function detail(e) {
+function detail(e, all = [e]) {
   const parts = [];
   for (const x of e.items) {
     const it = ITEM[x.id];
@@ -2220,12 +2241,30 @@ function detail(e) {
     if (be.probability <= 0) parts.push(`<p>Pays for itself even without “${esc(HAZARD_LABEL(be.hazard))}”.</p>`);
     else if (be.probability <= 1) parts.push(`<p>Pays for itself if the yearly chance of “${esc(HAZARD_LABEL(be.hazard))}” is above ${pct(be.probability)}%. It is set at ${pct(be.current)}%.</p>`);
   }
-  if (e.setupHours > 0) parts.push(`<p>Time to set up: ${num(e.setupHours, 1)} hours, counted in the yearly cost.</p>`);
+  parts.push(costText(all));
   const src = e.items.flatMap((x) => ITEM[x.id].sources || []);
   if (src.length) {
     parts.push('<p>Sources: ' + src.slice(0, 6).map((u) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(u.replace(/^https?:\/\/(www\.)?/, '').split('/')[0])}</a>`).join(', ') + '.</p>');
   }
   return parts.join('');
+}
+
+// Where the yearly cost comes from. Time is valued at the hour value of
+// whoever spends it; for shared items, the lowest in the household.
+function costText(all) {
+  const sum = (f) => all.reduce((t, e) => t + (e.annualCostParts ? e.annualCostParts[f] : 0), 0);
+  const setupH = all.reduce((t, e) => t + e.setupHours, 0);
+  const upkeepH = sum('upkeepHours');
+  const pieces = [
+    [sum('capital'), 'the purchase, spread over its life'],
+    [sum('money'), 'upkeep and storage'],
+    [sum('setupTime'), `${num(setupH, 1)} hours to set up, spread over its life`],
+    [sum('upkeepTime'), `${num(upkeepH, upkeepH >= 1 ? 1 : 2)} hours a year of upkeep`],
+  ].filter(([v]) => v >= 0.005).map(([v, t]) => `${money(v)} for ${t}`);
+  const total = all.reduce((t, e) => t + e.annualCostUsd, 0);
+  const names = whoText(all.map((e) => String(e.items[0].person)));
+  const who = all.length > 1 ? ` for ${names === 'Everyone' ? 'everyone' : names} together` : '';
+  return `<p>Yearly cost${who}: ${money(total)}${pieces.length ? `, of which ${pieces.join('; ')}` : ''}. Time is valued at the hour value of whoever spends it; for a shared item, at the lowest in the household.</p>`;
 }
 
 // The list as plain text (Markdown), for the reader to keep or to give to an
@@ -2349,7 +2388,7 @@ function render() {
     const chance = chances.includes(null) ? '…' : lo === hi ? `${lo}%` : `${lo}–${hi}%`;
     const who = several ? `<td class="who">${esc(whoText(row.who))}</td>` : '';
     html += `<tr class="entry${i >= cutoff ? ' below' : ''}" data-key="${key}"><td class="cb"><input type="checkbox" data-own="${row.idx.join(',')}" title="I already have this"></td><td class="r">${n + 1}</td><td class="name" data-toggle="${key}">${entryName(e)}<div class="sub">${esc(ITEM[e.items[0].id].group || '')}</div></td>${who}<td class="r">${whole(row.upfrontUsd)}</td><td class="r">${money(row.annualCostUsd)}</td><td class="r">${money(row.hardshipUsd)}</td><td class="r">${num(row.micromorts, Math.abs(row.micromorts) >= 10 ? 0 : 2)}</td><td class="r"><span class="bar" style="width:${barw(row.ratio)}px"></span>${ratioText(row.ratio)}</td><td class="r">${chance}</td><td class="for">${mainText}</td></tr>`;
-    if (open[key]) html += `<tr class="detail"><td colspan="${cols}">${detail(e)}</td></tr>`;
+    if (open[key]) html += `<tr class="detail"><td colspan="${cols}">${detail(e, row.entries)}</td></tr>`;
   });
   html += '</tbody></table>';
   if (rows.length > SHORT_LIST) {
