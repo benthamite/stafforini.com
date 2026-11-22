@@ -32,3 +32,5 @@ Full details with rejected alternatives and evidence are in `decisions/`. Read t
 | 026 | SA LP freshness checker | Derive the calculator's expected label and values from the note's declared warrant adjustment rather than as-filed integers; the check proves artifact/note agreement, not warrant-count correctness. | Final |
 | 027 | Fast quote deploys | Render quote and named-work segments into the preserved build; search stays stale; orphaned quotes or PDF-link changes promote to a quick build. The Emacs publisher reports success only after verifying the live quote against the build. | Final |
 | 028 | SA LP unknown CUSIPs | An unmapped CUSIP in `sa-data` fails the refresh instead of falling back to cached filings; other SEC errors still use the cache. | Final |
+| 029 | SALP/VARA refresh deploys | One launchd job (`model-refresh.sh`) runs both refreshes with `--no-deploy` and deploys once; the scripts still deploy themselves when run by hand. | Final |
+| 030 | Netlify bandwidth | Fonts split into Latin and rest files by exact `unicode-range`; RSS feeds capped at 50 items. Long notes in the notes feed deferred. | Final |
