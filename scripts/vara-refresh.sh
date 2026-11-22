@@ -13,18 +13,22 @@
 set -euo pipefail
 
 INCLUDE_SENSITIVITY=0
-if [[ "$#" -gt 1 ]]; then
-  echo "Usage: $0 [--with-sensitivity]" >&2
+# --no-deploy leaves the deploy to the caller: scripts/model-refresh.sh runs
+# both refreshes and deploys once, because each Netlify production deploy
+# costs 15 credits (2026-11-22). The caller learns that the refresh ran to the
+# end (rather than skipping on an Emacs lock) from REFRESH_COMPLETED_FILE.
+DEPLOY=1
+usage() {
+  echo "Usage: $0 [--with-sensitivity] [--no-deploy]" >&2
   exit 2
-fi
-case "${1:-}" in
-  "") ;;
-  --with-sensitivity) INCLUDE_SENSITIVITY=1 ;;
-  *)
-    echo "Usage: $0 [--with-sensitivity]" >&2
-    exit 2
-    ;;
-esac
+}
+for arg in "$@"; do
+  case "$arg" in
+    --with-sensitivity) INCLUDE_SENSITIVITY=1 ;;
+    --no-deploy) DEPLOY=0 ;;
+    *) usage ;;
+  esac
+done
 
 # launchd runs with a minimal PATH; make sure Homebrew + pyenv are findable.
 export PATH="/opt/homebrew/bin:$HOME/.pyenv/shims:$PATH"
@@ -216,15 +220,18 @@ commit_if_changed "$STAFFORINI_REPO" \
   "static/images/value-aligned-research-advisors-calculator.html" \
   "static/code/value-aligned-research-advisors.py"
 
-echo "--- Deploying to Netlify (fast note/static asset path) ---"
-if [[ "${DRY_RUN:-0}" == "1" ]]; then
-  echo "$STAFFORINI_REPO: [dry-run] would deploy with --fast-note."
+if [[ "$DEPLOY" -eq 0 ]]; then
+  echo "--- Skipping deploy (--no-deploy); the caller deploys ---"
+  if [[ -n "${REFRESH_COMPLETED_FILE:-}" ]]; then
+    touch "$REFRESH_COMPLETED_FILE"
+  fi
 else
-  bash "$STAFFORINI_REPO/scripts/deploy.sh" --fast-note
-  # Only a completed deployment establishes freshness; skips and dry runs do not.
-  SUCCESS_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/launchd"
-  mkdir -p "$SUCCESS_DIR"
-  touch "$SUCCESS_DIR/com.stafforini.vara-refresh.success"
+  echo "--- Deploying to Netlify (fast note/static asset path) ---"
+  if [[ "${DRY_RUN:-0}" == "1" ]]; then
+    echo "$STAFFORINI_REPO: [dry-run] would deploy with --fast-note."
+  else
+    bash "$STAFFORINI_REPO/scripts/deploy.sh" --fast-note
+  fi
 fi
 
 echo "=== [$(date '+%Y-%m-%d %H:%M:%S')] vara refresh done ==="

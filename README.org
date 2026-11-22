@@ -126,6 +126,12 @@ through =scripts/sa-lp-init.el=, which sets =debug-on-event= to nil so a
 SIGUSR2 aimed at the interactive Emacs (the =emacsk= shell helper) cannot
 arm the debugger and abort the batch run with exit 255.
 
+launchd runs neither directly: =scripts/model-refresh.sh= (job
+=com.stafforini.model-refresh=, daily at 03:37) runs both with =--no-deploy=
+and then deploys once, because each Netlify production deploy costs 15
+credits. Run either script on its own for a manual refresh; without
+=--no-deploy= it deploys itself.
+
 * Quote Export
 
 =scripts/export-quotes.el= sets =#+hugo_base_dir:= to this repository in each
