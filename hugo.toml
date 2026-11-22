@@ -77,6 +77,13 @@ thumbBaseURL = "/pdf-thumbnails"
 [taxonomies]
   tag = "tags"
 
+# Each RSS feed carries only its 50 most recent items (read by
+# layouts/_default/rss.xml and layouts/quotes/rss.xml). Uncapped, /index.xml
+# listed every page and weighed 6 MB compressed per fetch; on 2026-11-22 the
+# feeds were a quarter of the site's Netlify bandwidth, billed in credits.
+[services.rss]
+  limit = 50
+
 # Pagination (controls quotes per page in the /quotes/ feed)
 [pagination]
   pagerSize = 20
